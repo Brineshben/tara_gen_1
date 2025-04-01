@@ -1,0 +1,42 @@
+class robotResponseModel {
+  String? status;
+  Data? data;
+
+  robotResponseModel({this.status, this.data});
+
+  robotResponseModel.fromJson(Map<String, dynamic> json) {
+    status = json['status'];
+    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['status'] = this.status;
+    if (this.data != null) {
+      data['data'] = this.data!.toJson();
+    }
+    return data;
+  }
+}
+
+class Data {
+  bool? listening;
+  bool? waiting;
+  bool? speaking;
+
+  Data({this.listening, this.waiting, this.speaking});
+
+  Data.fromJson(Map<String, dynamic> json) {
+    listening = json['listening'];
+    waiting = json['waiting'];
+    speaking = json['speaking'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['listening'] = this.listening;
+    data['waiting'] = this.waiting;
+    data['speaking'] = this.speaking;
+    return data;
+  }
+}
