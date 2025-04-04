@@ -43,7 +43,9 @@ class _ApiKeyState extends State<ApiKey> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    final Size size = MediaQuery
+        .of(context)
+        .size;
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -60,7 +62,7 @@ class _ApiKeyState extends State<ApiKey> {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                    controller.background.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -73,7 +75,7 @@ class _ApiKeyState extends State<ApiKey> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20,top: 20),
+                  padding: const EdgeInsets.only(left: 20, top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -93,7 +95,9 @@ class _ApiKeyState extends State<ApiKey> {
                               //     spreadRadius: 0,
                               //   ),
                               // ],
-                              borderRadius: BorderRadius.circular(15).r),
+                              borderRadius: BorderRadius
+                                  .circular(15)
+                                  .r),
                           child: Icon(
                             Icons.arrow_back_outlined,
                             color: Colors.grey,
@@ -125,7 +129,7 @@ class _ApiKeyState extends State<ApiKey> {
                         children: [
                           Container(
                             margin: EdgeInsets.only(
-                                left: 40.w, bottom: 15, right: 40.w,top: 50.w),
+                                left: 40.w, bottom: 15, right: 40.w, top: 50.w),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -147,11 +151,13 @@ class _ApiKeyState extends State<ApiKey> {
                               maxLength: 30,
                               minLines: 1,
                               controller: NewIp,
-                              validator: (val) => val!.trim().isEmpty
+                              validator: (val) =>
+                              val!.trim().isEmpty
                                   ? 'Please Enter New API key'
                                   : null,
                               decoration: InputDecoration(
-                                  hintStyle: const TextStyle(color: Colors.white38),
+                                  hintStyle: const TextStyle(
+                                      color: Colors.white38),
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 10.h, horizontal: 10.w),
                                   hintText: "Enter New API key",
@@ -166,14 +172,14 @@ class _ApiKeyState extends State<ApiKey> {
                                     borderSide: const BorderSide(
                                         color: Colors.blue, width: 1.0),
                                     borderRadius:
-                                        const BorderRadius.all(Radius.circular(10))
-                                            .r,
+                                    const BorderRadius.all(Radius.circular(10))
+                                        .r,
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
                                         color: Colors.blue, width: 1.0),
                                     borderRadius: const BorderRadius.all(
-                                            Radius.circular(10.0))
+                                        Radius.circular(10.0))
                                         .r,
                                   ),
                                   fillColor: Colors.blueGrey[900],
@@ -189,37 +195,41 @@ class _ApiKeyState extends State<ApiKey> {
 
                             child: InkWell(
                               splashColor: Colors.white,
-                              highlightColor:Colors.white.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(20.r),                          onTap: () async {
+                              highlightColor: Colors.white.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20.r),
+                              onTap: () async {
                                 if (_formKey.currentState!.validate()) {
-                                if(NewIp.text.isNotEmpty){
+                                  if (NewIp.text.isNotEmpty) {
+                                    Map<String, dynamic> resp =
+                                    await ApiServices.ApiKey(
+                                        Data: NewIp.text);
 
-                                  Map<String, dynamic> resp =
-                                  await ApiServices.ApiKey(Data:NewIp.text );
-
-                                  if (resp['status'] == "ok") {
-                                    FocusManager.instance.primaryFocus?.unfocus();
-                                    ProductAppPopUps.submit2back(
-                                      title: "SUCCESS",
-                                      message: resp['message'].toString(),
-                                      actionName: "Close",
-                                      iconData: Icons.done,
-                                      iconColor: Colors.green,
-                                    );
-                                  } else {
-                                    ProductAppPopUps.submit(
-                                      title: "FAILED",
-                                      message: "Something went wrong.",
-                                      actionName: "Close",
-                                      iconData: Icons.info_outline,
-                                      iconColor: Colors.red,
-                                    );
+                                    if (resp['status'] == "ok") {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      ProductAppPopUps.submit2back(
+                                        title: "SUCCESS",
+                                        message: resp['message'].toString(),
+                                        actionName: "Close",
+                                        iconData: Icons.done,
+                                        iconColor: Colors.green,
+                                      );
+                                    } else {
+                                      ProductAppPopUps.submit(
+                                        title: "FAILED",
+                                        message: "Something went wrong.",
+                                        actionName: "Close",
+                                        iconData: Icons.info_outline,
+                                        iconColor: Colors.red,
+                                      );
+                                    }
                                   }
-                                }
                                 }
                               },
                               child: buildInfoCard(
-                                  MediaQuery.of(context).size, 'SUBMIT'),
+                                  MediaQuery
+                                      .of(context)
+                                      .size, 'SUBMIT'),
                             ),
                           ),
                         ],

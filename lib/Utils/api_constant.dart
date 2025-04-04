@@ -116,6 +116,7 @@ class ApiConstants {
   ///offline
   static String poweroffoffline = "/off/";
   static String navigationoffline = "/navigation/list/";
+  static String navigationEditoffline = "/navigation/edit/";
   static String navigationdestinationoffline = "/navigation/";
   static String basestatusoffline = "/base/status/";
   static String volumeoffline = "/volume/set/";
@@ -165,7 +166,7 @@ Future<void> fetchAndUpdateBaseUrl() async {
         "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
     final response = await http.get(Uri.parse(
         "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
-    print("objectresponse$data");
+    print("objectresponse$url");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       String? ipAddress = jsonResponse['data']['ip_address'];

@@ -26,16 +26,16 @@ class ApiServices {
       "password": psw,
     };
     // try {
-      var request = http.Request('POST', Uri.parse(url));
-      request.body = (json.encode(apiBody));
-      request.headers.addAll({'Content-Type': 'application/json'});
-      print('Api body---------------------->${request.body}');
-      http.StreamedResponse response = await request.send();
-      print('Api bodybenenen---------------------->${response}');
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    print('Api body---------------------->${request.body}');
+    http.StreamedResponse response = await request.send();
+    print('Api bodybenenen---------------------->${response}');
 
-      var respString = await response.stream.bytesToString();
-      print('Api body---------------------->${json.decode(respString)}');
-      return json.decode(respString);
+    var respString = await response.stream.bytesToString();
+    print('Api body---------------------->${json.decode(respString)}');
+    return json.decode(respString);
 
     // } catch (e) {
     //   throw Exception("Service Error");
@@ -51,7 +51,7 @@ class ApiServices {
     return json.decode(respString);
   }
 
-   ///Reboot
+  ///Reboot
   static Future<Map<String, dynamic>> Reboot(bool data) async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.reboot}";
     print("reboot$url");
@@ -309,9 +309,31 @@ class ApiServices {
   ///check Navigationoffline
 
   static Future<Map<String, dynamic>> navigateoffline() async {
+    // String url = "http://192.168.1.36:8000/${ApiConstants.navigationoffline}";
     String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationoffline}";
     print("Navigationoffline$url");
     var request = http.Request('GET', Uri.parse(url));
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    return json.decode(respString);
+  }
+
+  ///check navigateDescriptionSubmit
+
+  static Future<Map<String, dynamic>> navigateDescriptionSubmit({
+    required int userId,
+    required String data,
+  }) async {
+    // String url =
+    //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
+    Map apiBody = {
+      "description": data,
+    };
+    print("Navigationoffline$url");
+    var request = http.Request('PUT', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     return json.decode(respString);
@@ -453,16 +475,16 @@ class ApiServices {
     var respString = await response.stream.bytesToString();
     return json.decode(respString);
   }
+
   ///Send NavigationSubmit
 
   static Future<Map<String, dynamic>> navigationSubmit({
     required List<int> navigationData,
   }) async {
-    String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.navigationSubmit}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationSubmit}";
 
     print("navigations...$url");
-    Map apiBody = {"navigations":navigationData };
+    Map apiBody = {"navigations": navigationData};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
@@ -476,10 +498,9 @@ class ApiServices {
   static Future<Map<String, dynamic>> ApiKey({
     required String Data,
   }) async {
-    String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.apikey}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.apikey}";
 
-    Map apiBody = {"key":Data };
+    Map apiBody = {"key": Data};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
@@ -493,10 +514,9 @@ class ApiServices {
   static Future<Map<String, dynamic>> FulltourNavigation({
     required bool Data,
   }) async {
-    String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.fullTour}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.fullTour}";
 
-    Map apiBody = {"status":Data };
+    Map apiBody = {"status": Data};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});

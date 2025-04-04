@@ -15,7 +15,6 @@ import 'package:lottie/lottie.dart';
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/battery_Controller.dart';
-import '../../Controller/update_status_controller.dart';
 import '../../Service/Api_Service.dart';
 import '../../Utils/button.dart';
 import '../../Utils/colors.dart';

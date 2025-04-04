@@ -8,6 +8,7 @@ import '../Controller/EnquirySubListModel.dart';
 import '../Controller/FulltourController.dart';
 import '../Controller/Ipcontroller.dart';
 import '../Controller/Login_api_controller.dart';
+import '../Controller/Nav_description_controller.dart';
 import '../Controller/Navigate_Controller.dart';
 import '../Controller/PasswordController.dart';
 import '../Controller/Response_Nav_Controller.dart';
@@ -40,6 +41,7 @@ class HandleControllers {
     Get.put(ResponseNavController());
     Get.put(IpController());
     Get.put(FullTourControllerNew());
+    Get.put(NavigateDescriptionController());
   }
 
   static deleteAllGetControllers() async{
@@ -61,5 +63,6 @@ class HandleControllers {
    await  Get.delete<ResponseNavController>();
    await  Get.delete<IpController>();
    await  Get.delete<FullTourControllerNew>();
+   await  Get.delete<NavigateDescriptionController>();
   }
 }

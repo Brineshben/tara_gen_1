@@ -29,6 +29,8 @@ import '../Home_Screen/battery_Widget.dart';
 import '../Home_Screen/home_page.dart';
 import '../Settings/maintanance.dart';
 import '../Settings/otp_page.dart';
+import '../Splash/Battery_Splash.dart';
+import '../Splash/Loading_Splash.dart';
 import 'Navigation.dart';
 
 class RobotResponse extends StatefulWidget {
@@ -38,7 +40,8 @@ class RobotResponse extends StatefulWidget {
   State<RobotResponse> createState() => _RobotResponseState();
 }
 
-class _RobotResponseState extends State<RobotResponse> with WidgetsBindingObserver {
+class _RobotResponseState extends State<RobotResponse>
+    with WidgetsBindingObserver {
   Timer? messageTimer;
   bool canExit = false;
   bool isForegroundTaskRunning = false;
@@ -49,18 +52,24 @@ class _RobotResponseState extends State<RobotResponse> with WidgetsBindingObserv
     super.initState();
     WidgetsBinding.instance.addObserver(this);
 
-    startForegroundTask();
-
     _hideSystemUI();
 
     Get.find<Enquirylistcontroller>().fetchEnquiryList(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
     Get.find<BackgroudController>().fetchBackground(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       print("Timer");
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      if (isBatteryscreen ?? false) {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return  const BatterySplash();
+        },));
+        timer.cancel();
+      }
       fetchAndUpdateBaseUrl();
       Get.find<RobotresponseapiController>().fetchObsResultList();
     });
@@ -73,58 +82,20 @@ class _RobotResponseState extends State<RobotResponse> with WidgetsBindingObserv
     super.dispose();
   }
 
-  /// Detect when app is minimized and bring it back
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.paused) {
-      if (!canExit) {
-        Future.delayed(Duration(seconds: 1), bringAppToFront);
-      }
-    }
-  }
-
-  /// Start the foreground service
-  void startForegroundTask() async {
-    await FlutterForegroundTask.startService(
-      notificationTitle: 'App Running',
-      notificationText: 'You cannot minimize or close the app.',
-      callback: () {},
-    );
-    isForegroundTaskRunning = true;
-  }
-
-  /// Stop the foreground service (when user clicks "Allow Exit")
-  void stopForegroundTask() async {
-    if (isForegroundTaskRunning) {
-      await FlutterForegroundTask.stopService();
-      isForegroundTaskRunning = false;
-    }
-  }
-
-  /// Bring app to the front if minimized
-  void bringAppToFront() async {
-    const platform = MethodChannel('com.example.bringtofront');
-
-    try {
-      await platform.invokeMethod('bringToFront');
-    } on PlatformException catch (e) {
-      print("Failed to bring app to front: ${e.message}");
-    }
-  }
-
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.immersive); // Hide status bar again
   }
-
-
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
     return WillPopScope(
-      onWillPop: () async => canExit,
+      onWillPop: () async {
+        return false;
+      },
+      // onWillPop: () async => canExit,
 
       // onWillPop: () async {
       //   if (allowExit) {
@@ -206,10 +177,19 @@ class _RobotResponseState extends State<RobotResponse> with WidgetsBindingObserv
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    setState(() {
-                                      canExit = true;
-                                      stopForegroundTask(); // Stop foreground service
-                                    });
+                                    Navigator.push(context, MaterialPageRoute(
+                                      builder: (context) {
+                                        return BatterySplash();
+                                      },
+                                    ));
+                                    // Navigator.push(context, MaterialPageRoute(
+                                    //   builder: (context) {
+                                    //     return LoadingSplash();
+                                    //   },
+                                    // )); // setState(() {
+                                    //   Navigator.
+                                    //   canExit = true;
+                                    // });
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(

@@ -26,6 +26,8 @@ if (flutterVersionName == null) {
 android {
     namespace = "com.example.ihub"
     compileSdkVersion 35
+    compileSdk = flutter.compileSdkVersion
+
     ndkVersion = flutter.ndkVersion
     defaultConfig {
         minSdkVersion 21

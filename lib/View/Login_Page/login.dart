@@ -36,19 +36,21 @@ class _LoginPageState extends State<LoginPage> {
     initialize();
     super.initState();
   }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersive); // Hide status bar again
   }
 
   Future<void> initialize() async {
     LoginModel? loginApi = await SharedPrefs().getLoginData();
     print("loginsgaredpreferencedata ${loginApi?.user?.id}");
-    if(loginApi != null) {
+    if (loginApi != null) {
       await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const RobotResponse()), (route) => false);
-    } else {
-
-    }
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const RobotResponse()),
+          (route) => false);
+    } else {}
   }
 
   @override
@@ -75,17 +77,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-
               Positioned.fill(
                 child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
                         child: SingleChildScrollView(
                           keyboardDismissBehavior:
-                          ScrollViewKeyboardDismissBehavior.onDrag,
+                              ScrollViewKeyboardDismissBehavior.onDrag,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -114,6 +116,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                               ),
                               SizedBox(height: 5.h),
+
                               /// Username Field
                               Padding(
                                 padding: EdgeInsets.symmetric(
@@ -210,25 +213,26 @@ class _LoginPageState extends State<LoginPage> {
                               Center(
                                 child: Material(
                                   color: Colors.transparent,
-
                                   child: InkWell(
                                     splashColor: Colors.white,
-                                    highlightColor:Colors.white.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(20.r),                                    onTap: () async {
+                                    highlightColor:
+                                        Colors.white.withOpacity(0.3),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                    onTap: () async {
                                       checkInternet2(
                                         context: context,
                                         function: () async {
                                           String user =
-                                          _usernameController.text.trim();
+                                              _usernameController.text.trim();
                                           String psw =
-                                          _passwordController.text.trim();
+                                              _passwordController.text.trim();
                                           if (user.isNotEmpty) {
                                             if (psw.isNotEmpty) {
                                               await Get.find<
-                                                  UserAuthController>()
+                                                      UserAuthController>()
                                                   .fetchUserData(
-                                                  username: user,
-                                                  password: psw);
+                                                      username: user,
+                                                      password: psw);
                                               if (Get.find<UserAuthController>()
                                                   .isLoaded
                                                   .value) {
@@ -238,10 +242,21 @@ class _LoginPageState extends State<LoginPage> {
                                                 Navigator.pushReplacement(
                                                   context,
                                                   PageRouteBuilder(
-                                                    transitionDuration: Duration(milliseconds: 300),
-                                                    pageBuilder: (context, animation, secondaryAnimation) => RobotResponse(),
-                                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                                      return FadeTransition(opacity: animation, child: child);
+                                                    transitionDuration:
+                                                        Duration(
+                                                            milliseconds: 300),
+                                                    pageBuilder: (context,
+                                                            animation,
+                                                            secondaryAnimation) =>
+                                                        RobotResponse(),
+                                                    transitionsBuilder:
+                                                        (context,
+                                                            animation,
+                                                            secondaryAnimation,
+                                                            child) {
+                                                      return FadeTransition(
+                                                          opacity: animation,
+                                                          child: child);
                                                     },
                                                   ),
                                                 );
@@ -258,7 +273,7 @@ class _LoginPageState extends State<LoginPage> {
                                               ProductAppPopUps.submit(
                                                 title: "FAILED",
                                                 message:
-                                                "Please Enter your Password.",
+                                                    "Please Enter your Password.",
                                                 actionName: "Close",
                                                 iconData: Icons.error_outline,
                                                 iconColor: Colors.red,
@@ -268,7 +283,7 @@ class _LoginPageState extends State<LoginPage> {
                                             ProductAppPopUps.submit(
                                               title: "FAILED",
                                               message:
-                                              "Please Enter Your Username.",
+                                                  "Please Enter Your Username.",
                                               actionName: "Close",
                                               iconData: Icons.error_outline,
                                               iconColor: Colors.red,
@@ -277,7 +292,7 @@ class _LoginPageState extends State<LoginPage> {
                                         },
                                       );
                                     },
-                                    child:  buildInfoCard(size, 'LOGIN'),
+                                    child: buildInfoCard(size, 'LOGIN'),
                                   ),
                                 ),
                               ),
@@ -314,8 +329,12 @@ Future<void> checkInternet2(
     );
   }
 }
-Future<void> checkInternet1(
-    {required BuildContext context, required Function() function ,required Function() function2 ,}) async {
+
+Future<void> checkInternet1({
+  required BuildContext context,
+  required Function() function,
+  required Function() function2,
+}) async {
   bool connected = await CheckConnectivity().check();
   print("internect connection is $connected");
   if (connected) {
@@ -325,12 +344,14 @@ Future<void> checkInternet1(
     Get.snackbar(
       'Alert', // Title
       'Network Error, Proceed it on offline Mode', // Message
-      snackPosition: SnackPosition.BOTTOM, // Position (TOP or BOTTOM)
+      snackPosition: SnackPosition.BOTTOM,
+      // Position (TOP or BOTTOM)
       backgroundColor: Colors.blueGrey,
       colorText: Colors.white,
       borderRadius: 10,
       margin: EdgeInsets.all(10),
-      duration: Duration(seconds: 3), // Auto dismiss time
+      duration: Duration(seconds: 3),
+      // Auto dismiss time
       icon: Icon(Icons.check_circle, color: Colors.white),
     );
   }

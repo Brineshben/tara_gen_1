@@ -240,7 +240,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                           print("bennn$dataz");
                                         } else {
                                           print(
-                                              "Warning: Invalid navId found - '${element.navId}'");
+                                              "Warning: Invalid navId found - '${element.id}'");
                                         }
                                       }
                                       Map<String, dynamic> resp =

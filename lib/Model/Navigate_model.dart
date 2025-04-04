@@ -29,25 +29,22 @@ class NavigationListModel {
 
 class NavigationData {
   int? id;
-  int? user;
-  String? navId;
   String? name;
+  String? description;
 
-  NavigationData({this.id, this.user, this.navId, this.name});
+  NavigationData({this.id, this.name, this.description});
 
   NavigationData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    user = json['user'];
-    navId = json['nav_id'];
     name = json['name'];
+    description = json['description'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['user'] = this.user;
-    data['nav_id'] = this.navId;
     data['name'] = this.name;
+    data['description'] = this.description;
     return data;
   }
 }

@@ -74,7 +74,7 @@ class Robot {
   String? workingTime;
   String? position;
   bool? subscription;
-  String? language;
+  Null? language;
   Null? image;
   String? voltage;
   String? current;
@@ -85,6 +85,8 @@ class Robot {
   bool? emergencyStop;
   bool? motorBrakeReleased;
   bool? readyToNavigate;
+  bool? charging;
+  String? dockingStatus;
 
   Robot(
       {this.id,
@@ -105,7 +107,9 @@ class Robot {
         this.map,
         this.emergencyStop,
         this.motorBrakeReleased,
-        this.readyToNavigate});
+        this.readyToNavigate,
+        this.charging,
+        this.dockingStatus});
 
   Robot.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -127,6 +131,8 @@ class Robot {
     emergencyStop = json['emergency_stop'];
     motorBrakeReleased = json['motor_brake_released'];
     readyToNavigate = json['ready_to_navigate'];
+    charging = json['charging'];
+    dockingStatus = json['dockingStatus'];
   }
 
   Map<String, dynamic> toJson() {
@@ -150,6 +156,8 @@ class Robot {
     data['emergency_stop'] = this.emergencyStop;
     data['motor_brake_released'] = this.motorBrakeReleased;
     data['ready_to_navigate'] = this.readyToNavigate;
+    data['charging'] = this.charging;
+    data['dockingStatus'] = this.dockingStatus;
     return data;
   }
 }
@@ -161,6 +169,7 @@ class User {
   int? phoneNumber;
   String? profilePic;
   String? role;
+  int? secretKey;
 
   User(
       {this.id,
@@ -168,7 +177,8 @@ class User {
         this.email,
         this.phoneNumber,
         this.profilePic,
-        this.role});
+        this.role,
+        this.secretKey});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -177,6 +187,7 @@ class User {
     phoneNumber = json['phone_number'];
     profilePic = json['profile_pic'];
     role = json['role'];
+    secretKey = json['secret_key'];
   }
 
   Map<String, dynamic> toJson() {
@@ -187,6 +198,7 @@ class User {
     data['phone_number'] = this.phoneNumber;
     data['profile_pic'] = this.profilePic;
     data['role'] = this.role;
+    data['secret_key'] = this.secretKey;
     return data;
   }
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -35,6 +37,15 @@ class Maintanance extends StatefulWidget {
 }
 
 class _MaintananceState extends State<Maintanance> {
+  static const platform = MethodChannel('com.example.ihub/channel');
+  void openAnotherAppKisko() async {
+    try {
+      await platform.invokeMethod('openAnotherApp');
+    } catch (e) {
+      print("Error launching app: $e");
+    }
+  }
+
   bool isTraining = false;
 
   @override
@@ -194,31 +205,31 @@ class _MaintananceState extends State<Maintanance> {
                           },
                         ),
                       ),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20.r),
-                          child: buildInfoCard(size, 'IP ADDRESS'),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                transitionDuration: Duration(milliseconds: 300),
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        Ipaddress(),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  return FadeTransition(
-                                      opacity: animation, child: child);
-                                },
-                              ),
-                            );
-                          },
-                        ),
-                      ),
+                      // Material(
+                      //   color: Colors.transparent,
+                      //   child: InkWell(
+                      //     splashColor: Colors.white,
+                      //     highlightColor: Colors.white.withOpacity(0.3),
+                      //     borderRadius: BorderRadius.circular(20.r),
+                      //     child: buildInfoCard(size, 'IP ADDRESS'),
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         PageRouteBuilder(
+                      //           transitionDuration: Duration(milliseconds: 300),
+                      //           pageBuilder:
+                      //               (context, animation, secondaryAnimation) =>
+                      //                   Ipaddress(),
+                      //           transitionsBuilder: (context, animation,
+                      //               secondaryAnimation, child) {
+                      //             return FadeTransition(
+                      //                 opacity: animation, child: child);
+                      //           },
+                      //         ),
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
                       // GestureDetector(
                       //   child: buildInfoCard(
                       //       size, isTraining ? 'ON TRAINING' : 'TRAIN ROBOT'),
@@ -236,7 +247,8 @@ class _MaintananceState extends State<Maintanance> {
                           borderRadius: BorderRadius.circular(20.r),
                           child: buildInfoCard(size, 'MAPPING'),
                           onTap: () {
-                            openAnotherApp();
+                            openAnotherAppKisko();
+                            // openAnotherApp();
                           },
                         ),
                       ),
@@ -254,13 +266,14 @@ class _MaintananceState extends State<Maintanance> {
                                     builder: (context) => FileUploadScreen()));
                           },
                         ),
-                      ),  Material(
+                      ),
+                      Material(
                         color: Colors.transparent,
                         child: InkWell(
                           splashColor: Colors.white,
                           highlightColor: Colors.white.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(20.r),
-                          child: buildInfoCard(size, 'ADD NAVIGATION'),
+                          child: buildInfoCard(size, 'ADD DESCRIPTION'),
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -417,6 +430,7 @@ class _MaintananceState extends State<Maintanance> {
                           },
                         ),
                       ),
+
                     ],
                   ),
                 )
@@ -425,6 +439,49 @@ class _MaintananceState extends State<Maintanance> {
           ),
         ],
       ),
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(
+              left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.red,
+                      Colors.red
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                      10), // Ensure proper border radius
+                ),
+                child: Material(
+                  color: Colors.transparent, // Ensure the gradient is visible
+                  borderRadius: BorderRadius.circular(10),
+                  child: FloatingActionButton.extended(
+                    backgroundColor: Colors.transparent,
+                    onPressed: () {
+                      exit(0);
+
+                    },
+                    icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                    label: Text("EXIT APP",
+                        style: GoogleFonts.orbitron(
+                          color: Colors.white,
+                          fontSize: 18.h,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        )
+
     );
   }
 }
@@ -461,24 +518,27 @@ Widget buildInfoCard(Size size, String title) {
     ),
   );
 }
-
 void openAnotherApp() async {
   const packageName = "com.slamtec.robostudio";
   final Uri androidUri =
-      Uri.parse("intent://#Intent;package=$packageName;end;");
+  Uri.parse("intent://#Intent;package=$packageName;end;");
 
   try {
-    if (await launchUrl(Uri.parse("android-app://$packageName"))) {
+    if (await canLaunchUrl(Uri.parse("android-app://$packageName"))) {
+      await launchUrl(Uri.parse("android-app://$packageName"));
       return;
     }
 
-    if (await launchUrl(androidUri)) {
+    if (await canLaunchUrl(androidUri)) {
+      await launchUrl(androidUri);
       return;
     }
 
+    // Open Play Store if the app is not installed
     await launchUrl(
-        Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
-        mode: LaunchMode.externalApplication);
+      Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
+      mode: LaunchMode.externalApplication,
+    );
   } catch (e) {
     print("Error launching app: $e");
   }

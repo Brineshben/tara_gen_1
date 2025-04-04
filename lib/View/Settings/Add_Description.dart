@@ -2,46 +2,39 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Controller/Backgroud_controller.dart';
+import '../../Controller/Nav_description_controller.dart';
+import '../../Controller/Navigate_Controller.dart';
+import '../../Service/Api_Service.dart';
 import '../../Utils/colors.dart';
+import '../../Utils/popups.dart';
+import 'VideoPlayer.dart';
 
-class AddDescription extends StatelessWidget {
+class AddDescription extends StatefulWidget {
   AddDescription({super.key});
 
-  final List<Map<String, String>> items = [
-    {
-      'name': 'Roy',
-      'details': 'Anxiety Disorder | AGE : 25',
-      'extra': 'Specialized in UI/UX and API integration'
-    },
-    {
-      'name': 'Jane Smith',
-      'details': 'Anxiety Disorder | AGE : 25',
-      'extra': 'Expert in Node.js, Python, and Databases'
-    },
-    {
-      'name': 'Alice Brown',
-      'details': 'Anxiety Disorder | AGE : 25',
-      'extra': 'Specialized in Flutter and React Native'
-    },
-    {
-      'name': 'Alice Brown',
-      'details': 'Anxiety Disorder | AGE : 25',
-      'extra': 'Specialized in Flutter and React Native'
-    },
-    {
-      'name': 'Alice Brown',
-      'details': 'Anxiety Disorder | AGE : 25',
-      'extra': 'Specialized in Flutter and React Native'
-    },
-  ];
+  @override
+  State<AddDescription> createState() => _AddDescriptionState();
+}
+
+class _AddDescriptionState extends State<AddDescription> {
+  @override
+  void initState() {
+    Get.find<NavigateDescriptionController>().NavigateData();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery
+        .of(context)
+        .size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -67,7 +60,7 @@ class AddDescription extends StatelessWidget {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20,bottom: 40),
+                padding: const EdgeInsets.only(left: 20, top: 20, bottom: 40),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -87,7 +80,9 @@ class AddDescription extends StatelessWidget {
                             //     spreadRadius: 0,
                             //   ),
                             // ],
-                            borderRadius: BorderRadius.circular(15).r),
+                            borderRadius: BorderRadius
+                                .circular(15)
+                                .r),
                         child: Icon(
                           Icons.arrow_back_outlined,
                           color: Colors.grey,
@@ -110,130 +105,225 @@ class AddDescription extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.only(left: 150, right: 150, bottom: 1),
-                  itemCount: items.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                        color: Colors.white.withOpacity(0.8),
-                        margin: EdgeInsets.symmetric(vertical: 10),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)),
-                        elevation: 2,
-                        child: ExpansionTile(
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: BorderSide.none),
-                          collapsedShape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              side: BorderSide.none),
-                          title: Center(
-                            child: Text("SPOT 1",
-                                style: TextStyle(
-                                    fontSize: 15.h,
-                                    fontWeight: FontWeight.w800,
-                                    color: Colors.black)),
-                          ),
-                          // subtitle: Column(
-                          //   children: [
-                          //     Row(
-                          //       children: [
-                          //         Text("APPOINMENT DATE: ",
-                          //             style: TextStyle(
-                          //                 fontSize: 15.h,
-                          //                 fontWeight: FontWeight.w500,
-                          //                 color: Colors.black)),
-                          //
-                          //       ],
-                          //     ),
-                          //   ],
-                          // ),
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
+                child: GetX<NavigateDescriptionController>(
+                  builder: (NavigateDescriptionController controller) {
+                    return ListView.builder(
+                      padding:
+                      EdgeInsets.only(left: 150, right: 150, bottom: 1),
+                      itemCount: controller.DataList.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                            color: Colors.white.withOpacity(0.3),
+                            margin: EdgeInsets.symmetric(vertical: 10),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15)),
+                            elevation: 2,
+                            child: ExpansionTile(
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                side: BorderSide.none),
+                              collapsedShape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide.none),
+                              title: Center(
+                                child: Text(
+                                    "${controller.DataList[index]?.name
+                                        ?.toUpperCase()}",
+                                    style: TextStyle(
+                                        fontSize: 20.h,
+                                        fontWeight: FontWeight.w800,
+                                        color: Colors.white)),
                               ),
-                              padding: EdgeInsets.all(16),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text("DESCRIPTION",
-                                      style: TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w500)),
-                                  SizedBox(height: 10),
-                                  Container(
-                                    height: size.height * 0.1,
-                                    child: TextFormField(
-
-                                      style: const TextStyle(color: Colors.white),
-                                      minLines: 1,
-
-                                      validator: (val) => val!.trim().isEmpty
-                                          ? 'Please Enter Description.'
-                                          : null,
-                                      decoration: InputDecoration(
-                                          hintStyle: const TextStyle(color: Colors.white38),
-                                          contentPadding: EdgeInsets.symmetric(
-                                              vertical: 10.h, horizontal: 10.w),
-                                          hintText: "Enter Description  ",
-                                          border: OutlineInputBorder(
-                                            borderRadius: const BorderRadius.all(
-                                              Radius.circular(10.0),
-                                            ).r,
-                                          ),
-                                          enabledBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                color: Colors.blue, width: 1.0),
-                                            borderRadius:
-                                            const BorderRadius.all(Radius.circular(10))
-                                                .r,
-                                          ),
-                                          focusedBorder: OutlineInputBorder(
-                                            borderSide: const BorderSide(
-                                                color: Colors.blue, width: 1.0),
-                                            borderRadius: const BorderRadius.all(
-                                                Radius.circular(10.0))
-                                                .r,
-                                          ),
-                                          fillColor: Colors.blueGrey[900],
-                                          filled: true),
-                                      maxLines: 5,
-                                    ),
+                              // subtitle: Column(
+                              //   children: [
+                              //     Row(
+                              //       children: [
+                              //         Text("APPOINMENT DATE: ",
+                              //             style: TextStyle(
+                              //                 fontSize: 15.h,
+                              //                 fontWeight: FontWeight.w500,
+                              //                 color: Colors.black)),
+                              //
+                              //       ],
+                              //     ),
+                              //   ],
+                              // ),
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.5),
+                                    borderRadius: BorderRadius.circular(10),
                                   ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
+                                  padding: EdgeInsets.all(16),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                    CrossAxisAlignment.start,
                                     children: [
+                                      Text("DESCRIPTION",
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w500)),
+                                      SizedBox(height: 10),
                                       Container(
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            colors: [ColorUtils.userdetailcolor,ColorUtils.userdetailcolor],
-
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                          ),
-                                          borderRadius: BorderRadius.circular(20.r),
-                                        ),
-                                        width: 40.w,
-                                        height: 40.h,
-                                        child: Center(
-                                          child: Text(
-                                            'SUBMIT',
-                                            style: GoogleFonts.inter(
-                                                color: Colors.white,
-                                                fontSize: 16.h,
-                                                fontWeight: FontWeight.bold),
-                                          ),
+                                        height: size.height * 0.1,
+                                        child: TextFormField(
+                                          controller:
+                                          controller.textControllers[index],
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                          minLines: 1,
+                                          validator: (val) =>
+                                          val!.trim().isEmpty
+                                              ? 'Please Enter Description.'
+                                              : null,
+                                          decoration: InputDecoration(
+                                              hintStyle: const TextStyle(
+                                                  color: Colors.white38),
+                                              contentPadding:
+                                              EdgeInsets.symmetric(
+                                                  vertical: 10.h,
+                                                  horizontal: 10.w),
+                                              hintText: "Enter Description  ",
+                                              border: OutlineInputBorder(
+                                                borderRadius:
+                                                const BorderRadius.all(
+                                                  Radius.circular(10.0),
+                                                ).r,
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 1.0),
+                                                borderRadius:
+                                                const BorderRadius.all(
+                                                    Radius.circular(10))
+                                                    .r,
+                                              ),
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: const BorderSide(
+                                                    color: Colors.blue,
+                                                    width: 1.0),
+                                                borderRadius: const BorderRadius
+                                                    .all(
+                                                    Radius.circular(10.0))
+                                                    .r,
+                                              ),
+                                              fillColor: Colors.blueGrey[900],
+                                              filled: true),
+                                          maxLines: 7,
                                         ),
                                       ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.end,
+                                        children: [
+                                          GestureDetector(
+
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      ColorUtils
+                                                          .userdetailcolor,
+                                                      ColorUtils.userdetailcolor
+                                                    ],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                                ),
+                                                width: 40.w,
+                                                height: 40.h,
+                                                child: Center(
+                                                  child: Text(
+                                                    'PLAY VIDEO',
+                                                    style: GoogleFonts.inter(
+                                                        color: Colors.white,
+                                                        fontSize: 16.h,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                           onTap: (){
+                                             _showVideoDialog(context);
+                                           },
+                                          ),
+                                          GestureDetector(
+
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 4),
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  gradient: LinearGradient(
+                                                    colors: [
+                                                      ColorUtils
+                                                          .userdetailcolor,
+                                                      ColorUtils.userdetailcolor
+                                                    ],
+                                                    begin: Alignment.topLeft,
+                                                    end: Alignment.bottomRight,
+                                                  ),
+                                                  borderRadius:
+                                                  BorderRadius.circular(20.r),
+                                                ),
+                                                width: 40.w,
+                                                height: 40.h,
+                                                child: Center(
+                                                  child: Text(
+                                                    'SUBMIT',
+                                                    style: GoogleFonts.inter(
+                                                        color: Colors.white,
+                                                        fontSize: 16.h,
+                                                        fontWeight:
+                                                        FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            onTap: () async {
+                                              Map<String, dynamic> resp =
+                                              await ApiServices
+                                                  .navigateDescriptionSubmit(
+                                                  data: controller
+                                                      .textControllers[index]
+                                                      .text, userId: controller
+                                                  .DataList[index]?.id ?? 0);
+
+                                              if (resp['status'] == 'ok') {
+                                                ProductAppPopUps.submit(
+                                                  title: "Success",
+                                                  message: resp['message'],
+                                                  actionName: "Close",
+                                                  iconData: Icons.done,
+                                                  iconColor: Colors.green,
+                                                );
+                                              } else {
+                                                ProductAppPopUps.submit(
+                                                  title: "FAILED",
+                                                  message: "Something went wrong.",
+                                                  actionName: "Close",
+                                                  iconData: Icons.info_outline,
+                                                  iconColor: Colors.red,
+                                                );
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      )
                                     ],
-                                  )
-                                ],
-                              ),
-                            ),
-                          ],
-                        ));
+                                  ),
+                                ),
+                              ],
+                            ));
+                      },
+                    );
                   },
                 ),
               ),
@@ -241,6 +331,55 @@ class AddDescription extends StatelessWidget {
           ),
         ],
       ),
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(
+              left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.red,
+                      Colors.red
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(
+                      10), // Ensure proper border radius
+                ),
+                child: Material(
+                  color: Colors.transparent, // Ensure the gradient is visible
+                  borderRadius: BorderRadius.circular(10),
+                  child: FloatingActionButton.extended(
+                    backgroundColor: Colors.transparent,
+                    onPressed: () {
+                      _showVideoDialog(context);
+                    },
+                    icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                    label: Text("EXIT APP",
+                        style: GoogleFonts.orbitron(
+                          color: Colors.white,
+                          fontSize: 18.h,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        )
+
     );
+
   }
+}
+void _showVideoDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (context) => VideoDialog(),
+  );
 }

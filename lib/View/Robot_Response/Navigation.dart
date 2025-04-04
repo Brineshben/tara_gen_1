@@ -191,55 +191,57 @@ class _NavigationState extends State<Navigation> {
                                     : null;
                                 return Row(
                                   children: [
-
-                                      // Container(
-                                      //   margin: EdgeInsets.only(
-                                      //       left: 10.w, top: 40.h, right: 10.w),
-                                      //   decoration: BoxDecoration(
-                                      //     color: Colors.white.withOpacity(0.2),
-                                      //     borderRadius:
-                                      //         BorderRadius.circular(20.r),
-                                      //   ),
-                                      //   width: size.height * 0.1,
-                                      //   height: size.height * 0.070,
-                                      //   child: Center(
-                                      //     child: SizedBox(
-                                      //       child: Padding(
-                                      //         padding:
-                                      //             const EdgeInsets.all(8.0),
-                                      //         child: Lottie.asset(
-                                      //           "assets/emergency.json",
-                                      //           fit: BoxFit.fitHeight,
-                                      //         ),
-                                      //       ),
-                                      //     ),
-                                      //   ),
-                                      // ),
+                                    // Container(
+                                    //   margin: EdgeInsets.only(
+                                    //       left: 10.w, top: 40.h, right: 10.w),
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.white.withOpacity(0.2),
+                                    //     borderRadius:
+                                    //         BorderRadius.circular(20.r),
+                                    //   ),
+                                    //   width: size.height * 0.1,
+                                    //   height: size.height * 0.070,
+                                    //   child: Center(
+                                    //     child: SizedBox(
+                                    //       child: Padding(
+                                    //         padding:
+                                    //             const EdgeInsets.all(8.0),
+                                    //         child: Lottie.asset(
+                                    //           "assets/emergency.json",
+                                    //           fit: BoxFit.fitHeight,
+                                    //         ),
+                                    //       ),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                     if (controller.background.value?.data?.first
                                             .robot?.motorBrakeReleased ??
                                         false)
                                       Center(
                                         child: Container(
                                             margin: EdgeInsets.only(
-                                                left: 10.w, top: 40.h, right: 10.w),
+                                                left: 10.w,
+                                                top: 40.h,
+                                                right: 10.w),
                                             height: size.height * 0.060,
                                             width: size.width * 0.060,
-                                            child: Image.asset("assets/brake.png",
+                                            child: Image.asset(
+                                                "assets/brake.png",
                                                 fit: BoxFit.contain)),
                                       ),
                                     if (controller.background.value?.data?.first
-                                        .robot?.emergencyStop ??
+                                            .robot?.emergencyStop ??
                                         false)
                                       Container(
                                         margin: EdgeInsets.only(
                                             left: 1.w, top: 40.h, right: 1.w),
-
                                         child: Center(
                                           child: Container(
                                             height: size.height * 0.060,
                                             width: size.width * 0.060,
                                             child: SvgPicture.asset(
-                                              "assets/alert-icon-orange.svg",),
+                                              "assets/alert-icon-orange.svg",
+                                            ),
                                           ),
                                         ),
                                       ),
@@ -313,153 +315,213 @@ class _NavigationState extends State<Navigation> {
                       SizedBox(
                         height: 50,
                       ),
-                      if( controller.DataList.isNotEmpty)
+                      if (controller.DataList.isNotEmpty)
+                        controller.isLoading.value
+                            ? CircularProgressIndicator(
+                                color: Colors.blue,
+                              )
+                            : SingleChildScrollView(
+                                child: Column(
+                                  children: List.generate(
+                                    controller.DataList.length,
+                                    // Change this to your dynamic list length
+                                    (index) => Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: InkWell(
+                                            splashColor: Colors.white,
+                                            highlightColor:
+                                                Colors.white.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(20.r),
+                                            onTap: () async {
+                                              {
+                                                try {
+                                                  await ApiServices.destination(
+                                                      id: controller
+                                                              .DataList[index]
+                                                              ?.id ??
+                                                          0);
+                                                  await Future.delayed(
+                                                      Duration(seconds: 1));
+                                                  Map<String, dynamic> resp =
+                                                      await ApiServices
+                                                          .robotbasestatus();
 
-                      controller.isLoading.value
-                          ? CircularProgressIndicator(
-                              color: Colors.blue,
-                            )
-                          : SingleChildScrollView(
-                              child: Column(
-                                children: List.generate(
-                                  controller.DataList.length,
-                                  // Change this to your dynamic list length
-                                  (index) => Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: InkWell(
-                                          splashColor: Colors.white,
-                                          highlightColor:
-                                              Colors.white.withOpacity(0.3),
-                                          borderRadius:
-                                              BorderRadius.circular(20.r),
-                                          onTap: () async {
-                                            {
-                                              try {
-                                                await ApiServices.destination(
-                                                    id: controller
-                                                            .DataList[index]
-                                                            ?.id ??
-                                                        0);
-                                                await Future.delayed(
-                                                    Duration(seconds: 1));
-                                                Map<String, dynamic> resp =
-                                                    await ApiServices
-                                                        .robotbasestatus();
-
-                                                print(
-                                                    "benbenbenbenben${controller.DataList[index]?.id ?? 0}");
-
-                                                if (resp['status'] == true) {
-                                                  print("base status");
-                                                  FocusManager
-                                                      .instance.primaryFocus
-                                                      ?.unfocus();
                                                   print(
-                                                      "-----ben---------$resp");
+                                                      "benbenbenbenben${controller.DataList[index]?.id ?? 0}");
 
-                                                  Get.dialog(
-                                                    AlertDialog(
-                                                      shape:
-                                                          const RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.all(
-                                                                Radius.circular(
-                                                                    20.0)),
-                                                      ),
-                                                      title: Column(
-                                                        children: [
-                                                          Center(
-                                                            child: SizedBox(
-                                                              width: 180.w,
-                                                              height: 180.h,
-                                                              child:
-                                                                  Lottie.asset(
-                                                                "assets/navigate.json",
-                                                                fit: BoxFit
-                                                                    .fitHeight,
+                                                  if (resp['status'] == true) {
+                                                    print("base status");
+                                                    FocusManager
+                                                        .instance.primaryFocus
+                                                        ?.unfocus();
+                                                    print(
+                                                        "-----ben---------$resp");
+
+                                                    Get.dialog(
+                                                      AlertDialog(
+                                                        shape:
+                                                            const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20.0)),
+                                                        ),
+                                                        title: Column(
+                                                          children: [
+                                                            Center(
+                                                              child: SizedBox(
+                                                                width: 180.w,
+                                                                height: 180.h,
+                                                                child: Lottie
+                                                                    .asset(
+                                                                  "assets/navigate.json",
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                ),
                                                               ),
                                                             ),
-                                                          ),
-                                                          Text(
-                                                            "COMMAND RECEIVED",
-                                                            style: GoogleFonts
-                                                                .orbitron(
-                                                              color:
-                                                                  Colors.black,
-                                                              fontSize: 20.h,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
+                                                            Text(
+                                                              "COMMAND RECEIVED",
+                                                              style: GoogleFonts
+                                                                  .orbitron(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20.h,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                              ),
                                                             ),
+                                                          ],
+                                                        ),
+                                                        content: Text(
+                                                          "Heading to the ${controller.DataList[index]?.name}"
+                                                              .toUpperCase(),
+                                                          textAlign:
+                                                              TextAlign.center,
+                                                          style: GoogleFonts
+                                                              .oxygen(
+                                                            color: Colors.black,
+                                                            fontSize: 15.h,
                                                           ),
-                                                        ],
-                                                      ),
-                                                      content: Text(
-                                                        "Heading to the ${controller.DataList[index]?.name}"
-                                                            .toUpperCase(),
-                                                        textAlign:
-                                                            TextAlign.center,
-                                                        style:
-                                                            GoogleFonts.oxygen(
-                                                          color: Colors.black,
-                                                          fontSize: 15.h,
                                                         ),
                                                       ),
-                                                    ),
-                                                  );
+                                                    );
 
-                                                  Future.delayed(
-                                                      const Duration(
-                                                          seconds: 3), () {
-                                                    if (Get.isDialogOpen ??
-                                                        false) {
-                                                      Get.back();
-                                                    }
-                                                  });
-                                                } else {
+                                                    Future.delayed(
+                                                        const Duration(
+                                                            seconds: 3), () {
+                                                      if (Get.isDialogOpen ??
+                                                          false) {
+                                                        Get.back();
+                                                      }
+                                                    });
+                                                  } else {
+                                                    Get.dialog(
+                                                      AlertDialog(
+                                                        shape:
+                                                        const RoundedRectangleBorder(
+                                                          borderRadius:
+                                                          BorderRadius.all(
+                                                              Radius
+                                                                  .circular(
+                                                                  20.0)),
+                                                        ),
+                                                        title: Column(
+                                                          children: [
+                                                            Center(
+                                                              child: SizedBox(
+                                                                width: 180.w,
+                                                                height: 180.h,
+                                                                child: Lottie
+                                                                    .asset(
+                                                                  "assets/navigate.json",
+                                                                  fit: BoxFit
+                                                                      .fitHeight,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Text(
+                                                              "COMMAND RECEIVED",
+                                                              style: GoogleFonts
+                                                                  .orbitron(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontSize: 20.h,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        content: Text(
+                                                          "COMMAND ALREADY RECEIVED"
+                                                              .toUpperCase(),
+                                                          textAlign:
+                                                          TextAlign.center,
+                                                          style: GoogleFonts
+                                                              .oxygen(
+                                                            color: Colors.black,
+                                                            fontSize: 15.h,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    );
+                                                    Future.delayed(
+                                                        const Duration(
+                                                            seconds: 3), () {
+                                                      if (Get.isDialogOpen ??
+                                                          false) {
+                                                        Get.back();
+                                                      }
+                                                    });
+
+                                                  }
+                                                } catch (e) {
                                                   ProductAppPopUps.submit(
                                                     title: "FAILED",
                                                     message:
-                                                        "Something went wrong.",
+                                                    "Something went wrong.",
                                                     actionName: "Close",
                                                     iconData:
-                                                        Icons.info_outline,
+                                                    Icons.info_outline,
                                                     iconColor: Colors.red,
                                                   );
+                                                  print(
+                                                      "------forgot error-----------${e.toString()}");
                                                 }
-                                              } catch (e) {
-                                                print(
-                                                    "------forgot error-----------${e.toString()}");
                                               }
-                                            }
-                                          },
-                                          child: buildInfoCard2(
-                                              "${controller.DataList[index]?.name}")),
+                                            },
+                                            child: buildInfoCard2(
+                                                "${controller.DataList[index]?.name}")),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            )
+                              )
                       else
-                      Center(
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 150,
-                            ),
-                            Text(
-                            "Oops..No Data Found in Destination List..",
-                            style: GoogleFonts.oxygen(
-                                              color: Colors.red,
-                                              fontSize: 20.h,
-                                              fontWeight: FontWeight.w700),
-                                              ),
-                          ],
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        Center(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 150,
+                              ),
+                              Text(
+                                "Oops..No Data Found in Destination List..",
+                                style: GoogleFonts.oxygen(
+                                    color: Colors.red,
+                                    fontSize: 20.h,
+                                    fontWeight: FontWeight.w700),
+                              ),
+                            ],
+                            mainAxisAlignment: MainAxisAlignment.center,
+                          ),
                         ),
-                      ),
                     ],
                   );
                 },
@@ -489,16 +551,17 @@ class _NavigationState extends State<Navigation> {
               child: FloatingActionButton.extended(
                 backgroundColor: Colors.transparent,
                 onPressed: () async {
-                  try{
+                  try {
                     Map<String, dynamic> resp =
-                    await ApiServices.FulltourNavigation(Data: true);
+                        await ApiServices.FulltourNavigation(Data: true);
 
                     if (resp['status'] == "ok") {
                       FocusManager.instance.primaryFocus?.unfocus();
                       Get.dialog(
                         AlertDialog(
                           shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20.0)),
                           ),
                           title: Column(
                             children: [
@@ -547,8 +610,7 @@ class _NavigationState extends State<Navigation> {
                         iconColor: Colors.red,
                       );
                     }
-                  }catch (e){
-
+                  } catch (e) {
                     ProductAppPopUps.submit(
                       title: "FAILED",
                       message: "Response Not recived From Robot",
@@ -557,7 +619,6 @@ class _NavigationState extends State<Navigation> {
                       iconColor: Colors.red,
                     );
                   }
-
                 },
                 icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
                 label: Text("FULL TOUR",
@@ -610,6 +671,5 @@ class _NavigationState extends State<Navigation> {
         ],
       ),
     );
-
   }
 }
