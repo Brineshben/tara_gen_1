@@ -114,7 +114,7 @@ class ApiConstants {
   static String baseUrl = "https://anumolm403.pythonanywhere.com";
 
   ///offline
-  static String poweroffoffline = "/off/";
+  static String poweroffoffline = "/update-reboot-status/";
   static String navigationoffline = "/navigation/list/";
   static String navigationEditoffline = "/navigation/edit/";
   static String navigationdestinationoffline = "/navigation/";
@@ -138,6 +138,7 @@ class ApiConstants {
   static String customerDetails = "/robot/customer/edit/";
   static String updateStatus = "/accounts/video/update/";
   static String battery = "/robot/sale/user/list/";
+  static String loading = "/status/";
   static String enquiryList = "/enquiry/list/enquiries/?user_id=";
   static String navigate = "/enquiry/navigation/list/";
   static String destination = "/enquiry/navigation/";
@@ -162,6 +163,8 @@ class ApiConstants {
 Future<void> fetchAndUpdateBaseUrl() async {
   try {
     String data =Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? "";
+    print("objectresponse$data");
+
     String url =
         "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
     final response = await http.get(Uri.parse(

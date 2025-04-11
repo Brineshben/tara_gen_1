@@ -73,11 +73,17 @@ class ApiServices {
     Map apiBody = {
       "status": data,
     };
+    print("logoutofflinelogoutoffline$apiBody");
+
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
+    print("logoutofflinelogoutben$response");
+
     var respString = await response.stream.bytesToString();
+    print("logoutofflinelogoutoffline$respString");
+
     return json.decode(respString);
   }
 
@@ -91,6 +97,8 @@ class ApiServices {
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+    print('Api destination--------${respString}--------------');
+
     return json.decode(respString);
   }
 
@@ -110,7 +118,7 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> robotResponsee() async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.robotResponse}";
-    print("url$url");
+    print("urlspeaking$url");
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -215,6 +223,17 @@ class ApiServices {
     required int userId,
   }) async {
     String url = "${ApiConstants.baseUrl}${ApiConstants.battery}$userId/";
+    var request = http.Request('GET', Uri.parse(url));
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    return json.decode(respString);
+  }
+
+  ///check loading
+
+  static Future<Map<String, dynamic>> loading() async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.loading}";
+    print("urllllllll$url");
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();

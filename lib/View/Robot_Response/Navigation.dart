@@ -477,7 +477,7 @@ class _NavigationState extends State<Navigation> {
                                                             seconds: 3), () {
                                                       if (Get.isDialogOpen ??
                                                           false) {
-                                                        Get.back();
+                                                        Get.back();Get.back();
                                                       }
                                                     });
 

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
@@ -5,11 +6,45 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/View/Login_Page/login.dart';
 import 'package:lottie/lottie.dart';
 
-class LoadingSplash extends StatelessWidget {
+import '../../Service/Api_Service.dart';
+import '../Robot_Response/robot_response.dart';
+
+class LoadingSplash extends StatefulWidget {
   const LoadingSplash({super.key});
 
+  @override
+  State<LoadingSplash> createState() => _LoadingSplashState();
+}
+
+class _LoadingSplashState extends State<LoadingSplash> {
+  Timer? messageTimer;
+
+  @override
+  void initState() {
+    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      try {
+        Map<String, dynamic> resp =
+        await ApiServices.loading();
+        print("POWERPOWERPOWER$resp");
+        if (resp['status'] == "ON") {
+          FocusManager.instance.primaryFocus?.unfocus();
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+            timer.cancel();
+            return LoginPage();
+          },));
+        } else {
+
+        }
+      } catch (e){
+
+
+      }
+    });
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -18,70 +53,22 @@ class LoadingSplash extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Column(
         children: [
-          Padding(
-            padding: EdgeInsets.only(left: 10, top: 20),
-            child: Row(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
-                            borderRadius:
-                            BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    // SizedBox(
-                    //   width: 10,
-                    // ),
-                    // Center(
-                    //   child: Text(
-                    //     "NAVIGATION",
-                    //     style: GoogleFonts.oxygen(
-                    //         color: Colors.white,
-                    //         fontSize: 25.h,
-                    //         fontWeight: FontWeight.w700),
-                    //   ),
-                    // ),
-                  ],
-                ),
 
-              ],
-            ),
-          ),
           Padding(
             padding: const EdgeInsets.only(top: 200),
             child: Column(
               children: [
-                // Center(
-                //   child: Lottie.asset(
-                //     "assets/loading.json",
-                //     fit: BoxFit.fitHeight,
-                //   ),
-                // ),
+                Center(
+                  child: Lottie.asset(
+                    "assets/loading.json",
+                    fit: BoxFit.fitHeight,
+                  ),
+                ),
                 SizedBox(
                   height: 50.h,
                   width: 280.w,
                   child: DefaultTextStyle(
-                    style: GoogleFonts.orbitron(
+                    style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 30.h,
                         fontWeight: FontWeight.bold,

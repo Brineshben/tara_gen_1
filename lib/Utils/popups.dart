@@ -6,6 +6,7 @@ import '../Service/controller_handling.dart';
 import '../Service/sharedPreference.dart';
 import '../View/Login_Page/login.dart';
 import '../View/Robot_Response/robot_response.dart';
+import '../View/Splash/Loading_Splash.dart';
 import 'colors.dart';
 
 class ProductAppPopUps {
@@ -123,7 +124,7 @@ class ProductAppPopUps {
                HandleControllers.createGetControllers();
 
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoadingSplash()),
                   (_) => false);
             },
             style: ButtonStyle(
@@ -188,10 +189,10 @@ class ProductAppPopUps {
               Get.back();
               // HandleControllers.deleteAllGetControllers();
               // SharedPrefs().removeLoginData();
-              //
-              // Navigator.of(context).pushAndRemoveUntil(
-              //     MaterialPageRoute(builder: (context) => const LoginPage()),
-              //         (_) => false);
+
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => const LoadingSplash()),
+                      (_) => false);
               //
               // HandleControllers.createGetControllers();
             },

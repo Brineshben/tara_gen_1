@@ -36,6 +36,8 @@ class BatteryController extends GetxController {
       if (resp['status'] == "ok") {
         print("--------Responsessssss: $resp-------");
         BatteryModel batteryData = BatteryModel.fromJson(resp);
+        print("background.value: ${batteryData}");
+
         background.value = batteryData;
         print("background.value: ${batteryData}");
 

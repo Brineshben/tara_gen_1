@@ -74,7 +74,7 @@ class Robot {
   String? workingTime;
   String? position;
   bool? subscription;
-  Null? language;
+  String? language;
   Null? image;
   String? voltage;
   String? current;

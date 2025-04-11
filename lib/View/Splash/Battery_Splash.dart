@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,16 +28,20 @@ class _BatterySplashState extends State<BatterySplash> {
   void initState() {
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       print("Timer");
-    bool? chargeStatus =await  Get.find<BatteryController>().fetchCharging(
+      bool? chargeStatus = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-      if(!(chargeStatus?? true )){
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return const RobotResponse();
-        },));
+      if (!(chargeStatus ?? true)) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const RobotResponse();
+          },
+        ));
         timer.cancel();
       }
-    });    super.initState();
+    });
+    super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
@@ -46,56 +51,31 @@ class _BatterySplashState extends State<BatterySplash> {
       body: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(left: 10, top: 20),
-            child: Row(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
-                            borderRadius: BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    // SizedBox(
-                    //   width: 10,
-                    // ),
-                    // Center(
-                    //   child: Text(
-                    //     "NAVIGATION",
-                    //     style: GoogleFonts.oxygen(
-                    //         color: Colors.white,
-                    //         fontSize: 25.h,
-                    //         fontWeight: FontWeight.w700),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.only(top: 100),
             child: Column(
               children: [
+                GetX<BatteryController>(
+                  builder: (BatteryController controller) {
+                    String? data;
+
+                    if (controller.background.value?.data!.isNotEmpty ??
+                        false) {
+                      data = controller.background.value?.data?.first.robot
+                              ?.batteryStatus ??
+                          "";
+                    }
+
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "${data ?? ""}%",
+                          style: TextStyle(color: Colors.white, fontSize: 30.h),
+                        )
+                      ],
+                    );
+                  },
+                ),
                 Center(
                   child: Transform.rotate(
                     angle: 3 * pi / 2,
@@ -109,16 +89,34 @@ class _BatterySplashState extends State<BatterySplash> {
                     ),
                   ),
                 ),
-                Center(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        top: 25.h, bottom: 25.h, left: 10.w, right: 10.w),
-                    child: Text(
-                      "BATTERY PERCENTAGE: 84%",
-                      style: GoogleFonts.roboto(
-                        color: Colors.blueGrey,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 20.h,
+                SizedBox(
+                  height: 50.h,
+                  width: 280.w,
+                  child: DefaultTextStyle(
+                    style: GoogleFonts.inter(
+                        color: Colors.white,
+                        fontSize: 30.h,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 5.0,
+                            color: Colors.black.withOpacity(0.7),
+                            offset: Offset(2, 2),
+                          ),
+                        ]),
+                    child: Center(
+                      child: AnimatedTextKit(
+                        animatedTexts: [
+                          TypewriterAnimatedText(
+                            'CHARGING....',
+                            speed: Duration(milliseconds: 50),
+                            // Adjust typing speed
+                            cursor: '|', // Optional cursor
+                          ),
+                        ],
+                        repeatForever: true,
+                        // Ensures continuous looping
+                        isRepeatingAnimation: true,
                       ),
                     ),
                   ),

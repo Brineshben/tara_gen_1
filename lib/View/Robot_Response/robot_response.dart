@@ -65,9 +65,11 @@ class _RobotResponseState extends State<RobotResponse>
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
       if (isBatteryscreen ?? false) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return  const BatterySplash();
-        },));
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const BatterySplash();
+          },
+        ));
         timer.cancel();
       }
       fetchAndUpdateBaseUrl();
@@ -179,17 +181,9 @@ class _RobotResponseState extends State<RobotResponse>
                                   onTap: () {
                                     Navigator.push(context, MaterialPageRoute(
                                       builder: (context) {
-                                        return BatterySplash();
+                                        return LoadingSplash();
                                       },
                                     ));
-                                    // Navigator.push(context, MaterialPageRoute(
-                                    //   builder: (context) {
-                                    //     return LoadingSplash();
-                                    //   },
-                                    // )); // setState(() {
-                                    //   Navigator.
-                                    //   canExit = true;
-                                    // });
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
