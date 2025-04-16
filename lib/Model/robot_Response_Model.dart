@@ -1,12 +1,14 @@
 class robotResponseModel {
   String? status;
   Data? data;
+  String? text;
 
-  robotResponseModel({this.status, this.data});
+  robotResponseModel({this.status, this.data, this.text});
 
   robotResponseModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    text = json['text'];
   }
 
   Map<String, dynamic> toJson() {
@@ -15,6 +17,7 @@ class robotResponseModel {
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
+    data['text'] = this.text;
     return data;
   }
 }

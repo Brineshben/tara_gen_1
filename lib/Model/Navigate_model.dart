@@ -31,13 +31,15 @@ class NavigationData {
   int? id;
   String? name;
   String? description;
+  String? video;
 
-  NavigationData({this.id, this.name, this.description});
+  NavigationData({this.id, this.name, this.description, this.video});
 
   NavigationData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     description = json['description'];
+    video = json['video'];
   }
 
   Map<String, dynamic> toJson() {
@@ -45,6 +47,7 @@ class NavigationData {
     data['id'] = this.id;
     data['name'] = this.name;
     data['description'] = this.description;
+    data['video'] = this.video;
     return data;
   }
 }

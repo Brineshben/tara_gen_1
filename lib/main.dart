@@ -8,6 +8,7 @@ import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
 import 'Utils/api_constant.dart';
 import 'View/Login_Page/login.dart';
+import 'View/Splash/Loading_Splash.dart';
 
 late List<CameraDescription> cameras;
 
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Tara',
        debugShowCheckedModeBanner: false,
-       home: LoginPage(),
+       home: LoadingSplash(),
       ),
     );
   }

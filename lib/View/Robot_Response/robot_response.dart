@@ -20,6 +20,7 @@ import '../../Controller/EnquiryListController.dart';
 import '../../Controller/EnquirySubListModel.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
+import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
 import '../../Utils/api_constant.dart';
 import '../../Utils/colors.dart';
@@ -62,6 +63,7 @@ class _RobotResponseState extends State<RobotResponse>
       print("Timer");
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      Get.find<BatteryOfflineController>().fetchOfflineBattery();
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
       if (isBatteryscreen ?? false) {
@@ -137,8 +139,8 @@ class _RobotResponseState extends State<RobotResponse>
                     GetX<BatteryController>(
                       builder: (BatteryController controller) {
                         Color? roboColor;
-                        int? batteryLevel;
-                        String? data;
+                        // int? batteryLevel;
+                        // String? data;
                         String? quality;
                         bool? brake;
                         bool? EmergencyStop;
@@ -154,14 +156,14 @@ class _RobotResponseState extends State<RobotResponse>
                                   : Colors.red
                               : null;
 
-                          batteryLevel = int.tryParse(controller.background
-                                      .value?.data?.first.robot?.batteryStatus
-                                      .toString() ??
-                                  '0') ??
-                              0;
-                          data = controller.background.value?.data?.first.robot
-                                  ?.batteryStatus ??
-                              "";
+                          // batteryLevel = int.tryParse(controller.background
+                          //     .value?.data?.first.robot?.batteryStatus
+                          //     .toString() ??
+                          //     '0') ??
+                          //     0;
+                          // data = controller.background.value?.data?.first.robot
+                          //     ?.batteryStatus ??
+                          //     "";
                           quality = controller.background.value?.data?.first
                                   .robot?.quality ??
                               "";
@@ -179,11 +181,11 @@ class _RobotResponseState extends State<RobotResponse>
                               children: [
                                 GestureDetector(
                                   onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return LoadingSplash();
-                                      },
-                                    ));
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => LoadingSplash(),
+                                        ));
                                   },
                                   child: Container(
                                     margin: EdgeInsets.only(
@@ -247,32 +249,57 @@ class _RobotResponseState extends State<RobotResponse>
                                   ),
                               ],
                             ),
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 20.w, top: 40.h, right: 10.w),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Row(
-                                    children: [
-                                      BatteryIcon(
-                                        batteryLevel: batteryLevel ?? 0,
-                                      ), // Updated widget
+                            GetX<BatteryOfflineController>(
+                              builder: (BatteryOfflineController controller) {
+                                int? batteryLevel;
+                                String? data;
 
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(
-                                        data ?? "",
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 20.h),
+                                // if (controller.background.value?.rB3
+                                //     ?.batteryStatus?.isNotEmpty ??
+                                //     false) {
+                                data = controller.background.value?.data?.rB3
+                                        ?.batteryStatus ??
+                                    "0";
+                                batteryLevel = int.tryParse(controller
+                                            .background
+                                            .value
+                                            ?.data
+                                            ?.rB3
+                                            ?.batteryStatus
+                                            .toString() ??
+                                        '0') ??
+                                    0;
+                                print("batettegdshgfcdshuf$batteryLevel");
+
+                                // }
+                                return Container(
+                                  margin: EdgeInsets.only(
+                                      left: 20.w, top: 40.h, right: 10.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          BatteryIcon(
+                                            batteryLevel: batteryLevel ?? 0,
+                                          ), // Updated widget
+
+                                          SizedBox(
+                                            width: 5,
+                                          ),
+                                          Text(
+                                            "$data %" ?? "0",
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 20.h),
+                                          )
+                                        ],
                                       )
                                     ],
-                                  )
-                                ],
-                              ),
+                                  ),
+                                );
+                              },
                             ),
                           ],
                         );
@@ -484,6 +511,22 @@ class _RobotResponseState extends State<RobotResponse>
                                         // )
                                       ],
                                     ),
+                                  if(controller.text.value?.text != "" && listening == true  )
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          controller.text.value?.text ?? "",
+                                          style: TextStyle(fontSize: 18,color: Colors.white),
+                                        ),
+                                      ),
+                                    )
+                                  else if (speaking==true|| waiting==true )
+                                    SizedBox(),
                                 ],
                               ),
                             );

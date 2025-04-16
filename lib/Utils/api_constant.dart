@@ -111,7 +111,7 @@ class ApiConstants {
     _baseUrl1 = newUrl; // Update in memory
   }
 
-  static String baseUrl = "https://anumolm403.pythonanywhere.com";
+  static String baseUrl = "http://54.163.176.141/";
 
   ///offline
   static String poweroffoffline = "/update-reboot-status/";
@@ -138,6 +138,7 @@ class ApiConstants {
   static String customerDetails = "/robot/customer/edit/";
   static String updateStatus = "/accounts/video/update/";
   static String battery = "/robot/sale/user/list/";
+  static String batteryOffline = "/robot-battery/list/";
   static String loading = "/status/";
   static String enquiryList = "/enquiry/list/enquiries/?user_id=";
   static String navigate = "/enquiry/navigation/list/";

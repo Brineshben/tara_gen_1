@@ -32,9 +32,7 @@ class _AddDescriptionState extends State<AddDescription> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery
-        .of(context)
-        .size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -80,9 +78,7 @@ class _AddDescriptionState extends State<AddDescription> {
                             //     spreadRadius: 0,
                             //   ),
                             // ],
-                            borderRadius: BorderRadius
-                                .circular(15)
-                                .r),
+                            borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
                           color: Colors.grey,
@@ -109,7 +105,7 @@ class _AddDescriptionState extends State<AddDescription> {
                   builder: (NavigateDescriptionController controller) {
                     return ListView.builder(
                       padding:
-                      EdgeInsets.only(left: 150, right: 150, bottom: 1),
+                          EdgeInsets.only(left: 150, right: 150, bottom: 1),
                       itemCount: controller.DataList.length,
                       itemBuilder: (context, index) {
                         return Card(
@@ -120,15 +116,14 @@ class _AddDescriptionState extends State<AddDescription> {
                             elevation: 2,
                             child: ExpansionTile(
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15),
-                                side: BorderSide.none),
+                                  borderRadius: BorderRadius.circular(15),
+                                  side: BorderSide.none),
                               collapsedShape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(15),
                                   side: BorderSide.none),
                               title: Center(
                                 child: Text(
-                                    "${controller.DataList[index]?.name
-                                        ?.toUpperCase()}",
+                                    "${controller.DataList[index]?.name?.toUpperCase()}",
                                     style: TextStyle(
                                         fontSize: 20.h,
                                         fontWeight: FontWeight.w800,
@@ -157,7 +152,7 @@ class _AddDescriptionState extends State<AddDescription> {
                                   padding: EdgeInsets.all(16),
                                   child: Column(
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text("DESCRIPTION",
                                           style: TextStyle(
@@ -168,25 +163,25 @@ class _AddDescriptionState extends State<AddDescription> {
                                         height: size.height * 0.1,
                                         child: TextFormField(
                                           controller:
-                                          controller.textControllers[index],
+                                              controller.textControllers[index],
                                           style: const TextStyle(
                                               color: Colors.white),
                                           minLines: 1,
                                           validator: (val) =>
-                                          val!.trim().isEmpty
-                                              ? 'Please Enter Description.'
-                                              : null,
+                                              val!.trim().isEmpty
+                                                  ? 'Please Enter Description.'
+                                                  : null,
                                           decoration: InputDecoration(
                                               hintStyle: const TextStyle(
                                                   color: Colors.white38),
                                               contentPadding:
-                                              EdgeInsets.symmetric(
-                                                  vertical: 10.h,
-                                                  horizontal: 10.w),
+                                                  EdgeInsets.symmetric(
+                                                      vertical: 10.h,
+                                                      horizontal: 10.w),
                                               hintText: "Enter Description  ",
                                               border: OutlineInputBorder(
                                                 borderRadius:
-                                                const BorderRadius.all(
+                                                    const BorderRadius.all(
                                                   Radius.circular(10.0),
                                                 ).r,
                                               ),
@@ -195,17 +190,17 @@ class _AddDescriptionState extends State<AddDescription> {
                                                     color: Colors.blue,
                                                     width: 1.0),
                                                 borderRadius:
-                                                const BorderRadius.all(
-                                                    Radius.circular(10))
-                                                    .r,
+                                                    const BorderRadius.all(
+                                                            Radius.circular(10))
+                                                        .r,
                                               ),
                                               focusedBorder: OutlineInputBorder(
                                                 borderSide: const BorderSide(
                                                     color: Colors.blue,
                                                     width: 1.0),
                                                 borderRadius: const BorderRadius
-                                                    .all(
-                                                    Radius.circular(10.0))
+                                                        .all(
+                                                        Radius.circular(10.0))
                                                     .r,
                                               ),
                                               fillColor: Colors.blueGrey[900],
@@ -215,50 +210,65 @@ class _AddDescriptionState extends State<AddDescription> {
                                       ),
                                       Row(
                                         mainAxisAlignment:
-                                        MainAxisAlignment.end,
+                                            MainAxisAlignment.end,
                                         children: [
-                                          GestureDetector(
-
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 4),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      ColorUtils
-                                                          .userdetailcolor,
-                                                      ColorUtils.userdetailcolor
-                                                    ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
+                                          controller.DataList[index]?.video !=
+                                                  null
+                                              ? GestureDetector(
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 4),
+                                                    child: Container(
+                                                      decoration: BoxDecoration(
+                                                        gradient:
+                                                            LinearGradient(
+                                                          colors: [
+                                                            ColorUtils
+                                                                .userdetailcolor,
+                                                            ColorUtils
+                                                                .userdetailcolor
+                                                          ],
+                                                          begin:
+                                                              Alignment.topLeft,
+                                                          end: Alignment
+                                                              .bottomRight,
+                                                        ),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20.r),
+                                                      ),
+                                                      width: 40.w,
+                                                      height: 40.h,
+                                                      child: Center(
+                                                        child: Text(
+                                                          'PLAY VIDEO',
+                                                          style:
+                                                              GoogleFonts.inter(
+                                                                  color: Colors
+                                                                      .white,
+                                                                  fontSize:
+                                                                      16.h,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
-                                                  borderRadius:
-                                                  BorderRadius.circular(20.r),
-                                                ),
-                                                width: 40.w,
-                                                height: 40.h,
-                                                child: Center(
-                                                  child: Text(
-                                                    'PLAY VIDEO',
-                                                    style: GoogleFonts.inter(
-                                                        color: Colors.white,
-                                                        fontSize: 16.h,
-                                                        fontWeight:
-                                                        FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                           onTap: (){
-                                             _showVideoDialog(context);
-                                           },
+                                                  onTap: () {
+                                                    _showVideoDialog(context,
+                                                        "${controller.DataList[index]?.video}");
+                                                  },
+                                                )
+                                              : SizedBox(),
+                                          SizedBox(
+                                            width: 10,
                                           ),
                                           GestureDetector(
-
                                             child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 4),
+                                              padding:
+                                                  const EdgeInsets.only(top: 4),
                                               child: Container(
                                                 decoration: BoxDecoration(
                                                   gradient: LinearGradient(
@@ -271,7 +281,8 @@ class _AddDescriptionState extends State<AddDescription> {
                                                     end: Alignment.bottomRight,
                                                   ),
                                                   borderRadius:
-                                                  BorderRadius.circular(20.r),
+                                                      BorderRadius.circular(
+                                                          20.r),
                                                 ),
                                                 width: 40.w,
                                                 height: 40.h,
@@ -282,19 +293,24 @@ class _AddDescriptionState extends State<AddDescription> {
                                                         color: Colors.white,
                                                         fontSize: 16.h,
                                                         fontWeight:
-                                                        FontWeight.bold),
+                                                            FontWeight.bold),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             onTap: () async {
                                               Map<String, dynamic> resp =
-                                              await ApiServices
-                                                  .navigateDescriptionSubmit(
-                                                  data: controller
-                                                      .textControllers[index]
-                                                      .text, userId: controller
-                                                  .DataList[index]?.id ?? 0);
+                                                  await ApiServices
+                                                      .navigateDescriptionSubmit(
+                                                          data: controller
+                                                              .textControllers[
+                                                                  index]
+                                                              .text,
+                                                          userId: controller
+                                                                  .DataList[
+                                                                      index]
+                                                                  ?.id ??
+                                                              0);
 
                                               if (resp['status'] == 'ok') {
                                                 ProductAppPopUps.submit(
@@ -307,7 +323,8 @@ class _AddDescriptionState extends State<AddDescription> {
                                               } else {
                                                 ProductAppPopUps.submit(
                                                   title: "FAILED",
-                                                  message: "Something went wrong.",
+                                                  message:
+                                                      "Something went wrong.",
                                                   actionName: "Close",
                                                   iconData: Icons.info_outline,
                                                   iconColor: Colors.red,
@@ -331,55 +348,54 @@ class _AddDescriptionState extends State<AddDescription> {
           ),
         ],
       ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.only(
-              left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Colors.red,
-                      Colors.red
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(
-                      10), // Ensure proper border radius
-                ),
-                child: Material(
-                  color: Colors.transparent, // Ensure the gradient is visible
-                  borderRadius: BorderRadius.circular(10),
-                  child: FloatingActionButton.extended(
-                    backgroundColor: Colors.transparent,
-                    onPressed: () {
-                      _showVideoDialog(context);
-                    },
-                    icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                    label: Text("EXIT APP",
-                        style: GoogleFonts.orbitron(
-                          color: Colors.white,
-                          fontSize: 18.h,
-                          fontWeight: FontWeight.bold,
-                        )),
-                  ),
-                ),
-              ),
-
-            ],
-          ),
-        )
-
+      // floatingActionButton: Container(
+      //   margin: EdgeInsets.only(
+      //       left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
+      //   child: Row(
+      //     mainAxisAlignment: MainAxisAlignment.end,
+      //     children: [
+      //       Container(
+      //         decoration: BoxDecoration(
+      //           gradient: LinearGradient(
+      //             colors: [
+      //               Colors.red,
+      //               Colors.red
+      //             ],
+      //             begin: Alignment.topLeft,
+      //             end: Alignment.bottomRight,
+      //           ),
+      //           borderRadius: BorderRadius.circular(
+      //               10), // Ensure proper border radius
+      //         ),
+      //         child: Material(
+      //           color: Colors.transparent, // Ensure the gradient is visible
+      //           borderRadius: BorderRadius.circular(10),
+      //           child: FloatingActionButton.extended(
+      //             backgroundColor: Colors.transparent,
+      //             onPressed: () {
+      //               _showVideoDialog(context);
+      //             },
+      //             icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+      //             label: Text("EXIT APP",
+      //                 style: GoogleFonts.orbitron(
+      //                   color: Colors.white,
+      //                   fontSize: 18.h,
+      //                   fontWeight: FontWeight.bold,
+      //                 )),
+      //           ),
+      //         ),
+      //       ),
+      //
+      //     ],
+      //   ),
+      // )
     );
-
   }
 }
-void _showVideoDialog(BuildContext context) {
+
+void _showVideoDialog(BuildContext context, String video) {
   showDialog(
     context: context,
-    builder: (context) => VideoDialog(),
+    builder: (context) => VideoDialog(video),
   );
 }

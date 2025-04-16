@@ -4,6 +4,9 @@ import 'package:video_player/video_player.dart';
 
 
 class VideoDialog extends StatefulWidget {
+   final  String vedio;
+
+  VideoDialog( this.vedio);
 
   @override
   _VideoDialogState createState() => _VideoDialogState();
@@ -16,7 +19,7 @@ class _VideoDialogState extends State<VideoDialog> {
   void initState() {
     super.initState();
     _controller = VideoPlayerController.network(
-      'https://www.learningcontainer.com/wp-content/uploads/2020/05/sample-mp4-file.mp4',
+      widget.vedio,
     )..initialize().then((_) {
       if (mounted) {
         setState(() {});

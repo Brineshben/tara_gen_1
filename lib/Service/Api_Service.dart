@@ -229,6 +229,20 @@ class ApiServices {
     return json.decode(respString);
   }
 
+  ///check battery offline
+
+  static Future<Map<String, dynamic>> batteryOffline() async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.batteryOffline}";
+    print("urlllllsddlll$url");
+
+    var request = http.Request('GET', Uri.parse(url));
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print("urlllllsddlll$respString");
+
+    return json.decode(respString);
+  }
+
   ///check loading
 
   static Future<Map<String, dynamic>> loading() async {

@@ -11,6 +11,7 @@ class RobotresponseapiController extends GetxController {
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<Data> responseData = Data().obs;
+  Rx<robotResponseModel?> text = Rx(null);
 
 
   void resetStatus() {
@@ -30,6 +31,8 @@ class RobotresponseapiController extends GetxController {
       if (resp['status']== "OK") {
 
         robotResponseModel observationResultApiModel = robotResponseModel.fromJson(resp);
+
+        text.value=observationResultApiModel;
         responseData.value = observationResultApiModel.data!;
         isLoaded.value = true;
       }
