@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Service/sharedPreference.dart';
 import 'package:ihub/View/Robot_Response/robot_response.dart';
 import 'package:lottie/lottie.dart';
 
@@ -36,6 +37,13 @@ class BatteryController extends GetxController {
       if (resp['status'] == "ok") {
         print("--------Responsessssss: $resp-------");
         BatteryModel batteryData = BatteryModel.fromJson(resp);
+
+        print(batteryData.data?.first.robot?.id);
+
+        final roboId = batteryData.data?.first.robot?.id;
+        if (roboId != null) {
+          await SharedPrefs().storeRoboId(roboId);
+        }
         print("background.value: ${batteryData}");
 
         background.value = batteryData;
@@ -246,10 +254,8 @@ class BatteryController extends GetxController {
 
         bool? charge = background.value?.data?.first.robot?.charging;
         if (charge == true) {
-
           return true;
         } else {
-
           return false;
         }
 

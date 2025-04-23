@@ -56,6 +56,11 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+
 }
 
 flutter {
@@ -64,3 +69,6 @@ flutter {
 dependencies {
     implementation fileTree(dir: 'libs', include:['*.jar'])
 }
+
+
+

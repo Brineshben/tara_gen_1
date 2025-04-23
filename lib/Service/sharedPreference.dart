@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +5,6 @@ import 'package:get_it/get_it.dart';
 
 import '../Model/ipadressModel.dart';
 import '../Model/login_model.dart';
-
 
 class SharedPrefs {
   final _getIt = GetIt.instance;
@@ -23,6 +21,7 @@ class SharedPrefs {
     _prefs = await SharedPreferences.getInstance();
     _getIt.registerSingleton<SharedPrefs>(this);
   }
+
   Future<bool> setLoginData(LoginModel loginApi) async {
     Map<String, dynamic> api = loginApi.toJson();
     String encodedData = json.encode(api);
@@ -75,5 +74,20 @@ class SharedPrefs {
     final prefs = sharedPrefs.prefs;
     bool done = await prefs.remove("IpAddress");
     return done;
+  }
+
+  // store id
+  Future storeRoboId(int id) async {
+    final sharedPrefs = GetIt.instance<SharedPrefs>();
+    final prefs = sharedPrefs.prefs;
+    prefs.setInt("roboId", id);
+  }
+
+  // get robot id
+  Future<int?> getRobotdId() async {
+    final sharedPrefs = GetIt.instance<SharedPrefs>();
+    final prefs = sharedPrefs.prefs;
+    int? id = prefs.getInt("roboId");
+    return id;
   }
 }

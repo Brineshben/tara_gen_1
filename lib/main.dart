@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ihub/View/Settings/About_robot.dart';
 import 'Controller/Login_api_controller.dart';
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
@@ -13,18 +14,15 @@ import 'View/Splash/Loading_Splash.dart';
 late List<CameraDescription> cameras;
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await ApiConstants.loadBaseUrl1();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
-  SystemChrome.setPreferredOrientations(
-      [
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]
-  );
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,
+    DeviceOrientation.landscapeRight,
+  ]);
   cameras = await availableCameras();
   final sharedPrefs = SharedPrefs();
   await sharedPrefs.initialize();
@@ -43,10 +41,9 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       child: GetMaterialApp(
         title: 'Tara',
-       debugShowCheckedModeBanner: false,
-       home: LoadingSplash(),
+        debugShowCheckedModeBanner: false,
+        home: AboutRobot(),
       ),
     );
   }
 }
-

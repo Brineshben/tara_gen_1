@@ -111,7 +111,8 @@ class ApiConstants {
     _baseUrl1 = newUrl; // Update in memory
   }
 
-  static String baseUrl = "http://54.163.176.141/";
+  // static String baseUrl = "http://54.163.176.141/";
+  static String baseUrl = "http://54.211.212.147/";
 
   ///offline
   static String poweroffoffline = "/update-reboot-status/";
@@ -163,11 +164,19 @@ class ApiConstants {
 /// Function to fetch the IP address from API and update baseUrl1
 Future<void> fetchAndUpdateBaseUrl() async {
   try {
-    String data =Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? "";
+    String data = Get.find<BatteryController>()
+            .background
+            .value
+            ?.data
+            ?.first
+            .robot
+            ?.roboId ??
+        "";
     print("objectresponse$data");
 
     String url =
         "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
+
     final response = await http.get(Uri.parse(
         "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
     print("objectresponse$url");

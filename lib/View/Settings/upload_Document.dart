@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:ihub/Service/sharedPreference.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
@@ -52,24 +53,31 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       return;
     }
 
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('https://anumolm403.pythonanywhere.com/enquiry/upload-stcm/'),
-    );
+    int? id = await SharedPrefs().getRobotdId();
 
-    request.files.add(
-      await http.MultipartFile.fromPath('file', _selectedFile!.path),
-    );
+    if (id != null) {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse(
+            'https://anumolm403.pythonanywhere.com/enquiry/upload-stcm/$id'),
+      );
 
-    var response = await request.send();
-    if (response.statusCode == 201) {
-      setState(() {
-        _statusMessage = "File uploaded successfully!";
-      });
+      request.files.add(
+        await http.MultipartFile.fromPath('file', _selectedFile!.path),
+      );
+
+      var response = await request.send();
+      if (response.statusCode == 201) {
+        setState(() {
+          _statusMessage = "File uploaded successfully!";
+        });
+      } else {
+        setState(() {
+          _statusMessage = "File upload failed! Status: ${response.statusCode}";
+        });
+      }
     } else {
-      setState(() {
-        _statusMessage = "File upload failed! Status: ${response.statusCode}";
-      });
+      print('Robot ID is null. Cannot upload STCM.');
     }
   }
 
@@ -101,7 +109,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20,top: 20),
+                padding: const EdgeInsets.only(left: 20, top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -186,9 +194,9 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                           child: buildInfoCardRed(size, 'DELETE MAP'),
                           onTap: () async {
                             print("dsjfjdgijf");
-                            try{
+                            try {
                               Map<String, dynamic> resp =
-                              await ApiServices.deleteFile(status: true);
+                                  await ApiServices.deleteFile(status: true);
                               if (resp['status'] == true) {
                                 FocusManager.instance.primaryFocus?.unfocus();
                                 ProductAppPopUps.submit(
@@ -207,7 +215,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                   iconColor: Colors.red,
                                 );
                               }
-                            }catch (e){
+                            } catch (e) {
                               ProductAppPopUps.submit(
                                 title: "Failed",
                                 message: "Response not Received",
@@ -216,7 +224,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                 iconColor: Colors.red,
                               );
                             }
-
                           },
                         ),
                       ),
