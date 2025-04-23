@@ -54,7 +54,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('https://anumolm403.pythonanywhere.com/enquiry/upload-stcm/'),
+      Uri.parse('https://anumolm403.pythonanywhere.com/enquiry/upload-stcm/RB3/'),
     );
 
     request.files.add(

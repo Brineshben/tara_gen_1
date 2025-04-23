@@ -111,7 +111,7 @@ class ApiConstants {
     _baseUrl1 = newUrl; // Update in memory
   }
 
-  static String baseUrl = "http://54.163.176.141/";
+  static String baseUrl = "http://54.163.176.141";
 
   ///offline
   static String poweroffoffline = "/update-reboot-status/";
@@ -161,16 +161,18 @@ class ApiConstants {
 }
 
 /// Function to fetch the IP address from API and update baseUrl1
+/// Function to fetch the IP address from API and update baseUrl1
+/// Function to fetch the IP address from API and update baseUrl1
 Future<void> fetchAndUpdateBaseUrl() async {
   try {
     String data =Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? "";
     print("objectresponse$data");
 
     String url =
-        "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
+        "http://54.163.176.141/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
     final response = await http.get(Uri.parse(
-        "https://anumolm403.pythonanywhere.com/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
-    print("objectresponse$url");
+        "http://54.163.176.141/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
+    print("objectresfgdfghponse$url");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       String? ipAddress = jsonResponse['data']['ip_address'];

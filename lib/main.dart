@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Tara',
        debugShowCheckedModeBanner: false,
-       home: LoadingSplash(),
+       home: LoginPage(),
       ),
     );
   }
