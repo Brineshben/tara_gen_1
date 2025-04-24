@@ -50,17 +50,17 @@ class Passwordcontroller extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-      Get.snackbar(
-        'Failed', // Title
-        'Api Issue in Password', // Message
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.blueGrey,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 3), // Auto dismiss time
-        icon: Icon(Icons.check_circle, color: Colors.white),
-      );
+      // Get.snackbar(
+      //   'Failed', // Title
+      //   'Api Issue in Password', // Message
+      //   snackPosition: SnackPosition.BOTTOM,
+      //   backgroundColor: Colors.blueGrey,
+      //   colorText: Colors.white,
+      //   borderRadius: 10,
+      //   margin: EdgeInsets.all(10),
+      //   duration: Duration(seconds: 3), // Auto dismiss time
+      //   icon: Icon(Icons.check_circle, color: Colors.white),
+      // );
 
       print("Error fetching battery data: $e");
     } finally {

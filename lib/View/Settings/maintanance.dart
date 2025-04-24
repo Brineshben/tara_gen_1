@@ -16,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/battery_Controller.dart';
 import '../../Service/Api_Service.dart';
+import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../Home_Screen/home_page.dart';
@@ -158,12 +159,18 @@ class _MaintananceState extends State<Maintanance> {
                           width: 10,
                         ),
                         Center(
-                          child: Text(
-                            "SETTINGS",
-                            style: GoogleFonts.oxygen(
-                                color: Colors.white,
-                                fontSize: 25.h,
-                                fontWeight: FontWeight.w700),
+                          child: GestureDetector(
+                            onTap: ()async{
+                              await  SharedPrefs().removeLoginData();
+
+                            },
+                            child: Text(
+                              "SETTINGS",
+                              style: GoogleFonts.oxygen(
+                                  color: Colors.white,
+                                  fontSize: 25.h,
+                                  fontWeight: FontWeight.w700),
+                            ),
                           ),
                         ),
                       ],

@@ -28,7 +28,7 @@ class UserAuthController extends GetxController {
       {required String username, required String password}) async {
     isLoading.value = true;
     isLoaded.value = false;
-    // try {
+    try {
       Map<String, dynamic> resp =
           await ApiServices.userLogin(userName: username, psw: password);
     print("------resp------$resp");
@@ -59,23 +59,23 @@ class UserAuthController extends GetxController {
           iconColor:Colors.red,
         );
       }
-    // } catch (e) {
-    //   isLoaded.value = false;
-    //   Get.snackbar(
-    //     'Failed', // Title
-    //     'Error in Api Issue Login', // Message
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     backgroundColor: Colors.blueGrey,
-    //     colorText: Colors.white,
-    //     borderRadius: 10,
-    //     margin: EdgeInsets.all(10),
-    //     duration: Duration(seconds: 3), // Auto dismiss time
-    //     icon: Icon(Icons.check_circle, color: Colors.white),
-    //   );
-    //
-    // } finally {
-    //   resetStatus();
-    // }
+    } catch (e) {
+      isLoaded.value = false;
+      Get.snackbar(
+        'Failed', // Title
+        'Error in Api Issue Login', // Message
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.blueGrey,
+        colorText: Colors.white,
+        borderRadius: 10,
+        margin: EdgeInsets.all(10),
+        duration: Duration(seconds: 3), // Auto dismiss time
+        icon: Icon(Icons.check_circle, color: Colors.white),
+      );
+
+    } finally {
+      resetStatus();
+    }
   }
 
   Future<void> getUserLoginSaved(LoginModel loginApi) async {
