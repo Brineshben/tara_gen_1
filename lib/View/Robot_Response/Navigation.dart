@@ -116,7 +116,7 @@ class _NavigationState extends State<Navigation> {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -424,12 +424,12 @@ class _NavigationState extends State<Navigation> {
                                                     Get.dialog(
                                                       AlertDialog(
                                                         shape:
-                                                        const RoundedRectangleBorder(
+                                                            const RoundedRectangleBorder(
                                                           borderRadius:
-                                                          BorderRadius.all(
-                                                              Radius
-                                                                  .circular(
-                                                                  20.0)),
+                                                              BorderRadius.all(
+                                                                  Radius
+                                                                      .circular(
+                                                                          20.0)),
                                                         ),
                                                         title: Column(
                                                           children: [
@@ -453,8 +453,8 @@ class _NavigationState extends State<Navigation> {
                                                                     .black,
                                                                 fontSize: 20.h,
                                                                 fontWeight:
-                                                                FontWeight
-                                                                    .bold,
+                                                                    FontWeight
+                                                                        .bold,
                                                               ),
                                                             ),
                                                           ],
@@ -463,7 +463,7 @@ class _NavigationState extends State<Navigation> {
                                                           "COMMAND ALREADY RECEIVED"
                                                               .toUpperCase(),
                                                           textAlign:
-                                                          TextAlign.center,
+                                                              TextAlign.center,
                                                           style: GoogleFonts
                                                               .oxygen(
                                                             color: Colors.black,
@@ -477,19 +477,19 @@ class _NavigationState extends State<Navigation> {
                                                             seconds: 3), () {
                                                       if (Get.isDialogOpen ??
                                                           false) {
-                                                        Get.back();Get.back();
+                                                        Get.back();
+                                                        Get.back();
                                                       }
                                                     });
-
                                                   }
                                                 } catch (e) {
                                                   ProductAppPopUps.submit(
                                                     title: "FAILED",
                                                     message:
-                                                    "Something went wrong.",
+                                                        "Something went wrong.",
                                                     actionName: "Close",
                                                     iconData:
-                                                    Icons.info_outline,
+                                                        Icons.info_outline,
                                                     iconColor: Colors.red,
                                                   );
                                                   print(

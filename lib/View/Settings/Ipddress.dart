@@ -1,22 +1,14 @@
-import 'package:flutter/cupertino.dart';
-
-import 'dart:async';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'dart:math' as math;
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Ipcontroller.dart';
 import '../../Utils/api_constant.dart';
-import 'maintanance.dart';
+import 'settings.dart';
 
 class Ipaddress extends StatefulWidget {
   const Ipaddress({Key? key}) : super(key: key);
@@ -71,7 +63,7 @@ class _IpaddressState extends State<Ipaddress> {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -84,7 +76,7 @@ class _IpaddressState extends State<Ipaddress> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20,top: 20),
+                  padding: const EdgeInsets.only(left: 20, top: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -131,7 +123,6 @@ class _IpaddressState extends State<Ipaddress> {
                     child: Form(
                       key: _formKey,
                       child: Column(
-
                         children: [
                           SizedBox(
                             height: 50,
@@ -174,7 +165,8 @@ class _IpaddressState extends State<Ipaddress> {
                                   ? 'Please Enter New IP Address'
                                   : null,
                               decoration: InputDecoration(
-                                  hintStyle: const TextStyle(color: Colors.white38),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.white38),
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 10.h, horizontal: 10.w),
                                   hintText: "Enter  New IP Address",
@@ -188,9 +180,9 @@ class _IpaddressState extends State<Ipaddress> {
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
                                         color: Colors.blue, width: 1.0),
-                                    borderRadius:
-                                        const BorderRadius.all(Radius.circular(10))
-                                            .r,
+                                    borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))
+                                        .r,
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
@@ -209,10 +201,9 @@ class _IpaddressState extends State<Ipaddress> {
                           ),
                           Material(
                             color: Colors.transparent,
-
                             child: InkWell(
                               splashColor: Colors.white,
-                              highlightColor:Colors.white.withOpacity(0.3),
+                              highlightColor: Colors.white.withOpacity(0.3),
                               borderRadius: BorderRadius.circular(20.r),
                               onTap: () async {
                                 if (_formKey.currentState!.validate()) {

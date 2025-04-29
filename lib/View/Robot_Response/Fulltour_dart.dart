@@ -2,19 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Service/Api_Service.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/FulltourController.dart';
-import '../../Model/AddEmployeeDetailsModel.dart';
 import '../../Model/Navigate_model.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import '../Settings/maintanance.dart';
+import '../Settings/settings.dart';
 
 class ListAnimationdData extends StatefulWidget {
   @override
@@ -43,7 +39,8 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
             builder: (BackgroudController controller) {
               return Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl: controller.background.value?.backgroundImage ?? "",
+                  imageUrl:
+                      controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -58,7 +55,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 20,top: 20),
+                padding: const EdgeInsets.only(left: 20, top: 20),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -124,7 +121,8 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                     Get.find<FullTourControllerNew>();
                                 return controller.dataNavigation.isNotEmpty
                                     ? ListView.builder(
-                                        itemCount: controller.dataNavigation.length,
+                                        itemCount:
+                                            controller.dataNavigation.length,
                                         itemBuilder: (context, index) {
                                           final item =
                                               controller.dataNavigation[index];
@@ -134,15 +132,15 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                               color: Colors.transparent,
                                               child: InkWell(
                                                 splashColor: Colors.white,
-                                                highlightColor:
-                                                    Colors.white.withOpacity(0.3),
+                                                highlightColor: Colors.white
+                                                    .withOpacity(0.3),
                                                 borderRadius:
                                                     BorderRadius.circular(20.r),
                                                 onTap: () {
                                                   controller.addData(item);
                                                 },
-                                                child: buildInfoCard(
-                                                    size, item.name ?? "No Name"),
+                                                child: buildInfoCard(size,
+                                                    item.name ?? "No Name"),
                                               ),
                                             ),
                                           );
@@ -160,10 +158,11 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                           ],
                         ),
                       ),
-                
+
                       // Vertical Divider
-                      VerticalDivider(thickness: 0.5, color: Colors.grey, width: 30),
-                
+                      VerticalDivider(
+                          thickness: 0.5, color: Colors.grey, width: 30),
+
                       // Right List (Selected Items with Animation)
                       Expanded(
                         child: Column(
@@ -181,15 +180,15 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                               child: Obx(() {
                                 FullTourControllerNew controller =
                                     Get.find<FullTourControllerNew>();
-                
+
                                 return controller.newDataNavigation.isNotEmpty
                                     ? ListView.builder(
                                         itemCount:
                                             controller.newDataNavigation.length,
                                         itemBuilder: (context, index) {
-                                          final item =
-                                              controller.newDataNavigation[index];
-                
+                                          final item = controller
+                                              .newDataNavigation[index];
+
                                           return Material(
                                             color: Colors.transparent,
                                             child: InkWell(
@@ -246,9 +245,10 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                       Map<String, dynamic> resp =
                                           await ApiServices.navigationSubmit(
                                               navigationData: dataz);
-                
+
                                       if (resp['status'] == "ok") {
-                                        FocusManager.instance.primaryFocus?.unfocus();
+                                        FocusManager.instance.primaryFocus
+                                            ?.unfocus();
                                         ProductAppPopUps.submit2back(
                                           title: "SUCCESS",
                                           message: resp['message'].toString(),

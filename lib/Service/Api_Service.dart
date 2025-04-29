@@ -154,20 +154,53 @@ class ApiServices {
   }
 
   ///check background
+  // static Future<Map<String, dynamic>> background({
+  //   required int userId,
+  // }) async {
+  //   try {
+  //     String url = "${ApiConstants.baseUrl}${ApiConstants.backGround}$userId/";
+  //     print("backgrounddata$url");
+  //     var request = http.Request('GET', Uri.parse(url));
+  //     request.headers.addAll(
+  //       {'Content-Type': 'application/json'},
+  //     );
+  //     var response = await request.send();
+  //     print("response---------------- $response");
+  //     var respString = await response.stream.bytesToString();
+  //     // print('bbbbbbbbbbbbbbbb ${json.decode(respString)}');
+  //     return json.decode(respString);
+  //   } catch (e) {
+  //     print('bgerror $e');
+  //     throw (e);
+  //   }
+  // }try {
+//       var request = http.Request('GET', Uri.parse(url));
+//       request.headers.addAll({'Authorization': "Bearer $token"});
+//       http.StreamedResponse response = await request.send();
+//       print('consultDoctorList------>${response}');
 
-  static Future<Map<String, dynamic>> background({
-    required int userId,
-  }) async {
+//       var respString = await response.stream.bytesToString();
+//       return json.decode(respString);
+//     } catch (e) {
+//       throw Exception("Service Error consultDoctorList");
+//     }
+
+  static Future<Map<String, dynamic>> background({required int userId}) async {
     String url = "${ApiConstants.baseUrl}${ApiConstants.backGround}$userId/";
-    print("backgrounddata$url");
-    var request = http.Request('GET', Uri.parse(url));
-    http.StreamedResponse response = await request.send();
-    var respString = await response.stream.bytesToString();
-    return json.decode(respString);
+    print("backgrounddata $url");
+    try {
+      var request = http.Request('GET', Uri.parse(url));
+      http.StreamedResponse response = await request.send();
+      print('backgroung------>${response}');
+      var respString = await response.stream.bytesToString();
+      return json.decode(respString);
+    } catch (e) {
+      print('bgerror $e');
+      throw (e);
+    }
   }
 
   ///check Customerdetails
-
   static Future<Map<String, dynamic>> customerDetails({
     required String sessionId,
     required String userName,
@@ -226,6 +259,8 @@ class ApiServices {
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+
+    print('service ressssssssspo ${respString}');
     return json.decode(respString);
   }
 
@@ -246,12 +281,17 @@ class ApiServices {
   ///check loading
 
   static Future<Map<String, dynamic>> loading() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.loading}";
-    print("urllllllll$url");
-    var request = http.Request('GET', Uri.parse(url));
-    http.StreamedResponse response = await request.send();
-    var respString = await response.stream.bytesToString();
-    return json.decode(respString);
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.loading}";
+      print("urllllllll  $url");
+      var request = http.Request('GET', Uri.parse(url));
+      http.StreamedResponse response = await request.send();
+      var respString = await response.stream.bytesToString();
+      print(json.decode(respString));
+      return json.decode(respString);
+    } catch (e) {
+      throw (e);
+    }
   }
 
   ///check EnquiryList
@@ -359,7 +399,8 @@ class ApiServices {
   }) async {
     // String url =
     //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
+    String url =
+        "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {
       "description": data,
     };

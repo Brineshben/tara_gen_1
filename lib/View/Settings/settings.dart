@@ -1,17 +1,19 @@
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:android_intent_plus/android_intent.dart';
-import 'package:android_intent_plus/flag.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/Login_api_controller.dart';
+import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/battery_Controller.dart';
@@ -19,16 +21,11 @@ import '../../Service/Api_Service.dart';
 import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import '../Home_Screen/home_page.dart';
-import '../Login_Page/login.dart';
+import '../Login_Page/login.dart' as login_page;
 import '../Robot_Response/Fulltour_dart.dart';
-import 'About_robot.dart';
 import 'Add_Description.dart';
-import 'Add_Employee.dart';
 import 'ApiKey.dart';
-import 'Ipddress.dart';
 import 'Volume_page.dart';
-import 'otp_page.dart';
 
 class Maintanance extends StatefulWidget {
   const Maintanance({Key? key}) : super(key: key);
@@ -55,7 +52,6 @@ class _MaintananceState extends State<Maintanance> {
   //     print("Error launching app: $e");
   //   }
   // }
-
 
   bool isTraining = false;
 
@@ -93,11 +89,116 @@ class _MaintananceState extends State<Maintanance> {
         SystemUiMode.immersive); // Hide status bar again
   }
 
+  File? _imageFile;
+  Future<void> _pickImage() async {
+    final pickedFile = await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+    );
+
+    if (pickedFile != null) {
+      File compressedImage = await _compressImage(File(pickedFile.path));
+
+      setState(() {
+        _imageFile = compressedImage;
+      });
+
+      _uploadImage(_imageFile!);
+    }
+  }
+
+  Future<File> _compressImage(File file) async {
+    final rawImage = img.decodeImage(await file.readAsBytes());
+    if (rawImage == null) return file;
+
+    final compressedBytes =
+        img.encodeJpg(rawImage, quality: 75); // 0-100 quality
+    final compressedFile = await file.writeAsBytes(compressedBytes);
+
+    return compressedFile;
+  }
+
+  // Future<void> _uploadImage(File imageFile) async {
+  //   try {
+  //     final url =
+  //         '${ApiConstants.baseUrl}/accounts/upload/background/${Get.find<UserAuthController>().loginData.value?.user?.id}';
+  //     print('backgroundid $url');
+
+  //     var request = http.MultipartRequest('POST', Uri.parse(url));
+
+  //     request.files.add(
+  //       await http.MultipartFile.fromPath(
+  //         'background_image',
+  //         imageFile.path,
+  //       ),
+  //     );
+
+  //     var streamedResponse = await request.send();
+  //     var response = await http.Response.fromStream(streamedResponse);
+
+  //     print('bguploadrespo ${response.body}');
+
+  //     var jsonResponse = jsonDecode(response.body);
+
+  //     if (jsonResponse['status'] == 'ok') {
+  //       Get.snackbar(
+  //         "Success",
+  //         "Background image uploaded successfully and replaced the old one",
+  //       );
+  //     } else {
+  //       Get.snackbar(
+  //         "Error",
+  //         "Image size too large. Please upload a smaller image",
+  //       );
+  //     }
+  //   } catch (e) {
+  //     print('Errorbgupload $e');
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(content: Text('something went wrong!')),
+  //     );
+  //   }
+  // }
+
+  Future<void> _uploadImage(File imageFile) async {
+    try {
+      final url =
+          '${ApiConstants.baseUrl}/accounts/upload/background/${Get.find<UserAuthController>().loginData.value?.user?.id}/';
+      print('backgroundid $url');
+
+      var request = http.MultipartRequest('POST', Uri.parse(url));
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          'background_image',
+          imageFile.path,
+        ),
+      );
+
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      debugPrint('bguploadrespo ${response.body}');
+
+      var jsonResponse = jsonDecode(response.body);
+
+      print('bgresponse $jsonResponse');
+
+      if (jsonResponse['status'] == 'ok') {
+        ProductAppPopUps.submit(
+            message: jsonResponse['message'],
+            actionName: "close",
+            iconData: Icons.check,
+            iconColor: Colors.green);
+
+        Get.find<BackgroudController>().fetchBackground(
+            Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      }
+    } catch (e) {
+      print('Errorbgupload $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
     return Scaffold(
         body: Stack(
           children: [
@@ -109,8 +210,8 @@ class _MaintananceState extends State<Maintanance> {
               builder: (BackgroudController controller) {
                 return Positioned.fill(
                   child: CachedNetworkImage(
-                    imageUrl: controller.background.value?.backgroundImage ??
-                        "",
+                    imageUrl:
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -146,9 +247,7 @@ class _MaintananceState extends State<Maintanance> {
                                 //     spreadRadius: 0,
                                 //   ),
                                 // ],
-                                borderRadius: BorderRadius
-                                    .circular(15)
-                                    .r),
+                                borderRadius: BorderRadius.circular(15).r),
                             child: Icon(
                               Icons.arrow_back_outlined,
                               color: Colors.grey,
@@ -160,9 +259,8 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         Center(
                           child: GestureDetector(
-                            onTap: ()async{
-                              await  SharedPrefs().removeLoginData();
-
+                            onTap: () async {
+                              await SharedPrefs().removeLoginData();
                             },
                             child: Text(
                               "SETTINGS",
@@ -213,11 +311,10 @@ class _MaintananceState extends State<Maintanance> {
                               Navigator.push(
                                 context,
                                 PageRouteBuilder(
-                                  transitionDuration: Duration(
-                                      milliseconds: 300),
-                                  pageBuilder:
-                                      (context, animation,
-                                      secondaryAnimation) =>
+                                  transitionDuration:
+                                      Duration(milliseconds: 300),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
                                       ApiKey(),
                                   transitionsBuilder: (context, animation,
                                       secondaryAnimation, child) {
@@ -284,6 +381,18 @@ class _MaintananceState extends State<Maintanance> {
                             splashColor: Colors.white,
                             highlightColor: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(size, 'CHANGE WALLPAPER'),
+                            onTap: () async {
+                              await _pickImage();
+                            },
+                          ),
+                        ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCard(size, 'UPLOAD MAP'),
                             onTap: () {
                               Navigator.push(
@@ -306,6 +415,22 @@ class _MaintananceState extends State<Maintanance> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => AddDescription()));
+                            },
+                          ),
+                        ),
+
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(size, 'ADD WEB LINK'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddUrlPage()));
                             },
                           ),
                         ),
@@ -365,14 +490,13 @@ class _MaintananceState extends State<Maintanance> {
                                 MaterialPageRoute(
                                   builder: (context) {
                                     return VolumeControl(
-                                      robotid: Get
-                                          .find<BatteryController>()
-                                          .background
-                                          .value
-                                          ?.data
-                                          ?.first
-                                          .robot
-                                          ?.roboId ??
+                                      robotid: Get.find<BatteryController>()
+                                              .background
+                                              .value
+                                              ?.data
+                                              ?.first
+                                              .robot
+                                              ?.roboId ??
                                           "",
                                     );
                                   },
@@ -389,12 +513,13 @@ class _MaintananceState extends State<Maintanance> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCardGREEN(size, 'RESTART'),
                             onTap: () {
-                              checkInternet2(
+                              login_page.checkInternet2(
                                 context: context,
                                 function: () async {
                                   try {
                                     Map<String, dynamic> resp =
-                                    await ApiServices.logoutoffline(true).timeout(Duration(seconds: 3));
+                                        await ApiServices.logoutoffline(true)
+                                            .timeout(Duration(seconds: 3));
                                     if (resp['message'] ==
                                         "Reboot status updated") {
                                       FocusManager.instance.primaryFocus
@@ -440,8 +565,8 @@ class _MaintananceState extends State<Maintanance> {
                             onTap: () async {
                               try {
                                 Map<String, dynamic> resp =
-                                await ApiServices.logout()
-                                    .timeout(Duration(seconds: 3));
+                                    await ApiServices.logout()
+                                        .timeout(Duration(seconds: 3));
                                 print("POWERPOWERPOWER$resp");
                                 if (resp['message'] == "Robot turned OFF") {
                                   FocusManager.instance.primaryFocus?.unfocus();
@@ -462,7 +587,7 @@ class _MaintananceState extends State<Maintanance> {
                                     iconColor: Colors.red,
                                   );
                                 }
-                              } catch (e){
+                              } catch (e) {
                                 ProductAppPopUps.submit(
                                   title: "FAILED",
                                   message: "Something went wrong.",
@@ -474,7 +599,6 @@ class _MaintananceState extends State<Maintanance> {
                             },
                           ),
                         ),
-
                       ],
                     ),
                   )
@@ -492,15 +616,12 @@ class _MaintananceState extends State<Maintanance> {
               Container(
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: [
-                      Colors.red,
-                      Colors.red
-                    ],
+                    colors: [Colors.red, Colors.red],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
-                  borderRadius: BorderRadius.circular(
-                      10), // Ensure proper border radius
+                  borderRadius:
+                      BorderRadius.circular(10), // Ensure proper border radius
                 ),
                 child: Material(
                   color: Colors.transparent, // Ensure the gradient is visible
@@ -520,12 +641,9 @@ class _MaintananceState extends State<Maintanance> {
                   ),
                 ),
               ),
-
             ],
           ),
-        )
-
-    );
+        ));
   }
 }
 

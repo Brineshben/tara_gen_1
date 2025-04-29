@@ -1,43 +1,46 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ihub/Service/url_service.dart';
 
 import '../Model/robot_Response_Model.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class RobotresponseapiController extends GetxController {
-
   RxBool isLoading = false.obs;
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<Data> responseData = Data().obs;
   Rx<robotResponseModel?> text = Rx(null);
 
-
   void resetStatus() {
     isLoading.value = false;
     isError.value = false;
   }
 
+  RxString link = ''.obs;
+  RxString name = ''.obs;
 
+  getUrl() async {
+    Map<String, dynamic> responce = await UrlService.getUrls();
+    if (responce['status'] == "ok") {
+      link.value = responce["data"]['url'];
+      name.value = responce["data"]['name'];
+    }
+  }
 
   Future<void> fetchObsResultList() async {
-
     isLoading.value = true;
     isLoaded.value = false;
     try {
-
       Map<String, dynamic> resp = await ApiServices.robotResponsee();
-      if (resp['status']== "OK") {
+      if (resp['status'] == "OK") {
+        robotResponseModel observationResultApiModel =
+            robotResponseModel.fromJson(resp);
 
-        robotResponseModel observationResultApiModel = robotResponseModel.fromJson(resp);
-
-        text.value=observationResultApiModel;
+        text.value = observationResultApiModel;
         responseData.value = observationResultApiModel.data!;
         isLoaded.value = true;
       }
     } catch (e) {
-
       print("gxsgdsydg$e");
       // isLoaded.value = false;
       // Get.snackbar(
@@ -57,6 +60,4 @@ class RobotresponseapiController extends GetxController {
       resetStatus();
     }
   }
-
-
 }

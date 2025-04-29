@@ -1,10 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/instance_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
@@ -14,9 +11,8 @@ import '../../Service/check_connectivity.dart';
 import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import '../Home_Screen/home_page.dart';
-import '../Robot_Response/robot_response.dart';
-import '../Settings/maintanance.dart';
+import '../Robot_Response/homepage.dart';
+import '../Settings/settings.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -48,9 +44,9 @@ class _LoginPageState extends State<LoginPage> {
     if (loginApi != null) {
       await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
       Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const RobotResponse()),
+          MaterialPageRoute(builder: (context) => const Homepage()),
           (route) => false);
-    } else {}
+    }
   }
 
   @override
@@ -248,7 +244,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     pageBuilder: (context,
                                                             animation,
                                                             secondaryAnimation) =>
-                                                        RobotResponse(),
+                                                        Homepage(),
                                                     transitionsBuilder:
                                                         (context,
                                                             animation,

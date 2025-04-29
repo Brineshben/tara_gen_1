@@ -45,7 +45,8 @@ class _AddDescriptionState extends State<AddDescription> {
             builder: (BackgroudController controller) {
               return Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl: controller.background.value?.backgroundImage ?? "",
+                  imageUrl:
+                      controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Image.asset("assets/images.jpg", fit: BoxFit.cover),

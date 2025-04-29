@@ -4,45 +4,35 @@ import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Service/Api_Service.dart';
-import 'package:ihub/View/Robot_Response/subcategory.dart';
+import 'package:ihub/Utils/api_constant.dart';
 import 'package:lottie/lottie.dart';
-import 'package:marquee/marquee.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/EnquiryListController.dart';
-import '../../Controller/EnquirySubListModel.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
 import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
-import '../../Utils/api_constant.dart';
 import '../../Utils/colors.dart';
-import '../../Utils/popups.dart';
-import '../Home_Screen/SplashScreen.dart';
 import '../Home_Screen/battery_Widget.dart';
-import '../Home_Screen/home_page.dart';
-import '../Settings/maintanance.dart';
 import '../Settings/otp_page.dart';
 import '../Splash/Battery_Splash.dart';
 import '../Splash/Loading_Splash.dart';
 import 'Navigation.dart';
 
-class RobotResponse extends StatefulWidget {
-  const RobotResponse({Key? key}) : super(key: key);
+class Homepage extends StatefulWidget {
+  const Homepage({Key? key}) : super(key: key);
 
   @override
-  State<RobotResponse> createState() => _RobotResponseState();
+  State<Homepage> createState() => _HomepageState();
 }
 
-class _RobotResponseState extends State<RobotResponse>
-    with WidgetsBindingObserver {
+class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   Timer? messageTimer;
   bool canExit = false;
   bool isForegroundTaskRunning = false;
@@ -52,6 +42,8 @@ class _RobotResponseState extends State<RobotResponse>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+
+    Get.find<RobotresponseapiController>().getUrl();
 
     _hideSystemUI();
 
@@ -122,7 +114,8 @@ class _RobotResponseState extends State<RobotResponse>
                   return Positioned.fill(
                     child: CachedNetworkImage(
                       imageUrl:
-                          controller.background.value?.backgroundImage ?? "",
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
                       fit: BoxFit.cover,
                       placeholder: (context, url) =>
                           Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -247,6 +240,25 @@ class _RobotResponseState extends State<RobotResponse>
                                         child: Image.asset("assets/brake.png",
                                             fit: BoxFit.contain)),
                                   ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 30),
+                                  child: InkWell(
+                                    onTap: () async {
+                                      final Uri url = Uri.parse(
+                                        'http://192.168.11.2/admin/index.html#/functions/wifi/client?freq=5GHz',
+                                      );
+                                      await launchUrl(
+                                        url,
+                                        mode: LaunchMode.inAppWebView,
+                                      );
+                                    },
+                                    child: Icon(
+                                      Icons.router,
+                                      size: 50,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
                               ],
                             ),
                             GetX<BatteryOfflineController>(
@@ -282,14 +294,14 @@ class _RobotResponseState extends State<RobotResponse>
                                       Row(
                                         children: [
                                           BatteryIcon(
-                                            batteryLevel: batteryLevel ?? 0,
+                                            batteryLevel: batteryLevel,
                                           ), // Updated widget
 
                                           SizedBox(
                                             width: 5,
                                           ),
                                           Text(
-                                            "$data %" ?? "0",
+                                            "$data %",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 20.h),
@@ -511,7 +523,8 @@ class _RobotResponseState extends State<RobotResponse>
                                         // )
                                       ],
                                     ),
-                                  if(controller.text.value?.text != "" && listening == true  )
+                                  if (controller.text.value?.text != "" &&
+                                      listening == true)
                                     Container(
                                       padding: EdgeInsets.all(8),
                                       decoration: BoxDecoration(
@@ -521,11 +534,13 @@ class _RobotResponseState extends State<RobotResponse>
                                       child: Center(
                                         child: Text(
                                           controller.text.value?.text ?? "",
-                                          style: TextStyle(fontSize: 18,color: Colors.white),
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
                                         ),
                                       ),
                                     )
-                                  else if (speaking==true|| waiting==true )
+                                  else if (speaking == true || waiting == true)
                                     SizedBox(),
                                 ],
                               ),
@@ -534,96 +549,96 @@ class _RobotResponseState extends State<RobotResponse>
                         ),
                       ),
                     ),
-                    GetX<Enquirylistcontroller>(
-                      builder: (Enquirylistcontroller controller) {
-                        if (controller.isLoading.value) {
-                          return Container(
-                            margin: EdgeInsets.only(
-                                left: 20.w,
-                                top: 10.h,
-                                right: 20.w,
-                                bottom: 350.h),
-                            child: Wrap(
-                              spacing: 10.w, // Space between items
-                              runSpacing: 10.h, // Space between rows
-                              children: List.generate(
-                                4, // Number of shimmer placeholders
-                                (index) => Shimmer.fromColors(
-                                  baseColor: Colors.grey[400]!,
-                                  highlightColor: Colors.grey[200]!,
-                                  child: Column(
-                                    children: [
-                                      Container(
-                                        height:
-                                            MediaQuery.of(context).size.width *
-                                                0.06,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.06,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white,
-                                          borderRadius:
-                                              BorderRadius.circular(25.r),
-                                        ),
-                                      ),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.15,
-                                        height:
-                                            MediaQuery.of(context).size.height *
-                                                0.060,
-                                        decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(30.r),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        } else {
-                          return Container(
-                            margin: EdgeInsets.only(
-                                left: 20.w,
-                                top: 10.h,
-                                right: 20.w,
-                                bottom: 350.h),
-                            child: Wrap(
-                              spacing: 10.w, // Space between items
-                              runSpacing: 10.h, // Space between rows
-                              children: List.generate(
-                                controller.enquiryData.length,
-                                // items is your list of data
-                                (index) => GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) {
-                                        return Subcategory(
-                                          enquiry: controller
-                                                  .enquiryData[index].id ??
-                                              0,
-                                          data: controller
-                                                  .enquiryData[index].heading ??
-                                              "",
-                                        );
-                                      },
-                                    ));
-                                  },
-                                  child: buildInfoCard2(
-                                      "${controller.enquiryData[index].heading?.toUpperCase()}",
-                                      "${controller.enquiryData[index].logo}"),
-                                ),
-                              ),
-                            ),
-                          );
-                        }
-                      },
-                    )
+                    // GetX<Enquirylistcontroller>(
+                    //   builder: (Enquirylistcontroller controller) {
+                    //     if (controller.isLoading.value) {
+                    //       return Container(
+                    //         margin: EdgeInsets.only(
+                    //             left: 20.w,
+                    //             top: 10.h,
+                    //             right: 20.w,
+                    //             bottom: 350.h),
+                    //         child: Wrap(
+                    //           spacing: 10.w, // Space between items
+                    //           runSpacing: 10.h, // Space between rows
+                    //           children: List.generate(
+                    //             4, // Number of shimmer placeholders
+                    //             (index) => Shimmer.fromColors(
+                    //               baseColor: Colors.grey[400]!,
+                    //               highlightColor: Colors.grey[200]!,
+                    //               child: Column(
+                    //                 children: [
+                    //                   Container(
+                    //                     height:
+                    //                         MediaQuery.of(context).size.width *
+                    //                             0.06,
+                    //                     width:
+                    //                         MediaQuery.of(context).size.width *
+                    //                             0.06,
+                    //                     decoration: BoxDecoration(
+                    //                       color: Colors.white,
+                    //                       borderRadius:
+                    //                           BorderRadius.circular(25.r),
+                    //                     ),
+                    //                   ),
+                    //                   SizedBox(height: 10),
+                    //                   Container(
+                    //                     width:
+                    //                         MediaQuery.of(context).size.width *
+                    //                             0.15,
+                    //                     height:
+                    //                         MediaQuery.of(context).size.height *
+                    //                             0.060,
+                    //                     decoration: BoxDecoration(
+                    //                       color: Colors.white.withOpacity(0.2),
+                    //                       borderRadius:
+                    //                           BorderRadius.circular(30.r),
+                    //                     ),
+                    //                   ),
+                    //                 ],
+                    //               ),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     } else {
+                    //       return Container(
+                    //         margin: EdgeInsets.only(
+                    //             left: 20.w,
+                    //             top: 10.h,
+                    //             right: 20.w,
+                    //             bottom: 350.h),
+                    //         child: Wrap(
+                    //           spacing: 10.w, // Space between items
+                    //           runSpacing: 10.h, // Space between rows
+                    //           children: List.generate(
+                    //             controller.enquiryData.length,
+                    //             // items is your list of data
+                    //             (index) => GestureDetector(
+                    //               onTap: () {
+                    //                 Navigator.push(context, MaterialPageRoute(
+                    //                   builder: (context) {
+                    //                     return Subcategory(
+                    //                       enquiry: controller
+                    //                               .enquiryData[index].id ??
+                    //                           0,
+                    //                       data: controller
+                    //                               .enquiryData[index].heading ??
+                    //                           "",
+                    //                     );
+                    //                   },
+                    //                 ));
+                    //               },
+                    //               child: buildInfoCard2(
+                    //                   "${controller.enquiryData[index].heading?.toUpperCase()}",
+                    //                   "${controller.enquiryData[index].logo}"),
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       );
+                    //     }
+                    //   },
+                    // )
                   ],
                 ),
               ),
@@ -634,54 +649,104 @@ class _RobotResponseState extends State<RobotResponse>
                 left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        ColorUtils.userdetailcolor,
-                        ColorUtils.userdetailcolor
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                        10), // Ensure proper border radius
-                  ),
-                  child: Material(
-                    color: Colors.transparent, // Ensure the gradient is visible
-                    borderRadius: BorderRadius.circular(10),
-                    child: FloatingActionButton.extended(
-                      backgroundColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) {
-                            return Navigation(
-                              robotid: Get.find<BatteryController>()
-                                      .background
-                                      .value
-                                      ?.data
-                                      ?.first
-                                      .robot
-                                      ?.roboId ??
-                                  "",
-                            );
-                            // robotId:controller.background.value?.data?.first.robot?.roboId ?? " ",
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  spacing: 20,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Get.find<RobotresponseapiController>().link.value != ''
+                        ? Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [
+                                  ColorUtils.userdetailcolor,
+                                  ColorUtils.userdetailcolor
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                              ),
+                              borderRadius: BorderRadius.circular(
+                                  10), // Ensure proper border radius
+                            ),
+                            child: Material(
+                              color: Colors
+                                  .transparent, // Ensure the gradient is visible
+                              borderRadius: BorderRadius.circular(10),
+                              child: FloatingActionButton.extended(
+                                backgroundColor: Colors.transparent,
+                                onPressed: () async {
+                                  final Uri url = Uri.parse(
+                                    Get.find<RobotresponseapiController>()
+                                        .link
+                                        .value,
+                                  );
+                                  await launchUrl(
+                                    url,
+                                    mode: LaunchMode.inAppWebView,
+                                  );
+                                },
+                                icon: Icon(Icons.arrow_forward_ios,
+                                    color: Colors.white),
+                                label: Text(
+                                    Get.find<RobotresponseapiController>()
+                                        .name
+                                        .value,
+                                    style: GoogleFonts.orbitron(
+                                      color: Colors.white,
+                                      fontSize: 18.h,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                              ),
+                            ),
+                          )
+                        : Text(""),
+                    Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            ColorUtils.userdetailcolor,
+                            ColorUtils.userdetailcolor
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Material(
+                        color: Colors.transparent,
+                        borderRadius: BorderRadius.circular(10),
+                        child: FloatingActionButton.extended(
+                          backgroundColor: Colors.transparent,
+                          onPressed: () {
+                            Navigator.push(context, MaterialPageRoute(
+                              builder: (context) {
+                                return Navigation(
+                                  robotid: Get.find<BatteryController>()
+                                          .background
+                                          .value
+                                          ?.data
+                                          ?.first
+                                          .robot
+                                          ?.roboId ??
+                                      "",
+                                );
+                              },
+                            ));
                           },
-                        ));
-                      },
-                      icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                      label: Text("NAVIGATE",
-                          style: GoogleFonts.orbitron(
-                            color: Colors.white,
-                            fontSize: 18.h,
-                            fontWeight: FontWeight.bold,
-                          )),
+                          icon: Icon(Icons.arrow_forward_ios,
+                              color: Colors.white),
+                          label: Text("NAVIGATE",
+                              style: GoogleFonts.orbitron(
+                                color: Colors.white,
+                                fontSize: 18.h,
+                                fontWeight: FontWeight.bold,
+                              )),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
+                  ],
                 ),
                 Container(
                   decoration: BoxDecoration(

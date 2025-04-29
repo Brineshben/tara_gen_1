@@ -1,11 +1,9 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/View/Home_Screen/home_page.dart';
-import 'package:ihub/View/Robot_Response/robot_response.dart';
+import 'package:ihub/View/Robot_Response/homepage.dart';
 
 import '../../Controller/CustomerDetails_Controller.dart';
 import '../../Utils/colors.dart';
@@ -23,9 +21,12 @@ class _ViewCustomerDetailsState extends State<ViewCustomerDetails> {
     _hideSystemUI();
     super.initState();
   }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersive); // Hide status bar again
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -41,8 +42,10 @@ class _ViewCustomerDetailsState extends State<ViewCustomerDetails> {
             context,
             PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 300),
-              pageBuilder: (context, animation, secondaryAnimation) => RobotResponse(),
-              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              pageBuilder: (context, animation, secondaryAnimation) =>
+                  Homepage(),
+              transitionsBuilder:
+                  (context, animation, secondaryAnimation, child) {
                 return FadeTransition(opacity: animation, child: child);
               },
             ),
@@ -90,13 +93,19 @@ class _ViewCustomerDetailsState extends State<ViewCustomerDetails> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildInfoRow("NAME", controller.userdata.value?.username ?? ""),
+                              buildInfoRow("NAME",
+                                  controller.userdata.value?.username ?? ""),
                               SizedBox(height: 5),
-                              buildInfoRow("ID", controller.userdata.value?.id.toString() ?? ""),
+                              buildInfoRow(
+                                  "ID",
+                                  controller.userdata.value?.id.toString() ??
+                                      ""),
                               SizedBox(height: 5),
-                              buildInfoRow("GENDER", controller.userdata.value?.gender ?? ""),
+                              buildInfoRow("GENDER",
+                                  controller.userdata.value?.gender ?? ""),
                               SizedBox(height: 5),
-                              buildInfoRow("PURPOSE", controller.userdata.value?.purpose ?? ""),
+                              buildInfoRow("PURPOSE",
+                                  controller.userdata.value?.purpose ?? ""),
                               SizedBox(height: 10),
                             ],
                           ),
@@ -109,15 +118,17 @@ class _ViewCustomerDetailsState extends State<ViewCustomerDetails> {
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => RobotResponse(),
+                                builder: (context) => Homepage(),
                               ));
                         },
                         child: Center(
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [ColorUtils.userdetailcolor,ColorUtils.userdetailcolor],
-
+                                colors: [
+                                  ColorUtils.userdetailcolor,
+                                  ColorUtils.userdetailcolor
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -141,7 +152,6 @@ class _ViewCustomerDetailsState extends State<ViewCustomerDetails> {
                   );
                 },
               ),
-
             ),
           ),
         ),

@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../Service/controller_handling.dart';
 import '../Service/sharedPreference.dart';
 import '../View/Login_Page/login.dart';
-import '../View/Robot_Response/robot_response.dart';
+import '../View/Robot_Response/homepage.dart';
 import '../View/Splash/Loading_Splash.dart';
 import 'colors.dart';
 
@@ -120,11 +120,12 @@ class ProductAppPopUps {
             onPressed: () async {
               Get.back();
               await HandleControllers.deleteAllGetControllers();
-             await  SharedPrefs().removeLoginData();
-               HandleControllers.createGetControllers();
+              await SharedPrefs().removeLoginData();
+              HandleControllers.createGetControllers();
 
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoadingSplash()),
+                  MaterialPageRoute(
+                      builder: (context) => const LoadingSplash()),
                   (_) => false);
             },
             style: ButtonStyle(
@@ -191,8 +192,9 @@ class ProductAppPopUps {
               // SharedPrefs().removeLoginData();
 
               Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => const LoadingSplash()),
-                      (_) => false);
+                  MaterialPageRoute(
+                      builder: (context) => const LoadingSplash()),
+                  (_) => false);
               //
               // HandleControllers.createGetControllers();
             },
@@ -275,7 +277,9 @@ class ProductAppPopUps {
         ],
       ),
     );
-  } static submit2back({
+  }
+
+  static submit2back({
     String? title,
     required String message,
     required String actionName,
@@ -316,7 +320,6 @@ class ProductAppPopUps {
             onPressed: () {
               Get.back();
               Get.back();
-
             },
             style: ButtonStyle(
               backgroundColor:

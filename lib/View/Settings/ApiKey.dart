@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,11 +6,9 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Controller/Backgroud_controller.dart';
-import '../../Controller/Ipcontroller.dart';
 import '../../Service/Api_Service.dart';
-import '../../Utils/api_constant.dart';
 import '../../Utils/popups.dart';
-import 'maintanance.dart';
+import 'settings.dart';
 
 class ApiKey extends StatefulWidget {
   const ApiKey({Key? key}) : super(key: key);
@@ -43,9 +39,7 @@ class _ApiKeyState extends State<ApiKey> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -56,13 +50,12 @@ class _ApiKeyState extends State<ApiKey> {
               width: ScreenUtil().screenWidth,
               height: ScreenUtil().screenHeight,
             ),
-
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                    controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -95,9 +88,7 @@ class _ApiKeyState extends State<ApiKey> {
                               //     spreadRadius: 0,
                               //   ),
                               // ],
-                              borderRadius: BorderRadius
-                                  .circular(15)
-                                  .r),
+                              borderRadius: BorderRadius.circular(15).r),
                           child: Icon(
                             Icons.arrow_back_outlined,
                             color: Colors.grey,
@@ -119,7 +110,6 @@ class _ApiKeyState extends State<ApiKey> {
                     ],
                   ),
                 ),
-
                 Center(
                   child: SingleChildScrollView(
                     child: Form(
@@ -151,13 +141,12 @@ class _ApiKeyState extends State<ApiKey> {
                               maxLength: 30,
                               minLines: 1,
                               controller: NewIp,
-                              validator: (val) =>
-                              val!.trim().isEmpty
+                              validator: (val) => val!.trim().isEmpty
                                   ? 'Please Enter New API key'
                                   : null,
                               decoration: InputDecoration(
-                                  hintStyle: const TextStyle(
-                                      color: Colors.white38),
+                                  hintStyle:
+                                      const TextStyle(color: Colors.white38),
                                   contentPadding: EdgeInsets.symmetric(
                                       vertical: 10.h, horizontal: 10.w),
                                   hintText: "Enter New API key",
@@ -171,15 +160,15 @@ class _ApiKeyState extends State<ApiKey> {
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
                                         color: Colors.blue, width: 1.0),
-                                    borderRadius:
-                                    const BorderRadius.all(Radius.circular(10))
+                                    borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))
                                         .r,
                                   ),
                                   focusedBorder: OutlineInputBorder(
                                     borderSide: const BorderSide(
                                         color: Colors.blue, width: 1.0),
                                     borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0))
+                                            Radius.circular(10.0))
                                         .r,
                                   ),
                                   fillColor: Colors.blueGrey[900],
@@ -192,7 +181,6 @@ class _ApiKeyState extends State<ApiKey> {
                           ),
                           Material(
                             color: Colors.transparent,
-
                             child: InkWell(
                               splashColor: Colors.white,
                               highlightColor: Colors.white.withOpacity(0.3),
@@ -201,8 +189,8 @@ class _ApiKeyState extends State<ApiKey> {
                                 if (_formKey.currentState!.validate()) {
                                   if (NewIp.text.isNotEmpty) {
                                     Map<String, dynamic> resp =
-                                    await ApiServices.ApiKey(
-                                        Data: NewIp.text);
+                                        await ApiServices.ApiKey(
+                                            Data: NewIp.text);
 
                                     if (resp['status'] == "ok") {
                                       FocusManager.instance.primaryFocus
@@ -227,9 +215,7 @@ class _ApiKeyState extends State<ApiKey> {
                                 }
                               },
                               child: buildInfoCard(
-                                  MediaQuery
-                                      .of(context)
-                                      .size, 'SUBMIT'),
+                                  MediaQuery.of(context).size, 'SUBMIT'),
                             ),
                           ),
                         ],

@@ -1,24 +1,19 @@
 import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/Login_api_controller.dart';
 
 import '../../Controller/Backgroud_controller.dart';
-
-import '../../Controller/PasswordController.dart';
 import '../../Model/login_model.dart';
 import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import 'maintanance.dart';
+import 'settings.dart';
 
 class otp extends StatefulWidget {
   const otp({Key? key}) : super(key: key);
@@ -56,14 +51,12 @@ class _otpState extends State<otp> {
               width: ScreenUtil().screenWidth,
               height: ScreenUtil().screenHeight,
             ),
-
-
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -175,26 +168,29 @@ class _otpState extends State<otp> {
                       color: Colors.transparent,
                       child: InkWell(
                         splashColor: Colors.white,
-                        highlightColor:Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r), // Match container shape
+                        highlightColor: Colors.white.withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(
+                            20.r), // Match container shape
 
                         onTap: () async {
                           // Navigator.push(context, MaterialPageRoute(
                           String otp = otpControllers.map((e) => e.text).join();
                           print("benenen$otp");
-                          LoginModel? loginApi = await SharedPrefs().getLoginData();
+                          LoginModel? loginApi =
+                              await SharedPrefs().getLoginData();
 
                           print("login${loginApi?.user?.secretKey.toString()}");
                           print("otp${otp}");
 
-                          if(loginApi?.user?.secretKey != null && loginApi?.user?.secretKey.toString() == otp){
+                          if (loginApi?.user?.secretKey != null &&
+                              loginApi?.user?.secretKey.toString() == otp) {
                             Navigator.pushReplacement(
                               context,
                               PageRouteBuilder(
                                 transitionDuration: Duration(milliseconds: 300),
                                 pageBuilder:
                                     (context, animation, secondaryAnimation) =>
-                                    Maintanance(),
+                                        Maintanance(),
                                 transitionsBuilder: (context, animation,
                                     secondaryAnimation, child) {
                                   return FadeTransition(
@@ -202,13 +198,12 @@ class _otpState extends State<otp> {
                                 },
                               ),
                             );
-                          }else {
-
+                          } else {
                             ProductAppPopUps.submit(
-                                        message: "Incorrect Password",
-                                        actionName: "Try Again",
-                                        iconData: Icons.error_outline,
-                                        iconColor: Colors.red);
+                                message: "Incorrect Password",
+                                actionName: "Try Again",
+                                iconData: Icons.error_outline,
+                                iconColor: Colors.red);
                           }
 
                           // if (otp.isNotEmpty && otp.length == 4) {

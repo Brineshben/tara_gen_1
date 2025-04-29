@@ -27,13 +27,15 @@ class _VolumeControlState extends State<VolumeControl> {
     Get.find<VolumeController>().fetchinitialvolume("RB3");
     super.initState();
   }
+
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.immersive); // Hide status bar again
   }
+
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       body: Stack(
         children: [
           SizedBox(
@@ -51,7 +53,7 @@ class _VolumeControlState extends State<VolumeControl> {
               return Positioned.fill(
                 child: CachedNetworkImage(
                   imageUrl:
-                  controller.background.value?.backgroundImage ?? "",
+                      controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -84,9 +86,7 @@ class _VolumeControlState extends State<VolumeControl> {
                             //     spreadRadius: 0,
                             //   ),
                             // ],
-                            borderRadius: BorderRadius
-                                .circular(15)
-                                .r),
+                            borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
                           color: Colors.grey,
@@ -106,7 +106,6 @@ class _VolumeControlState extends State<VolumeControl> {
                   ],
                 ),
               ),
-
               SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 100),
@@ -115,9 +114,16 @@ class _VolumeControlState extends State<VolumeControl> {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Icon(Icons.volume_up, size: 50,color: Colors.white,),
+                          const Icon(
+                            Icons.volume_up,
+                            size: 50,
+                            color: Colors.white,
+                          ),
                           Text("Volume: ${controller.roboVolume.value}%",
-                              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold,color: Colors.white)),
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white)),
                           SizedBox(
                             width: 300.w, // Adjust width as needed
                             child: Slider(
@@ -130,7 +136,8 @@ class _VolumeControlState extends State<VolumeControl> {
                                 controller.roboVolume.value = value.toInt();
                               },
                               onChangeEnd: (value) {
-                                Get.find<VolumeController>().fetchvolume("RB3", value.toInt());
+                                Get.find<VolumeController>()
+                                    .fetchvolume("RB3", value.toInt());
                               },
                             ),
                           ),

@@ -91,7 +91,8 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.0.170:8000"; // Default IP
+  // static String _defaultBaseUrl1 = "http://192.168.0.170:8000"; // Default IP
+  static String _defaultBaseUrl1 = "http://192.168.1.68:8001"; // Default IP
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -108,11 +109,15 @@ class ApiConstants {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String newUrl = "http://$newIp:8000"; // Format base URL
     await prefs.setString('stored_ip', newUrl);
+    print('newwwwwwwwwww $newUrl');
     _baseUrl1 = newUrl; // Update in memory
   }
 
   // static String baseUrl = "http://54.163.176.141/";
   static String baseUrl = "http://54.211.212.147";
+
+  static String addUrl = "/url/add/";
+  static String getUrl = "/url/list/";
 
   ///offline
   static String poweroffoffline = "/update-reboot-status/";
@@ -174,15 +179,16 @@ Future<void> fetchAndUpdateBaseUrl() async {
             .robot
             ?.roboId ??
         "";
-    // print("objectresponse$data");
+    print("objectresponse$data");
 
     String url =
         "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
 
-    print(url);
+    print("url${url}");
     final response = await http.get(Uri.parse(
         "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
-
+    print(
+        'robo id ${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId}');
     // print("objectresfgdfghponse$url");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);

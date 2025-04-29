@@ -12,7 +12,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/battery_Controller.dart';
-import '../Robot_Response/robot_response.dart';
+import '../Robot_Response/homepage.dart';
 
 class BatterySplash extends StatefulWidget {
   const BatterySplash({super.key});
@@ -33,7 +33,7 @@ class _BatterySplashState extends State<BatterySplash> {
       if (!(chargeStatus ?? true)) {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
-            return const RobotResponse();
+            return const Homepage();
           },
         ));
         timer.cancel();

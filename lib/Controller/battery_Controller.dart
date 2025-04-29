@@ -1,18 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Service/sharedPreference.dart';
-import 'package:ihub/View/Robot_Response/robot_response.dart';
-import 'package:lottie/lottie.dart';
 
-import '../Model/background_model.dart';
 import '../Model/batteryModel.dart';
-import '../Model/robot_Response_Model.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/colors.dart';
-import '../Utils/popups.dart';
-import '../View/Splash/Battery_Splash.dart';
 
 class BatteryController extends GetxController {
   RxBool isLoading = false.obs;
@@ -21,7 +11,7 @@ class BatteryController extends GetxController {
   Rx<BatteryModel?> background = Rx(null);
   bool popupshow = false;
   bool popupshow2 = false;
-
+  var roboId;
   void resetStatus() {
     isLoading.value = false;
     isError.value = false;
@@ -34,189 +24,21 @@ class BatteryController extends GetxController {
     try {
       Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
 
-      if (resp['status'] == "ok") {
+      print(resp);
+      if (resp['status'] == 'ok') {
         print("--------Responsessssss: $resp-------");
         BatteryModel batteryData = BatteryModel.fromJson(resp);
-
-        print(batteryData.data?.first.robot?.id);
-
-        final roboId = batteryData.data?.first.robot?.id;
-        if (roboId != null) {
-          await SharedPrefs().storeRoboId(roboId);
-        }
         print("background.value: ${batteryData}");
 
         background.value = batteryData;
-        print("background.value: ${batteryData}");
 
-        // String? batteryStatusStr =
-        //     background.value?.data?.first.robot?.batteryStatus;
-        // int batteryStatus = int.tryParse(batteryStatusStr ?? "-1") ?? -1;
-        // if (batteryStatus <= 30 && batteryStatus >= 0) {
-        //   if (!popupshow2) {
-        //     popupshow2 = true;
-        //     await Get.dialog(
-        //       AlertDialog(
-        //         shape: const RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        //         ),
-        //         title: Column(
-        //           children: [
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.end,
-        //               children: [
-        //                 GestureDetector(
-        //                   onTap: () => Get.back(),
-        //                   child: const Icon(Icons.close_outlined,
-        //                       color: Colors.grey),
-        //                 )
-        //               ],
-        //             ),
-        //             Center(
-        //               child: SizedBox(
-        //                 width: 120.w,
-        //                 height: 120.h,
-        //                 child: Lottie.asset(
-        //                   "assets/batterylottie.json",
-        //                   fit: BoxFit.fitHeight,
-        //                 ),
-        //               ),
-        //             ),
-        //             Text(
-        //               "BATTERY LOW",
-        //               style: GoogleFonts.oxygen(
-        //                 color: Colors.black,
-        //                 fontSize: 18.h,
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         // content: Container(
-        //         //   width: 150.w,
-        //         //   child: const Text(
-        //         //     "Hey there! My energy levels are running low. I need a recharge soon to keep assisting you.",
-        //         //     textAlign: TextAlign.center,
-        //         //     style: TextStyle(fontSize: 16),
-        //         //   ),
-        //         // ),
-        //         actionsAlignment: MainAxisAlignment.center,
-        //         actions: [
-        //           Row(
-        //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //             children: [
-        //               FilledButton(
-        //                 onPressed: () => Get.back(),
-        //                 style: ButtonStyle(
-        //                   backgroundColor: MaterialStateProperty.all(
-        //                       ColorUtils.userdetailcolor),
-        //                 ),
-        //                 child: Text(
-        //                   "OK",
-        //                   style: TextStyle(color: Colors.white, fontSize: 16.h),
-        //                 ),
-        //               ),
-        //               // FilledButton(
-        //               //   onPressed: () => Get.back(),
-        //               //   style: ButtonStyle(
-        //               //     backgroundColor: MaterialStateProperty.all(
-        //               //         ColorUtils.userdetailcolor),
-        //               //   ),
-        //               //   child: Text(
-        //               //     "OK PROCEED",
-        //               //     style: TextStyle(color: Colors.white, fontSize: 16.h),
-        //               //   ),
-        //               // ),
-        //             ],
-        //           )
-        //         ],
-        //       ),
-        //     );
-        //   }
+        roboId = batteryData.data?.first.robot?.id;
+
+        print('robot id ${roboId}');
+
+        // if (roboId != null) {
+        //   await SharedPrefs().storeRoboId(roboId);
         // }
-        // if (batteryStatus <= 20 && batteryStatus >= 0) {
-        //   if (!popupshow) {
-        //     popupshow = true;
-        //     await Get.dialog(
-        //       AlertDialog(
-        //         shape: const RoundedRectangleBorder(
-        //           borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        //         ),
-        //         title: Column(
-        //           children: [
-        //             Row(
-        //               mainAxisAlignment: MainAxisAlignment.end,
-        //               children: [
-        //                 GestureDetector(
-        //                   onTap: () => Get.back(),
-        //                   child: const Icon(Icons.close_outlined,
-        //                       color: Colors.grey),
-        //                 )
-        //               ],
-        //             ),
-        //             Center(
-        //               child: SizedBox(
-        //                 width: 120.w,
-        //                 height: 120.h,
-        //                 child: Lottie.asset(
-        //                   "assets/batterylottie.json",
-        //                   fit: BoxFit.fitHeight,
-        //                 ),
-        //               ),
-        //             ),
-        //             Text(
-        //               "BATTERY LOW",
-        //               style: GoogleFonts.oxygen(
-        //                 color: Colors.black,
-        //                 fontSize: 18.h,
-        //                 fontWeight: FontWeight.bold,
-        //               ),
-        //             ),
-        //           ],
-        //         ),
-        //         content: Container(
-        //           width: 150.w,
-        //           child: const Text(
-        //             "Hey there! My energy levels are running low. I need a recharge soon to keep assisting you.",
-        //             textAlign: TextAlign.center,
-        //             style: TextStyle(fontSize: 16),
-        //           ),
-        //         ),
-        //         actionsAlignment: MainAxisAlignment.center,
-        //         // actions: [
-        //         //   Row(
-        //         //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //         //     children: [
-        //         //       FilledButton(
-        //         //         onPressed: () => Get.back(),
-        //         //         style: ButtonStyle(
-        //         //           backgroundColor: MaterialStateProperty.all(
-        //         //               ColorUtils.userdetailcolor),
-        //         //         ),
-        //         //         child: Text(
-        //         //           "CANCEL",
-        //         //           style: TextStyle(color: Colors.white, fontSize: 16.h),
-        //         //         ),
-        //         //       ),
-        //         //       FilledButton(
-        //         //         onPressed: () => Get.back(),
-        //         //         style: ButtonStyle(
-        //         //           backgroundColor: MaterialStateProperty.all(
-        //         //               ColorUtils.userdetailcolor),
-        //         //         ),
-        //         //         child: Text(
-        //         //           "OK PROCEED",
-        //         //           style: TextStyle(color: Colors.white, fontSize: 16.h),
-        //         //         ),
-        //         //       ),
-        //         //     ],
-        //         //   )
-        //         // ],
-        //       ),
-        //     );
-        //   }
-        // }
-        // isLoaded.value = true;
       }
     } catch (e) {
       isLoaded.value = false;

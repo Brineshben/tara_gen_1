@@ -6,7 +6,10 @@ class BatteryModel {
 
   BatteryModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    if (json['data'] != null) {
+    final dataList = json['data'] as List?;
+    if (dataList == null || dataList.isEmpty) {
+      throw Exception('No data found');
+    } else {
       data = <Data>[];
       json['data'].forEach((v) {
         data!.add(new Data.fromJson(v));
@@ -34,11 +37,11 @@ class Data {
 
   Data(
       {this.id,
-        this.robot,
-        this.user,
-        this.date,
-        this.endDate,
-        this.maintenanceHours});
+      this.robot,
+      this.user,
+      this.date,
+      this.endDate,
+      this.maintenanceHours});
 
   Data.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -90,26 +93,26 @@ class Robot {
 
   Robot(
       {this.id,
-        this.roboName,
-        this.roboId,
-        this.activeStatus,
-        this.batteryStatus,
-        this.workingTime,
-        this.position,
-        this.subscription,
-        this.language,
-        this.image,
-        this.voltage,
-        this.current,
-        this.power,
-        this.energy,
-        this.quality,
-        this.map,
-        this.emergencyStop,
-        this.motorBrakeReleased,
-        this.readyToNavigate,
-        this.charging,
-        this.dockingStatus});
+      this.roboName,
+      this.roboId,
+      this.activeStatus,
+      this.batteryStatus,
+      this.workingTime,
+      this.position,
+      this.subscription,
+      this.language,
+      this.image,
+      this.voltage,
+      this.current,
+      this.power,
+      this.energy,
+      this.quality,
+      this.map,
+      this.emergencyStop,
+      this.motorBrakeReleased,
+      this.readyToNavigate,
+      this.charging,
+      this.dockingStatus});
 
   Robot.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -173,12 +176,12 @@ class User {
 
   User(
       {this.id,
-        this.username,
-        this.email,
-        this.phoneNumber,
-        this.profilePic,
-        this.role,
-        this.secretKey});
+      this.username,
+      this.email,
+      this.phoneNumber,
+      this.profilePic,
+      this.role,
+      this.secretKey});
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];

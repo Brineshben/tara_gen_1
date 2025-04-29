@@ -1,20 +1,18 @@
 import 'dart:io';
-import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:ihub/Service/sharedPreference.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
 import '../../Utils/popups.dart';
-import 'maintanance.dart';
+import 'settings.dart';
 
 class FileUploadScreen extends StatefulWidget {
   @override
@@ -53,7 +51,9 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       return;
     }
 
-    int? id = await SharedPrefs().getRobotdId();
+    // int? id = await SharedPrefs().getRobotdId();
+    final batteryController = Get.find<BatteryController>();
+    int? id = batteryController.roboId;
 
     if (id != null) {
       var request = http.MultipartRequest(
@@ -96,7 +96,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
             builder: (BackgroudController controller) {
               return Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl: controller.background.value?.backgroundImage ?? "",
+                  imageUrl:
+                      controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Image.asset("assets/images.jpg", fit: BoxFit.cover),

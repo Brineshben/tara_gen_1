@@ -29,23 +29,19 @@ class _SubcategoryState extends State<Subcategory> {
   void initState() {
     _hideSystemUI();
     Get.find<EnquirySubListController>().fetchEnquirySubList(
-        Get
-            .find<UserAuthController>()
-            .loginData
-            .value
-            ?.user
-            ?.id ?? 0,
+        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
         widget.enquiry);
     super.initState();
   }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersive); // Hide status bar again
   }
+
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -58,7 +54,8 @@ class _SubcategoryState extends State<Subcategory> {
             builder: (BackgroudController controller) {
               return Positioned.fill(
                 child: CachedNetworkImage(
-                  imageUrl: controller.background.value?.backgroundImage ?? "",
+                  imageUrl:
+                      controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
                       Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -91,9 +88,7 @@ class _SubcategoryState extends State<Subcategory> {
                             //     spreadRadius: 0,
                             //   ),
                             // ],
-                            borderRadius: BorderRadius
-                                .circular(15)
-                                .r),
+                            borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
                           color: Colors.grey,
@@ -125,48 +120,53 @@ class _SubcategoryState extends State<Subcategory> {
                     } else {
                       return controller.enquiryList.isNotEmpty
                           ? Center(
-                        child: Column(
-                          children: List.generate(
-                            controller.enquiryList.length,
-                            // Change this to your dynamic list length
-                                (index) =>
-                                Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(context,
-                                            MaterialPageRoute(
-                                              builder: (context) {
-                                                return SubDetails(
-                                                  subheading: controller
-                                                      .enquiryList[index]
-                                                      .enquiryDetails?.id ?? 0,
-                                                  heading
-                                                  : controller.enquiryList[index].enquiryDetails?.heading ?? "",
-                                                  description: '',);
-                                              },
-                                            ));
-                                      },
-                                      child: buildInfoCard2(
-                                          controller.enquiryList[index]
-                                              .subheading ??
-                                              " ",
-                                          "sj")),
+                              child: Column(
+                                children: List.generate(
+                                  controller.enquiryList.length,
+                                  // Change this to your dynamic list length
+                                  (index) => Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                            builder: (context) {
+                                              return SubDetails(
+                                                subheading: controller
+                                                        .enquiryList[index]
+                                                        .enquiryDetails
+                                                        ?.id ??
+                                                    0,
+                                                heading: controller
+                                                        .enquiryList[index]
+                                                        .enquiryDetails
+                                                        ?.heading ??
+                                                    "",
+                                                description: '',
+                                              );
+                                            },
+                                          ));
+                                        },
+                                        child: buildInfoCard2(
+                                            controller.enquiryList[index]
+                                                    .subheading ??
+                                                " ",
+                                            "sj")),
+                                  ),
                                 ),
-                          ),
-                        ),
-                      )
+                              ),
+                            )
                           : Padding(
-                        padding: EdgeInsets.only(top: 100),
-                        child: Center(
-                            child: Text(
-                              "Oops..No Data Found.",
-                              style: TextStyle(
-                                  fontSize: 10.w,
-                                  fontStyle: FontStyle.italic,
-                                  color: Colors.red),
-                            )),
-                      );
+                              padding: EdgeInsets.only(top: 100),
+                              child: Center(
+                                  child: Text(
+                                "Oops..No Data Found.",
+                                style: TextStyle(
+                                    fontSize: 10.w,
+                                    fontStyle: FontStyle.italic,
+                                    color: Colors.red),
+                              )),
+                            );
                     }
                   },
                 ),
@@ -179,9 +179,7 @@ class _SubcategoryState extends State<Subcategory> {
   }
 
   Widget buildInfoCard2(String title, String image) {
-    final Size size = MediaQuery
-        .of(context)
-        .size;
+    final Size size = MediaQuery.of(context).size;
 
     return Container(
       decoration: BoxDecoration(
@@ -206,7 +204,7 @@ class _SubcategoryState extends State<Subcategory> {
       child: Center(
         child: Padding(
           padding:
-          const EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 4),
+              const EdgeInsets.only(left: 20, right: 20, top: 4, bottom: 4),
           child: Row(
             children: [
               Text(

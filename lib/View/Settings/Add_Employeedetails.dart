@@ -1,22 +1,12 @@
-import 'dart:async';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/View/Face_detection/viewCustomer_details.dart';
-import 'package:ihub/View/Login_Page/login.dart';
 
 import '../../Controller/AddEmployeeDetailController.dart';
-import '../../Controller/CustomerDetails_Controller.dart';
 import '../../Controller/Login_api_controller.dart';
-import '../../Controller/SessionId_controller.dart';
 import '../../Utils/colors.dart';
-import '../Home_Screen/home_page.dart';
-import '../Robot_Response/robot_response.dart';
 
 class AddEmployeedetails extends StatefulWidget {
   final String employeeId;
@@ -42,6 +32,7 @@ class _AddEmployeedetailsState extends State<AddEmployeedetails> {
 
     super.initState();
   }
+
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.immersive); // Hide status bar again
@@ -269,10 +260,9 @@ class _AddEmployeedetailsState extends State<AddEmployeedetails> {
                             print("kab");
                             if (_formKey.currentState!.validate()) {
                               print("kab1");
-                              String name =
-                              nameController.text.trim();
+                              String name = nameController.text.trim();
                               String designation =
-                              designationController.text.trim();
+                                  designationController.text.trim();
 
                               if (name.isNotEmpty && designation.isNotEmpty) {
                                 print("kab2");
@@ -290,8 +280,10 @@ class _AddEmployeedetailsState extends State<AddEmployeedetails> {
                           child: Container(
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
-                                colors: [ColorUtils.userdetailcolor,ColorUtils.userdetailcolor],
-
+                                colors: [
+                                  ColorUtils.userdetailcolor,
+                                  ColorUtils.userdetailcolor
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),

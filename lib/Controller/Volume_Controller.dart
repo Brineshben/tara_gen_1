@@ -12,25 +12,21 @@ class VolumeController extends GetxController {
   RxInt roboVolume = RxInt(0);
   Rx<volume_model?> updatedatass = Rx(null);
 
-
-
   // void resetStatus() {
   //   isLoading.value = false;
   //   isError.value = false;
   // }
 
-  Future<void> fetchvolume(String RobotId , int volume) async {
+  Future<void> fetchvolume(String RobotId, int volume) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
       Map<String, dynamic> resp =
-      await ApiServices.volume(roboid:RobotId,volume:volume );
+          await ApiServices.volume(roboid: RobotId, volume: volume);
       print("------respvolumecontrol------$resp");
       if (resp['current_volume'] != null) {
         roboVolume.value = resp['current_volume'];
         isLoaded.value = true;
-
-
       }
     } catch (e) {
       isLoaded.value = false;
@@ -53,7 +49,6 @@ class VolumeController extends GetxController {
       //   iconColor: Colors.grey,
       // );
       print("--------session id not generated---------");
-
     } finally {
       print("--------session id not generated---------");
       // resetStatus();
@@ -66,13 +61,11 @@ class VolumeController extends GetxController {
 
     try {
       Map<String, dynamic> resp =
-      await ApiServices.volumeinitial(roboid:RobotId );
+          await ApiServices.volumeinitial(roboid: RobotId);
       print("------resp------$resp");
       if (resp['current_volume'] != null) {
         roboVolume.value = resp['current_volume'];
         isLoaded.value = true;
-
-
       }
     } catch (e) {
       isLoaded.value = false;
@@ -89,7 +82,6 @@ class VolumeController extends GetxController {
       );
 
       print("--------session id not generated---------");
-
     } finally {
       print("--------session id not generated---------");
       // resetStatus();

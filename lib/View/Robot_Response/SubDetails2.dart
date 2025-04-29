@@ -1,12 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/View/Home_Screen/home_page.dart';
-import 'package:ihub/View/Robot_Response/robot_response.dart';
 
-import '../../Controller/CustomerDetails_Controller.dart';
 import '../../Utils/colors.dart';
 
 class Subdetails2 extends StatefulWidget {
@@ -65,11 +60,11 @@ class _Subdetails2State extends State<Subdetails2> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildInfoRow("NAME",""),
+                        buildInfoRow("NAME", ""),
                         SizedBox(height: 5),
-                        buildInfoRow("ID",  ""),
+                        buildInfoRow("ID", ""),
                         SizedBox(height: 5),
-                        buildInfoRow("GENDER",  ""),
+                        buildInfoRow("GENDER", ""),
                         SizedBox(height: 5),
                         buildInfoRow("PURPOSE", ""),
                         SizedBox(height: 10),
@@ -91,7 +86,10 @@ class _Subdetails2State extends State<Subdetails2> {
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: [ColorUtils.userdetailcolor,ColorUtils.userdetailcolor],
+                          colors: [
+                            ColorUtils.userdetailcolor,
+                            ColorUtils.userdetailcolor
+                          ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
                         ),
@@ -113,7 +111,6 @@ class _Subdetails2State extends State<Subdetails2> {
                 )
               ],
             ),
-
           ),
         ),
       ),

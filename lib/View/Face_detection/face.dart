@@ -1,23 +1,21 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/View/Robot_Response/robot_response.dart';
-import 'dart:math' as math;
+import 'package:ihub/View/Robot_Response/homepage.dart';
+
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Session_Controller.dart';
 import '../../Model/SessionUpdateModel.dart';
 import '../../Utils/colors.dart';
-import '../../Utils/popups.dart';
 import '../../main.dart';
-import '../Home_Screen/home_page.dart';
 import 'add_user.dart';
 
 class Face extends StatefulWidget {
@@ -79,9 +77,12 @@ class _FaceState extends State<Face> {
       }
     });
   }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersive); // Hide status bar again
   }
+
   @override
   void dispose() {
     // Get.find<PopupController>().isHomepage.value = true;
@@ -97,11 +98,13 @@ class _FaceState extends State<Face> {
 
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result)  {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) {
-          return RobotResponse();
-        },));
-        },
+      onPopInvokedWithResult: (didPop, result) {
+        Navigator.of(context).pushReplacement(MaterialPageRoute(
+          builder: (context) {
+            return Homepage();
+          },
+        ));
+      },
       child: Scaffold(
         body: Stack(
           children: [
@@ -120,7 +123,7 @@ class _FaceState extends State<Face> {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -229,12 +232,17 @@ class _FaceState extends State<Face> {
                               Navigator.pushReplacement(
                                 context,
                                 PageRouteBuilder(
-                                  transitionDuration: Duration(milliseconds: 300),
-                                  pageBuilder: (context, animation, secondaryAnimation) => AddUser(
-                                      sessionId: sessionid?.sessionId ?? ""
-                                  ),
-                                  transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                    return FadeTransition(opacity: animation, child: child);
+                                  transitionDuration:
+                                      Duration(milliseconds: 300),
+                                  pageBuilder: (context, animation,
+                                          secondaryAnimation) =>
+                                      AddUser(
+                                          sessionId:
+                                              sessionid?.sessionId ?? ""),
+                                  transitionsBuilder: (context, animation,
+                                      secondaryAnimation, child) {
+                                    return FadeTransition(
+                                        opacity: animation, child: child);
                                   },
                                 ),
                               );

@@ -1,28 +1,21 @@
-import 'package:flutter/cupertino.dart';
-
-import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:math' as math;
+
 import '../../Controller/AddEmployeeController.dart';
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Login_api_controller.dart';
-import '../../Controller/Session_Controller.dart';
-import '../../Model/SessionUpdateModel.dart';
-import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../../main.dart';
-import '../Home_Screen/home_page.dart';
 import 'Add_Employeedetails.dart';
-import 'maintanance.dart';
+import 'settings.dart';
 
 class AddEmployee extends StatefulWidget {
   const AddEmployee({Key? key}) : super(key: key);
@@ -64,10 +57,12 @@ class _AddEmployeeState extends State<AddEmployee> {
       }
     });
   }
+
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.immersive); // Hide status bar again
   }
+
   @override
   void dispose() {
     // Get.find<PopupController>().isHomepage.value = true;
@@ -100,7 +95,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
-                        controller.background.value?.backgroundImage ?? "",
+                        controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
                         Image.asset("assets/images.jpg", fit: BoxFit.cover),
@@ -226,8 +221,7 @@ class _AddEmployeeState extends State<AddEmployee> {
                       ),
                     ),
                     Container(
-                      margin:
-                          EdgeInsets.only(left: 40.w, right: 40.w),
+                      margin: EdgeInsets.only(left: 40.w, right: 40.w),
                       height: size.height * 0.2,
                       child: TextFormField(
                         style: const TextStyle(color: Colors.white),
@@ -273,17 +267,20 @@ class _AddEmployeeState extends State<AddEmployee> {
                         String user = employeeidcontoller.text.trim();
                         if (_formKey.currentState!.validate()) {
                           if (user.isNotEmpty) {
-                            await Get.find<AddEmployeeController>().updateaddemployee(
-                                data:
-                                    "${Get.find<UserAuthController>().loginData.value?.user?.id ?? 0}",
-                                employeeID: employeeidcontoller.text);
+                            await Get.find<AddEmployeeController>()
+                                .updateaddemployee(
+                                    data:
+                                        "${Get.find<UserAuthController>().loginData.value?.user?.id ?? 0}",
+                                    employeeID: employeeidcontoller.text);
 
                             if (Get.find<AddEmployeeController>()
                                 .isLoaded
                                 .value) {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
-                                  return AddEmployeedetails(employeeId: employeeidcontoller.text,);
+                                  return AddEmployeedetails(
+                                    employeeId: employeeidcontoller.text,
+                                  );
                                 },
                               ));
 
@@ -299,7 +296,9 @@ class _AddEmployeeState extends State<AddEmployee> {
                         }
                       },
                     ),
-                    SizedBox(height: 20,)
+                    SizedBox(
+                      height: 20,
+                    )
                   ],
                 ),
               ),

@@ -13,6 +13,7 @@ late List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await ApiConstants.loadBaseUrl1();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Tara',
         debugShowCheckedModeBanner: false,
+        // home: LoadingSplash(),
         home: LoginPage(),
       ),
     );
