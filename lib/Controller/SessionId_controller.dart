@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
-import '../Model/SessionUpdateModel.dart';
 import '../Model/sessionModel.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class SessionIDController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<SessionUpdateIdModel?> sessionDatas = Rx(null);
-
-
 
   // void resetStatus() {
   //   isLoading.value = false;
@@ -24,14 +19,14 @@ class SessionIDController extends GetxController {
     isLoading.value = true;
     isLoaded.value = false;
     try {
-      Map<String, dynamic> resp =
-      await ApiServices.sessionid();
+      Map<String, dynamic> resp = await ApiServices.sessionid();
       print("------respben------$resp");
       if (resp['status'] == "ok") {
         SessionUpdateIdModel sessionData = SessionUpdateIdModel.fromJson(resp);
         sessionDatas.value = sessionData;
 
-        print("------bebebebebebebe--${sessionDatas.value?.latestSessionId}--------");
+        print(
+            "------bebebebebebebe--${sessionDatas.value?.latestSessionId}--------");
         // isLoaded.value = true;
         // ProductAppPopUps.submit(
         //   title: "Success",
@@ -40,7 +35,6 @@ class SessionIDController extends GetxController {
         //   iconData: Icons.error_outline,
         //   iconColor:Colors.grey,
         // );
-
       }
     } catch (e) {
       isLoaded.value = false;
@@ -56,7 +50,6 @@ class SessionIDController extends GetxController {
         duration: Duration(seconds: 3), // Auto dismiss time
         icon: Icon(Icons.check_circle, color: Colors.white),
       );
-
     } finally {
       print("--------sesssssssion id not generated---------");
       // resetStatus();

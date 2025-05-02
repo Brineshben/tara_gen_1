@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../Model/EnquirySublistDetailModel.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class Subenquirydetailscontroller extends GetxController {
   RxBool isLoading = false.obs;

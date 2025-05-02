@@ -24,7 +24,7 @@ class _VolumeControlState extends State<VolumeControl> {
   @override
   void initState() {
     _hideSystemUI();
-    Get.find<VolumeController>().fetchinitialvolume("RB3");
+    Get.find<VolumeController>().fetchinitialvolume(widget.robotid);
     super.initState();
   }
 
@@ -137,7 +137,7 @@ class _VolumeControlState extends State<VolumeControl> {
                               },
                               onChangeEnd: (value) {
                                 Get.find<VolumeController>()
-                                    .fetchvolume("RB3", value.toInt());
+                                    .fetchvolume(widget.robotid, value.toInt());
                               },
                             ),
                           ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:ihub/Service/url_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/robot_Response_Model.dart';
 import '../Service/Api_Service.dart';
@@ -20,11 +21,18 @@ class RobotresponseapiController extends GetxController {
   RxString name = ''.obs;
 
   getUrl() async {
-    Map<String, dynamic> responce = await UrlService.getUrls();
-    if (responce['status'] == "ok") {
-      link.value = responce["data"]['url'];
-      name.value = responce["data"]['name'];
-    }
+    // Map<String, dynamic> responce = await UrlService.getUrls();
+    // if (responce['status'] == "ok") {
+    //   link.value = responce["data"]['url'];
+    //   name.value = responce["data"]['name'];
+    // }
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    link.value = prefs.getString('url') ?? '';
+    name.value = prefs.getString('name') ?? '';
+
+    print('link ${link.value}');
+    print('name ${name.value}');
   }
 
   Future<void> fetchObsResultList() async {

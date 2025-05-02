@@ -158,6 +158,10 @@ class ApiConstants {
   static String train = "/accounts/update/model/status/";
   static String emergency = "/robot/robot/detail/";
 
+  // update charge / get current charge
+  static String chargeUpdate = "/charge/update/";
+  static String getCurrentCharge = "/charge/current/";
+
   // static String volume = "/enquiry/volume/set/";
   // static String volumeinitial = "/enquiry/volume/get/";
   static String robotresponsepopup = "/enquiry/robot/message/get/";

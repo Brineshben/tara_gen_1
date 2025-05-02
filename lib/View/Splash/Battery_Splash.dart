@@ -45,86 +45,88 @@ class _BatterySplashState extends State<BatterySplash> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 100),
-            child: Column(
-              children: [
-                GetX<BatteryController>(
-                  builder: (BatteryController controller) {
-                    String? data;
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 100),
+              child: Column(
+                children: [
+                  GetX<BatteryController>(
+                    builder: (BatteryController controller) {
+                      String? data;
 
-                    if (controller.background.value?.data!.isNotEmpty ??
-                        false) {
-                      data = controller.background.value?.data?.first.robot
-                              ?.batteryStatus ??
-                          "";
-                    }
+                      if (controller.background.value?.data!.isNotEmpty ??
+                          false) {
+                        data = controller.background.value?.data?.first.robot
+                                ?.batteryStatus ??
+                            "";
+                      }
 
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "${data ?? ""}%",
-                          style: TextStyle(color: Colors.white, fontSize: 30.h),
-                        )
-                      ],
-                    );
-                  },
-                ),
-                Center(
-                  child: Transform.rotate(
-                    angle: 3 * pi / 2,
-                    child: SizedBox(
-                      width: size.width * 0.35,
-                      height: size.width * 0.35,
-                      child: Lottie.asset(
-                        "assets/battery.json",
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 50.h,
-                  width: 280.w,
-                  child: DefaultTextStyle(
-                    style: GoogleFonts.inter(
-                        color: Colors.white,
-                        fontSize: 30.h,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 5.0,
-                            color: Colors.black.withOpacity(0.7),
-                            offset: Offset(2, 2),
-                          ),
-                        ]),
-                    child: Center(
-                      child: AnimatedTextKit(
-                        animatedTexts: [
-                          TypewriterAnimatedText(
-                            'CHARGING....',
-                            speed: Duration(milliseconds: 50),
-                            // Adjust typing speed
-                            cursor: '|', // Optional cursor
-                          ),
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "${data ?? ""}%",
+                            style:
+                                TextStyle(color: Colors.white, fontSize: 30.h),
+                          )
                         ],
-                        repeatForever: true,
-                        // Ensures continuous looping
-                        isRepeatingAnimation: true,
+                      );
+                    },
+                  ),
+                  Center(
+                    child: Transform.rotate(
+                      angle: 3 * pi / 2,
+                      child: SizedBox(
+                        width: size.width * 0.35,
+                        height: size.width * 0.35,
+                        child: Lottie.asset(
+                          "assets/battery.json",
+                          fit: BoxFit.fitHeight,
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(
+                    height: 50.h,
+                    width: 280.w,
+                    child: DefaultTextStyle(
+                      style: GoogleFonts.inter(
+                          color: Colors.white,
+                          fontSize: 30.h,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              blurRadius: 5.0,
+                              color: Colors.black.withOpacity(0.7),
+                              offset: Offset(2, 2),
+                            ),
+                          ]),
+                      child: Center(
+                        child: AnimatedTextKit(
+                          animatedTexts: [
+                            TypewriterAnimatedText(
+                              'CHARGING....',
+                              speed: Duration(milliseconds: 50),
+                              // Adjust typing speed
+                              cursor: '|', // Optional cursor
+                            ),
+                          ],
+                          repeatForever: true,
+                          // Ensures continuous looping
+                          isRepeatingAnimation: true,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

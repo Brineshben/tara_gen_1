@@ -55,9 +55,12 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       print("Timer");
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+
       Get.find<BatteryOfflineController>().fetchOfflineBattery();
+
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+
       if (isBatteryscreen ?? false) {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
@@ -261,26 +264,36 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                 ),
                               ],
                             ),
-                            GetX<BatteryOfflineController>(
-                              builder: (BatteryOfflineController controller) {
+                            GetX<BatteryController>(
+                              builder: (BatteryController controller) {
                                 int? batteryLevel;
-                                String? data;
+                                // String? data;
 
                                 // if (controller.background.value?.rB3
                                 //     ?.batteryStatus?.isNotEmpty ??
                                 //     false) {
-                                data = controller.background.value?.data?.rB3
-                                        ?.batteryStatus ??
-                                    "0";
+
                                 batteryLevel = int.tryParse(controller
                                             .background
                                             .value
                                             ?.data
-                                            ?.rB3
-                                            ?.batteryStatus
-                                            .toString() ??
-                                        '0') ??
+                                            ?.first
+                                            .robot
+                                            ?.batteryStatus ??
+                                        "0") ??
                                     0;
+                                // data = controller.background.value?.data?.rB3
+                                //         ?.batteryStatus ??
+                                //     "0";
+                                // batteryLevel = int.tryParse(controller
+                                //             .background
+                                //             .value
+                                //             ?.data
+                                //             ?.rB3
+                                //             ?.batteryStatus
+                                //             .toString() ??
+                                //         '0') ??
+                                //     0;
                                 print("batettegdshgfcdshuf$batteryLevel");
 
                                 // }
@@ -301,7 +314,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             width: 5,
                                           ),
                                           Text(
-                                            "$data %",
+                                            "$batteryLevel %",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 20.h),
@@ -523,25 +536,25 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                         // )
                                       ],
                                     ),
-                                  if (controller.text.value?.text != "" &&
-                                      listening == true)
-                                    Container(
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.blueGrey,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          controller.text.value?.text ?? "",
-                                          style: TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    )
-                                  else if (speaking == true || waiting == true)
-                                    SizedBox(),
+                                  // if (controller.text.value?.text != "" &&
+                                  //     listening == true)
+                                  //   Container(
+                                  //     padding: EdgeInsets.all(8),
+                                  //     decoration: BoxDecoration(
+                                  //       color: Colors.blueGrey,
+                                  //       borderRadius: BorderRadius.circular(12),
+                                  //     ),
+                                  //     child: Center(
+                                  //       child: Text(
+                                  //         controller.text.value?.text ?? "",
+                                  //         style: TextStyle(
+                                  //             fontSize: 18,
+                                  //             color: Colors.white),
+                                  //       ),
+                                  //     ),
+                                  //   )
+                                  // else if (speaking == true || waiting == true)
+                                  //   SizedBox(),
                                 ],
                               ),
                             );

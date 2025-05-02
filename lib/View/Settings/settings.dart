@@ -9,8 +9,10 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/Login_api_controller.dart';
+import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Settings/add_url.dart';
+import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
@@ -232,7 +234,7 @@ class _MaintananceState extends State<Maintanance> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         GestureDetector(
-                          onTap: () {
+                          onTap: () async {
                             Navigator.pop(context);
                           },
                           child: Container(
@@ -400,6 +402,24 @@ class _MaintananceState extends State<Maintanance> {
                                   MaterialPageRoute(
                                       builder: (context) =>
                                           FileUploadScreen()));
+                            },
+                          ),
+                        ),
+
+                        // charge
+
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(size, 'CHARGE'),
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => ChargeEntryView()));
                             },
                           ),
                         ),

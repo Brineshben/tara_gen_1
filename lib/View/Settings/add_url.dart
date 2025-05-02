@@ -194,33 +194,38 @@ class _AddUrlPageState extends State<AddUrlPage> {
                                         return;
                                       }
 
-                                      Map<String, dynamic> response =
-                                          await UrlService.addUrl(
-                                              name: _nameController.text,
-                                              urlpage: _urlController.text);
+                                      // Map<String, dynamic> response =
+                                      //     await UrlService.addUrl(
+                                      //         name: _nameController.text,
+                                      //         urlpage: _urlController.text);
 
-                                      print('addurlresponse$response');
+                                      // print('addurlresponse$response');
 
-                                      if (response['status'] == 'ok') {
-                                        submit(
-                                          title: "SUCCESS",
-                                          message: "URL added successfully",
-                                          actionName: "Close",
-                                          iconData: Icons.done,
-                                          iconColor: Colors.green,
-                                        );
+                                      // if (response['status'] == 'ok') {
+                                      //   submit(
+                                      //     title: "SUCCESS",
+                                      //     message: "URL added successfully",
+                                      //     actionName: "Close",
+                                      //     iconData: Icons.done,
+                                      //     iconColor: Colors.green,
+                                      //   );
+                                      // Get.find<RobotresponseapiController>()
+                                      //     .getUrl();
+                                      // } else {
+                                      //   ProductAppPopUps.submit(
+                                      //     title: "FAILED",
+                                      //     message: "Failed to add URL",
+                                      //     actionName: "Close",
+                                      //     iconData: Icons.info,
+                                      //     iconColor: Colors.red,
+                                      //   );
+                                      // }
 
-                                        Get.find<RobotresponseapiController>()
-                                            .getUrl();
-                                      } else {
-                                        ProductAppPopUps.submit(
-                                          title: "FAILED",
-                                          message: "Failed to add URL",
-                                          actionName: "Close",
-                                          iconData: Icons.info,
-                                          iconColor: Colors.red,
-                                        );
-                                      }
+                                      await UrlService.storeUrl(
+                                          name: _nameController.text,
+                                          urlpage: _urlController.text);
+
+                                      Get.back();
                                     },
                                     child: buildInfoCard(size, 'ADD'),
                                   ),

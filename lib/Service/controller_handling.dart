@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ihub/Controller/charge_screen_controller.dart';
 import '../Controller/AddEmployeeController.dart';
 import '../Controller/AddEmployeeDetailController.dart';
 import '../Controller/Backgroud_controller.dart';
@@ -44,28 +45,30 @@ class HandleControllers {
     Get.put(FullTourControllerNew());
     Get.put(NavigateDescriptionController());
     Get.put(BatteryOfflineController());
+    Get.put(ChargeScreenController());
   }
 
-  static deleteAllGetControllers() async{
-   await Get.delete<UserAuthController>();
-   await Get.delete<RobotresponseapiController>();
-   await Get.delete<BackgroudController>();
-   await Get.delete<SessionController>();
-   await Get.delete<CustomerdetailsController>();
+  static deleteAllGetControllers() async {
+    await Get.delete<UserAuthController>();
+    await Get.delete<RobotresponseapiController>();
+    await Get.delete<BackgroudController>();
+    await Get.delete<SessionController>();
+    await Get.delete<CustomerdetailsController>();
     // Get.delete<PopupController>();
-   await Get.delete<UpdateStatusController>();
-   await Get.delete<SessionIDController>();
-   await Get.delete<BatteryController>();
-   await Get.delete<Enquirylistcontroller>();
-   await Get.delete<NavigateController>();
-   await Get.delete<AddEmployeeController>();
-   await Get.delete<AddEmployeeDetailsController>();
-   await Get.delete<EnquirySubListController>();
-   await Get.delete<VolumeController>();
-   await  Get.delete<ResponseNavController>();
-   await  Get.delete<IpController>();
-   await  Get.delete<FullTourControllerNew>();
-   await  Get.delete<NavigateDescriptionController>();
-   await  Get.delete<BatteryOfflineController>();
+    await Get.delete<UpdateStatusController>();
+    await Get.delete<SessionIDController>();
+    await Get.delete<BatteryController>();
+    await Get.delete<Enquirylistcontroller>();
+    await Get.delete<NavigateController>();
+    await Get.delete<AddEmployeeController>();
+    await Get.delete<AddEmployeeDetailsController>();
+    await Get.delete<EnquirySubListController>();
+    await Get.delete<VolumeController>();
+    await Get.delete<ResponseNavController>();
+    await Get.delete<IpController>();
+    await Get.delete<FullTourControllerNew>();
+    await Get.delete<NavigateDescriptionController>();
+    await Get.delete<BatteryOfflineController>();
+    await Get.delete<ChargeScreenController>();
   }
 }

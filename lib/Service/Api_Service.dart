@@ -239,6 +239,8 @@ class ApiServices {
     required bool status,
   }) async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
+    print("urlurlurlurlurlurlurl:$url");
+
     Map apiBody = {"status": status};
     // try {
     print("apibody:$apiBody");
@@ -247,11 +249,13 @@ class ApiServices {
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+    print('filedelete ${respString}');
+
+    print(json.decode(respString));
     return json.decode(respString);
   }
 
   ///check battery
-
   static Future<Map<String, dynamic>> battery({
     required int userId,
   }) async {
@@ -260,12 +264,13 @@ class ApiServices {
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
 
+    print('batteryurl $url');
+
     print('service ressssssssspo ${respString}');
     return json.decode(respString);
   }
 
   ///check battery offline
-
   static Future<Map<String, dynamic>> batteryOffline() async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.batteryOffline}";
     print("urlllllsddlll$url");

@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:ihub/Service/sharedPreference.dart';
 
 import '../Model/batteryModel.dart';
 import '../Service/Api_Service.dart';
@@ -29,16 +28,13 @@ class BatteryController extends GetxController {
         print("--------Responsessssss: $resp-------");
         BatteryModel batteryData = BatteryModel.fromJson(resp);
         print("background.value: ${batteryData}");
+        print("background.id: ${batteryData.data?.first.robot?.roboId}");
 
         background.value = batteryData;
 
-        roboId = batteryData.data?.first.robot?.id;
+        roboId = batteryData.data?.first.robot?.roboId;
 
         print('robot id ${roboId}');
-
-        // if (roboId != null) {
-        //   await SharedPrefs().storeRoboId(roboId);
-        // }
       }
     } catch (e) {
       isLoaded.value = false;
@@ -75,6 +71,8 @@ class BatteryController extends GetxController {
         print("background.value: ${batteryData}");
 
         bool? charge = background.value?.data?.first.robot?.charging;
+
+        print("BATTERT-IS-CHARGING $charge");
         if (charge == true) {
           return true;
         } else {

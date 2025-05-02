@@ -1,18 +1,21 @@
 import 'dart:io';
-
+import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/View/Settings/settings.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
 import '../../Utils/popups.dart';
-import 'settings.dart';
 
 class FileUploadScreen extends StatefulWidget {
   @override
@@ -51,33 +54,26 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       return;
     }
 
-    // int? id = await SharedPrefs().getRobotdId();
-    final batteryController = Get.find<BatteryController>();
-    int? id = batteryController.roboId;
+    String id = Get.find<BatteryController>().roboId;
+    print("idididididididididid${id}");
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://54.211.212.147/enquiry/upload-stcm/$id/'),
+    );
 
-    if (id != null) {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse(
-            'https://anumolm403.pythonanywhere.com/enquiry/upload-stcm/$id'),
-      );
+    request.files.add(
+      await http.MultipartFile.fromPath('file', _selectedFile!.path),
+    );
 
-      request.files.add(
-        await http.MultipartFile.fromPath('file', _selectedFile!.path),
-      );
-
-      var response = await request.send();
-      if (response.statusCode == 201) {
-        setState(() {
-          _statusMessage = "File uploaded successfully!";
-        });
-      } else {
-        setState(() {
-          _statusMessage = "File upload failed! Status: ${response.statusCode}";
-        });
-      }
+    var response = await request.send();
+    if (response.statusCode == 201) {
+      setState(() {
+        _statusMessage = "File uploaded successfully!";
+      });
     } else {
-      print('Robot ID is null. Cannot upload STCM.');
+      setState(() {
+        _statusMessage = "File upload failed! Status: ${response.statusCode}";
+      });
     }
   }
 
@@ -195,36 +191,36 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                           child: buildInfoCardRed(size, 'DELETE MAP'),
                           onTap: () async {
                             print("dsjfjdgijf");
-                            try {
-                              Map<String, dynamic> resp =
-                                  await ApiServices.deleteFile(status: true);
-                              if (resp['status'] == true) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                ProductAppPopUps.submit(
-                                  title: "SUCCESS",
-                                  message: resp['message'].toString(),
-                                  actionName: "Close",
-                                  iconData: Icons.done,
-                                  iconColor: Colors.green,
-                                );
-                              } else {
-                                ProductAppPopUps.submit(
-                                  title: "Failed",
-                                  message: resp['message'].toString(),
-                                  actionName: "Close",
-                                  iconData: Icons.error_outline,
-                                  iconColor: Colors.red,
-                                );
-                              }
-                            } catch (e) {
+                            // try {
+                            Map<String, dynamic> resp =
+                                await ApiServices.deleteFile(status: true);
+                            if (resp['status'] == true) {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                              ProductAppPopUps.submit(
+                                title: "SUCCESS",
+                                message: resp['message'].toString(),
+                                actionName: "Close",
+                                iconData: Icons.done,
+                                iconColor: Colors.green,
+                              );
+                            } else {
                               ProductAppPopUps.submit(
                                 title: "Failed",
-                                message: "Response not Received",
+                                message: resp['message'].toString(),
                                 actionName: "Close",
                                 iconData: Icons.error_outline,
                                 iconColor: Colors.red,
                               );
                             }
+                            // } catch (e) {
+                            //   ProductAppPopUps.submit(
+                            //     title: "Failed",
+                            //     message: "Response not ",
+                            //     actionName: "Close",
+                            //     iconData: Icons.error_outline,
+                            //     iconColor: Colors.red,
+                            //   );
+                            // }
                           },
                         ),
                       ),

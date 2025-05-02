@@ -40,8 +40,7 @@ class BatteryOfflineController extends GetxController {
         background.value = batteryData;
         print("background.value: ${batteryData}");
 
-        String? batteryStatusStr =
-            background.value?.data?.rB3?.batteryStatus;
+        String? batteryStatusStr = background.value?.data?.rB3?.batteryStatus;
         int batteryStatus = int.tryParse(batteryStatusStr ?? "-1") ?? -1;
         if (batteryStatus <= 30 && batteryStatus >= 0) {
           if (!popupshow2) {
@@ -229,5 +228,4 @@ class BatteryOfflineController extends GetxController {
       resetStatus();
     }
   }
-
 }
