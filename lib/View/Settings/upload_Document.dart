@@ -1,15 +1,12 @@
 import 'dart:io';
-import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-
-import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/View/Settings/settings.dart';
 
@@ -190,10 +187,12 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                           borderRadius: BorderRadius.circular(20.r),
                           child: buildInfoCardRed(size, 'DELETE MAP'),
                           onTap: () async {
-                            print("dsjfjdgijf");
                             // try {
                             Map<String, dynamic> resp =
                                 await ApiServices.deleteFile(status: true);
+
+                            print('deletemapresponce ${resp}');
+
                             if (resp['status'] == true) {
                               FocusManager.instance.primaryFocus?.unfocus();
                               ProductAppPopUps.submit(

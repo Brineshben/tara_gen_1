@@ -236,6 +236,19 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                                       return;
                                     }
 
+                                    if (batteryValue >= 100 ||
+                                        homeValue >= 100) {
+                                      Get.snackbar(
+                                        margin: EdgeInsets.all(20),
+                                        'Invalid Value',
+                                        'Values must be less than 100',
+                                        snackPosition: SnackPosition.TOP,
+                                        backgroundColor: Colors.red,
+                                        colorText: Colors.white,
+                                      );
+                                      return;
+                                    }
+
                                     settingsController.updateChargeValues(
                                       batteryEntry: _batteryController.text,
                                       homeEntry: _homeController.text,
@@ -279,56 +292,6 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
             ),
           ],
         ),
-
-        // floatingActionButton: Material(
-        //   color: Colors.transparent,
-        //   child: InkWell(
-        //     onTap: () {
-        //       //
-        //     },
-        //     child: Container(
-        //       width: 150,
-        //       decoration: BoxDecoration(
-        //         gradient: LinearGradient(
-        //           colors: [Color(0xFF42275a), Color(0xFF734b6d)],
-        //           begin: Alignment.topLeft,
-        //           end: Alignment.bottomRight,
-        //         ),
-        //         borderRadius: BorderRadius.circular(20),
-        //         boxShadow: [
-        //           BoxShadow(
-        //             color: Colors.purpleAccent.withOpacity(0.6),
-        //             spreadRadius: 1,
-        //             blurRadius: 6,
-        //             offset: Offset(0, 2),
-        //           ),
-        //         ],
-        //       ),
-        //       child: Padding(
-        //         padding: const EdgeInsets.symmetric(vertical: 10),
-        //         child: Row(
-        //           mainAxisAlignment:
-        //               MainAxisAlignment.spaceAround, // Spread icons evenly
-        //           children: [
-        //             Icon(
-        //               Icons.charging_station,
-        //               color: Colors.white, // Icon color
-        //               size: 30, // Icon size
-        //             ),
-        //             Icon(
-        //               Icons.compare_arrows,
-        //               color: Colors.white, // Icon color
-        //               size: 30, // Icon size
-        //             ),
-        //             Icon(
-        //               Icons.home,
-        //               color: Colors.white, // Icon color
-        //               size: 30, // Icon size
-        //             ),
-        //           ],
-        //         ),
-        //       ),
-        //     ),
       ),
     );
   }

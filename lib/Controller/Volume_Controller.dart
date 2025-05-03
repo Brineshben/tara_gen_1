@@ -12,10 +12,10 @@ class VolumeController extends GetxController {
   RxInt roboVolume = RxInt(0);
   Rx<volume_model?> updatedatass = Rx(null);
 
-  // void resetStatus() {
-  //   isLoading.value = false;
-  //   isError.value = false;
-  // }
+  void resetStatus() {
+    isLoading.value = false;
+    isError.value = false;
+  }
 
   Future<void> fetchvolume(String RobotId, int volume) async {
     isLoading.value = true;
