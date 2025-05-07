@@ -1,5 +1,9 @@
 import 'package:get/get.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
+import 'package:ihub/Controller/description_controller.dart';
+import 'package:ihub/Controller/prompt_controller.dart';
+import 'package:ihub/speed/controller/speed_controller.dart';
+
 import '../Controller/AddEmployeeController.dart';
 import '../Controller/AddEmployeeDetailController.dart';
 import '../Controller/Backgroud_controller.dart';
@@ -20,7 +24,6 @@ import '../Controller/Volume_Controller.dart';
 import '../Controller/batteryOfflineController.dart';
 import '../Controller/battery_Controller.dart';
 import '../Controller/update_status_controller.dart';
-import '../View/Home_Screen/home_page.dart';
 
 class HandleControllers {
   static createGetControllers() {
@@ -46,6 +49,9 @@ class HandleControllers {
     Get.put(NavigateDescriptionController());
     Get.put(BatteryOfflineController());
     Get.put(ChargeScreenController());
+    Get.put(DescriptionController());
+    Get.put(PromptController());
+    Get.put(SpeedController());
   }
 
   static deleteAllGetControllers() async {
@@ -70,5 +76,8 @@ class HandleControllers {
     await Get.delete<NavigateDescriptionController>();
     await Get.delete<BatteryOfflineController>();
     await Get.delete<ChargeScreenController>();
+    await Get.delete<DescriptionController>();
+    await Get.delete<PromptController>();
+    await Get.delete<SpeedController>();
   }
 }

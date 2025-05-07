@@ -1,6 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../Utils/api_constant.dart';
@@ -299,6 +301,21 @@ class ApiServices {
     }
   }
 
+// map restart
+  static Future<Map<String, dynamic>> mapRestart() async {
+    String url =
+        "${ApiConstants.baseUrl1}${ApiConstants.start_stop_button_press}";
+
+    Map apiBody = {"status": true};
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print('maprestatr ${json.decode(respString)}');
+    return json.decode(respString);
+  }
+
   ///check EnquiryList
 
   static Future<Map<String, dynamic>> EnquiryList({
@@ -397,7 +414,6 @@ class ApiServices {
   }
 
   ///check navigateDescriptionSubmit
-
   static Future<Map<String, dynamic>> navigateDescriptionSubmit({
     required int userId,
     required String data,
@@ -602,5 +618,53 @@ class ApiServices {
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     return json.decode(respString);
+  }
+
+// GO CHARGING DOK
+  static setChargingStatus(bool status) async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.gotoCharging}";
+    final response = await http.post(
+      Uri.parse(url),
+      body: jsonEncode({'status': status}),
+    );
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      // ❌ Server error
+      Get.snackbar(
+        "Server Error",
+        "Something went wrong. Please try again.",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        snackPosition: SnackPosition.TOP,
+        margin: EdgeInsets.all(20),
+      );
+      return null;
+    }
+  }
+
+// DELETE DESCRIPTION
+  static deleteDescription(int id) async {
+    String url =
+        "${ApiConstants.baseUrl1}${ApiConstants.deactivate_description}";
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'pk': id.toString()},
+    );
+    print('deleteresponce ${response.body}');
+    return jsonDecode(response.body);
+  }
+
+// DELETE PROMPT
+  static deletePrompt(int id) async {
+    String url =
+        "${ApiConstants.baseUrl1}${ApiConstants.deactivate_command_prompt}";
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'pk': id.toString()},
+    );
+    print('deleteresponce ${response.body}');
+    return jsonDecode(response.body);
   }
 }

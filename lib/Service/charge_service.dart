@@ -7,7 +7,7 @@ class ChargeService {
     required String batteryEntry,
     required String homeEntry,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.chargeUpdate}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.chargeUpdate}";
 
     try {
       final response = await http.post(
@@ -32,7 +32,7 @@ class ChargeService {
   static Future<Map<String, dynamic>> fetchCurrentCharge() async {
     try {
       final response = await http.get(
-        Uri.parse("${ApiConstants.baseUrl}${ApiConstants.getCurrentCharge}"),
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.getCurrentCharge}"),
       );
       print('GET Status: ${response.statusCode}');
       print('GET Body: ${response.body}');

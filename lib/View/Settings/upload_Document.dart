@@ -100,145 +100,179 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               );
             },
           ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
-                            borderRadius: BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        "ADD MAP",
-                        style: GoogleFonts.oxygen(
-                            color: Colors.white,
-                            fontSize: 25.h,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, top: 20),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(height: 100),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20.r),
-                          child: buildInfoCard(size, 'SELECT MAP'),
-                          onTap: () {
-                            print("nenhenh");
-                            _pickFile();
-                          },
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.pop(context);
+                        },
+                        child: Container(
+                          height: 60.h,
+                          width: 60.h,
+                          decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              // boxShadow: [
+                              //   BoxShadow(
+                              //     color: Colors.grey.withOpacity(0.3),
+                              //     blurRadius: 10,
+                              //     spreadRadius: 0,
+                              //   ),
+                              // ],
+                              borderRadius: BorderRadius.circular(15).r),
+                          child: Icon(
+                            Icons.arrow_back_outlined,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
-                      SizedBox(height: 20),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20.r),
-                          child: buildInfoCard(size, 'UPLOAD MAP'),
-                          onTap: () {
-                            _uploadFile();
-                          },
-                        ),
+                      SizedBox(
+                        width: 10,
                       ),
-                      SizedBox(height: 20),
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          splashColor: Colors.white,
-                          highlightColor: Colors.white.withOpacity(0.3),
-                          borderRadius: BorderRadius.circular(20.r),
-                          child: buildInfoCardRed(size, 'DELETE MAP'),
-                          onTap: () async {
-                            // try {
-                            Map<String, dynamic> resp =
-                                await ApiServices.deleteFile(status: true);
-
-                            print('deletemapresponce ${resp}');
-
-                            if (resp['status'] == true) {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              ProductAppPopUps.submit(
-                                title: "SUCCESS",
-                                message: resp['message'].toString(),
-                                actionName: "Close",
-                                iconData: Icons.done,
-                                iconColor: Colors.green,
-                              );
-                            } else {
-                              ProductAppPopUps.submit(
-                                title: "Failed",
-                                message: resp['message'].toString(),
-                                actionName: "Close",
-                                iconData: Icons.error_outline,
-                                iconColor: Colors.red,
-                              );
-                            }
-                            // } catch (e) {
-                            //   ProductAppPopUps.submit(
-                            //     title: "Failed",
-                            //     message: "Response not ",
-                            //     actionName: "Close",
-                            //     iconData: Icons.error_outline,
-                            //     iconColor: Colors.red,
-                            //   );
-                            // }
-                          },
+                      Center(
+                        child: Text(
+                          "ADD MAP",
+                          style: GoogleFonts.oxygen(
+                              color: Colors.white,
+                              fontSize: 25.h,
+                              fontWeight: FontWeight.w700),
                         ),
-                      ),
-                      SizedBox(height: 20),
-                      Text(
-                        _statusMessage,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(height: 100),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(size, 'SELECT MAP'),
+                            onTap: () {
+                              print("nenhenh");
+                              _pickFile();
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(size, 'UPLOAD MAP'),
+                            onTap: () {
+                              _uploadFile();
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCardRed(size, 'DELETE MAP'),
+                            onTap: () async {
+                              // try {
+                              Map<String, dynamic> resp =
+                                  await ApiServices.deleteFile(status: true);
+
+                              print('deletemapresponce ${resp}');
+
+                              if (resp['status'] == true) {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                ProductAppPopUps.submit(
+                                  title: "SUCCESS",
+                                  message: resp['message'].toString(),
+                                  actionName: "Close",
+                                  iconData: Icons.done,
+                                  iconColor: Colors.green,
+                                );
+                              } else {
+                                ProductAppPopUps.submit(
+                                  title: "Failed",
+                                  message: resp['message'].toString(),
+                                  actionName: "Close",
+                                  iconData: Icons.error_outline,
+                                  iconColor: Colors.red,
+                                );
+                              }
+                              // } catch (e) {
+                              //   ProductAppPopUps.submit(
+                              //     title: "Failed",
+                              //     message: "Response not ",
+                              //     actionName: "Close",
+                              //     iconData: Icons.error_outline,
+                              //     iconColor: Colors.red,
+                              //   );
+                              // }
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          _statusMessage,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.white,
+        icon: Icon(Icons.refresh, color: Colors.black),
+        label: Text(
+          'Refresh',
+          style: TextStyle(color: Colors.black),
+        ),
+        onPressed: () async {
+          Map response = await ApiServices.mapRestart();
+          if (response['status'] == 'ok') {
+            Get.snackbar(
+              'Success',
+              'Map restarted successfully!',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+              duration: Duration(seconds: 2),
+              margin: EdgeInsets.all(20),
+            );
+          } else {
+            Get.snackbar(
+              'Error',
+              'Map not restarted',
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              duration: Duration(seconds: 2),
+              margin: EdgeInsets.all(20),
+            );
+          }
+        },
       ),
     );
   }
@@ -267,7 +301,7 @@ Widget buildInfoCardRed(Size size, String title) {
     child: Center(
       child: Text(
         title,
-        style: GoogleFonts.orbitron(
+        style: GoogleFonts.poppins(
           color: Colors.white,
           fontSize: 18.h,
           fontWeight: FontWeight.bold,

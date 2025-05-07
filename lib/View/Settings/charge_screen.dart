@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
 import 'package:ihub/Service/sharedPreference.dart';
+import 'package:ihub/speed/view/speed_page.dart';
 
 class ChargeEntryView extends StatefulWidget {
   ChargeEntryView({super.key});
@@ -78,9 +79,10 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 40),
+                  padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       GestureDetector(
                         onTap: () async {
@@ -91,13 +93,6 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                           width: 60.h,
                           decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Colors.grey.withOpacity(0.3),
-                              //     blurRadius: 10,
-                              //     spreadRadius: 0,
-                              //   ),
-                              // ],
                               borderRadius: BorderRadius.circular(15).r),
                           child: Icon(
                             Icons.arrow_back_outlined,
@@ -115,6 +110,32 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                               color: Colors.white,
                               fontSize: 25.h,
                               fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                      Spacer(),
+                      GestureDetector(
+                        onDoubleTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => SpeedControllerPage(),
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Image.asset(
+                              "assets/speedometer.png",
+                              width: 90,
+                            ),
+                            Text(
+                              "Speed",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],

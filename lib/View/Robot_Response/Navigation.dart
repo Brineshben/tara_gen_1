@@ -5,23 +5,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:lottie/lottie.dart';
-import 'package:marquee/marquee.dart';
 
 import '../../Controller/Backgroud_controller.dart';
-import '../../Controller/Login_api_controller.dart';
 import '../../Controller/Navigate_Controller.dart';
 import '../../Controller/Response_Nav_Controller.dart';
-import '../../Model/Navigate_model.dart';
 import '../../Service/Api_Service.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import '../Login_Page/login.dart';
-import 'SubDetails2.dart';
 
 class Navigation extends StatefulWidget {
   final String robotid;
@@ -135,6 +129,7 @@ class _NavigationState extends State<Navigation> {
                       Padding(
                         padding: EdgeInsets.only(left: 10, top: 20),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
                             Row(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -246,8 +241,8 @@ class _NavigationState extends State<Navigation> {
                                         ),
                                       ),
                                     Container(
-                                      margin: EdgeInsets.only(
-                                          left: 10, top: 35, right: 10),
+                                      margin:
+                                          EdgeInsets.only(top: 35, right: 10),
                                       decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.2),
 
@@ -307,9 +302,9 @@ class _NavigationState extends State<Navigation> {
                       ),
                       Text(
                         "PLEASE SELECT YOUR DESTINATION",
-                        style: GoogleFonts.oxygen(
+                        style: GoogleFonts.poppins(
                             color: Colors.white,
-                            fontSize: 25.h,
+                            fontSize: 20.h,
                             fontWeight: FontWeight.w700),
                       ),
                       SizedBox(
@@ -513,7 +508,7 @@ class _NavigationState extends State<Navigation> {
                               ),
                               Text(
                                 "Oops..No Data Found in Destination List..",
-                                style: GoogleFonts.oxygen(
+                                style: GoogleFonts.poppins(
                                     color: Colors.red,
                                     fontSize: 20.h,
                                     fontWeight: FontWeight.w700),
@@ -529,106 +524,192 @@ class _NavigationState extends State<Navigation> {
             ),
           ],
         ),
-        floatingActionButton: Container(
-          margin: EdgeInsets.only(
-              left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  ColorUtils.userdetailcolor,
-                  ColorUtils.userdetailcolor
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-              borderRadius:
-                  BorderRadius.circular(10), // Ensure proper border radius
-            ),
-            child: Material(
-              color: Colors.transparent, // Ensure the gradient is visible
-              borderRadius: BorderRadius.circular(10),
-              child: FloatingActionButton.extended(
-                backgroundColor: Colors.transparent,
-                onPressed: () async {
-                  try {
-                    Map<String, dynamic> resp =
-                        await ApiServices.FulltourNavigation(Data: true);
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15.r),
+                  onTap: () async {
+                    Get.dialog(
+                      AlertDialog(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                        ),
+                        title: Column(
+                          children: [
+                            Icon(
+                              Icons.bolt,
+                              color: Colors.orange,
+                              size: 50.h,
+                            ),
+                          ],
+                        ),
+                        content: Text(
+                          "Do you want to go to the charging station?",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 16.h),
+                        ),
+                        actionsAlignment: MainAxisAlignment.center,
+                        actions: [
+                          FilledButton(
+                            onPressed: () async {
+                              final responce =
+                                  await ApiServices.setChargingStatus(true);
 
-                    if (resp['status'] == "ok") {
-                      FocusManager.instance.primaryFocus?.unfocus();
-                      Get.dialog(
-                        AlertDialog(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20.0)),
+                              if (responce['status'] == 'ok') {
+                                Get.back();
+                              } else {}
+                            },
+                            style: ButtonStyle(
+                              backgroundColor: WidgetStateProperty.all(
+                                  ColorUtils.userdetailcolor),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  "Yes",
+                                  style: TextStyle(
+                                      color: Colors.white, fontSize: 16.h),
+                                ),
+                              ],
+                            ),
                           ),
-                          title: Column(
-                            children: [
-                              Center(
-                                child: SizedBox(
-                                  width: 180.w,
-                                  height: 180.h,
-                                  child: Lottie.asset(
-                                    "assets/navigate.json",
-                                    fit: BoxFit.fitHeight,
+                        ],
+                      ),
+                    );
+                  },
+                  child: Ink(
+                    width: 100,
+                    height: 120,
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Lottie.asset("assets/char.json"),
+                        Text(
+                          "CHARGE",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.symmetric(vertical: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        ColorUtils.userdetailcolor,
+                        ColorUtils.userdetailcolor
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    ),
+                    borderRadius: BorderRadius.circular(
+                        10), // Ensure proper border radius
+                  ),
+                  child: Material(
+                    color: Colors.transparent, // Ensure the gradient is visible
+                    borderRadius: BorderRadius.circular(10),
+                    child: FloatingActionButton.extended(
+                      backgroundColor: Colors.transparent,
+                      onPressed: () async {
+                        try {
+                          Map<String, dynamic> resp =
+                              await ApiServices.FulltourNavigation(Data: true);
+
+                          if (resp['status'] == "ok") {
+                            FocusManager.instance.primaryFocus?.unfocus();
+                            Get.dialog(
+                              AlertDialog(
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(20.0)),
+                                ),
+                                title: Column(
+                                  children: [
+                                    Center(
+                                      child: SizedBox(
+                                        width: 180.w,
+                                        height: 180.h,
+                                        child: Lottie.asset(
+                                          "assets/navigate.json",
+                                          fit: BoxFit.fitHeight,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      "COMMAND RECEIVED",
+                                      style: GoogleFonts.orbitron(
+                                        color: Colors.black,
+                                        fontSize: 20.h,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                content: Text(
+                                  "Full Tour Mode Activated ".toUpperCase(),
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.oxygen(
+                                    color: Colors.black,
+                                    fontSize: 15.h,
                                   ),
                                 ),
                               ),
-                              Text(
-                                "COMMAND RECEIVED",
-                                style: GoogleFonts.orbitron(
-                                  color: Colors.black,
-                                  fontSize: 20.h,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          content: Text(
-                            "Full Tour Mode Activated ".toUpperCase(),
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.oxygen(
-                              color: Colors.black,
-                              fontSize: 15.h,
-                            ),
-                          ),
-                        ),
-                      ).then((_) {});
+                            ).then((_) {});
 
-                      Future.delayed(const Duration(seconds: 3), () {
-                        if (Get.isDialogOpen ?? false) {
-                          Get.back();
+                            Future.delayed(const Duration(seconds: 3), () {
+                              if (Get.isDialogOpen ?? false) {
+                                Get.back();
+                              }
+                            });
+                          } else {
+                            ProductAppPopUps.submit(
+                              title: "FAILED",
+                              message: "Something went wrong.",
+                              actionName: "Close",
+                              iconData: Icons.info_outline,
+                              iconColor: Colors.red,
+                            );
+                          }
+                        } catch (e) {
+                          ProductAppPopUps.submit(
+                            title: "FAILED",
+                            message: "Response Not recived From Robot",
+                            actionName: "Close",
+                            iconData: Icons.info_outline,
+                            iconColor: Colors.red,
+                          );
                         }
-                      });
-                    } else {
-                      ProductAppPopUps.submit(
-                        title: "FAILED",
-                        message: "Something went wrong.",
-                        actionName: "Close",
-                        iconData: Icons.info_outline,
-                        iconColor: Colors.red,
-                      );
-                    }
-                  } catch (e) {
-                    ProductAppPopUps.submit(
-                      title: "FAILED",
-                      message: "Response Not recived From Robot",
-                      actionName: "Close",
-                      iconData: Icons.info_outline,
-                      iconColor: Colors.red,
-                    );
-                  }
-                },
-                icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                label: Text("FULL TOUR",
-                    style: GoogleFonts.orbitron(
-                      color: Colors.white,
-                      fontSize: 18.h,
-                      fontWeight: FontWeight.bold,
-                    )),
+                      },
+                      icon: Icon(Icons.arrow_forward_ios, color: Colors.white),
+                      label: Text("FULL TOUR",
+                          style: GoogleFonts.poppins(
+                            color: Colors.white,
+                            fontSize: 18.h,
+                            fontWeight: FontWeight.bold,
+                          )),
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
         ));
   }

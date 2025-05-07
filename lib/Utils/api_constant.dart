@@ -91,8 +91,7 @@ class ApiConstants {
     return _instance;
   }
 
-  // static String _defaultBaseUrl1 = "http://192.168.0.170:8000"; // Default IP
-  static String _defaultBaseUrl1 = "http://192.168.1.68:8001"; // Default IP
+  static String _defaultBaseUrl1 = "http://192.168.1.31:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -131,6 +130,16 @@ class ApiConstants {
   static String apikey = "/api-key/upload/";
   static String fullTour = "/tour/update/";
   static String reboot = "/update-reboot-status/";
+
+  static String description = "/add_wishing_commands/";
+  static String commandPrompt = "/command_prompt/";
+  static String start_stop_button_press = "/start_stop_button_press/";
+
+  static String updateSpeed = "/speed/value/";
+  static String getSpeed = "/speed/";
+  static String gotoCharging = "/charging/set/";
+  static String deactivate_description = "/deactivate_description/";
+  static String deactivate_command_prompt = "/deactivate_command_prompt/";
 
   ///online
 

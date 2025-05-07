@@ -9,6 +9,8 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/View/Robot_Response/password_page.dart';
+import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -20,8 +22,6 @@ import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
 import '../../Utils/colors.dart';
 import '../Home_Screen/battery_Widget.dart';
-import '../Settings/otp_page.dart';
-import '../Splash/Battery_Splash.dart';
 import '../Splash/Loading_Splash.dart';
 import 'Navigation.dart';
 
@@ -56,7 +56,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      Get.find<BatteryOfflineController>().fetchOfflineBattery();
+      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
@@ -669,52 +669,49 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   spacing: 20,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Get.find<RobotresponseapiController>().link.value != ''
-                        ? Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                colors: [
-                                  ColorUtils.userdetailcolor,
-                                  ColorUtils.userdetailcolor
-                                ],
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
+                    Obx(() {
+                      final controller = Get.find<RobotresponseapiController>();
+                      return controller.link.value != ''
+                          ? Container(
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    ColorUtils.userdetailcolor,
+                                    ColorUtils.userdetailcolor,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              borderRadius: BorderRadius.circular(
-                                  10), // Ensure proper border radius
-                            ),
-                            child: Material(
-                              color: Colors
-                                  .transparent, // Ensure the gradient is visible
-                              borderRadius: BorderRadius.circular(10),
-                              child: FloatingActionButton.extended(
-                                backgroundColor: Colors.transparent,
-                                onPressed: () async {
-                                  final Uri url = Uri.parse(
-                                    Get.find<RobotresponseapiController>()
-                                        .link
-                                        .value,
-                                  );
-                                  await launchUrl(
-                                    url,
-                                    mode: LaunchMode.inAppWebView,
-                                  );
-                                },
-                                icon: Icon(Icons.arrow_forward_ios,
-                                    color: Colors.white),
-                                label: Text(
-                                    Get.find<RobotresponseapiController>()
-                                        .name
-                                        .value,
-                                    style: GoogleFonts.orbitron(
+                              child: Material(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(10),
+                                child: FloatingActionButton.extended(
+                                  backgroundColor: Colors.transparent,
+                                  onPressed: () async {
+                                    final Uri url =
+                                        Uri.parse(controller.link.value);
+                                    await launchUrl(
+                                      url,
+                                      mode: LaunchMode.inAppWebView,
+                                    );
+                                  },
+                                  icon:
+                                      Icon(Icons.language, color: Colors.white),
+                                  label: Text(
+                                    controller.name.value,
+                                    style: GoogleFonts.poppins(
                                       color: Colors.white,
                                       fontSize: 18.h,
                                       fontWeight: FontWeight.bold,
-                                    )),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          )
-                        : Text(""),
+                            )
+                          : SizedBox(); // Use SizedBox() instead of Text("") for better UI handling
+                    }),
                     Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -751,7 +748,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           icon: Icon(Icons.arrow_forward_ios,
                               color: Colors.white),
                           label: Text("NAVIGATE",
-                              style: GoogleFonts.orbitron(
+                              style: GoogleFonts.poppins(
                                 color: Colors.white,
                                 fontSize: 18.h,
                                 fontWeight: FontWeight.bold,
@@ -786,7 +783,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             transitionDuration: Duration(milliseconds: 300),
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    otp(),
+                                    PasswordPage(),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               return FadeTransition(
@@ -802,7 +799,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                       },
                       icon: Icon(Icons.settings, color: Colors.white),
                       label: Text("SETTINGS ",
-                          style: GoogleFonts.orbitron(
+                          style: GoogleFonts.poppins(
                             color: Colors.white,
                             fontSize: 18.h,
                             fontWeight: FontWeight.bold,

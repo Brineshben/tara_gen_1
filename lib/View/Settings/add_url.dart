@@ -8,6 +8,7 @@ import 'package:ihub/Service/url_service.dart';
 import 'package:ihub/Utils/popups.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../Utils/colors.dart';
 
@@ -26,6 +27,13 @@ class _AddUrlPageState extends State<AddUrlPage> {
   void initState() {
     _hideSystemUI();
     super.initState();
+    getData();
+  }
+
+  getData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _urlController.text = prefs.getString('url') ?? '';
+    _nameController.text = prefs.getString('name') ?? '';
   }
 
   void _hideSystemUI() {
@@ -111,7 +119,7 @@ class _AddUrlPageState extends State<AddUrlPage> {
                                 child: TextFormField(
                                   cursorColor: ColorUtils.userdetailcolor,
                                   controller: _nameController,
-                                  textInputAction: TextInputAction.next,
+                                  textInputAction: TextInputAction.done,
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
@@ -136,7 +144,7 @@ class _AddUrlPageState extends State<AddUrlPage> {
                                 child: TextFormField(
                                   cursorColor: ColorUtils.userdetailcolor,
                                   controller: _urlController,
-                                  textInputAction: TextInputAction.next,
+                                  textInputAction: TextInputAction.done,
                                   style: TextStyle(color: Colors.white),
                                   decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
