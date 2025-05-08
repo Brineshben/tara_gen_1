@@ -74,12 +74,11 @@
 //   static String robotresponsefornav = "/robot/button/clicked/";
 // }
 import 'dart:convert';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
-import '../Controller/Login_api_controller.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../Controller/battery_Controller.dart';
 
 class ApiConstants {

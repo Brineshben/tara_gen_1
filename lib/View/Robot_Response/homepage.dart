@@ -58,19 +58,19 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
-      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      if (isBatteryscreen ?? false) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const BatterySplash();
-          },
-        ));
-        timer.cancel();
-      }
-      fetchAndUpdateBaseUrl();
-      Get.find<RobotresponseapiController>().fetchObsResultList();
+      // if (isBatteryscreen ?? false) {
+      //   Navigator.push(context, MaterialPageRoute(
+      //     builder: (context) {
+      //       return const BatterySplash();
+      //     },
+      //   ));
+      //   timer.cancel();
+      // }
+      // fetchAndUpdateBaseUrl();
+      // Get.find<RobotresponseapiController>().fetchObsResultList();
     });
   }
 
@@ -175,47 +175,38 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           children: [
                             Row(
                               children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => LoadingSplash(),
-                                        ));
-                                  },
-                                  child: Container(
-                                    margin: EdgeInsets.only(
-                                        left: 10.w, top: 40.h, right: 10.w),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(20.r),
-                                    ),
-                                    width: size.width * 0.15,
-                                    height: size.height * 0.060,
-                                    child: Center(
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8, top: 8, bottom: 8),
-                                            child: Container(
-                                              height: size.height * 0.060,
-                                              width: size.width * 0.060,
-                                              child: SvgPicture.asset(
-                                                  "assets/reshot-icon-map-marker-KS456ZT2P3.svg",
-                                                  color: roboColor),
-                                            ),
+                                Container(
+                                  margin: EdgeInsets.only(
+                                      left: 10.w, top: 40.h, right: 10.w),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  width: size.width * 0.15,
+                                  height: size.height * 0.060,
+                                  child: Center(
+                                    child: Row(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                              left: 8, top: 8, bottom: 8),
+                                          child: Container(
+                                            height: size.height * 0.060,
+                                            width: size.width * 0.060,
+                                            child: SvgPicture.asset(
+                                                "assets/reshot-icon-map-marker-KS456ZT2P3.svg",
+                                                color: roboColor),
                                           ),
-                                          Text(
-                                            "Q: $quality ",
-                                            style: GoogleFonts.roboto(
-                                              color: Colors.white,
-                                              fontSize: 15.h,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                        ),
+                                        Text(
+                                          "Q: $quality ",
+                                          style: GoogleFonts.roboto(
+                                            color: Colors.white,
+                                            fontSize: 15.h,
+                                            fontWeight: FontWeight.bold,
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -267,11 +258,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             GetX<BatteryController>(
                               builder: (BatteryController controller) {
                                 int? batteryLevel;
-                                // String? data;
-
-                                // if (controller.background.value?.rB3
-                                //     ?.batteryStatus?.isNotEmpty ??
-                                //     false) {
 
                                 batteryLevel = int.tryParse(controller
                                             .background
@@ -282,21 +268,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             ?.batteryStatus ??
                                         "0") ??
                                     0;
-                                // data = controller.background.value?.data?.rB3
-                                //         ?.batteryStatus ??
-                                //     "0";
-                                // batteryLevel = int.tryParse(controller
-                                //             .background
-                                //             .value
-                                //             ?.data
-                                //             ?.rB3
-                                //             ?.batteryStatus
-                                //             .toString() ??
-                                //         '0') ??
-                                //     0;
+
                                 print("batettegdshgfcdshuf$batteryLevel");
 
-                                // }
                                 return Container(
                                   margin: EdgeInsets.only(
                                       left: 20.w, top: 40.h, right: 10.w),
@@ -379,13 +353,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                                     'LISTENING....',
                                                     speed: Duration(
                                                         milliseconds: 50),
-                                                    // Adjust typing speed
-                                                    cursor:
-                                                        '|', // Optional cursor
+                                                    cursor: '|',
                                                   ),
                                                 ],
                                                 repeatForever: true,
-                                                // Ensures continuous looping
                                                 isRepeatingAnimation: true,
                                               ),
                                             ),
@@ -425,13 +396,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                                     'THINKING....',
                                                     speed: Duration(
                                                         milliseconds: 50),
-                                                    // Adjust typing speed
-                                                    cursor:
-                                                        '|', // Optional cursor
+                                                    cursor: '|',
                                                   ),
                                                 ],
                                                 repeatForever: true,
-                                                // Ensures continuous looping
                                                 isRepeatingAnimation: true,
                                               ),
                                             ),
@@ -688,6 +656,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(10),
                                 child: FloatingActionButton.extended(
+                                  heroTag: "link_btn",
                                   backgroundColor: Colors.transparent,
                                   onPressed: () async {
                                     final Uri url =
@@ -728,6 +697,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         color: Colors.transparent,
                         borderRadius: BorderRadius.circular(10),
                         child: FloatingActionButton.extended(
+                          heroTag: "navigate_btn",
                           backgroundColor: Colors.transparent,
                           onPressed: () {
                             Navigator.push(context, MaterialPageRoute(
@@ -775,6 +745,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     color: Colors.transparent, // Ensure the gradient is visible
                     borderRadius: BorderRadius.circular(10),
                     child: FloatingActionButton.extended(
+                      heroTag: "settings_btn",
                       backgroundColor: Colors.transparent,
                       onPressed: () {
                         Navigator.push(
@@ -809,13 +780,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                 ),
               ],
             ),
-          )
-          // GetX<BatteryController>(
-          //   builder: (BatteryController controller) {
-          //     return ;
-          //   },
-          // ),
-          ),
+          )),
     );
   }
 
@@ -833,13 +798,11 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(25.r),
-              // Ensuring rounded corners
               child: CachedNetworkImage(
                 width: double.infinity,
                 height: double.infinity,
                 imageUrl: image,
                 fit: BoxFit.cover,
-                // Makes sure the image fills the container properly
                 placeholder: (context, url) => Image.asset(
                   "assets/homelogo.jpg",
                   fit: BoxFit.fitWidth,
@@ -849,29 +812,14 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   fit: BoxFit.fitWidth,
                 ),
               ),
-            )
-            // Fallback if no image
-            ),
+            )),
         SizedBox(
           height: 10,
         ),
         Container(
           decoration: BoxDecoration(
             color: Colors.white.withOpacity(0.2),
-
-            // gradient: LinearGradient(
-            //   colors: [Colors.blue, Colors.purple], // Define gradient colors
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            // ),
             borderRadius: BorderRadius.circular(30.r),
-            // boxShadow: [
-            //   BoxShadow(
-            //     color: Colors.white,
-            //     spreadRadius: 0.01,
-            //     offset: Offset(0, 0),
-            //   ),
-            // ],
           ),
           width: size.width * 0.15,
           height: size.height * 0.060,

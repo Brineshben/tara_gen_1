@@ -9,16 +9,15 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/Login_api_controller.dart';
-import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
-import 'package:ihub/View/Settings/description_list_screen.dart';
+import 'package:ihub/View/Settings/description_option.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
-import 'package:ihub/View/Settings/system_promt_add_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/battery_Controller.dart';
@@ -28,7 +27,6 @@ import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../Login_Page/login.dart' as login_page;
 import '../Robot_Response/Fulltour_dart.dart';
-import 'Add_Description.dart';
 import 'ApiKey.dart';
 import 'Volume_page.dart';
 
@@ -40,7 +38,7 @@ class Maintanance extends StatefulWidget {
 }
 
 class _MaintananceState extends State<Maintanance> {
-  static const _platform = MethodChannel('com.example.ihub/channel');
+  // static const _platform = MethodChannel('com.example.ihub/channel');
 
   // static Future<void> openExternalApp() async {
   //   try {
@@ -164,478 +162,459 @@ class _MaintananceState extends State<Maintanance> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+        backgroundColor: Colors.white,
         body: Stack(
-      children: [
-        SizedBox(
-          width: ScreenUtil().screenWidth,
-          height: ScreenUtil().screenHeight,
-        ),
-        GetX<BackgroudController>(
-          builder: (BackgroudController controller) {
-            return Positioned.fill(
-              child: CachedNetworkImage(
-                imageUrl:
-                    controller.backgroundModel.value?.backgroundImage ?? "",
-                fit: BoxFit.cover,
-                placeholder: (context, url) =>
-                    Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                errorWidget: (context, url, error) =>
-                    Image.asset("assets/images.jpg", fit: BoxFit.cover),
-              ),
-            );
-          },
-        ),
+          children: [
+            SizedBox(
+              width: ScreenUtil().screenWidth,
+              height: ScreenUtil().screenHeight,
+            ),
+            GetX<BackgroudController>(
+              builder: (BackgroudController controller) {
+                return Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        controller.backgroundModel.value?.backgroundImage ?? "",
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                    errorWidget: (context, url, error) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
 
-        /// Main Content
-        SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
+            /// Main Content
+            SingleChildScrollView(
+              child: Column(
+                children: [
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 20, top: 20, right: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () async {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            height: 60.h,
-                            width: 60.h,
-                            decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: Colors.grey.withOpacity(0.3),
-                                //     blurRadius: 10,
-                                //     spreadRadius: 0,
-                                //   ),
-                                // ],
-                                borderRadius: BorderRadius.circular(15).r),
-                            child: Icon(
-                              Icons.arrow_back_outlined,
-                              color: Colors.grey,
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            GestureDetector(
+                              onTap: () async {
+                                Navigator.pop(context);
+                              },
+                              child: Container(
+                                height: 60.h,
+                                width: 60.h,
+                                decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(0.2),
+                                    // boxShadow: [
+                                    //   BoxShadow(
+                                    //     color: Colors.grey.withOpacity(0.3),
+                                    //     blurRadius: 10,
+                                    //     spreadRadius: 0,
+                                    //   ),
+                                    // ],
+                                    borderRadius: BorderRadius.circular(15).r),
+                                child: Icon(
+                                  Icons.arrow_back_outlined,
+                                  color: Colors.grey,
+                                ),
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Center(
-                          child: GestureDetector(
-                            onTap: () async {
-                              await SharedPrefs().removeLoginData();
-                            },
-                            child: Text(
-                              "SETTINGS",
-                              style: GoogleFonts.oxygen(
-                                  color: Colors.white,
-                                  fontSize: 25.h,
-                                  fontWeight: FontWeight.w700),
+                            SizedBox(
+                              width: 10,
                             ),
-                          ),
+                            Center(
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await SharedPrefs().removeLoginData();
+                                },
+                                child: Text(
+                                  "SETTINGS",
+                                  style: GoogleFonts.oxygen(
+                                      color: Colors.white,
+                                      fontSize: 25.h,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
+                        // Container(
+                        //   decoration: BoxDecoration(
+                        //     gradient: LinearGradient(
+                        //       colors: [Colors.red, Colors.red],
+                        //       begin: Alignment.topLeft,
+                        //       end: Alignment.bottomRight,
+                        //     ),
+                        //     borderRadius: BorderRadius.circular(
+                        //         10), // Ensure proper border radius
+                        //   ),
+                        //   child: Material(
+                        //     color: Colors
+                        //         .transparent, // Ensure the gradient is visible
+                        //     borderRadius: BorderRadius.circular(10),
+                        //     child: FloatingActionButton.extended(
+                        //       backgroundColor: Colors.transparent,
+                        //       onPressed: () {
+                        //         exit(0);
+                        //       },
+                        //       icon: Icon(Icons.arrow_forward_ios,
+                        //           color: Colors.white),
+                        //       label: Text("EXIT APP",
+                        //           style: GoogleFonts.poppins(
+                        //             color: Colors.white,
+                        //             fontSize: 18.h,
+                        //             fontWeight: FontWeight.bold,
+                        //           )),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [Colors.red, Colors.red],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(
-                            10), // Ensure proper border radius
-                      ),
-                      child: Material(
-                        color: Colors
-                            .transparent, // Ensure the gradient is visible
-                        borderRadius: BorderRadius.circular(10),
-                        child: FloatingActionButton.extended(
-                          backgroundColor: Colors.transparent,
-                          onPressed: () {
-                            exit(0);
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      top: 30,
+                      bottom: 20,
+                      right: 20,
+                      left: 20,
+                    ),
+                    child: Wrap(
+                      spacing: 20.0, // Horizontal space between items
+                      runSpacing: 20.0, // Vertical space between rows
+                      alignment: WrapAlignment.center,
+                      children: [
+                        // GestureDetector(
+                        //   child: buildInfoCard(size, 'ADD EMPLOYEES'),
+                        //   onTap: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       PageRouteBuilder(
+                        //         transitionDuration: Duration(milliseconds: 300),
+                        //         pageBuilder:
+                        //             (context, animation, secondaryAnimation) =>
+                        //                 AddEmployee(),
+                        //         transitionsBuilder: (context, animation,
+                        //             secondaryAnimation, child) {
+                        //           return FadeTransition(
+                        //               opacity: animation, child: child);
+                        //         },
+                        //       ),
+                        //     );
+                        //   },
+                        // ),
+
+                        // Material(
+                        //   color: Colors.transparent,
+                        //   child: InkWell(
+                        //     splashColor: Colors.white,
+                        //     highlightColor: Colors.white.withOpacity(0.3),
+                        //     borderRadius: BorderRadius.circular(20.r),
+                        //     child: buildInfoCard(size, 'IP ADDRESS'),
+                        //     onTap: () {
+                        //       Navigator.push(
+                        //         context,
+                        //         PageRouteBuilder(
+                        //           transitionDuration: Duration(milliseconds: 300),
+                        //           pageBuilder:
+                        //               (context, animation, secondaryAnimation) =>
+                        //                   Ipaddress(),
+                        //           transitionsBuilder: (context, animation,
+                        //               secondaryAnimation, child) {
+                        //             return FadeTransition(
+                        //                 opacity: animation, child: child);
+                        //           },
+                        //         ),
+                        //       );
+                        //     },
+                        //   ),
+                        // ),
+
+                        // GestureDetector(
+                        //   child: buildInfoCard(
+                        //       size, isTraining ? 'ON TRAINING' : 'TRAIN ROBOT'),
+                        //   onTap: () async {
+                        //     if (!isTraining) {
+                        //       startTraining();
+                        //     }
+                        //   },
+                        // ),
+
+                        // REBOOT
+                        // GestureDetector(
+                        //   child: buildInfoCard(size, 'REBOOT'),
+                        //   onTap: () async {
+                        //     Map<String, dynamic> resp =
+                        //         await ApiServices.Reboot(true);
+                        //     print("POWERPOWERPOWER$resp");
+                        //     if (resp['status'] == true) {
+                        //       FocusManager.instance.primaryFocus?.unfocus();
+                        //       ProductAppPopUps.submit(
+                        //         title: "SUCCESS",
+                        //         message: resp['message'].toString(),
+                        //         actionName: "Close",
+                        //         iconData: Icons.done,
+                        //         iconColor: Colors.green,
+                        //       );
+                        //     } else {
+                        //       ProductAppPopUps.submit(
+                        //         title: "FAILED",
+                        //         message: "Something went wrong.",
+                        //         actionName: "Close",
+                        //         iconData: Icons.info_outline,
+                        //         iconColor: Colors.red,
+                        //       );
+                        //     }
+                        //   },
+                        // ),
+
+                        SettingsCard(
+                          iconPath: 'assets/key.png',
+                          subtitle: 'Manage your API keys securely',
+                          title: 'API KEY',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                transitionDuration: Duration(milliseconds: 300),
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        ApiKey(),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  return FadeTransition(
+                                      opacity: animation, child: child);
+                                },
+                              ),
+                            );
                           },
-                          icon: Icon(Icons.arrow_forward_ios,
-                              color: Colors.white),
-                          label: Text("EXIT APP",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 18.h,
-                                fontWeight: FontWeight.bold,
-                              )),
                         ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 30),
-                child: Wrap(
-                  spacing: 20.0, // Horizontal space between items
-                  runSpacing: 20.0, // Vertical space between rows
-                  alignment: WrapAlignment.center,
-                  children: [
-                    // GestureDetector(
-                    //   child: buildInfoCard(size, 'ADD EMPLOYEES'),
-                    //   onTap: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       PageRouteBuilder(
-                    //         transitionDuration: Duration(milliseconds: 300),
-                    //         pageBuilder:
-                    //             (context, animation, secondaryAnimation) =>
-                    //                 AddEmployee(),
-                    //         transitionsBuilder: (context, animation,
-                    //             secondaryAnimation, child) {
-                    //           return FadeTransition(
-                    //               opacity: animation, child: child);
-                    //         },
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'API KEY'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              transitionDuration: Duration(milliseconds: 300),
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      ApiKey(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                    opacity: animation, child: child);
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    // Material(
-                    //   color: Colors.transparent,
-                    //   child: InkWell(
-                    //     splashColor: Colors.white,
-                    //     highlightColor: Colors.white.withOpacity(0.3),
-                    //     borderRadius: BorderRadius.circular(20.r),
-                    //     child: buildInfoCard(size, 'IP ADDRESS'),
-                    //     onTap: () {
-                    //       Navigator.push(
-                    //         context,
-                    //         PageRouteBuilder(
-                    //           transitionDuration: Duration(milliseconds: 300),
-                    //           pageBuilder:
-                    //               (context, animation, secondaryAnimation) =>
-                    //                   Ipaddress(),
-                    //           transitionsBuilder: (context, animation,
-                    //               secondaryAnimation, child) {
-                    //             return FadeTransition(
-                    //                 opacity: animation, child: child);
-                    //           },
-                    //         ),
-                    //       );
-                    //     },
-                    //   ),
-                    // ),
-                    // GestureDetector(
-                    //   child: buildInfoCard(
-                    //       size, isTraining ? 'ON TRAINING' : 'TRAIN ROBOT'),
-                    //   onTap: () async {
-                    //     if (!isTraining) {
-                    //       startTraining();
-                    //     }
-                    //   },
-                    // ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'MAPPING'),
-                        onTap: () {
-                          // NativeBridge.openExternalApp();
-                          //
-                          // // openExternalApp();
-                          // openAnotherApp();
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'CHANGE WALLPAPER'),
-                        onTap: () async {
-                          await _pickImage();
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'UPLOAD MAP'),
-                        onTap: () {
-                          Navigator.push(
+                        SettingsCard(
+                          iconPath: 'assets/robo.png',
+                          subtitle: 'Open RoboStudio application',
+                          title: 'MAPPING',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            // NativeBridge.openExternalApp();
+                            //
+                            // // openExternalApp();
+                            // openAnotherApp();
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/change.png',
+                          subtitle: 'Select and set a new wallpaper',
+                          title: 'CHANGE WALLPAPER',
+                          backgroundColor: Colors.white,
+                          onTap: () async {
+                            await _pickImage();
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/map.png',
+                          subtitle: "Upload a new map for your tour",
+                          title: 'UPLOAD MAP',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FileUploadScreen()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/prompt.png',
+                          subtitle: 'Manage system prompts and responses',
+                          title: 'SYSTEM PROMPT',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => PromptListPage()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/charging.png',
+                          subtitle: 'Check the current charge status',
+                          title: 'CHARGE',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => ChargeEntryView()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/description.png',
+                          subtitle: 'Manage and edit descriptions',
+                          title: 'DESCRIPTION',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => DescriptionOption()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/link.png',
+                          subtitle: 'Add and manage web links',
+                          title: 'WEB LINK',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddUrlPage()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/destination.png',
+                          subtitle: "Create a new full tour itinerary",
+                          title: 'ADD FULL TOUR',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ListAnimationdData()));
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/high-volume.png',
+                          subtitle: 'Adjust the controller volume',
+                          title: 'VOLUME CONTROLLER',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => FileUploadScreen()));
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'SYSTEM PROMPT'),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => PromptListPage()));
-                        },
-                      ),
-                    ),
-
-                    // charge
-
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'CHARGE'),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChargeEntryView()));
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'ADD DESCRIPTION'),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      DescriptionListScreen()));
-                        },
-                      ),
-                    ),
-
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'ADD WEB LINK'),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddUrlPage()));
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'ADD FULL TOUR'),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnimationdData()));
-                        },
-                      ),
-                    ),
-                    // GestureDetector(
-                    //   child: buildInfoCard(size, 'REBOOT'),
-                    //   onTap: () async {
-                    //       Map<String, dynamic> resp = await ApiServices
-                    //           .Reboot(true);
-                    //       print("POWERPOWERPOWER$resp");
-                    //       if (resp['status'] == true) {
-                    //         FocusManager.instance.primaryFocus?.unfocus();
-                    //         ProductAppPopUps.submit(
-                    //           title: "SUCCESS",
-                    //           message: resp['message'].toString(),
-                    //           actionName: "Close",
-                    //           iconData: Icons.done,
-                    //           iconColor: Colors.green,
-                    //         );
-                    //       } else {
-                    //         ProductAppPopUps.submit(
-                    //           title: "FAILED",
-                    //           message: "Something went wrong.",
-                    //           actionName: "Close",
-                    //           iconData: Icons.info_outline,
-                    //           iconColor: Colors.red,
-                    //         );
-                    //       }
-                    //
-                    //   },
-                    // ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCard(size, 'VOLUME'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                return VolumeControl(
-                                  robotid: Get.find<BatteryController>()
-                                          .background
-                                          .value
-                                          ?.data
-                                          ?.first
-                                          .robot
-                                          ?.roboId ??
-                                      "",
-                                );
-                              },
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCardGREEN(size, 'RESTART'),
-                        onTap: () {
-                          login_page.checkInternet2(
-                            context: context,
-                            function: () async {
-                              try {
-                                Map<String, dynamic> resp =
-                                    await ApiServices.logoutoffline(true)
-                                        .timeout(Duration(seconds: 3));
-                                if (resp['message'] ==
-                                    "Reboot status updated") {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  ProductAppPopUps.submitLogOut2(
-                                    title: "SUCCESS",
-                                    message: "Robot Restarted",
-                                    actionName: "OK",
-                                    iconData: Icons.done,
-                                    iconColor: Colors.green,
-                                    context: context,
+                                builder: (context) {
+                                  return VolumeControl(
+                                    robotid: Get.find<BatteryController>()
+                                            .background
+                                            .value
+                                            ?.data
+                                            ?.first
+                                            .robot
+                                            ?.roboId ??
+                                        "",
                                   );
-                                } else {
+                                },
+                              ),
+                            );
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/synchronize.png',
+                          subtitle: 'Restart your device to refresh settings',
+                          title: 'RESTART',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            login_page.checkInternet2(
+                              context: context,
+                              function: () async {
+                                try {
+                                  Map<String, dynamic> resp =
+                                      await ApiServices.logoutoffline(true)
+                                          .timeout(Duration(seconds: 3));
+                                  if (resp['message'] ==
+                                      "Reboot status updated") {
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
+                                    ProductAppPopUps.submitLogOut2(
+                                      title: "SUCCESS",
+                                      message: "Robot Restarted",
+                                      actionName: "OK",
+                                      iconData: Icons.done,
+                                      iconColor: Colors.green,
+                                      context: context,
+                                    );
+                                  } else {
+                                    ProductAppPopUps.submit(
+                                      title: "FAILED",
+                                      message: "Api Response Issue",
+                                      actionName: "Close",
+                                      iconData: Icons.info_outline,
+                                      iconColor: Colors.red,
+                                    );
+                                  }
+                                } catch (e) {
                                   ProductAppPopUps.submit(
                                     title: "FAILED",
-                                    message: "Api Response Issue",
+                                    message: "Something went wrong.",
                                     actionName: "Close",
                                     iconData: Icons.info_outline,
                                     iconColor: Colors.red,
                                   );
                                 }
-                              } catch (e) {
+                              },
+                            );
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/power-on.png',
+                          subtitle: 'Turn off your device completely',
+                          title: 'POWER OFF',
+                          backgroundColor: Colors.white,
+                          onTap: () async {
+                            try {
+                              Map<String, dynamic> resp =
+                                  await ApiServices.logout()
+                                      .timeout(Duration(seconds: 3));
+                              print("POWERPOWERPOWER$resp");
+                              if (resp['message'] == "Robot turned OFF") {
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                ProductAppPopUps.submitLogOut(
+                                  title: "SUCCESS",
+                                  message: resp['message'].toString(),
+                                  actionName: "Close",
+                                  iconData: Icons.done,
+                                  iconColor: Colors.green,
+                                  context: context,
+                                );
+                              } else {
                                 ProductAppPopUps.submit(
                                   title: "FAILED",
-                                  message: "Something went wrong.",
+                                  message: "Api issue",
                                   actionName: "Close",
                                   iconData: Icons.info_outline,
                                   iconColor: Colors.red,
                                 );
                               }
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        splashColor: Colors.white,
-                        highlightColor: Colors.white.withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(20.r),
-                        child: buildInfoCardRed(size, 'POWER OFF'),
-                        onTap: () async {
-                          try {
-                            Map<String, dynamic> resp =
-                                await ApiServices.logout()
-                                    .timeout(Duration(seconds: 3));
-                            print("POWERPOWERPOWER$resp");
-                            if (resp['message'] == "Robot turned OFF") {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              ProductAppPopUps.submitLogOut(
-                                title: "SUCCESS",
-                                message: resp['message'].toString(),
-                                actionName: "Close",
-                                iconData: Icons.done,
-                                iconColor: Colors.green,
-                                context: context,
-                              );
-                            } else {
+                            } catch (e) {
                               ProductAppPopUps.submit(
                                 title: "FAILED",
-                                message: "Api issue",
+                                message: "Something went wrong.",
                                 actionName: "Close",
                                 iconData: Icons.info_outline,
                                 iconColor: Colors.red,
                               );
                             }
-                          } catch (e) {
-                            ProductAppPopUps.submit(
-                              title: "FAILED",
-                              message: "Something went wrong.",
-                              actionName: "Close",
-                              iconData: Icons.info_outline,
-                              iconColor: Colors.red,
-                            );
-                          }
-                        },
-                      ),
+                          },
+                        ),
+                        SettingsCard(
+                          iconPath: 'assets/exit.png',
+                          subtitle: 'Exit and close everything',
+                          title: 'Exit',
+                          backgroundColor: Colors.white,
+                          onTap: () async {
+                            exit(0);
+                          },
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ],
-    ));
+                  )
+                ],
+              ),
+            ),
+          ],
+        ));
   }
 }
 
@@ -671,63 +650,31 @@ Widget buildInfoCard(Size size, String title) {
     ),
   );
 }
-// void openAnotherApp() async {
-//   const packageName = "com.slamtec.robostudio";
-//   final Uri androidUri =
-//   Uri.parse("intent://#Intent;package=$packageName;end;");
-//
-//   try {
-//     if (await canLaunchUrl(Uri.parse("android-app://$packageName"))) {
-//       await launchUrl(Uri.parse("android-app://$packageName"));
-//       return;
-//     }
-//
-//     if (await canLaunchUrl(androidUri)) {
-//       await launchUrl(androidUri);
-//       return;
-//     }
-//
-//     // Open Play Store if the app is not installed
-//     await launchUrl(
-//       Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
-//       mode: LaunchMode.externalApplication,
-//     );
-//   } catch (e) {
-//     print("Error launching app: $e");
-//   }
-// }
 
-Widget buildInfoCardGREEN(Size size, String title) {
-  return Ink(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Colors.green, Colors.green],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(20.r),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.white,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset(0, 0),
-        ),
-      ],
-    ),
-    width: size.width * 0.28,
-    height: size.height * 0.075,
-    child: Center(
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 18.h,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  );
+void openAnotherApp() async {
+  const packageName = "com.slamtec.robostudio";
+  final Uri androidUri =
+      Uri.parse("intent://#Intent;package=$packageName;end;");
+
+  try {
+    if (await canLaunchUrl(Uri.parse("android-app://$packageName"))) {
+      await launchUrl(Uri.parse("android-app://$packageName"));
+      return;
+    }
+
+    if (await canLaunchUrl(androidUri)) {
+      await launchUrl(androidUri);
+      return;
+    }
+
+    // Open Play Store if the app is not installed
+    await launchUrl(
+      Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
+      mode: LaunchMode.externalApplication,
+    );
+  } catch (e) {
+    print("Error launching app: $e");
+  }
 }
 
 class NativeBridge {
@@ -739,5 +686,68 @@ class NativeBridge {
     } on PlatformException catch (e) {
       print("Error: ${e.message}");
     }
+  }
+}
+
+class SettingsCard extends StatelessWidget {
+  final String iconPath;
+  final String title;
+  final String subtitle;
+  final VoidCallback? onTap;
+  final Color? backgroundColor; // ✅ New: for background color
+  final Color? titleColor; // ✅ New: for title text color
+  final Color? subtitleColor; // ✅ New: for subtitle text color
+
+  const SettingsCard({
+    Key? key,
+    required this.iconPath,
+    required this.title,
+    required this.subtitle,
+    this.onTap,
+    this.backgroundColor,
+    this.titleColor,
+    this.subtitleColor,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        borderRadius: BorderRadius.circular(20),
+        onTap: onTap,
+        child: Ink(
+          padding: const EdgeInsets.all(15),
+          decoration: BoxDecoration(
+            color: backgroundColor ?? Colors.white, // ✅ use given or default
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.blueGrey.shade200, width: 1),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Image.asset(iconPath, width: 30),
+              const SizedBox(height: 10),
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: titleColor ?? Colors.black, // ✅ use given or default
+                ),
+              ),
+              Text(
+                subtitle,
+                style: TextStyle(
+                  color:
+                      subtitleColor ?? Colors.black54, // ✅ use given or default
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
