@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Login_Page/login.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../Service/Api_Service.dart';
 
@@ -22,14 +23,8 @@ class _LoadingSplashState extends State<LoadingSplash> {
   @override
   void initState() {
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      print('splash init');
-
       Map<String, dynamic> resp = await ApiServices.loading();
-      print("POWERPOWERPOWER$resp");
-
       if (resp['status'] == "ON") {
-        print('staus ===0 ');
-
         FocusManager.instance.primaryFocus?.unfocus();
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {
@@ -64,50 +59,42 @@ class _LoadingSplashState extends State<LoadingSplash> {
                 ),
               ),
             ),
-            SizedBox(
-              height: 50,
-            ),
-            SizedBox(
-              height: 50.h,
-              width: 280.w,
-              child: DefaultTextStyle(
-                style: GoogleFonts.inter(
-                    color: Colors.white,
-                    fontSize: 30.h,
-                    fontWeight: FontWeight.bold,
-                    shadows: [
-                      Shadow(
-                        blurRadius: 5.0,
-                        color: Colors.black.withOpacity(0.7),
-                        offset: Offset(2, 2),
-                      ),
-                    ]),
-                child: Center(
-                  child: AnimatedTextKit(
-                    animatedTexts: [
-                      TypewriterAnimatedText(
-                        'LOADING....',
-                        speed: Duration(milliseconds: 50),
-                        // Adjust typing speed
-                        cursor: '|', // Optional cursor
-                      ),
-                    ],
-                    repeatForever: true,
-                    // Ensures continuous looping
-                    isRepeatingAnimation: true,
-                  ),
-                ),
-              ),
-            ),
+            Lottie.asset("assets/loading.json", width: 80),
+            // SizedBox(
+            //   height: 50.h,
+            //   width: 280.w,
+            //   child: DefaultTextStyle(
+            //     style: GoogleFonts.inter(
+            //         color: Colors.white,
+            //         fontSize: 30.h,
+            //         fontWeight: FontWeight.bold,
+            //         shadows: [
+            //           Shadow(
+            //             blurRadius: 5.0,
+            //             color: Colors.black.withOpacity(0.7),
+            //             offset: Offset(2, 2),
+            //           ),
+            //         ]),
+            // child: Center(
+            //   child: AnimatedTextKit(
+            //     animatedTexts: [
+            //       TypewriterAnimatedText(
+            //         'LOADING....',
+            //         speed: Duration(seconds: 1),
+            //         // Adjust typing speed
+            //         cursor: '|', // Optional cursor
+            //       ),
+            //     ],
+            //     repeatForever: true,
+            //     // Ensures continuous looping
+            //     isRepeatingAnimation: true,
+            //   ),
+            // )
+            // ),
+            // ),
           ],
         ),
       ),
     );
   }
 }
-// Center(
-// child: Lottie.asset(
-// "assets/loading.json",
-// fit: BoxFit.fitHeight,
-// ),
-// ),

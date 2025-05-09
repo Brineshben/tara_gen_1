@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
-import 'package:ihub/Service/sharedPreference.dart';
 import 'package:ihub/speed/view/speed_page.dart';
 
 class ChargeEntryView extends StatefulWidget {
@@ -82,7 +81,7 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                   padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       GestureDetector(
                         onTap: () async {
@@ -103,9 +102,10 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                       SizedBox(
                         width: 10,
                       ),
-                      Center(
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
                         child: Text(
-                          "CHARGE",
+                          "Battery Config",
                           style: GoogleFonts.oxygen(
                               color: Colors.white,
                               fontSize: 25.h,
@@ -170,7 +170,7 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                                       // color: AppColor.primary,
                                       ),
                                   filled: true,
-                                  fillColor: Colors.transparent,
+                                  fillColor: Colors.blueGrey[100],
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(12),
@@ -206,7 +206,7 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                                       // color: AppColor.primary,
                                       ),
                                   filled: true,
-                                  fillColor: Colors.transparent,
+                                  fillColor: Colors.blueGrey[100],
                                   enabledBorder: OutlineInputBorder(
                                     borderRadius: BorderRadius.all(
                                       Radius.circular(12),

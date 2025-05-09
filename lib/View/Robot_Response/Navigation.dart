@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:lottie/lottie.dart';
 
@@ -199,8 +201,7 @@ class _NavigationState extends State<Navigation> {
                                     //   child: Center(
                                     //     child: SizedBox(
                                     //       child: Padding(
-                                    //         padding:
-                                    //             const EdgeInsets.all(8.0),
+                                    //         padding: const EdgeInsets.all(8.0),
                                     //         child: Lottie.asset(
                                     //           "assets/emergency.json",
                                     //           fit: BoxFit.fitHeight,
@@ -297,206 +298,422 @@ class _NavigationState extends State<Navigation> {
                           ],
                         ),
                       ),
-                      SizedBox(
-                        height: 50,
-                      ),
-                      Text(
-                        "PLEASE SELECT YOUR DESTINATION",
-                        style: GoogleFonts.poppins(
-                            color: Colors.white,
-                            fontSize: 20.h,
-                            fontWeight: FontWeight.w700),
-                      ),
-                      SizedBox(
-                        height: 50,
-                      ),
                       if (controller.DataList.isNotEmpty)
                         controller.isLoading.value
-                            ? CircularProgressIndicator(
-                                color: Colors.blue,
+                            ? SizedBox(
+                                height: 500,
+                                width: 200,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
+                                ),
                               )
                             : SingleChildScrollView(
                                 child: Column(
-                                  children: List.generate(
-                                    controller.DataList.length,
-                                    // Change this to your dynamic list length
-                                    (index) => Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Material(
-                                        color: Colors.transparent,
-                                        child: InkWell(
-                                            splashColor: Colors.white,
-                                            highlightColor:
-                                                Colors.white.withOpacity(0.3),
-                                            borderRadius:
-                                                BorderRadius.circular(20.r),
-                                            onTap: () async {
-                                              {
-                                                try {
-                                                  await ApiServices.destination(
-                                                      id: controller
-                                                              .DataList[index]
-                                                              ?.id ??
-                                                          0);
-                                                  await Future.delayed(
-                                                      Duration(seconds: 1));
-                                                  Map<String, dynamic> resp =
+                                  children: [
+                                    GetX<RobotresponseapiController>(
+                                      builder: (controller) {
+                                        bool? listening = controller
+                                            .responseData.value.listening;
+                                        bool? waiting = controller
+                                            .responseData.value.waiting;
+                                        bool? speaking = controller
+                                            .responseData.value.speaking;
+                                        return SizedBox(
+                                          // height: size.width * 0.25,
+                                          width: size.width * 0.3,
+                                          child: Column(
+                                            children: [
+                                              if (listening == true)
+                                                Column(
+                                                  children: [
+                                                    Center(
+                                                      child: Lottie.asset(
+                                                        "assets/Animation - 1739525563341.json",
+                                                        fit: BoxFit.fitHeight,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100.h,
+                                                      width: 280.w,
+                                                      child: DefaultTextStyle(
+                                                        style: GoogleFonts
+                                                            .orbitron(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 30.h,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                shadows: [
+                                                              Shadow(
+                                                                blurRadius: 5.0,
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                                offset: Offset(
+                                                                    2, 2),
+                                                              ),
+                                                            ]),
+                                                        child: Center(
+                                                          child:
+                                                              AnimatedTextKit(
+                                                            animatedTexts: [
+                                                              TypewriterAnimatedText(
+                                                                'LISTENING....',
+                                                                speed: Duration(
+                                                                    milliseconds:
+                                                                        50),
+                                                                cursor: '|',
+                                                              ),
+                                                            ],
+                                                            repeatForever: true,
+                                                            isRepeatingAnimation:
+                                                                true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              if (waiting == true)
+                                                Column(
+                                                  children: [
+                                                    Center(
+                                                      child: Lottie.asset(
+                                                        "assets/Animation - 1739525563341.json",
+                                                        fit: BoxFit.fitHeight,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100.h,
+                                                      width: 280.w,
+                                                      child: DefaultTextStyle(
+                                                        style: GoogleFonts
+                                                            .orbitron(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 30.h,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                shadows: [
+                                                              Shadow(
+                                                                blurRadius: 5.0,
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                                offset: Offset(
+                                                                    2, 2),
+                                                              ),
+                                                            ]),
+                                                        child: Center(
+                                                          child:
+                                                              AnimatedTextKit(
+                                                            animatedTexts: [
+                                                              TypewriterAnimatedText(
+                                                                'THINKING....',
+                                                                speed: Duration(
+                                                                    milliseconds:
+                                                                        50),
+                                                                cursor: '|',
+                                                              ),
+                                                            ],
+                                                            repeatForever: true,
+                                                            isRepeatingAnimation:
+                                                                true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              if (speaking == true)
+                                                Column(
+                                                  children: [
+                                                    Center(
+                                                      child: Lottie.asset(
+                                                        "assets/Animation - 1739525563341.json",
+                                                        fit: BoxFit.fitHeight,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 100.h,
+                                                      width: double.infinity,
+                                                      child: DefaultTextStyle(
+                                                        style: GoogleFonts
+                                                            .orbitron(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 30.h,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold,
+                                                                shadows: [
+                                                              Shadow(
+                                                                blurRadius: 5.0,
+                                                                color: Colors
+                                                                    .black
+                                                                    .withOpacity(
+                                                                        0.7),
+                                                                offset: Offset(
+                                                                    2, 2),
+                                                              ),
+                                                            ]),
+                                                        child: Center(
+                                                          child:
+                                                              AnimatedTextKit(
+                                                            animatedTexts: [
+                                                              TypewriterAnimatedText(
+                                                                'SPEAKING....',
+                                                                speed: Duration(
+                                                                    milliseconds:
+                                                                        50),
+                                                                // Adjust typing speed
+                                                                cursor:
+                                                                    '|', // Optional cursor
+                                                              ),
+                                                            ],
+                                                            repeatForever: true,
+                                                            isRepeatingAnimation:
+                                                                true,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              if (controller.text.value?.text !=
+                                                      "" &&
+                                                  listening == true)
+                                                Container(
+                                                  padding: EdgeInsets.all(8),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.blueGrey,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text(
+                                                      controller.text.value
+                                                              ?.text ??
+                                                          "",
+                                                      style: TextStyle(
+                                                          fontSize: 18,
+                                                          color: Colors.white),
+                                                    ),
+                                                  ),
+                                                )
+                                              else if (speaking == true ||
+                                                  waiting == true)
+                                                SizedBox(),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                    Wrap(
+                                      children: List.generate(
+                                        controller.DataList.length,
+                                        (index) => Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Material(
+                                            color: Colors.transparent,
+                                            child: InkWell(
+                                                splashColor: Colors.white,
+                                                highlightColor: Colors.white
+                                                    .withOpacity(0.3),
+                                                borderRadius:
+                                                    BorderRadius.circular(20.r),
+                                                onTap: () async {
+                                                  {
+                                                    try {
                                                       await ApiServices
-                                                          .robotbasestatus();
+                                                          .destination(
+                                                              id: controller
+                                                                      .DataList[
+                                                                          index]
+                                                                      ?.id ??
+                                                                  0);
+                                                      await Future.delayed(
+                                                          Duration(seconds: 1));
+                                                      Map<String, dynamic>
+                                                          resp =
+                                                          await ApiServices
+                                                              .robotbasestatus();
 
-                                                  print(
-                                                      "benbenbenbenben${controller.DataList[index]?.id ?? 0}");
+                                                      print(
+                                                          "benbenbenbenben${controller.DataList[index]?.id ?? 0}");
 
-                                                  if (resp['status'] == true) {
-                                                    print("base status");
-                                                    FocusManager
-                                                        .instance.primaryFocus
-                                                        ?.unfocus();
-                                                    print(
-                                                        "-----ben---------$resp");
+                                                      if (resp['status'] ==
+                                                          true) {
+                                                        print("base status");
+                                                        FocusManager.instance
+                                                            .primaryFocus
+                                                            ?.unfocus();
+                                                        print(
+                                                            "-----ben---------$resp");
 
-                                                    Get.dialog(
-                                                      AlertDialog(
-                                                        shape:
-                                                            const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
+                                                        Get.dialog(
+                                                          AlertDialog(
+                                                            shape:
+                                                                const RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
                                                                       .circular(
                                                                           20.0)),
-                                                        ),
-                                                        title: Column(
-                                                          children: [
-                                                            Center(
-                                                              child: SizedBox(
-                                                                width: 180.w,
-                                                                height: 180.h,
-                                                                child: Lottie
-                                                                    .asset(
-                                                                  "assets/navigate.json",
-                                                                  fit: BoxFit
-                                                                      .fitHeight,
-                                                                ),
-                                                              ),
                                                             ),
-                                                            Text(
-                                                              "COMMAND RECEIVED",
+                                                            title: Column(
+                                                              children: [
+                                                                Center(
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width:
+                                                                        180.w,
+                                                                    height:
+                                                                        180.h,
+                                                                    child: Lottie
+                                                                        .asset(
+                                                                      "assets/navigate.json",
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "COMMAND RECEIVED",
+                                                                  style: GoogleFonts
+                                                                      .orbitron(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20.h,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            content: Text(
+                                                              "Heading to the ${controller.DataList[index]?.name}"
+                                                                  .toUpperCase(),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               style: GoogleFonts
-                                                                  .orbitron(
+                                                                  .oxygen(
                                                                 color: Colors
                                                                     .black,
-                                                                fontSize: 20.h,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontSize: 15.h,
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                        content: Text(
-                                                          "Heading to the ${controller.DataList[index]?.name}"
-                                                              .toUpperCase(),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: GoogleFonts
-                                                              .oxygen(
-                                                            color: Colors.black,
-                                                            fontSize: 15.h,
                                                           ),
-                                                        ),
-                                                      ),
-                                                    );
+                                                        );
 
-                                                    Future.delayed(
-                                                        const Duration(
-                                                            seconds: 3), () {
-                                                      if (Get.isDialogOpen ??
-                                                          false) {
-                                                        Get.back();
-                                                      }
-                                                    });
-                                                  } else {
-                                                    Get.dialog(
-                                                      AlertDialog(
-                                                        shape:
-                                                            const RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.all(
-                                                                  Radius
+                                                        Future.delayed(
+                                                            const Duration(
+                                                                seconds: 3),
+                                                            () {
+                                                          if (Get.isDialogOpen ??
+                                                              false) {
+                                                            Get.back();
+                                                          }
+                                                        });
+                                                      } else {
+                                                        Get.dialog(
+                                                          AlertDialog(
+                                                            shape:
+                                                                const RoundedRectangleBorder(
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
                                                                       .circular(
                                                                           20.0)),
-                                                        ),
-                                                        title: Column(
-                                                          children: [
-                                                            Center(
-                                                              child: SizedBox(
-                                                                width: 180.w,
-                                                                height: 180.h,
-                                                                child: Lottie
-                                                                    .asset(
-                                                                  "assets/navigate.json",
-                                                                  fit: BoxFit
-                                                                      .fitHeight,
-                                                                ),
-                                                              ),
                                                             ),
-                                                            Text(
-                                                              "COMMAND RECEIVED",
+                                                            title: Column(
+                                                              children: [
+                                                                Center(
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width:
+                                                                        180.w,
+                                                                    height:
+                                                                        180.h,
+                                                                    child: Lottie
+                                                                        .asset(
+                                                                      "assets/navigate.json",
+                                                                      fit: BoxFit
+                                                                          .fitHeight,
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                Text(
+                                                                  "COMMAND RECEIVED",
+                                                                  style: GoogleFonts
+                                                                      .orbitron(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20.h,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            content: Text(
+                                                              "COMMAND ALREADY RECEIVED"
+                                                                  .toUpperCase(),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
                                                               style: GoogleFonts
-                                                                  .orbitron(
+                                                                  .oxygen(
                                                                 color: Colors
                                                                     .black,
-                                                                fontSize: 20.h,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
+                                                                fontSize: 15.h,
                                                               ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                        content: Text(
-                                                          "COMMAND ALREADY RECEIVED"
-                                                              .toUpperCase(),
-                                                          textAlign:
-                                                              TextAlign.center,
-                                                          style: GoogleFonts
-                                                              .oxygen(
-                                                            color: Colors.black,
-                                                            fontSize: 15.h,
                                                           ),
-                                                        ),
-                                                      ),
-                                                    );
-                                                    Future.delayed(
-                                                        const Duration(
-                                                            seconds: 3), () {
-                                                      if (Get.isDialogOpen ??
-                                                          false) {
-                                                        Get.back();
-                                                        Get.back();
+                                                        );
+                                                        Future.delayed(
+                                                            const Duration(
+                                                                seconds: 3),
+                                                            () {
+                                                          if (Get.isDialogOpen ??
+                                                              false) {
+                                                            Get.back();
+                                                            Get.back();
+                                                          }
+                                                        });
                                                       }
-                                                    });
+                                                    } catch (e) {
+                                                      ProductAppPopUps.submit(
+                                                        title: "FAILED",
+                                                        message:
+                                                            "Something went wrong.",
+                                                        actionName: "Close",
+                                                        iconData:
+                                                            Icons.info_outline,
+                                                        iconColor: Colors.red,
+                                                      );
+                                                      print(
+                                                          "------forgot error-----------${e.toString()}");
+                                                    }
                                                   }
-                                                } catch (e) {
-                                                  ProductAppPopUps.submit(
-                                                    title: "FAILED",
-                                                    message:
-                                                        "Something went wrong.",
-                                                    actionName: "Close",
-                                                    iconData:
-                                                        Icons.info_outline,
-                                                    iconColor: Colors.red,
-                                                  );
-                                                  print(
-                                                      "------forgot error-----------${e.toString()}");
-                                                }
-                                              }
-                                            },
-                                            child: buildInfoCard2(
-                                                "${controller.DataList[index]?.name}")),
+                                                },
+                                                child: buildInfoCard2(
+                                                    "${controller.DataList[index]?.name}")),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
                               )
                       else
@@ -504,7 +721,7 @@ class _NavigationState extends State<Navigation> {
                           child: Row(
                             children: [
                               SizedBox(
-                                height: 150,
+                                height: 500,
                               ),
                               Text(
                                 "Oops..No Data Found in Destination List..",

@@ -56,7 +56,7 @@ class DescriptionOption extends StatelessWidget {
                     ),
                     const SizedBox(width: 10),
                     Text(
-                      "DESCRIPTION LIST",
+                      "Description Options",
                       style: GoogleFonts.poppins(
                         color: Colors.white,
                         fontSize: 25.h,

@@ -35,7 +35,7 @@ class SpeedController extends GetxController {
 
   Future<void> updateSpeed(double speedValue) async {
     Map<String, dynamic> resp = await SpeedService.speedUpdate(
-      speed: speedValue,
+      speed: double.parse(speedValue.toStringAsFixed(1)),
     );
     print("speed update resp $resp");
     if (resp['status'] == 'ok') {

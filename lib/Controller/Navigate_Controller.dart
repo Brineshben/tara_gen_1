@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ihub/Service/Api_Service.dart';
 
 import '../Model/Navigate_model.dart';
-import '../Utils/popups.dart';
 
 class NavigateController extends GetxController {
   RxBool isLoading = false.obs;
@@ -18,17 +17,14 @@ class NavigateController extends GetxController {
     isLoaded.value = false;
     try {
       Map<String, dynamic> resp = await ApiServices.navigateoffline();
-      if (resp['status'] == 'ok'){
-
-        Navifateedata.value =NavigationListModel.fromJson(resp);
-        print(" Navifateedata.value${ Navifateedata.value?.data}");
-        DataList.value =Navifateedata.value?.data ?? [];
+      if (resp['status'] == 'ok') {
+        Navifateedata.value = NavigationListModel.fromJson(resp);
+        print(" Navifateedata.value${Navifateedata.value?.data}");
+        DataList.value = Navifateedata.value?.data ?? [];
         isLoading.value = true;
-
       } else {
         isError.value = true;
       }
-
     } catch (e) {
       isLoaded.value = false;
 

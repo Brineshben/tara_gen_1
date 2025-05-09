@@ -8,7 +8,17 @@ import '../../Controller/description_controller.dart';
 import '../../Utils/colors.dart';
 
 class AddDescriptionPage extends StatefulWidget {
-  const AddDescriptionPage({Key? key}) : super(key: key);
+  final bool isEdit;
+  final int id;
+  final String? time;
+  final String description;
+  const AddDescriptionPage({
+    Key? key,
+    required this.id,
+    required this.isEdit,
+    required this.time,
+    required this.description,
+  }) : super(key: key);
 
   @override
   State<AddDescriptionPage> createState() => _AddDescriptionPageState();
@@ -25,6 +35,13 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
     'night'
   ];
   String? _selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedTime = widget.time;
+    textController.text = widget.description;
+  }
 
   @override
   void dispose() {
@@ -135,10 +152,18 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        descriptionController.submitDescription(
-                          description: textController.text.trim(),
-                          time: _selectedTime ?? '',
-                        );
+                        if (widget.isEdit) {
+                          descriptionController.editDescription(
+                            description: textController.text.trim(),
+                            time: _selectedTime ?? '',
+                            id: widget.id.toString(),
+                          );
+                        } else {
+                          descriptionController.submitDescription(
+                            description: textController.text.trim(),
+                            time: _selectedTime ?? '',
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

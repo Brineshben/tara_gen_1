@@ -24,13 +24,13 @@ class SpeedService {
     required double speed,
   }) async {
     print('speed $speed');
-    String url = "${ApiConstants.baseUrl}${ApiConstants.updateSpeed}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.updateSpeed}";
     print('post url $url');
     final response = await http.post(
       Uri.parse(url),
       body: {"value": speed.toString()},
     );
-    print(response.body);
+    print('speedresponce ${response.body}');
     return json.decode(response.body);
   }
 }

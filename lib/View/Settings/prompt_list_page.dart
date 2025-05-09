@@ -9,7 +9,6 @@ import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/colors.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
-import 'package:ihub/View/Settings/Add_Description.dart';
 import 'package:ihub/View/Settings/system_promt_add_page.dart';
 
 class PromptListPage extends StatefulWidget {
@@ -34,8 +33,14 @@ class _PromptListPageState extends State<PromptListPage> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white, // makes it white
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddSystemPrompt()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddSystemPrompt(
+                        id: '',
+                        isEdit: false,
+                        prompt: '',
+                      )));
         },
         child: Icon(Icons.add, color: Colors.black), // icon color
       ),
@@ -161,15 +166,16 @@ class _PromptListPageState extends State<PromptListPage> {
                                         ],
                                       ),
                                       content: Text(
-                                        'Are you sure you want to delete the prompt',
+                                        'Are you sure you want to edit or delete this prompt?',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(fontSize: 16.h),
                                       ),
                                       actionsAlignment:
                                           MainAxisAlignment.center,
                                       actions: [
+                                        // Cancel Button
                                         OutlinedButton(
-                                          onPressed: () async {
+                                          onPressed: () {
                                             Get.back();
                                           },
                                           style: OutlinedButton.styleFrom(
@@ -177,23 +183,55 @@ class _PromptListPageState extends State<PromptListPage> {
                                                 BorderSide(color: Colors.black),
                                           ),
                                           child: Text(
-                                            "No",
+                                            "Cancel",
                                             style: TextStyle(
-                                              color: Colors.black, // Text color
+                                              color: Colors.black,
                                               fontSize: 16.h,
                                             ),
                                           ),
                                         ),
+
+                                        // Edit Button
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Get.back();
+
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddSystemPrompt(
+                                                          id: item.id
+                                                              .toString(),
+                                                          isEdit: true,
+                                                          prompt:
+                                                              item.commandPrompt ??
+                                                                  '',
+                                                        )));
+                                          },
+                                          style: OutlinedButton.styleFrom(
+                                            side:
+                                                BorderSide(color: Colors.blue),
+                                          ),
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                              color: Colors.blue,
+                                              fontSize: 16.h,
+                                            ),
+                                          ),
+                                        ),
+
+                                        // Delete Button
                                         FilledButton(
                                           onPressed: () async {
                                             final response =
                                                 await ApiServices.deletePrompt(
                                                     item.id ?? 0);
-
                                             print(response);
 
+                                            Get.back();
                                             if (response['status'] == "ok") {
-                                              Get.back();
                                               Get.snackbar(
                                                 margin: EdgeInsets.all(20),
                                                 "Success",
@@ -205,11 +243,9 @@ class _PromptListPageState extends State<PromptListPage> {
                                                     SnackPosition.TOP,
                                                 duration: Duration(seconds: 3),
                                               );
-
                                               Get.find<PromptController>()
                                                   .fetchPrompt();
                                             } else {
-                                              Get.back();
                                               Get.snackbar(
                                                 margin: EdgeInsets.all(20),
                                                 "Error",
@@ -228,7 +264,7 @@ class _PromptListPageState extends State<PromptListPage> {
                                                     ColorUtils.userdetailcolor),
                                           ),
                                           child: Text(
-                                            "Yes",
+                                            "Delete",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16.h),

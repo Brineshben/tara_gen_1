@@ -161,8 +161,6 @@ class BatteryController extends GetxController {
         } else {
           return false;
         }
-
-        isLoaded.value = true;
       }
     } catch (e) {
       isLoaded.value = false;

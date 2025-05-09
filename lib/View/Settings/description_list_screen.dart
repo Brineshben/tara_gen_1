@@ -33,8 +33,15 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.white, // makes it white
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddDescriptionPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => AddDescriptionPage(
+                        id: 0,
+                        isEdit: false,
+                        description: '',
+                        time: null,
+                      )));
         },
         child: Icon(Icons.add, color: Colors.black), // icon color
       ),
@@ -161,7 +168,7 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                                         ],
                                       ),
                                       content: Text(
-                                        'Are you sure you want to delete this description',
+                                        'Are you sure you want to delete or edit this description?',
                                         textAlign: TextAlign.center,
                                         style: TextStyle(fontSize: 16.h),
                                       ),
@@ -173,16 +180,38 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                                             Get.back();
                                           },
                                           style: OutlinedButton.styleFrom(
-                                            side: BorderSide(
-                                                color: Colors
-                                                    .black), // Border color
+                                            side:
+                                                BorderSide(color: Colors.black),
                                           ),
                                           child: Text(
-                                            "No",
+                                            "Cancel",
                                             style: TextStyle(
-                                              color: Colors.black, // Text color
-                                              fontSize: 16.h,
-                                            ),
+                                                color: Colors.black,
+                                                fontSize: 16.h),
+                                          ),
+                                        ),
+                                        OutlinedButton(
+                                          onPressed: () {
+                                            Get.back();
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddDescriptionPage(
+                                                  id: item.id ?? 0,
+                                                  isEdit: true,
+                                                  description:
+                                                      item.description ?? '',
+                                                  time: item.timeOfDay,
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 16.h),
                                           ),
                                         ),
                                         FilledButton(
@@ -227,7 +256,7 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                                                     ColorUtils.userdetailcolor),
                                           ),
                                           child: Text(
-                                            "Yes",
+                                            "Delete",
                                             style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16.h),

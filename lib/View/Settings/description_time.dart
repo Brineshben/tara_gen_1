@@ -1,17 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Nav_description_controller.dart';
-import '../../Controller/Navigate_Controller.dart';
 import '../../Service/Api_Service.dart';
-import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import 'VideoPlayer.dart';
 
@@ -26,7 +21,6 @@ class _AddDescriptionState extends State<AddDescription> {
   @override
   void initState() {
     Get.find<NavigateDescriptionController>().NavigateData();
-
     super.initState();
   }
 
@@ -72,13 +66,6 @@ class _AddDescriptionState extends State<AddDescription> {
                         width: 60.h,
                         decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
                             borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
@@ -91,7 +78,7 @@ class _AddDescriptionState extends State<AddDescription> {
                     ),
                     Center(
                       child: Text(
-                        "ADD DESCRIPTION",
+                        "DESCRIPTION LIST",
                         style: GoogleFonts.oxygen(
                             color: Colors.white,
                             fontSize: 25.h,
@@ -104,137 +91,176 @@ class _AddDescriptionState extends State<AddDescription> {
               Expanded(
                 child: GetX<NavigateDescriptionController>(
                   builder: (NavigateDescriptionController controller) {
-                    return ListView.builder(
-                      padding:
-                          EdgeInsets.only(left: 150, right: 150, bottom: 1),
-                      itemCount: controller.DataList.length,
-                      itemBuilder: (context, index) {
-                        return Card(
-                            color: Colors.white.withOpacity(0.3),
-                            margin: EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(15)),
-                            elevation: 2,
-                            child: ExpansionTile(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  side: BorderSide.none),
-                              collapsedShape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  side: BorderSide.none),
-                              title: Center(
-                                child: Text(
-                                    "${controller.DataList[index]?.name?.toUpperCase()}",
-                                    style: TextStyle(
-                                        fontSize: 20.h,
-                                        fontWeight: FontWeight.w800,
-                                        color: Colors.white)),
-                              ),
-                              // subtitle: Column(
-                              //   children: [
-                              //     Row(
-                              //       children: [
-                              //         Text("APPOINMENT DATE: ",
-                              //             style: TextStyle(
-                              //                 fontSize: 15.h,
-                              //                 fontWeight: FontWeight.w500,
-                              //                 color: Colors.black)),
-                              //
-                              //       ],
-                              //     ),
-                              //   ],
-                              // ),
-                              children: [
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.5),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  padding: EdgeInsets.all(16),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("DESCRIPTION",
+                    return controller.dataList.isEmpty
+                        ? Center(
+                            child: Text(
+                            "No description found",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ))
+                        : ListView.builder(
+                            padding: EdgeInsets.only(
+                                left: 150, right: 150, bottom: 1),
+                            itemCount: controller.dataList.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                  color: Colors.white,
+                                  margin: EdgeInsets.symmetric(vertical: 10),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(15)),
+                                  elevation: 2,
+                                  child: ExpansionTile(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide.none),
+                                    collapsedShape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(15),
+                                        side: BorderSide.none),
+                                    title: Center(
+                                      child: Text(
+                                          "${controller.dataList[index]?.name?.toUpperCase()}",
                                           style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w500)),
-                                      SizedBox(height: 10),
-                                      Container(
-                                        height: size.height * 0.1,
-                                        child: TextFormField(
-                                          controller:
-                                              controller.textControllers[index],
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                          minLines: 1,
-                                          validator: (val) =>
-                                              val!.trim().isEmpty
-                                                  ? 'Please Enter Description.'
-                                                  : null,
-                                          decoration: InputDecoration(
-                                              hintStyle: const TextStyle(
-                                                  color: Colors.white38),
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 10.h,
-                                                      horizontal: 10.w),
-                                              hintText: "Enter Description  ",
-                                              border: OutlineInputBorder(
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                  Radius.circular(10.0),
-                                                ).r,
+                                              fontSize: 20.h,
+                                              fontWeight: FontWeight.w800,
+                                              color: Colors.black)),
+                                    ),
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 20),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text("DESCRIPTION",
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight:
+                                                        FontWeight.w500)),
+                                            SizedBox(height: 10),
+                                            Container(
+                                              height: size.height * 0.2,
+                                              child: TextFormField(
+                                                controller: controller
+                                                    .textControllers[index],
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                minLines: 1,
+                                                validator: (val) => val!
+                                                        .trim()
+                                                        .isEmpty
+                                                    ? 'Please Enter Description.'
+                                                    : null,
+                                                decoration: InputDecoration(
+                                                    hintStyle: const TextStyle(
+                                                        color: Colors.white38),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.h,
+                                                            horizontal: 10.w),
+                                                    hintText:
+                                                        "Enter Description  ",
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(10.0),
+                                                      ).r,
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.blue,
+                                                              width: 1.0),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10))
+                                                              .r,
+                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.blue,
+                                                              width: 1.0),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0))
+                                                              .r,
+                                                    ),
+                                                    fillColor:
+                                                        Colors.blueGrey[900],
+                                                    filled: true),
+                                                maxLines: 7,
                                               ),
-                                              enabledBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    color: Colors.blue,
-                                                    width: 1.0),
-                                                borderRadius:
-                                                    const BorderRadius.all(
-                                                            Radius.circular(10))
-                                                        .r,
-                                              ),
-                                              focusedBorder: OutlineInputBorder(
-                                                borderSide: const BorderSide(
-                                                    color: Colors.blue,
-                                                    width: 1.0),
-                                                borderRadius: const BorderRadius
-                                                        .all(
-                                                        Radius.circular(10.0))
-                                                    .r,
-                                              ),
-                                              fillColor: Colors.blueGrey[900],
-                                              filled: true),
-                                          maxLines: 7,
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          controller.DataList[index]?.video !=
-                                                  null
-                                              ? GestureDetector(
+                                            ),
+                                            SizedBox(height: 10),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                controller.dataList[index]
+                                                            ?.video !=
+                                                        null
+                                                    ? GestureDetector(
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(top: 4),
+                                                          child: Container(
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.r),
+                                                              color: Colors
+                                                                  .deepPurple,
+                                                            ),
+                                                            width: 40.w,
+                                                            height: 40.h,
+                                                            child: Center(
+                                                              child: Text(
+                                                                'PLAY VIDEO',
+                                                                style: GoogleFonts.poppins(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        12,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        onTap: () {
+                                                          _showVideoDialog(
+                                                              context,
+                                                              "${controller.dataList[index]?.video}");
+                                                        },
+                                                      )
+                                                    : SizedBox(),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                GestureDetector(
                                                   child: Padding(
                                                     padding:
                                                         const EdgeInsets.only(
                                                             top: 4),
                                                     child: Container(
                                                       decoration: BoxDecoration(
-                                                        gradient:
-                                                            LinearGradient(
-                                                          colors: [
-                                                            ColorUtils
-                                                                .userdetailcolor,
-                                                            ColorUtils
-                                                                .userdetailcolor
-                                                          ],
-                                                          begin:
-                                                              Alignment.topLeft,
-                                                          end: Alignment
-                                                              .bottomRight,
-                                                        ),
+                                                        color: Colors.green,
                                                         borderRadius:
                                                             BorderRadius
                                                                 .circular(20.r),
@@ -243,13 +269,12 @@ class _AddDescriptionState extends State<AddDescription> {
                                                       height: 40.h,
                                                       child: Center(
                                                         child: Text(
-                                                          'PLAY VIDEO',
+                                                          'SUBMIT',
                                                           style:
                                                               GoogleFonts.inter(
                                                                   color: Colors
                                                                       .white,
-                                                                  fontSize:
-                                                                      16.h,
+                                                                  fontSize: 14,
                                                                   fontWeight:
                                                                       FontWeight
                                                                           .bold),
@@ -257,91 +282,52 @@ class _AddDescriptionState extends State<AddDescription> {
                                                       ),
                                                     ),
                                                   ),
-                                                  onTap: () {
-                                                    _showVideoDialog(context,
-                                                        "${controller.DataList[index]?.video}");
-                                                  },
-                                                )
-                                              : SizedBox(),
-                                          SizedBox(
-                                            width: 10,
-                                          ),
-                                          GestureDetector(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.only(top: 4),
-                                              child: Container(
-                                                decoration: BoxDecoration(
-                                                  gradient: LinearGradient(
-                                                    colors: [
-                                                      ColorUtils
-                                                          .userdetailcolor,
-                                                      ColorUtils.userdetailcolor
-                                                    ],
-                                                    begin: Alignment.topLeft,
-                                                    end: Alignment.bottomRight,
-                                                  ),
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          20.r),
-                                                ),
-                                                width: 40.w,
-                                                height: 40.h,
-                                                child: Center(
-                                                  child: Text(
-                                                    'SUBMIT',
-                                                    style: GoogleFonts.inter(
-                                                        color: Colors.white,
-                                                        fontSize: 16.h,
-                                                        fontWeight:
-                                                            FontWeight.bold),
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            onTap: () async {
-                                              Map<String, dynamic> resp =
-                                                  await ApiServices
-                                                      .navigateDescriptionSubmit(
-                                                          data: controller
-                                                              .textControllers[
-                                                                  index]
-                                                              .text,
-                                                          userId: controller
-                                                                  .DataList[
-                                                                      index]
-                                                                  ?.id ??
-                                                              0);
+                                                  onTap: () async {
+                                                    Map<String, dynamic> resp =
+                                                        await ApiServices
+                                                            .navigateDescriptionSubmit(
+                                                                data: controller
+                                                                    .textControllers[
+                                                                        index]
+                                                                    .text,
+                                                                userId: controller
+                                                                        .dataList[
+                                                                            index]
+                                                                        ?.id ??
+                                                                    0);
 
-                                              if (resp['status'] == 'ok') {
-                                                ProductAppPopUps.submit(
-                                                  title: "Success",
-                                                  message: resp['message'],
-                                                  actionName: "Close",
-                                                  iconData: Icons.done,
-                                                  iconColor: Colors.green,
-                                                );
-                                              } else {
-                                                ProductAppPopUps.submit(
-                                                  title: "FAILED",
-                                                  message:
-                                                      "Something went wrong.",
-                                                  actionName: "Close",
-                                                  iconData: Icons.info_outline,
-                                                  iconColor: Colors.red,
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ],
-                                      )
+                                                    if (resp['status'] ==
+                                                        'ok') {
+                                                      ProductAppPopUps.submit(
+                                                        title: "Success",
+                                                        message:
+                                                            resp['message'],
+                                                        actionName: "Close",
+                                                        iconData: Icons.done,
+                                                        iconColor: Colors.green,
+                                                      );
+                                                    } else {
+                                                      ProductAppPopUps.submit(
+                                                        title: "FAILED",
+                                                        message:
+                                                            "Something went wrong.",
+                                                        actionName: "Close",
+                                                        iconData:
+                                                            Icons.info_outline,
+                                                        iconColor: Colors.red,
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                ),
-                              ],
-                            ));
-                      },
-                    );
+                                  ));
+                            },
+                          );
                   },
                 ),
               ),

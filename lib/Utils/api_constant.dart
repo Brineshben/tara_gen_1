@@ -104,9 +104,11 @@ class ApiConstants {
 
   /// Update baseUrl1 in SharedPreferences and memory
   static Future<void> updateBaseUrl1(String newIp) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
     String newUrl = "http://$newIp:8000"; // Format base URL
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setString('stored_ip', newUrl);
+
     print('newwwwwwwwwww $newUrl');
     _baseUrl1 = newUrl; // Update in memory
   }
@@ -130,12 +132,19 @@ class ApiConstants {
   static String fullTour = "/tour/update/";
   static String reboot = "/update-reboot-status/";
 
+  //  description
   static String description = "/add_wishing_commands/";
+  static String edit_wishing_commands = "/edit_wishing_commands/";
+
+  // prompt
   static String commandPrompt = "/command_prompt/";
+  static String command_prompt_edit = "/command_prompt_edit/";
+
+  // map kill
   static String start_stop_button_press = "/start_stop_button_press/";
 
   static String updateSpeed = "/speed/value/";
-  static String getSpeed = "/speed/";
+  static String getSpeed = "/current_speed/";
   static String gotoCharging = "/charging/set/";
   static String deactivate_description = "/deactivate_description/";
   static String deactivate_command_prompt = "/deactivate_command_prompt/";

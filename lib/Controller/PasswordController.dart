@@ -1,10 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Model/PasswordModel.dart';
-
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class Passwordcontroller extends GetxController {
   RxBool isLoading = false.obs;
@@ -22,7 +19,8 @@ class Passwordcontroller extends GetxController {
     isLoaded.value = false;
 
     try {
-      Map<String, dynamic> resp = await ApiServices.password(userId: userID, Password: password);
+      Map<String, dynamic> resp =
+          await ApiServices.password(userId: userID, Password: password);
 
       if (resp['status'] == "ok") {
         print("--------Response: $resp-------");

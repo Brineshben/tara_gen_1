@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+
 import '../Service/controller_handling.dart';
 import '../Service/sharedPreference.dart';
-import '../View/Login_Page/login.dart';
-import '../View/Robot_Response/homepage.dart';
 import '../View/Splash/Loading_Splash.dart';
 import 'colors.dart';
 

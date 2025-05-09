@@ -2,13 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/description_controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
-import 'package:ihub/Service/add_description_service.dart';
 import 'package:lottie/lottie.dart';
 
 class AddSystemPrompt extends StatefulWidget {
-  const AddSystemPrompt({super.key});
+  final String id;
+  final String prompt;
+  final bool isEdit;
+  const AddSystemPrompt(
+      {super.key,
+      required this.id,
+      required this.prompt,
+      required this.isEdit});
 
   @override
   State<AddSystemPrompt> createState() => _AddSystemPromptState();
@@ -17,6 +22,12 @@ class AddSystemPrompt extends StatefulWidget {
 class _AddSystemPromptState extends State<AddSystemPrompt> {
   final TextEditingController textController = TextEditingController();
   final promptController = Get.find<PromptController>();
+
+  @override
+  void initState() {
+    super.initState();
+    textController.text = widget.prompt;
+  }
 
   @override
   void dispose() {
@@ -83,8 +94,13 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
                     width: 200,
                     child: ElevatedButton.icon(
                       onPressed: () async {
-                        await promptController.addPrompt(
-                            prompt: textController.text);
+                        if (widget.isEdit) {
+                          await promptController.editPrompt(
+                              id: widget.id, prompt: textController.text);
+                        } else {
+                          await promptController.addPrompt(
+                              prompt: textController.text);
+                        }
                       },
                       label: Text("Submit"),
                       style: ElevatedButton.styleFrom(

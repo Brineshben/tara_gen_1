@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ihub/Service/Api_Service.dart';
 
 import '../Model/Navigate_model.dart';
-import '../Utils/popups.dart';
 
 class NavigateDescriptionController extends GetxController {
   RxBool isLoading = false.obs;
@@ -12,7 +11,7 @@ class NavigateDescriptionController extends GetxController {
   Rx<NavigationListModel?> Navifateedata = Rx(null);
   List<TextEditingController> textControllers = [];
 
-  RxList<NavigationData?> DataList = RxList();
+  RxList<NavigationData?> dataList = RxList();
 
   Future<void> NavigateData() async {
     isLoading.value = true;
@@ -24,11 +23,13 @@ class NavigateDescriptionController extends GetxController {
         Navifateedata.value = NavigationListModel.fromJson(resp);
 
         if (Navifateedata.value != null) {
-          DataList.assignAll(Navifateedata.value!.data ?? []);
+          dataList.assignAll(Navifateedata.value!.data ?? []);
 
           // Initialize TextEditingControllers with the existing description from API
-          textControllers = List.generate(DataList.length, (index) =>
-              TextEditingController(text: DataList[index]?.description ?? "No Data Found"));
+          textControllers = List.generate(
+              dataList.length,
+              (index) => TextEditingController(
+                  text: dataList[index]?.description ?? "No Data Found"));
 
           isLoaded.value = true;
           update(); // Notify UI to update
@@ -36,7 +37,7 @@ class NavigateDescriptionController extends GetxController {
       } else {
         isError.value = true;
       }
-    }catch (e) {
+    } catch (e) {
       isLoaded.value = false;
 
       Get.snackbar(

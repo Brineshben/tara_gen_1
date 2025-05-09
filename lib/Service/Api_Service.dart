@@ -235,14 +235,12 @@ class ApiServices {
     return json.decode(respString);
   }
 
-  ///check deleteFile
-
-  static Future<Map<String, dynamic>> deleteFile({
+  // delete map from server
+  static Future<Map<String, dynamic>> deleteFileServer({
     required bool status,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
+    String url = "http://54.211.212.147${ApiConstants.deletefile}";
     print("urlurlurlurlurlurlurl:$url");
-
     Map apiBody = {"status": status};
     // try {
     print("apibody:$apiBody");
@@ -252,7 +250,25 @@ class ApiServices {
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     print('filedelete ${respString}');
+    print(json.decode(respString));
+    return json.decode(respString);
+  }
 
+// delete map from local
+  static Future<Map<String, dynamic>> deleteFileLocal({
+    required bool status,
+  }) async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
+    print("urlurlurlurlurlurlurl:$url");
+    Map apiBody = {"status": status};
+    // try {
+    print("apibody:$apiBody");
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print('filedelete ${respString}');
     print(json.decode(respString));
     return json.decode(respString);
   }
@@ -294,7 +310,7 @@ class ApiServices {
       var request = http.Request('GET', Uri.parse(url));
       http.StreamedResponse response = await request.send();
       var respString = await response.stream.bytesToString();
-      print(json.decode(respString));
+      print('robotresponce ${json.decode(respString)}');
       return json.decode(respString);
     } catch (e) {
       throw (e);

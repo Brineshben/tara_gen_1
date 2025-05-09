@@ -160,7 +160,7 @@ class _MaintananceState extends State<Maintanance> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
+    // final Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.white,
         body: Stack(
@@ -393,14 +393,11 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         SettingsCard(
                           iconPath: 'assets/robo.png',
-                          subtitle: 'Open RoboStudio application',
+                          subtitle: 'Preparing for mapping',
                           title: 'MAPPING',
                           backgroundColor: Colors.white,
                           onTap: () {
-                            // NativeBridge.openExternalApp();
-                            //
-                            // // openExternalApp();
-                            // openAnotherApp();
+                            openAnotherApp();
                           },
                         ),
                         SettingsCard(
@@ -439,7 +436,7 @@ class _MaintananceState extends State<Maintanance> {
                         SettingsCard(
                           iconPath: 'assets/charging.png',
                           subtitle: 'Check the current charge status',
-                          title: 'CHARGE',
+                          title: 'Battery Config',
                           backgroundColor: Colors.white,
                           onTap: () {
                             Navigator.push(
@@ -653,9 +650,9 @@ Widget buildInfoCard(Size size, String title) {
 
 void openAnotherApp() async {
   const packageName = "com.slamtec.robostudio";
-  final Uri androidUri =
-      Uri.parse("intent://#Intent;package=$packageName;end;");
-
+  final Uri androidUri = Uri.parse(
+    "intent://#Intent;package=$packageName;end;",
+  );
   try {
     if (await canLaunchUrl(Uri.parse("android-app://$packageName"))) {
       await launchUrl(Uri.parse("android-app://$packageName"));
@@ -669,23 +666,13 @@ void openAnotherApp() async {
 
     // Open Play Store if the app is not installed
     await launchUrl(
-      Uri.parse("https://play.google.com/store/apps/details?id=$packageName"),
+      Uri.parse(
+        "https://play.google.com/store/apps/details?id=$packageName",
+      ),
       mode: LaunchMode.externalApplication,
     );
   } catch (e) {
     print("Error launching app: $e");
-  }
-}
-
-class NativeBridge {
-  static const platform = MethodChannel('com.example.ihub/channel');
-
-  static Future<void> openExternalApp() async {
-    try {
-      await platform.invokeMethod('openAnotherApp');
-    } on PlatformException catch (e) {
-      print("Error: ${e.message}");
-    }
   }
 }
 

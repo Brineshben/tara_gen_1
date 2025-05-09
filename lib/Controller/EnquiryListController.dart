@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../Model/EnquiryListModel.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class Enquirylistcontroller extends GetxController {
   RxBool isLoading = false.obs;
@@ -24,7 +24,6 @@ class Enquirylistcontroller extends GetxController {
       Map<String, dynamic> resp = await ApiServices.EnquiryList(userId: userID);
 
       if (resp['status'] == "ok") {
-
         print("nenhehjehjeh");
         enquiryList.value = EnquiryListModel.fromJson(resp);
         enquiryData.value = enquiryList.value?.data ?? [];

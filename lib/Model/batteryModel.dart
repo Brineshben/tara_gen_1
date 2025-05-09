@@ -78,7 +78,7 @@ class Robot {
   String? position;
   bool? subscription;
   String? language;
-  Null? image;
+  Null image;
   String? voltage;
   String? current;
   String? power;

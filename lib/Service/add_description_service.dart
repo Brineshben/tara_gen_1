@@ -62,4 +62,44 @@ class DescriptionService {
     }
     return null;
   }
+
+  // delete
+
+  static Future<Map<String, dynamic>?> editDescription({
+    required String timeOfDay,
+    required String description,
+    required String id,
+  }) async {
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl1}${ApiConstants.edit_wishing_commands}");
+
+    try {
+      final requestBody = jsonEncode({
+        'time_of_day': timeOfDay,
+        'description': description,
+        'description_id': id,
+      });
+
+      print('URL: $url');
+      print('Request Body: $requestBody');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print('Exception in submitDescription: $e');
+    }
+    return null;
+  }
 }

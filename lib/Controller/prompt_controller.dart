@@ -72,4 +72,55 @@ class PromptController extends GetxController {
       }
     }
   }
+
+  // edit
+
+  Future<void> editPrompt({
+    required String prompt,
+    required String id,
+  }) async {
+    if (prompt.isEmpty) {
+      Get.snackbar(
+        margin: EdgeInsets.all(20),
+        "Error",
+        "Please fill field",
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    isLoading.value = true;
+
+    final response =
+        await PromptService.editPrompt(commandPromt: prompt, id: id);
+
+    isLoading.value = false;
+
+    print('Controller Response: $response');
+
+    if (response != null) {
+      if (response['status'] == 'ok') {
+        await fetchPrompt();
+        Get.back();
+        Get.snackbar(
+          margin: EdgeInsets.all(20),
+          "Success",
+          response['message'] ?? "Prompt submitted successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          margin: EdgeInsets.all(20),
+          "Failed",
+          snackPosition: SnackPosition.TOP,
+          response['message'] ?? "Something went wrong",
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
 }

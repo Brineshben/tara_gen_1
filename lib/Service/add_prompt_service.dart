@@ -65,4 +65,44 @@ class PromptService {
     }
     return null;
   }
+
+  static Future<Map<String, dynamic>?> editPrompt({
+    required String commandPromt,
+    required String id,
+  }) async {
+    final url = Uri.parse(
+        "${ApiConstants.baseUrl1}${ApiConstants.command_prompt_edit}");
+
+    try {
+      final requestBody = jsonEncode({
+        'command_prompt': commandPromt,
+        'command_prompt_id': id,
+      });
+
+      print('URL: $url');
+      print('Request Body: $requestBody');
+
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: requestBody,
+      );
+
+      print('Response Status Code: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.statusCode == 200) {
+        return jsonDecode(response.body);
+      }
+    } catch (e) {
+      print('Exception in submitDescription: $e');
+      return {
+        'success': false,
+        'message': 'Error: $e',
+      };
+    }
+    return null;
+  }
 }

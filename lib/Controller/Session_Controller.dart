@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
 import '../Model/SessionUpdateModel.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/popups.dart';
 
 class SessionController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<SessionUpdateModel?> sessionDatas = Rx(null);
-
-
 
   // void resetStatus() {
   //   isLoading.value = false;
@@ -23,8 +19,7 @@ class SessionController extends GetxController {
     isLoading.value = true;
     isLoaded.value = false;
     try {
-      Map<String, dynamic> resp =
-      await ApiServices.session();
+      Map<String, dynamic> resp = await ApiServices.session();
       print("------respben------$resp");
       if (resp['status'] == "ok") {
         SessionUpdateModel sessionData = SessionUpdateModel.fromJson(resp);
@@ -39,7 +34,6 @@ class SessionController extends GetxController {
         //   iconData: Icons.error_outline,
         //   iconColor:Colors.grey,
         // );
-
       }
     } catch (e) {
       isLoaded.value = false;
@@ -54,7 +48,6 @@ class SessionController extends GetxController {
         duration: Duration(seconds: 3), // Auto dismiss time
         icon: Icon(Icons.check_circle, color: Colors.white),
       );
-
     } finally {
       print("--------sesssssssion id not generated---------");
       // resetStatus();

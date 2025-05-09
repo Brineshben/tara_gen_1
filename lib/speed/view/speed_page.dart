@@ -128,7 +128,7 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
                       SizedBox(height: 30),
 
                       Text(
-                        "Speed: ${controller.speed.value.toStringAsFixed(2)}",
+                        "Speed: ${controller.speed.value.toStringAsFixed(1)}",
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,

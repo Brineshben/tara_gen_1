@@ -1,18 +1,15 @@
 import 'dart:async';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/View/Face_detection/viewCustomer_details.dart';
-import 'package:ihub/View/Login_Page/login.dart';
 
 import '../../Controller/CustomerDetails_Controller.dart';
 import '../../Controller/SessionId_controller.dart';
 import '../../Utils/colors.dart';
-import '../Home_Screen/home_page.dart';
 
 class AddUser extends StatefulWidget {
   final String sessionId;
@@ -38,8 +35,10 @@ class _AddUserState extends State<AddUser> {
     });
     super.initState();
   }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.immersive); // Hide status bar again
   }
 
   @override
@@ -55,8 +54,10 @@ class _AddUserState extends State<AddUser> {
             height: ScreenUtil().screenHeight,
             width: ScreenUtil().screenWidth,
             child: Padding(
-              padding: EdgeInsets.only(left: 20.w, top: 15.h, right: 20.w, bottom: 10.h),
-              child: SingleChildScrollView( // Removed Expanded
+              padding: EdgeInsets.only(
+                  left: 20.w, top: 15.h, right: 20.w, bottom: 10.h),
+              child: SingleChildScrollView(
+                // Removed Expanded
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -87,23 +88,32 @@ class _AddUserState extends State<AddUser> {
 
                       // Name Field
                       _buildTextFieldLabel('NAME'),
-                      _buildTextField(nameController, "Enter Your Name", maxLines: 1),
+                      _buildTextField(nameController, "Enter Your Name",
+                          maxLines: 1),
 
                       // Purpose of Visit Field
                       _buildTextFieldLabel('PURPOSE OF VISIT'),
-                      _buildTextField(remarksController, "Enter The Purpose of Visit", maxLines: 5),
+                      _buildTextField(
+                          remarksController, "Enter The Purpose of Visit",
+                          maxLines: 5),
 
                       // Submit Button
                       Center(
                         child: Padding(
-                          padding: EdgeInsets.only(left: 30.w, bottom: 50.h, top: 10.h),
+                          padding: EdgeInsets.only(
+                              left: 30.w, bottom: 50.h, top: 10.h),
                           child: GestureDetector(
                             onTap: () {
                               if (_formKey.currentState!.validate()) {
                                 if (nameController.text.trim().isNotEmpty &&
                                     remarksController.text.trim().isNotEmpty) {
-                                  Get.find<CustomerdetailsController>().customerData(
-                                    sessionId: Get.find<SessionIDController>().sessionDatas.value?.latestSessionId ?? "",
+                                  Get.find<CustomerdetailsController>()
+                                      .customerData(
+                                    sessionId: Get.find<SessionIDController>()
+                                            .sessionDatas
+                                            .value
+                                            ?.latestSessionId ??
+                                        "",
                                     username: nameController.text,
                                     purpose: remarksController.text,
                                   );
@@ -111,10 +121,15 @@ class _AddUserState extends State<AddUser> {
                                   Navigator.pushReplacement(
                                     context,
                                     PageRouteBuilder(
-                                      transitionDuration: Duration(milliseconds: 300),
-                                      pageBuilder: (context, animation, secondaryAnimation) => ViewCustomerDetails(),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                        return FadeTransition(opacity: animation, child: child);
+                                      transitionDuration:
+                                          Duration(milliseconds: 300),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          ViewCustomerDetails(),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        return FadeTransition(
+                                            opacity: animation, child: child);
                                       },
                                     ),
                                   );
@@ -124,7 +139,10 @@ class _AddUserState extends State<AddUser> {
                             child: Container(
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
-                                  colors: [ColorUtils.userdetailcolor,ColorUtils.userdetailcolor],
+                                  colors: [
+                                    ColorUtils.userdetailcolor,
+                                    ColorUtils.userdetailcolor
+                                  ],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
@@ -162,26 +180,29 @@ class _AddUserState extends State<AddUser> {
       padding: EdgeInsets.only(left: 30.w, bottom: 15.h),
       child: Text(
         text,
-        style: TextStyle(fontSize: 25.h, fontWeight: FontWeight.bold, color: Colors.blue),
+        style: TextStyle(
+            fontSize: 25.h, fontWeight: FontWeight.bold, color: Colors.blue),
       ),
     );
   }
 
   // Function to create text fields
-  Widget _buildTextField(TextEditingController controller, String hintText, {int maxLines = 1}) {
+  Widget _buildTextField(TextEditingController controller, String hintText,
+      {int maxLines = 1}) {
     return Padding(
       padding: EdgeInsets.only(left: 30.w, bottom: 15.h),
       child: TextFormField(
-
         style: const TextStyle(color: Colors.white),
         maxLength: maxLines == 1 ? 30 : 100,
         minLines: 1,
         maxLines: maxLines,
         controller: controller,
-        validator: (val) => val!.trim().isEmpty ? 'Please enter $hintText.' : null,
+        validator: (val) =>
+            val!.trim().isEmpty ? 'Please enter $hintText.' : null,
         decoration: InputDecoration(
           hintStyle: const TextStyle(color: Colors.white38),
-          contentPadding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
+          contentPadding:
+              EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
           hintText: hintText,
           border: OutlineInputBorder(
             borderRadius: const BorderRadius.all(Radius.circular(10.0)).r,

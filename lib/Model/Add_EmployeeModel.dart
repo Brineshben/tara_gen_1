@@ -25,8 +25,8 @@ class EmployeeaddListModel {
 class Data {
   int? id;
   String? employeeId;
-  Null? employeeName;
-  Null? designation;
+  Null employeeName;
+  Null designation;
 
   Data({this.id, this.employeeId, this.employeeName, this.designation});
 

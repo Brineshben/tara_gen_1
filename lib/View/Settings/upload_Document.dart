@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Settings/settings.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -43,7 +44,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     }
   }
 
-  Future<void> _uploadFile() async {
+// upload map to server
+  Future<void> _uploadFileToServer() async {
     if (_selectedFile == null) {
       setState(() {
         _statusMessage = "Please select a file first.";
@@ -74,10 +76,99 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     }
   }
 
+// upload map to local
+  Future<void> _uploadFileTOLocal() async {
+    if (_selectedFile == null) {
+      setState(() {
+        _statusMessage = "Please select a file first.";
+      });
+      return;
+    }
+
+    String id = Get.find<BatteryController>().roboId;
+    print("idididididididididid${id}");
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('${ApiConstants.baseUrl1}/enquiry/upload-stcm/$id/'),
+    );
+
+    request.files.add(
+      await http.MultipartFile.fromPath('file', _selectedFile!.path),
+    );
+
+    var response = await request.send();
+    if (response.statusCode == 201) {
+      setState(() {
+        ProductAppPopUps.submit(
+          title: "SUCCESS",
+          message: "File uploaded successfully",
+          actionName: "Close",
+          iconData: Icons.done,
+          iconColor: Colors.green,
+        );
+        _statusMessage = "File uploaded successfully!";
+      });
+    } else {
+      setState(() {
+        _statusMessage = "File upload failed! Status: ${response.statusCode}";
+      });
+    }
+  }
+
+// delelete map from server
+  _deleteMapServer() async {
+    Map<String, dynamic> resp =
+        await ApiServices.deleteFileServer(status: true);
+
+    print('deletemapresponce ${resp}');
+
+    if (resp['status'] == true) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      ProductAppPopUps.submit(
+        title: "SUCCESS",
+        message: resp['message'].toString(),
+        actionName: "Close",
+        iconData: Icons.done,
+        iconColor: Colors.green,
+      );
+    } else {
+      ProductAppPopUps.submit(
+        title: "Failed",
+        message: resp['message'].toString(),
+        actionName: "Close",
+        iconData: Icons.error_outline,
+        iconColor: Colors.red,
+      );
+    }
+  }
+
+// delete map from local
+  _deleteMapLocal() async {
+    Map<String, dynamic> resp = await ApiServices.deleteFileLocal(status: true);
+    print('deletemapresponce ${resp}');
+    if (resp['status'] == true) {
+      FocusManager.instance.primaryFocus?.unfocus();
+      ProductAppPopUps.submit(
+        title: "SUCCESS",
+        message: resp['message'].toString(),
+        actionName: "Close",
+        iconData: Icons.done,
+        iconColor: Colors.green,
+      );
+    } else {
+      ProductAppPopUps.submit(
+        title: "Failed",
+        message: resp['message'].toString(),
+        actionName: "Close",
+        iconData: Icons.error_outline,
+        iconColor: Colors.red,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Stack(
         children: [
@@ -117,13 +208,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                           width: 60.h,
                           decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.2),
-                              // boxShadow: [
-                              //   BoxShadow(
-                              //     color: Colors.grey.withOpacity(0.3),
-                              //     blurRadius: 10,
-                              //     spreadRadius: 0,
-                              //   ),
-                              // ],
                               borderRadius: BorderRadius.circular(15).r),
                           child: Icon(
                             Icons.arrow_back_outlined,
@@ -175,7 +259,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCard(size, 'UPLOAD MAP'),
                             onTap: () {
-                              _uploadFile();
+                              _uploadFileTOLocal();
+                              _uploadFileToServer();
                             },
                           ),
                         ),
@@ -188,50 +273,26 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCardRed(size, 'DELETE MAP'),
                             onTap: () async {
-                              // try {
-                              Map<String, dynamic> resp =
-                                  await ApiServices.deleteFile(status: true);
-
-                              print('deletemapresponce ${resp}');
-
-                              if (resp['status'] == true) {
-                                FocusManager.instance.primaryFocus?.unfocus();
-                                ProductAppPopUps.submit(
-                                  title: "SUCCESS",
-                                  message: resp['message'].toString(),
-                                  actionName: "Close",
-                                  iconData: Icons.done,
-                                  iconColor: Colors.green,
-                                );
-                              } else {
-                                ProductAppPopUps.submit(
-                                  title: "Failed",
-                                  message: resp['message'].toString(),
-                                  actionName: "Close",
-                                  iconData: Icons.error_outline,
-                                  iconColor: Colors.red,
-                                );
-                              }
-                              // } catch (e) {
-                              //   ProductAppPopUps.submit(
-                              //     title: "Failed",
-                              //     message: "Response not ",
-                              //     actionName: "Close",
-                              //     iconData: Icons.error_outline,
-                              //     iconColor: Colors.red,
-                              //   );
-                              // }
+                              _deleteMapLocal();
+                              _deleteMapServer();
                             },
                           ),
                         ),
                         SizedBox(height: 20),
-                        Text(
-                          _statusMessage,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                        Container(
+                          decoration: BoxDecoration(
+                              color: Colors.black26,
+                              borderRadius: BorderRadius.circular(40)),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Text(
+                            _statusMessage,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
                         ),
                       ],
                     ),
@@ -242,37 +303,41 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.white,
-        icon: Icon(Icons.refresh, color: Colors.black),
-        label: Text(
-          'Refresh',
-          style: TextStyle(color: Colors.black),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20),
+        child: FloatingActionButton.extended(
+          backgroundColor: Colors.white,
+          icon: Icon(Icons.refresh, color: Colors.black),
+          label: Text(
+            'Refresh',
+            style: TextStyle(color: Colors.black),
+          ),
+          onPressed: () async {
+            Map response = await ApiServices.mapRestart();
+            if (response['status'] == 'ok') {
+              Get.snackbar(
+                'Success',
+                'Map restarted successfully!',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.green,
+                colorText: Colors.white,
+                duration: Duration(seconds: 2),
+                margin: EdgeInsets.all(20),
+              );
+            } else {
+              Get.snackbar(
+                'Error',
+                'Map not restarted',
+                snackPosition: SnackPosition.BOTTOM,
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+                duration: Duration(seconds: 2),
+                margin: EdgeInsets.all(20),
+              );
+            }
+          },
         ),
-        onPressed: () async {
-          Map response = await ApiServices.mapRestart();
-          if (response['status'] == 'ok') {
-            Get.snackbar(
-              'Success',
-              'Map restarted successfully!',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.green,
-              colorText: Colors.white,
-              duration: Duration(seconds: 2),
-              margin: EdgeInsets.all(20),
-            );
-          } else {
-            Get.snackbar(
-              'Error',
-              'Map not restarted',
-              snackPosition: SnackPosition.BOTTOM,
-              backgroundColor: Colors.red,
-              colorText: Colors.white,
-              duration: Duration(seconds: 2),
-              margin: EdgeInsets.all(20),
-            );
-          }
-        },
       ),
     );
   }

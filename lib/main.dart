@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ihub/Controller/RobotresponseApi_controller.dart';
+import 'package:ihub/View/Splash/Loading_Splash.dart';
 
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
@@ -15,7 +15,7 @@ late List<CameraDescription> cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await ApiConstants.loadBaseUrl1();
+  await ApiConstants.loadBaseUrl1();
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
@@ -32,9 +32,6 @@ Future<void> main() async {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
-  // TARA
-
   @override
   Widget build(BuildContext context) {
     HandleControllers.createGetControllers();

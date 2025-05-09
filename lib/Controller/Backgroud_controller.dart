@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 
 import '../Model/background_model.dart';
-import '../Model/robot_Response_Model.dart';
 import '../Service/Api_Service.dart';
 
 class BackgroudController extends GetxController {

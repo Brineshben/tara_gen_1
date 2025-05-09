@@ -73,4 +73,57 @@ class DescriptionController extends GetxController {
       }
     }
   }
+
+  // edit
+  Future<void> editDescription({
+    required String description,
+    required String time,
+    required String id,
+  }) async {
+    if (time.isEmpty || description.isEmpty) {
+      Get.snackbar(
+        margin: EdgeInsets.all(20),
+        "Error",
+        "Please fill all fields",
+        backgroundColor: Colors.red.withOpacity(0.8),
+        colorText: Colors.white,
+      );
+      return;
+    }
+
+    Map<String, dynamic>? response = await DescriptionService.editDescription(
+      timeOfDay: time,
+      description: description,
+      id: id,
+    );
+
+    print('Controller Response: $response');
+
+    print('kllllllllllllllllllll');
+
+    if (response != null) {
+      print('notnullllllllllll');
+      if (response['status'] == 'ok') {
+        await fetchDescription();
+        Get.back();
+        Get.snackbar(
+          margin: EdgeInsets.all(20),
+          "Success",
+          response['message'] ?? "Description edited successfully",
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.TOP,
+        );
+      } else {
+        Get.snackbar(
+          margin: EdgeInsets.all(20),
+          "Failed",
+          snackPosition: SnackPosition.TOP,
+          response['message'] ?? "Something went wrong",
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      }
+    }
+  }
 }

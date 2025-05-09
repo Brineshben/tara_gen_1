@@ -22,7 +22,6 @@ import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
 import '../../Utils/colors.dart';
 import '../Home_Screen/battery_Widget.dart';
-import '../Splash/Loading_Splash.dart';
 import 'Navigation.dart';
 
 class Homepage extends StatefulWidget {
@@ -56,21 +55,21 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
+      Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
-      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      // if (isBatteryscreen ?? false) {
-      //   Navigator.push(context, MaterialPageRoute(
-      //     builder: (context) {
-      //       return const BatterySplash();
-      //     },
-      //   ));
-      //   timer.cancel();
-      // }
-      // fetchAndUpdateBaseUrl();
-      // Get.find<RobotresponseapiController>().fetchObsResultList();
+      if (isBatteryscreen ?? false) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const BatterySplash();
+          },
+        ));
+        timer.cancel();
+      }
+      fetchAndUpdateBaseUrl();
+      Get.find<RobotresponseapiController>().fetchObsResultList();
     });
   }
 
@@ -445,7 +444,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                                   ),
                                                 ],
                                                 repeatForever: true,
-                                                // Ensures continuous looping
                                                 isRepeatingAnimation: true,
                                               ),
                                             ),
@@ -504,25 +502,25 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                         // )
                                       ],
                                     ),
-                                  // if (controller.text.value?.text != "" &&
-                                  //     listening == true)
-                                  //   Container(
-                                  //     padding: EdgeInsets.all(8),
-                                  //     decoration: BoxDecoration(
-                                  //       color: Colors.blueGrey,
-                                  //       borderRadius: BorderRadius.circular(12),
-                                  //     ),
-                                  //     child: Center(
-                                  //       child: Text(
-                                  //         controller.text.value?.text ?? "",
-                                  //         style: TextStyle(
-                                  //             fontSize: 18,
-                                  //             color: Colors.white),
-                                  //       ),
-                                  //     ),
-                                  //   )
-                                  // else if (speaking == true || waiting == true)
-                                  //   SizedBox(),
+                                  if (controller.text.value?.text != "" &&
+                                      listening == true)
+                                    Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueGrey,
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          controller.text.value?.text ?? "",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              color: Colors.white),
+                                        ),
+                                      ),
+                                    )
+                                  else if (speaking == true || waiting == true)
+                                    SizedBox(),
                                 ],
                               ),
                             );
