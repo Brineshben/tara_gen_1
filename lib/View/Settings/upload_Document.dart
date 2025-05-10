@@ -22,105 +22,161 @@ class FileUploadScreen extends StatefulWidget {
 
 class _FileUploadScreenState extends State<FileUploadScreen> {
   File? _selectedFile;
-  String _statusMessage = "";
+  String roboId = '';
+  @override
+  void initState() {
+    if (Get.find<BatteryController>().roboId != null) {
+      roboId = Get.find<BatteryController>().roboId;
+    }
+    super.initState();
+  }
 
   Future<void> _pickFile() async {
     String? initialDirectory = "/storage/emulated/0/Download";
-
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
       initialDirectory: initialDirectory, // Specify the initial directory
     );
 
     if (result != null) {
-      setState(() {
-        _selectedFile = File(result.files.single.path!);
-        _statusMessage = "File selected: ${result.files.single.name}";
-      });
+      _selectedFile = File(result.files.single.path!);
+      Get.snackbar(
+        'SELECTED',
+        'Map selected: ${result.files.single.name}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
     } else {
-      setState(() {
-        _statusMessage = "No file selected.";
-      });
+      Get.snackbar(
+        'CANCELLED',
+        'No file was selected.',
+        snackPosition: SnackPosition.BOTTOM,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
     }
   }
 
 // upload map to server
   Future<void> _uploadFileToServer() async {
     if (_selectedFile == null) {
-      setState(() {
-        _statusMessage = "Please select a file first.";
-      });
+      Get.snackbar(
+        'Warning',
+        'Please select a file before attempting to upload.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        margin: EdgeInsets.all(20),
+      );
       return;
     }
 
-    String id = Get.find<BatteryController>().roboId;
-    print("idididididididididid${id}");
+    print("idididididididididid${roboId}");
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('http://54.211.212.147/enquiry/upload-stcm/$id/'),
+      Uri.parse('http://54.211.212.147/stcm_files/create/'),
     );
 
     request.files.add(
-      await http.MultipartFile.fromPath('file', _selectedFile!.path),
+      await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
     );
+    request.fields['robot_id'] = roboId;
 
     var response = await request.send();
     if (response.statusCode == 201) {
-      setState(() {
-        _statusMessage = "File uploaded successfully!";
-      });
+      Get.snackbar(
+        'UPLOADED',
+        'Map uploaded successfully!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
     } else {
-      setState(() {
-        _statusMessage = "File upload failed! Status: ${response.statusCode}";
-      });
+      Get.snackbar(
+        'FAILED',
+        'File upload failed! Status: ${response.statusCode}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        margin: EdgeInsets.all(20),
+      );
     }
   }
 
 // upload map to local
   Future<void> _uploadFileTOLocal() async {
     if (_selectedFile == null) {
-      setState(() {
-        _statusMessage = "Please select a file first.";
-      });
+      Get.snackbar(
+        'Warning',
+        'Please select a file before attempting to upload.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.orange,
+        colorText: Colors.white,
+        duration: Duration(seconds: 2),
+        margin: EdgeInsets.all(20),
+      );
       return;
     }
 
-    String id = Get.find<BatteryController>().roboId;
-    print("idididididididididid${id}");
+    print("Selected Robot ID: $roboId");
+
     var request = http.MultipartRequest(
       'POST',
-      Uri.parse('${ApiConstants.baseUrl1}/enquiry/upload-stcm/$id/'),
+      // Uri.parse('http://192.168.11.55:8000/stcm_files/create/'),
+      Uri.parse('${ApiConstants.baseUrl1}/stcm_files/create/'),
     );
 
     request.files.add(
-      await http.MultipartFile.fromPath('file', _selectedFile!.path),
+      await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
     );
 
+    request.fields['robot_id'] = roboId;
+
     var response = await request.send();
+
+    final responseBody = await response.stream.bytesToString();
+    print('Response status upload map: ${response.statusCode}');
+    print('Response body: $responseBody');
+
     if (response.statusCode == 201) {
-      setState(() {
-        ProductAppPopUps.submit(
-          title: "SUCCESS",
-          message: "File uploaded successfully",
-          actionName: "Close",
-          iconData: Icons.done,
-          iconColor: Colors.green,
-        );
-        _statusMessage = "File uploaded successfully!";
-      });
+      Get.snackbar(
+        'UPLOADED',
+        'Map uploaded successfully!',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
     } else {
-      setState(() {
-        _statusMessage = "File upload failed! Status: ${response.statusCode}";
-      });
+      Get.snackbar(
+        'FAILED',
+        'File upload failed! Status: ${response.statusCode}',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
     }
   }
 
 // delelete map from server
   _deleteMapServer() async {
-    Map<String, dynamic> resp =
-        await ApiServices.deleteFileServer(status: true);
+    Map<String, dynamic> resp = await ApiServices.deleteFileServer(
+      status: true,
+      robotId: roboId,
+    );
 
-    print('deletemapresponce ${resp}');
+    print('deletemapresponceserver ${resp}');
 
     if (resp['status'] == true) {
       FocusManager.instance.primaryFocus?.unfocus();
@@ -144,13 +200,15 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
 // delete map from local
   _deleteMapLocal() async {
-    Map<String, dynamic> resp = await ApiServices.deleteFileLocal(status: true);
-    print('deletemapresponce ${resp}');
+    Map<String, dynamic> resp = await ApiServices.deleteFileLocal(
+      robotId: roboId,
+    );
+    print('deletemapresponcelocal ${resp}');
     if (resp['status'] == true) {
       FocusManager.instance.primaryFocus?.unfocus();
       ProductAppPopUps.submit(
         title: "SUCCESS",
-        message: resp['message'].toString(),
+        message: "Map deleted successfully",
         actionName: "Close",
         iconData: Icons.done,
         iconColor: Colors.green,
@@ -245,7 +303,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCard(size, 'SELECT MAP'),
                             onTap: () {
-                              print("nenhenh");
                               _pickFile();
                             },
                           ),
@@ -272,26 +329,10 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             highlightColor: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCardRed(size, 'DELETE MAP'),
-                            onTap: () async {
+                            onTap: () {
                               _deleteMapLocal();
                               _deleteMapServer();
                             },
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Container(
-                          decoration: BoxDecoration(
-                              color: Colors.black26,
-                              borderRadius: BorderRadius.circular(40)),
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 10),
-                          child: Text(
-                            _statusMessage,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
                           ),
                         ),
                       ],

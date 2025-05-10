@@ -90,7 +90,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.1.31:8000";
+  static String _defaultBaseUrl1 = "http://192.168.11.55:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -127,7 +127,8 @@ class ApiConstants {
   static String basestatusoffline = "/base/status/";
   static String volumeoffline = "/volume/set/";
   static String volumeinitialoffline = "/volume/get/";
-  static String deletefile = "/delete-status/";
+  // static String deletefile = "/delete-status/";
+  static String deleteMap = "/stcm_files/delete/";
   static String apikey = "/api-key/upload/";
   static String fullTour = "/tour/update/";
   static String reboot = "/update-reboot-status/";
@@ -135,22 +136,24 @@ class ApiConstants {
   //  description
   static String description = "/add_wishing_commands/";
   static String edit_wishing_commands = "/edit_wishing_commands/";
+  static String deactivate_description = "/deactivate_description/";
 
   // prompt
   static String commandPrompt = "/command_prompt/";
   static String command_prompt_edit = "/command_prompt_edit/";
-
-  // map kill
-  static String start_stop_button_press = "/start_stop_button_press/";
-
-  static String updateSpeed = "/speed/value/";
-  static String getSpeed = "/current_speed/";
-  static String gotoCharging = "/charging/set/";
-  static String deactivate_description = "/deactivate_description/";
   static String deactivate_command_prompt = "/deactivate_command_prompt/";
 
-  ///online
+  // map kill
+  static String fetch_refresh_status = "/fetch_refresh_status/";
 
+  // speed
+  static String updateSpeed = "/speed/value/";
+  static String getSpeed = "/current_speed/";
+
+  // charging dock
+  static String chargingDock = "/charging/set/";
+
+  ///online
   static String login = "/accounts/login/";
   static String poweroff = "/off/";
   static String robotResponse = "/list_status/";

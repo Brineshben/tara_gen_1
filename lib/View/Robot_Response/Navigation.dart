@@ -145,13 +145,6 @@ class _NavigationState extends State<Navigation> {
                                     width: 60.h,
                                     decoration: BoxDecoration(
                                         color: Colors.white.withOpacity(0.2),
-                                        // boxShadow: [
-                                        //   BoxShadow(
-                                        //     color: Colors.grey.withOpacity(0.3),
-                                        //     blurRadius: 10,
-                                        //     spreadRadius: 0,
-                                        //   ),
-                                        // ],
                                         borderRadius:
                                             BorderRadius.circular(15).r),
                                     child: Icon(
@@ -752,54 +745,10 @@ class _NavigationState extends State<Navigation> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.r),
                   onTap: () async {
-                    Get.dialog(
-                      AlertDialog(
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-                        ),
-                        title: Column(
-                          children: [
-                            Icon(
-                              Icons.bolt,
-                              color: Colors.orange,
-                              size: 50.h,
-                            ),
-                          ],
-                        ),
-                        content: Text(
-                          "Do you want to go to the charging station?",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(fontSize: 16.h),
-                        ),
-                        actionsAlignment: MainAxisAlignment.center,
-                        actions: [
-                          FilledButton(
-                            onPressed: () async {
-                              final responce =
-                                  await ApiServices.setChargingStatus(true);
-
-                              if (responce['status'] == 'ok') {
-                                Get.back();
-                              } else {}
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: WidgetStateProperty.all(
-                                  ColorUtils.userdetailcolor),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  "Yes",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 16.h),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
+                    final responce = await ApiServices.setChargingStatus(true);
+                    if (responce['status'] == true) {
+                      Get.back();
+                    }
                   },
                   child: Ink(
                     width: 100,

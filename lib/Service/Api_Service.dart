@@ -220,7 +220,6 @@ class ApiServices {
   }
 
   ///check UpdateStatus
-
   static Future<Map<String, dynamic>> updateStatus({
     required bool status,
   }) async {
@@ -238,14 +237,11 @@ class ApiServices {
   // delete map from server
   static Future<Map<String, dynamic>> deleteFileServer({
     required bool status,
+    required String robotId,
   }) async {
-    String url = "http://54.211.212.147${ApiConstants.deletefile}";
+    String url = "http://54.211.212.147${ApiConstants.deleteMap}$robotId/";
     print("urlurlurlurlurlurlurl:$url");
-    Map apiBody = {"status": status};
-    // try {
-    print("apibody:$apiBody");
-    var request = http.Request('POST', Uri.parse(url));
-    request.body = (json.encode(apiBody));
+    var request = http.Request('DELETE', Uri.parse(url));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -256,15 +252,11 @@ class ApiServices {
 
 // delete map from local
   static Future<Map<String, dynamic>> deleteFileLocal({
-    required bool status,
+    required String robotId,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.deleteMap}$robotId/";
     print("urlurlurlurlurlurlurl:$url");
-    Map apiBody = {"status": status};
-    // try {
-    print("apibody:$apiBody");
-    var request = http.Request('POST', Uri.parse(url));
-    request.body = (json.encode(apiBody));
+    var request = http.Request('DELETE', Uri.parse(url));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -319,11 +311,10 @@ class ApiServices {
 
 // map restart
   static Future<Map<String, dynamic>> mapRestart() async {
-    String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.start_stop_button_press}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.fetch_refresh_status}";
 
     Map apiBody = {"status": true};
-    var request = http.Request('POST', Uri.parse(url));
+    var request = http.Request('GET', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
@@ -638,26 +629,16 @@ class ApiServices {
 
 // GO CHARGING DOK
   static setChargingStatus(bool status) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.gotoCharging}";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.chargingDock}";
     final response = await http.post(
+      headers: {
+        'Content-Type': 'application/json',
+      },
       Uri.parse(url),
       body: jsonEncode({'status': status}),
     );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      // ❌ Server error
-      Get.snackbar(
-        "Server Error",
-        "Something went wrong. Please try again.",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-        margin: EdgeInsets.all(20),
-      );
-      return null;
-    }
+    print(' chargingdock ${response.body}');
+    return jsonDecode(response.body);
   }
 
 // DELETE DESCRIPTION
