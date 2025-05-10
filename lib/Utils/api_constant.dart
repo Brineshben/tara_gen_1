@@ -127,8 +127,7 @@ class ApiConstants {
   static String basestatusoffline = "/base/status/";
   static String volumeoffline = "/volume/set/";
   static String volumeinitialoffline = "/volume/get/";
-  // static String deletefile = "/delete-status/";
-  static String deleteMap = "/stcm_files/delete/";
+  static String deletefile = "/delete-status/";
   static String apikey = "/api-key/upload/";
   static String fullTour = "/tour/update/";
   static String reboot = "/update-reboot-status/";

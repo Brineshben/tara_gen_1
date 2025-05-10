@@ -62,57 +62,86 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
   }
 
 // upload map to server
-  Future<void> _uploadFileToServer() async {
-    if (_selectedFile == null) {
-      Get.snackbar(
-        'Warning',
-        'Please select a file before attempting to upload.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        margin: EdgeInsets.all(20),
-      );
-      return;
-    }
+  // Future<void> _uploadFileToServer() async {
+  //   if (_selectedFile == null) {
+  //     Get.snackbar(
+  //       'Warning',
+  //       'Please select a file before attempting to upload.',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.orange,
+  //       colorText: Colors.white,
+  //       duration: Duration(seconds: 2),
+  //       margin: EdgeInsets.all(20),
+  //     );
+  //     return;
+  //   }
 
-    print("idididididididididid${roboId}");
-    var request = http.MultipartRequest(
-      'POST',
-      Uri.parse('http://54.211.212.147/stcm_files/create/'),
-    );
+  //   print("idididididididididid${roboId}");
+  //   var request = http.MultipartRequest(
+  //     'POST',
+  //     Uri.parse('http://54.211.212.147/stcm_files/create/'),
+  //   );
 
-    request.files.add(
-      await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
-    );
-    request.fields['robot_id'] = roboId;
+  //   request.files.add(
+  //     await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
+  //   );
+  //   request.fields['robot_id'] = roboId;
 
-    var response = await request.send();
-    if (response.statusCode == 201) {
-      Get.snackbar(
-        'UPLOADED',
-        'Map uploaded successfully!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
-    } else {
-      Get.snackbar(
-        'FAILED',
-        'File upload failed! Status: ${response.statusCode}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        margin: EdgeInsets.all(20),
-      );
-    }
-  }
+  //   var response = await request.send();
+  //   if (response.statusCode == 201) {
+  //     Get.snackbar(
+  //       'UPLOADED',
+  //       'Map uploaded successfully!',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.green,
+  //       colorText: Colors.white,
+  //       duration: Duration(seconds: 5),
+  //       margin: EdgeInsets.all(20),
+  //     );
+  //   } else {
+  //     Get.snackbar(
+  //       'FAILED',
+  //       'File upload failed! Status: ${response.statusCode}',
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.red,
+  //       colorText: Colors.white,
+  //       duration: Duration(seconds: 2),
+  //       margin: EdgeInsets.all(20),
+  //     );
+  //   }
+  // }
+
+// delelete map from server
+  // _deleteMapServer() async {
+  //   Map<String, dynamic> resp = await ApiServices.deleteFileServer(
+  //     status: true,
+  //     robotId: roboId,
+  //   );
+
+  //   print('deletemapresponceserver ${resp}');
+
+  //   if (resp['status'] == true) {
+  //     FocusManager.instance.primaryFocus?.unfocus();
+  //     ProductAppPopUps.submit(
+  //       title: "SUCCESS",
+  //       message: resp['message'].toString(),
+  //       actionName: "Close",
+  //       iconData: Icons.done,
+  //       iconColor: Colors.green,
+  //     );
+  //   } else {
+  //     ProductAppPopUps.submit(
+  //       title: "Failed",
+  //       message: resp['message'].toString(),
+  //       actionName: "Close",
+  //       iconData: Icons.error_outline,
+  //       iconColor: Colors.red,
+  //     );
+  //   }
+  // }
 
 // upload map to local
-  Future<void> _uploadFileTOLocal() async {
+  Future<void> _uploadFile() async {
     if (_selectedFile == null) {
       Get.snackbar(
         'Warning',
@@ -130,7 +159,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
     var request = http.MultipartRequest(
       'POST',
-      // Uri.parse('http://192.168.11.55:8000/stcm_files/create/'),
       Uri.parse('${ApiConstants.baseUrl1}/stcm_files/create/'),
     );
 
@@ -169,39 +197,10 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     }
   }
 
-// delelete map from server
-  _deleteMapServer() async {
-    Map<String, dynamic> resp = await ApiServices.deleteFileServer(
-      status: true,
-      robotId: roboId,
-    );
-
-    print('deletemapresponceserver ${resp}');
-
-    if (resp['status'] == true) {
-      FocusManager.instance.primaryFocus?.unfocus();
-      ProductAppPopUps.submit(
-        title: "SUCCESS",
-        message: resp['message'].toString(),
-        actionName: "Close",
-        iconData: Icons.done,
-        iconColor: Colors.green,
-      );
-    } else {
-      ProductAppPopUps.submit(
-        title: "Failed",
-        message: resp['message'].toString(),
-        actionName: "Close",
-        iconData: Icons.error_outline,
-        iconColor: Colors.red,
-      );
-    }
-  }
-
-// delete map from local
-  _deleteMapLocal() async {
+  // DELETE MAP FROM LOCAL
+  _deleteMap() async {
     Map<String, dynamic> resp = await ApiServices.deleteFileLocal(
-      robotId: roboId,
+      status: true,
     );
     print('deletemapresponcelocal ${resp}');
     if (resp['status'] == true) {
@@ -316,8 +315,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCard(size, 'UPLOAD MAP'),
                             onTap: () {
-                              _uploadFileTOLocal();
-                              _uploadFileToServer();
+                              _uploadFile();
                             },
                           ),
                         ),
@@ -330,8 +328,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCardRed(size, 'DELETE MAP'),
                             onTap: () {
-                              _deleteMapLocal();
-                              _deleteMapServer();
+                              _deleteMap();
                             },
                           ),
                         ),

@@ -168,7 +168,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           EmergencyStop = controller.background.value?.data
                               ?.first.robot?.emergencyStop;
                         }
-
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -176,7 +175,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(
-                                      left: 10.w, top: 40.h, right: 10.w),
+                                    left: 10.w,
+                                    top: 40.h,
+                                    right: 10.w,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: Colors.white.withOpacity(0.2),
                                     borderRadius: BorderRadius.circular(20.r),

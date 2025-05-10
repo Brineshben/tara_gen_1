@@ -1,10 +1,6 @@
 import 'dart:async';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Login_Page/login.dart';
 import 'package:lottie/lottie.dart';
 

@@ -220,6 +220,7 @@ class ApiServices {
   }
 
   ///check UpdateStatus
+
   static Future<Map<String, dynamic>> updateStatus({
     required bool status,
   }) async {
@@ -235,28 +236,35 @@ class ApiServices {
   }
 
   // delete map from server
-  static Future<Map<String, dynamic>> deleteFileServer({
-    required bool status,
-    required String robotId,
-  }) async {
-    String url = "http://54.211.212.147${ApiConstants.deleteMap}$robotId/";
-    print("urlurlurlurlurlurlurl:$url");
-    var request = http.Request('DELETE', Uri.parse(url));
-    request.headers.addAll({'Content-Type': 'application/json'});
-    http.StreamedResponse response = await request.send();
-    var respString = await response.stream.bytesToString();
-    print('filedelete ${respString}');
-    print(json.decode(respString));
-    return json.decode(respString);
-  }
+  // static Future<Map<String, dynamic>> deleteFileServer({
+  //   required bool status,
+  // }) async {
+  //   String url = "http://54.211.212.147${ApiConstants.deletefile}";
+  //   print("urlurlurlurlurlurlurl:$url");
+  //   Map apiBody = {"status": status};
+  //   // try {
+  //   print("apibody:$apiBody");
+  //   var request = http.Request('POST', Uri.parse(url));
+  //   request.body = (json.encode(apiBody));
+  //   request.headers.addAll({'Content-Type': 'application/json'});
+  //   http.StreamedResponse response = await request.send();
+  //   var respString = await response.stream.bytesToString();
+  //   print('filedelete ${respString}');
+  //   print(json.decode(respString));
+  //   return json.decode(respString);
+  // }
 
 // delete map from local
   static Future<Map<String, dynamic>> deleteFileLocal({
-    required String robotId,
+    required bool status,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.deleteMap}$robotId/";
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
     print("urlurlurlurlurlurlurl:$url");
-    var request = http.Request('DELETE', Uri.parse(url));
+    Map apiBody = {"status": status};
+    // try {
+    print("apibody:$apiBody");
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
