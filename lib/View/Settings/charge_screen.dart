@@ -78,7 +78,11 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 20, right: 20),
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 30,
+                    right: 20,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,11 +95,11 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                           height: 60.h,
                           width: 60.h,
                           decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.black.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(15).r),
                           child: Icon(
                             Icons.arrow_back_outlined,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -107,7 +111,7 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                         child: Text(
                           "Battery Config",
                           style: GoogleFonts.oxygen(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 25.h,
                               fontWeight: FontWeight.w700),
                         ),

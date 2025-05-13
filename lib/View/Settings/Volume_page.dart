@@ -42,12 +42,6 @@ class _VolumeControlState extends State<VolumeControl> {
             width: ScreenUtil().screenWidth,
             height: ScreenUtil().screenHeight,
           ),
-          // Positioned.fill(
-          //   child: Image.asset(
-          //     'assets/images.jpg',
-          //     fit: BoxFit.cover,
-          //   ),
-          // ),
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
@@ -78,18 +72,11 @@ class _VolumeControlState extends State<VolumeControl> {
                         height: 60.h,
                         width: 60.h,
                         decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
+                            color: Colors.black.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -99,7 +86,7 @@ class _VolumeControlState extends State<VolumeControl> {
                     Text(
                       "VOLUME",
                       style: GoogleFonts.oxygen(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 25.h,
                           fontWeight: FontWeight.w700),
                     ),
@@ -117,13 +104,13 @@ class _VolumeControlState extends State<VolumeControl> {
                           const Icon(
                             Icons.volume_up,
                             size: 50,
-                            color: Colors.white,
+                            color: Colors.black,
                           ),
                           Text("Volume: ${controller.roboVolume.value}%",
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white)),
+                                  color: Colors.black)),
                           SizedBox(
                             width: 300.w, // Adjust width as needed
                             child: Slider(

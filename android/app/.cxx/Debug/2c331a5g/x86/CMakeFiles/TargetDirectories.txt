@@ -1,0 +1,2 @@
+C:/Users/muneef/Desktop/tara_gen_1/android/app/.cxx/Debug/2c331a5g/x86/CMakeFiles/edit_cache.dir
+C:/Users/muneef/Desktop/tara_gen_1/android/app/.cxx/Debug/2c331a5g/x86/CMakeFiles/rebuild_cache.dir

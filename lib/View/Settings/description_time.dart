@@ -65,11 +65,11 @@ class _AddDescriptionState extends State<AddDescription> {
                         height: 60.h,
                         width: 60.h,
                         decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.2),
                             borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -78,9 +78,9 @@ class _AddDescriptionState extends State<AddDescription> {
                     ),
                     Center(
                       child: Text(
-                        "DESCRIPTION LIST",
+                        "PLACE DESCRIPTION LIST",
                         style: GoogleFonts.oxygen(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 25.h,
                             fontWeight: FontWeight.w700),
                       ),
@@ -96,7 +96,7 @@ class _AddDescriptionState extends State<AddDescription> {
                             child: Text(
                             "No description found",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontWeight: FontWeight.bold,
                             ),
                           ))

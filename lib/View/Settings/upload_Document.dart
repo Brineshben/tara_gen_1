@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -9,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/settings.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -160,6 +163,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     var request = http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl1}/stcm_files/create/'),
+      // Uri.parse('http://192.168.1.31:8000/stcm_files/create/'),
     );
 
     request.files.add(
@@ -174,20 +178,78 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     print('Response status upload map: ${response.statusCode}');
     print('Response body: $responseBody');
 
-    if (response.statusCode == 201) {
+    final decodedBody = json.decode(responseBody);
+
+    try {
+      if (response.statusCode == 201) {
+        Get.snackbar(
+          'UPLOADED',
+          'Map uploaded successfully!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+          duration: Duration(seconds: 5),
+          margin: EdgeInsets.all(20),
+        );
+      } else if (response.statusCode >= 400 && response.statusCode < 500) {
+        // Client error
+        final error =
+            decodedBody['robot_id']?.join(', ') ?? 'Client error occurred';
+        Get.snackbar(
+          'FAILED',
+          'Client Error: $error',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.orange,
+          colorText: Colors.white,
+          duration: Duration(seconds: 5),
+          margin: EdgeInsets.all(20),
+        );
+      } else if (response.statusCode >= 500) {
+        // Server error
+        Get.snackbar(
+          'FAILED',
+          'Server Error! Please try again later.',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: Duration(seconds: 5),
+          margin: EdgeInsets.all(20),
+        );
+      } else {
+        Get.snackbar(
+          'FAILED',
+          'Unexpected error!',
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          duration: Duration(seconds: 5),
+          margin: EdgeInsets.all(20),
+        );
+      }
+    } on SocketException {
       Get.snackbar(
-        'UPLOADED',
-        'Map uploaded successfully!',
+        'NO INTERNET',
+        'Please check your connection.',
         snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red,
         colorText: Colors.white,
         duration: Duration(seconds: 5),
         margin: EdgeInsets.all(20),
       );
-    } else {
+    } on TimeoutException {
       Get.snackbar(
-        'FAILED',
-        'File upload failed! Status: ${response.statusCode}',
+        'TIMEOUT',
+        'Connection timed out.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        duration: Duration(seconds: 5),
+        margin: EdgeInsets.all(20),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'ERROR',
+        'Something went wrong: $e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red,
         colorText: Colors.white,
@@ -252,7 +314,12 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 20),
+                  padding: const EdgeInsets.only(
+                    left: 20,
+                    top: 20,
+                    bottom: 10,
+                    right: 15,
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -264,11 +331,11 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                           height: 60.h,
                           width: 60.h,
                           decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
+                              color: Colors.black.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(15).r),
                           child: Icon(
                             Icons.arrow_back_outlined,
-                            color: Colors.grey,
+                            color: Colors.black,
                           ),
                         ),
                       ),
@@ -279,7 +346,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                         child: Text(
                           "ADD MAP",
                           style: GoogleFonts.oxygen(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 25.h,
                               fontWeight: FontWeight.w700),
                         ),
@@ -339,9 +406,27 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               ],
             ),
           ),
+          Positioned(
+              right: 0,
+              child: GetX<BatteryController>(
+                builder: (BatteryController controller) {
+                  int? batteryLevel;
+
+                  batteryLevel = int.tryParse(controller.background.value?.data
+                              ?.first.robot?.batteryStatus ??
+                          "0") ??
+                      0;
+
+                  print("batettegdshgfcdshuf$batteryLevel");
+
+                  return BatteryIcon(
+                    batteryLevel: batteryLevel,
+                  );
+                },
+              )),
         ],
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(20),
         child: FloatingActionButton.extended(
@@ -353,7 +438,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           ),
           onPressed: () async {
             Map response = await ApiServices.mapRestart();
-            if (response['status'] == 'ok') {
+            if (response['data']['status'] == true) {
               Get.snackbar(
                 'Success',
                 'Map restarted successfully!',
@@ -365,7 +450,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               );
             } else {
               Get.snackbar(
-                'Error',
+                'Failed',
                 'Map not restarted',
                 snackPosition: SnackPosition.BOTTOM,
                 backgroundColor: Colors.red,

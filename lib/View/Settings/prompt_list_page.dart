@@ -29,51 +29,46 @@ class _PromptListPageState extends State<PromptListPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white, // makes it white
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddSystemPrompt(
-                        id: '',
-                        isEdit: false,
-                        prompt: '',
-                      )));
-        },
-        child: Icon(Icons.add, color: Colors.black), // icon color
-      ),
-      body: Stack(
-        children: [
-          // Background image
-          GetX<BackgroudController>(
-            builder: (BackgroudController controller) {
-              return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                ),
-              );
-            },
-          ),
-
-          // Content
-          SafeArea(
-            child: Column(
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white, // makes it white
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddSystemPrompt(
+                          id: '',
+                          isEdit: false,
+                          prompt: '',
+                        )));
+          },
+          child: Icon(Icons.add, color: Colors.black), // icon color
+        ),
+        body: Stack(
+          children: [
+            GetX<BackgroudController>(
+              builder: (BackgroudController controller) {
+                return Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        controller.backgroundModel.value?.backgroundImage ?? "",
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                    errorWidget: (context, url, error) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
+            Column(
               children: [
-                // Header
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
+                  padding: const EdgeInsets.only(top: 30, left: 20),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Back Button and Title
                       Row(
                         children: [
                           GestureDetector(
@@ -82,43 +77,27 @@ class _PromptListPageState extends State<PromptListPage> {
                               height: 60.h,
                               width: 60.h,
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
+                                color: Colors.black.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(15).r,
                               ),
                               child: const Icon(Icons.arrow_back_outlined,
-                                  color: Colors.grey),
+                                  color: Colors.black),
                             ),
                           ),
                           const SizedBox(width: 10),
                           Text(
                             "SYSTME PROMPT LIST",
                             style: GoogleFonts.oxygen(
-                              color: Colors.white,
+                              color: Colors.black,
                               fontSize: 25.h,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                         ],
                       ),
-                      // Battery Icon
-                      GetX<BatteryController>(
-                        builder: (batteryController) {
-                          int batteryLevel = int.tryParse(
-                                batteryController.background.value?.data?.first
-                                        .robot?.batteryStatus ??
-                                    "0",
-                              ) ??
-                              0;
-                          return BatteryIcon(batteryLevel: batteryLevel);
-                        },
-                      ),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 10),
-
-                // Description List
                 Expanded(
                   child: GetX<PromptController>(
                     builder: (controller) {
@@ -132,7 +111,7 @@ class _PromptListPageState extends State<PromptListPage> {
                         return const Center(
                           child: Text(
                             'No prompt found',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                         );
                       }
@@ -286,8 +265,27 @@ class _PromptListPageState extends State<PromptListPage> {
                 ),
               ],
             ),
-          ),
-        ],
+            Positioned(
+              right: 0,
+              child: GetX<BatteryController>(
+                builder: (BatteryController controller) {
+                  int? batteryLevel;
+
+                  batteryLevel = int.tryParse(controller.background.value?.data
+                              ?.first.robot?.batteryStatus ??
+                          "0") ??
+                      0;
+
+                  print("batettegdshgfcdshuf$batteryLevel");
+
+                  return BatteryIcon(
+                    batteryLevel: batteryLevel,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

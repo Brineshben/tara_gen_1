@@ -29,97 +29,71 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.white, // makes it white
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddDescriptionPage(
-                        id: 0,
-                        isEdit: false,
-                        description: '',
-                        time: null,
-                      )));
-        },
-        child: Icon(Icons.add, color: Colors.black), // icon color
-      ),
-      body: Stack(
-        children: [
-          // Background image
-          GetX<BackgroudController>(
-            builder: (BackgroudController controller) {
-              return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                ),
-              );
-            },
-          ),
-
-          // Content
-          SafeArea(
-            child: Column(
+    return SafeArea(
+      child: Scaffold(
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.white, // makes it white
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddDescriptionPage(
+                          id: 0,
+                          isEdit: false,
+                          description: '',
+                          time: null,
+                        )));
+          },
+          child: Icon(Icons.add, color: Colors.black), // icon color
+        ),
+        body: Stack(
+          children: [
+            GetX<BackgroudController>(
+              builder: (BackgroudController controller) {
+                return Positioned.fill(
+                  child: CachedNetworkImage(
+                    imageUrl:
+                        controller.backgroundModel.value?.backgroundImage ?? "",
+                    fit: BoxFit.cover,
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                    errorWidget: (context, url, error) =>
+                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                  ),
+                );
+              },
+            ),
+            Column(
               children: [
-                // Header
                 Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
+                  padding: const EdgeInsets.only(left: 20, top: 30),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      // Back Button and Title
-                      Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => Navigator.pop(context),
-                            child: Container(
-                              height: 60.h,
-                              width: 60.h,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15).r,
-                              ),
-                              child: const Icon(Icons.arrow_back_outlined,
-                                  color: Colors.grey),
-                            ),
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          height: 60.h,
+                          width: 60.h,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(15).r,
                           ),
-                          const SizedBox(width: 10),
-                          Text(
-                            "DESCRIPTION LIST",
-                            style: GoogleFonts.oxygen(
-                              color: Colors.white,
-                              fontSize: 25.h,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
+                          child: const Icon(Icons.arrow_back_outlined,
+                              color: Colors.black),
+                        ),
                       ),
-                      // Battery Icon
-                      GetX<BatteryController>(
-                        builder: (batteryController) {
-                          int batteryLevel = int.tryParse(
-                                batteryController.background.value?.data?.first
-                                        .robot?.batteryStatus ??
-                                    "0",
-                              ) ??
-                              0;
-                          return BatteryIcon(batteryLevel: batteryLevel);
-                        },
+                      const SizedBox(width: 10),
+                      Text(
+                        "TIME DESCRIPTION LIST",
+                        style: GoogleFonts.oxygen(
+                          color: Colors.black,
+                          fontSize: 25.h,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
                 ),
-
-                const SizedBox(height: 10),
-
-                // Description List
                 Expanded(
                   child: GetX<DescriptionController>(
                     builder: (controller) {
@@ -134,7 +108,7 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                         return const Center(
                           child: Text(
                             'No descriptions found',
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(color: Colors.black),
                           ),
                         );
                       }
@@ -284,8 +258,27 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                 ),
               ],
             ),
-          ),
-        ],
+            Positioned(
+              right: 0,
+              child: GetX<BatteryController>(
+                builder: (BatteryController controller) {
+                  int? batteryLevel;
+
+                  batteryLevel = int.tryParse(controller.background.value?.data
+                              ?.first.robot?.batteryStatus ??
+                          "0") ??
+                      0;
+
+                  print("batettegdshgfcdshuf$batteryLevel");
+
+                  return BatteryIcon(
+                    batteryLevel: batteryLevel,
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

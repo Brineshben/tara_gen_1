@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/description_option.dart';
@@ -186,103 +187,14 @@ class _MaintananceState extends State<Maintanance> {
             ),
 
             /// Main Content
-            SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, top: 20, right: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            GestureDetector(
-                              onTap: () async {
-                                Navigator.pop(context);
-                              },
-                              child: Container(
-                                height: 60.h,
-                                width: 60.h,
-                                decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(0.2),
-                                    // boxShadow: [
-                                    //   BoxShadow(
-                                    //     color: Colors.grey.withOpacity(0.3),
-                                    //     blurRadius: 10,
-                                    //     spreadRadius: 0,
-                                    //   ),
-                                    // ],
-                                    borderRadius: BorderRadius.circular(15).r),
-                                child: Icon(
-                                  Icons.arrow_back_outlined,
-                                  color: Colors.grey,
-                                ),
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Center(
-                              child: GestureDetector(
-                                onTap: () async {
-                                  await SharedPrefs().removeLoginData();
-                                },
-                                child: Text(
-                                  "SETTINGS",
-                                  style: GoogleFonts.oxygen(
-                                      color: Colors.white,
-                                      fontSize: 25.h,
-                                      fontWeight: FontWeight.w700),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        // Container(
-                        //   decoration: BoxDecoration(
-                        //     gradient: LinearGradient(
-                        //       colors: [Colors.red, Colors.red],
-                        //       begin: Alignment.topLeft,
-                        //       end: Alignment.bottomRight,
-                        //     ),
-                        //     borderRadius: BorderRadius.circular(
-                        //         10), // Ensure proper border radius
-                        //   ),
-                        //   child: Material(
-                        //     color: Colors
-                        //         .transparent, // Ensure the gradient is visible
-                        //     borderRadius: BorderRadius.circular(10),
-                        //     child: FloatingActionButton.extended(
-                        //       backgroundColor: Colors.transparent,
-                        //       onPressed: () {
-                        //         exit(0);
-                        //       },
-                        //       icon: Icon(Icons.arrow_forward_ios,
-                        //           color: Colors.white),
-                        //       label: Text("EXIT APP",
-                        //           style: GoogleFonts.poppins(
-                        //             color: Colors.white,
-                        //             fontSize: 18.h,
-                        //             fontWeight: FontWeight.bold,
-                        //           )),
-                        //     ),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(
-                      top: 30,
-                      bottom: 20,
-                      right: 20,
-                      left: 20,
-                    ),
-                    child: Wrap(
-                      spacing: 20.0, // Horizontal space between items
-                      runSpacing: 20.0, // Vertical space between rows
+            Padding(
+              padding: const EdgeInsets.only(top: 100, right: 50, left: 50),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Wrap(
+                      spacing: 20.0,
+                      runSpacing: 20.0,
                       alignment: WrapAlignment.center,
                       children: [
                         // GestureDetector(
@@ -423,8 +335,8 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         SettingsCard(
                           iconPath: 'assets/prompt.png',
-                          subtitle: 'Manage system prompts and responses',
-                          title: 'SYSTEM PROMPT',
+                          subtitle: 'Manage Behavior Protocol',
+                          title: 'Behavior Protocol',
                           backgroundColor: Colors.white,
                           onTap: () {
                             Navigator.push(
@@ -509,7 +421,7 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         SettingsCard(
                           iconPath: 'assets/synchronize.png',
-                          subtitle: 'Restart your device to refresh settings',
+                          subtitle: 'Restart your robot to refresh settings',
                           title: 'RESTART',
                           backgroundColor: Colors.white,
                           onTap: () {
@@ -556,7 +468,7 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         SettingsCard(
                           iconPath: 'assets/power-on.png',
-                          subtitle: 'Turn off your device completely',
+                          subtitle: 'Turn off your robot completely',
                           title: 'POWER OFF',
                           backgroundColor: Colors.white,
                           onTap: () async {
@@ -597,7 +509,7 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                         SettingsCard(
                           iconPath: 'assets/exit.png',
-                          subtitle: 'Exit and close everything',
+                          subtitle: 'Exit app and close everything',
                           title: 'Exit',
                           backgroundColor: Colors.white,
                           onTap: () async {
@@ -606,8 +518,67 @@ class _MaintananceState extends State<Maintanance> {
                         ),
                       ],
                     ),
-                  )
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 20, top: 20),
+              child: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async {
+                      Navigator.pop(context);
+                    },
+                    child: Container(
+                      height: 60.h,
+                      width: 60.h,
+                      decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(15).r),
+                      child: Icon(
+                        Icons.arrow_back_outlined,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  GestureDetector(
+                    onTap: () async {
+                      await SharedPrefs().removeLoginData();
+                    },
+                    child: Text(
+                      "SETTINGS",
+                      style: GoogleFonts.oxygen(
+                          color: Colors.black,
+                          fontSize: 25.h,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
                 ],
+              ),
+            ),
+
+            Positioned(
+              right: 0,
+              child: GetX<BatteryController>(
+                builder: (BatteryController controller) {
+                  int? batteryLevel;
+
+                  batteryLevel = int.tryParse(controller.background.value?.data
+                              ?.first.robot?.batteryStatus ??
+                          "0") ??
+                      0;
+
+                  print("batettegdshgfcdshuf$batteryLevel");
+
+                  return BatteryIcon(
+                    batteryLevel: batteryLevel,
+                  );
+                },
               ),
             ),
           ],

@@ -67,7 +67,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                         height: 60.h,
                         width: 60.h,
                         decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
+                            color: Colors.black.withOpacity(0.2),
                             // boxShadow: [
                             //   BoxShadow(
                             //     color: Colors.grey.withOpacity(0.3),
@@ -78,7 +78,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                             borderRadius: BorderRadius.circular(15).r),
                         child: Icon(
                           Icons.arrow_back_outlined,
-                          color: Colors.grey,
+                          color: Colors.black,
                         ),
                       ),
                     ),
@@ -89,7 +89,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                       child: Text(
                         "ADD NEW NAVIGATION LIST",
                         style: GoogleFonts.oxygen(
-                            color: Colors.white,
+                            color: Colors.black,
                             fontSize: 25.h,
                             fontWeight: FontWeight.w700),
                       ),
@@ -102,7 +102,6 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      // Left List (Main Items)
                       Expanded(
                         child: Column(
                           children: [
@@ -110,7 +109,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                             Text(
                               "DESTINATIONS LIST",
                               style: GoogleFonts.oxygen(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 25,
                                   fontWeight: FontWeight.w700),
                             ),
@@ -150,7 +149,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                         // Centering "no data found"
                                         child: Text(
                                           "No Data Found",
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.black),
                                         ),
                                       );
                               }),
@@ -158,12 +157,8 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                           ],
                         ),
                       ),
-
-                      // Vertical Divider
                       VerticalDivider(
                           thickness: 0.5, color: Colors.grey, width: 30),
-
-                      // Right List (Selected Items with Animation)
                       Expanded(
                         child: Column(
                           children: [
@@ -171,7 +166,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                             Text(
                               "SELECTED DESTINATIONS LIST",
                               style: GoogleFonts.oxygen(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 25,
                                   fontWeight: FontWeight.w700),
                             ),
@@ -210,7 +205,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                         // Centering "no data found"
                                         child: Text(
                                           "No Data Found",
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: Colors.black),
                                         ),
                                       );
                               }),

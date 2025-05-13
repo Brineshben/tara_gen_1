@@ -34,48 +34,30 @@ class DescriptionOption extends StatelessWidget {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 20, top: 10, right: 20),
+            padding: EdgeInsets.only(left: 20, top: 30),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // Back Button and Title
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () => Navigator.pop(context),
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(15).r,
-                        ),
-                        child: const Icon(Icons.arrow_back_outlined,
-                            color: Colors.grey),
-                      ),
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                    height: 60.h,
+                    width: 60.h,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(15).r,
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      "Description Options",
-                      style: GoogleFonts.poppins(
-                        color: Colors.white,
-                        fontSize: 25.h,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                    child: const Icon(Icons.arrow_back_outlined,
+                        color: Colors.black),
+                  ),
                 ),
-                // Battery Icon
-                GetX<BatteryController>(
-                  builder: (batteryController) {
-                    int batteryLevel = int.tryParse(
-                          batteryController.background.value?.data?.first.robot
-                                  ?.batteryStatus ??
-                              "0",
-                        ) ??
-                        0;
-                    return BatteryIcon(batteryLevel: batteryLevel);
-                  },
+                const SizedBox(width: 10),
+                Text(
+                  "Description Options",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: 25.h,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
@@ -122,6 +104,25 @@ class DescriptionOption extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: GetX<BatteryController>(
+              builder: (BatteryController controller) {
+                int? batteryLevel;
+
+                batteryLevel = int.tryParse(controller.background.value?.data
+                            ?.first.robot?.batteryStatus ??
+                        "0") ??
+                    0;
+
+                print("batettegdshgfcdshuf$batteryLevel");
+
+                return BatteryIcon(
+                  batteryLevel: batteryLevel,
+                );
+              },
             ),
           ),
         ],

@@ -62,12 +62,13 @@ class _PasswordPageState extends State<PasswordPage> {
             ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(top: 30, left: 20),
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           GestureDetector(
@@ -78,11 +79,11 @@ class _PasswordPageState extends State<PasswordPage> {
                               height: 60.h,
                               width: 60.h,
                               decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.2),
+                                  color: Colors.black.withOpacity(0.2),
                                   borderRadius: BorderRadius.circular(15).r),
                               child: Icon(
                                 Icons.arrow_back_outlined,
-                                color: Colors.grey,
+                                color: Colors.black,
                               ),
                             ),
                           ),
@@ -93,43 +94,31 @@ class _PasswordPageState extends State<PasswordPage> {
                             child: Text(
                               "PASSWORD",
                               style: GoogleFonts.oxygen(
-                                  color: Colors.white,
+                                  color: Colors.black,
                                   fontSize: 25.h,
                                   fontWeight: FontWeight.w700),
                             ),
                           ),
                         ],
                       ),
-                      GetX<BatteryController>(
-                        builder: (batteryController) {
-                          int batteryLevel = int.tryParse(batteryController
-                                      .background
-                                      .value
-                                      ?.data
-                                      ?.first
-                                      .robot
-                                      ?.batteryStatus ??
-                                  "0") ??
-                              0;
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 20,
-                                  horizontal: 20,
-                                ),
-                                child: BatteryIcon(
-                                  batteryLevel: batteryLevel,
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    GetX<BatteryController>(
+                      builder: (batteryController) {
+                        int batteryLevel = int.tryParse(batteryController
+                                    .background
+                                    .value
+                                    ?.data
+                                    ?.first
+                                    .robot
+                                    ?.batteryStatus ??
+                                "0") ??
+                            0;
+                        return BatteryIcon(
+                          batteryLevel: batteryLevel,
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ],
             ),

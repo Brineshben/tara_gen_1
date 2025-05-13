@@ -9,7 +9,7 @@ class RobotresponseapiController extends GetxController {
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<Data> responseData = Data().obs;
-  Rx<robotResponseModel?> text = Rx(null);
+  Rx<RobotResponseModel?> robotResponseModel = Rx(null);
 
   void resetStatus() {
     isLoading.value = false;
@@ -40,10 +40,10 @@ class RobotresponseapiController extends GetxController {
     try {
       Map<String, dynamic> resp = await ApiServices.robotResponsee();
       if (resp['status'] == "OK") {
-        robotResponseModel observationResultApiModel =
-            robotResponseModel.fromJson(resp);
+        RobotResponseModel observationResultApiModel =
+            RobotResponseModel.fromJson(resp);
 
-        text.value = observationResultApiModel;
+        robotResponseModel.value = observationResultApiModel;
         responseData.value = observationResultApiModel.data!;
         isLoaded.value = true;
       }

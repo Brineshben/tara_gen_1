@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
@@ -69,7 +71,7 @@ class _ApiKeyState extends State<ApiKey> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 20),
+                    padding: const EdgeInsets.only(left: 20, top: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
@@ -81,18 +83,11 @@ class _ApiKeyState extends State<ApiKey> {
                             height: 60.h,
                             width: 60.h,
                             decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                // boxShadow: [
-                                //   BoxShadow(
-                                //     color: Colors.grey.withOpacity(0.3),
-                                //     blurRadius: 10,
-                                //     spreadRadius: 0,
-                                //   ),
-                                // ],
+                                color: Colors.black.withOpacity(0.2),
                                 borderRadius: BorderRadius.circular(15).r),
                             child: Icon(
                               Icons.arrow_back_outlined,
-                              color: Colors.grey,
+                              color: Colors.black,
                             ),
                           ),
                         ),
@@ -101,9 +96,9 @@ class _ApiKeyState extends State<ApiKey> {
                         ),
                         Center(
                           child: Text(
-                            "ADD APIKEY",
-                            style: GoogleFonts.oxygen(
-                                color: Colors.white,
+                            "ADD API KEY",
+                            style: GoogleFonts.poppins(
+                                color: Colors.black,
                                 fontSize: 25.h,
                                 fontWeight: FontWeight.w700),
                           ),
@@ -112,165 +107,138 @@ class _ApiKeyState extends State<ApiKey> {
                     ),
                   ),
                   Center(
-                    child: SingleChildScrollView(
-                      child: Form(
-                        key: _formKey,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              margin: EdgeInsets.only(
-                                  left: 40.w,
-                                  bottom: 15,
-                                  right: 40.w,
-                                  top: 50.w),
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    'NEW API KEY',
-                                    style: TextStyle(
-                                        fontSize: 25.h,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blue),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Container(
+                            margin: EdgeInsets.only(
+                                left: 40.w, bottom: 15, right: 40.w, top: 50.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  'NEW API KEY',
+                                  style: TextStyle(
+                                      fontSize: 25.h,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blue),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(left: 40.w, right: 40.w),
+                            height: size.height * 0.2,
+                            child: TextFormField(
+                              style: const TextStyle(color: Colors.white),
+                              controller: NewIp,
+                              validator: (val) => val!.trim().isEmpty
+                                  ? 'Please Enter New API key'
+                                  : null,
+                              decoration: InputDecoration(
+                                  hintStyle:
+                                      const TextStyle(color: Colors.white38),
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 10.h, horizontal: 10.w),
+                                  hintText: "Enter New API key",
+                                  labelStyle: TextStyle(
+                                      color: Colors.white, fontSize: 16.h),
+                                  border: OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      Radius.circular(10.0),
+                                    ).r,
                                   ),
-                                ],
-                              ),
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.blue, width: 1.0),
+                                    borderRadius: const BorderRadius.all(
+                                            Radius.circular(10))
+                                        .r,
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        color: Colors.blue, width: 1.0),
+                                    borderRadius: const BorderRadius.all(
+                                            Radius.circular(10.0))
+                                        .r,
+                                  ),
+                                  fillColor: Colors.blueGrey[900],
+                                  filled: true),
+                              maxLines: 5,
                             ),
-                            Container(
-                              margin: EdgeInsets.only(left: 40.w, right: 40.w),
-                              height: size.height * 0.2,
-                              child: TextFormField(
-                                style: const TextStyle(color: Colors.white),
-                                controller: NewIp,
-                                validator: (val) => val!.trim().isEmpty
-                                    ? 'Please Enter New API key'
-                                    : null,
-                                decoration: InputDecoration(
-                                    hintStyle:
-                                        const TextStyle(color: Colors.white38),
-                                    contentPadding: EdgeInsets.symmetric(
-                                        vertical: 10.h, horizontal: 10.w),
-                                    hintText: "Enter New API key",
-                                    labelStyle: TextStyle(
-                                        color: Colors.white, fontSize: 16.h),
-                                    border: OutlineInputBorder(
-                                      borderRadius: const BorderRadius.all(
-                                        Radius.circular(10.0),
-                                      ).r,
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blue, width: 1.0),
-                                      borderRadius: const BorderRadius.all(
-                                              Radius.circular(10))
-                                          .r,
-                                    ),
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: const BorderSide(
-                                          color: Colors.blue, width: 1.0),
-                                      borderRadius: const BorderRadius.all(
-                                              Radius.circular(10.0))
-                                          .r,
-                                    ),
-                                    fillColor: Colors.blueGrey[900],
-                                    filled: true),
-                                maxLines: 5,
-                              ),
-                            ),
-                            SizedBox(
-                              height: 50,
-                            ),
-                            Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                splashColor: Colors.white,
-                                highlightColor: Colors.white.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(20.r),
-                                onTap: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    if (NewIp.text.isNotEmpty) {
-                                      Map<String, dynamic> resp =
-                                          await ApiServices.ApiKey(
-                                              Data: NewIp.text);
+                          ),
+                          SizedBox(
+                            height: 50,
+                          ),
+                          Material(
+                            color: Colors.transparent,
+                            child: InkWell(
+                              splashColor: Colors.white,
+                              highlightColor: Colors.white.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20.r),
+                              onTap: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  if (NewIp.text.isNotEmpty) {
+                                    Map<String, dynamic> resp =
+                                        await ApiServices.ApiKey(
+                                            Data: NewIp.text);
 
-                                      if (resp['status'] == "ok") {
-                                        FocusManager.instance.primaryFocus
-                                            ?.unfocus();
-                                        ProductAppPopUps.submit2back(
-                                          title: "SUCCESS",
-                                          message: resp['message'].toString(),
-                                          actionName: "Close",
-                                          iconData: Icons.done,
-                                          iconColor: Colors.green,
-                                        );
-                                      } else {
-                                        ProductAppPopUps.submit(
-                                          title: "FAILED",
-                                          message: "Something went wrong.",
-                                          actionName: "Close",
-                                          iconData: Icons.info_outline,
-                                          iconColor: Colors.red,
-                                        );
-                                      }
+                                    if (resp['status'] == "ok") {
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      ProductAppPopUps.submit2back(
+                                        title: "SUCCESS",
+                                        message: resp['message'].toString(),
+                                        actionName: "Close",
+                                        iconData: Icons.done,
+                                        iconColor: Colors.green,
+                                      );
+                                    } else {
+                                      ProductAppPopUps.submit(
+                                        title: "FAILED",
+                                        message: "Something went wrong.",
+                                        actionName: "Close",
+                                        iconData: Icons.info_outline,
+                                        iconColor: Colors.red,
+                                      );
                                     }
                                   }
-                                },
-                                child: buildInfoCard(
-                                    MediaQuery.of(context).size, 'SUBMIT'),
-                              ),
+                                }
+                              },
+                              child: buildInfoCard(
+                                  MediaQuery.of(context).size, 'SUBMIT'),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ],
               ),
             ),
+            Positioned(
+              right: 0,
+              child: GetX<BatteryController>(
+                builder: (BatteryController controller) {
+                  int? batteryLevel;
+
+                  batteryLevel = int.tryParse(controller.background.value?.data
+                              ?.first.robot?.batteryStatus ??
+                          "0") ??
+                      0;
+
+                  print("batettegdshgfcdshuf$batteryLevel");
+
+                  return BatteryIcon(
+                    batteryLevel: batteryLevel,
+                  );
+                },
+              ),
+            ),
           ],
         ),
-        // floatingActionButton: Container(
-        //   margin:
-        //       EdgeInsets.only(left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.center,
-        //     children: [
-        //       Container(
-        //         decoration: BoxDecoration(
-        //           color: Colors.red,
-        //           borderRadius: BorderRadius.circular(20.r),
-        //           boxShadow: [
-        //             BoxShadow(
-        //               color: Colors.black.withOpacity(0.2),
-        //               spreadRadius: 1,
-        //               blurRadius: 6,
-        //             ),
-        //           ],
-        //         ),
-        //         width: size.width * 0.28,
-        //         height: 50.h,
-        //         child: Center(
-        //           child: Text(
-        //             "Stop",
-        //             style: GoogleFonts.inter(
-        //               color: Colors.white,
-        //               fontSize: 18.h,
-        //               fontWeight: FontWeight.bold,
-        //             ),
-        //           ),
-        //         ),
-        //       )
-        //       // FloatingActionButton(
-        //       //   backgroundColor: Colors.red,
-        //       //   onPressed: () {},
-        //       //   child: TextButton(onPressed: () {  },
-        //       //   child: Text("STOP"),),
-        //       // ),
-        //     ],
-        //   ),
-        // ),
       ),
     );
   }

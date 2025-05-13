@@ -1,6 +1,5 @@
 package com.example.ihub
 //import io.flutter.embedding.android.FlutterActivity
-//
 //class MainActivity: FlutterActivity()
 import android.os.Bundle
 import android.widget.Toast

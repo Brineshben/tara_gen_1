@@ -64,11 +64,11 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
                       height: 60.h,
                       width: 60.h,
                       decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
+                          color: Colors.black.withOpacity(0.2),
                           borderRadius: BorderRadius.circular(15).r),
                       child: Icon(
                         Icons.arrow_back_outlined,
-                        color: Colors.grey,
+                        color: Colors.black,
                       ),
                     ),
                   ),
@@ -78,7 +78,7 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
                   Text(
                     "SPEED",
                     style: GoogleFonts.oxygen(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 25.h,
                         fontWeight: FontWeight.w700),
                   ),
@@ -90,7 +90,7 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
             child: GetX<SpeedController>(
               builder: (SpeedController controller) {
                 if (controller.isLoading.value) {
-                  return CircularProgressIndicator(color: Colors.white);
+                  return CircularProgressIndicator(color: Colors.black);
                 }
                 return SingleChildScrollView(
                   child: Column(
@@ -160,7 +160,11 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
                               child: Ink(
                                 width: 200,
                                 decoration: BoxDecoration(
-                                  color: Colors.red,
+                                  color: controller.speed.value <= 0.3
+                                      ? Colors.green
+                                      : controller.speed.value <= 0.5
+                                          ? Colors.orange
+                                          : Colors.red,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 padding: const EdgeInsets.all(12),
@@ -188,7 +192,11 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
                               child: Ink(
                                 width: 200,
                                 decoration: BoxDecoration(
-                                  color: Colors.red,
+                                  color: controller.speed.value <= 0.3
+                                      ? Colors.green
+                                      : controller.speed.value <= 0.5
+                                          ? Colors.orange
+                                          : Colors.red,
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 padding: const EdgeInsets.all(12),

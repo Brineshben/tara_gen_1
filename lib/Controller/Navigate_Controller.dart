@@ -12,7 +12,7 @@ class NavigateController extends GetxController {
 
   RxList<NavigationData?> DataList = RxList();
 
-  Future<void> NavigateData() async {
+  Future<void> navigateData() async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
