@@ -24,6 +24,8 @@ class BatterySplash extends StatefulWidget {
 class _BatterySplashState extends State<BatterySplash> {
   Timer? messageTimer;
 
+  bool isRotale = false;
+
   @override
   void initState() {
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
@@ -47,85 +49,123 @@ class _BatterySplashState extends State<BatterySplash> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.black,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 100),
-                child: Column(
-                  children: [
-                    GetX<BatteryController>(
-                      builder: (BatteryController controller) {
-                        String? data;
+        body: GestureDetector(
+          onTap: () {
+            isRotale = !isRotale;
+            setState(() {});
+          },
+          child: SingleChildScrollView(
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Column(
+                    children: [
+                      GetX<BatteryController>(
+                        builder: (BatteryController controller) {
+                          String? data;
 
-                        if (controller.background.value?.data!.isNotEmpty ??
-                            false) {
-                          data = controller.background.value?.data?.first.robot
-                                  ?.batteryStatus ??
-                              "";
-                        }
+                          if (controller.background.value?.data!.isNotEmpty ??
+                              false) {
+                            data = controller.background.value?.data?.first
+                                    .robot?.batteryStatus ??
+                                "";
+                          }
 
-                        return Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${data ?? ""}%",
-                              style: TextStyle(
-                                  color: Colors.white, fontSize: 30.h),
-                            )
-                          ],
-                        );
-                      },
-                    ),
-                    Center(
-                      child: Transform.rotate(
-                        angle: 3 * pi / 2,
-                        child: SizedBox(
-                          width: size.width * 0.35,
-                          height: size.width * 0.35,
-                          child: Lottie.asset(
-                            "assets/battery.json",
-                            fit: BoxFit.fitHeight,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 50.h,
-                      width: 280.w,
-                      child: DefaultTextStyle(
-                        style: GoogleFonts.inter(
-                            color: Colors.white,
-                            fontSize: 30.h,
-                            fontWeight: FontWeight.bold,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 5.0,
-                                color: Colors.black.withOpacity(0.7),
-                                offset: Offset(2, 2),
-                              ),
-                            ]),
-                        child: Center(
-                          child: AnimatedTextKit(
-                            animatedTexts: [
-                              TypewriterAnimatedText(
-                                'CHARGING....',
-                                speed: Duration(milliseconds: 50),
-                                // Adjust typing speed
-                                cursor: '|', // Optional cursor
-                              ),
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${data ?? "0"}%",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 50,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
                             ],
-                            repeatForever: true,
-                            // Ensures continuous looping
-                            isRepeatingAnimation: true,
-                          ),
-                        ),
+                          );
+                        },
                       ),
-                    ),
-                  ],
+                      // Center(
+                      //   child: Transform.rotate(
+                      //     angle: 3 * pi / 2,
+                      //     child: SizedBox(
+                      //       width: size.width * 0.35,
+                      //       height: size.width * 0.35,
+                      //       child: Lottie.asset(
+                      //         "assets/battery.json",
+                      //         fit: BoxFit.fitHeight,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      isRotale
+                          ? Center(
+                              child: SizedBox(
+                                height: size.width * 0.45,
+                                child: Lottie.asset(
+                                  "assets/rotate.json",
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            )
+                          : Center(
+                              child: SizedBox(
+                                height: size.width * 0.45,
+                                child: Lottie.asset(
+                                  "assets/still.json",
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+
+                      // SizedBox(
+                      //   height: 50.h,
+                      //   width: 280.w,
+                      //   child: DefaultTextStyle(
+                      //     style: GoogleFonts.inter(
+                      //         color: Colors.white,
+                      //         fontSize: 30.h,
+                      //         fontWeight: FontWeight.bold,
+                      //         shadows: [
+                      //           Shadow(
+                      //             blurRadius: 5.0,
+                      //             color: Colors.black.withOpacity(0.7),
+                      //             offset: Offset(2, 2),
+                      //           ),
+                      //         ]),
+                      //     child: Center(
+                      //       child: AnimatedTextKit(
+                      //         animatedTexts: [
+                      //           TypewriterAnimatedText(
+                      //             'CHARGING....',
+                      //             speed: Duration(milliseconds: 150),
+                      //             cursor: '|',
+                      //           ),
+                      //         ],
+                      //         repeatForever: true,
+                      //         isRepeatingAnimation: true,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+                Positioned(
+                  top: 180,
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: Icon(
+                    Icons.bolt,
+                    color: Colors.white,
+                    size: 50,
+                  ),
+                )
+              ],
+            ),
           ),
         ),
         floatingActionButton: Container(

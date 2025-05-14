@@ -581,6 +581,19 @@ class _MaintananceState extends State<Maintanance> {
                 },
               ),
             ),
+
+            Positioned(
+                right: 0,
+                bottom: 0,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                  child: Text(
+                    "Version: 2.0.4",
+                    style:
+                        GoogleFonts.padauk(color: Colors.black, fontSize: 20),
+                  ),
+                ))
           ],
         ));
   }

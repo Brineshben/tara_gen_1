@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ihub/View/Login_Page/login.dart';
+import 'package:ihub/View/Splash/Battery_Splash.dart';
 
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
 import 'Utils/api_constant.dart';
-import 'View/Login_Page/login.dart';
 
 late List<CameraDescription> cameras;
 
@@ -34,8 +35,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     HandleControllers.createGetControllers();
-    return const ScreenUtilInit(
-      designSize: Size(375, 812),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       child: GetMaterialApp(
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         // home: LoadingSplash(),
         home: LoginPage(),
+        // home: BatterySplash(),
       ),
     );
   }

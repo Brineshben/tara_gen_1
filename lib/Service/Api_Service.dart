@@ -100,14 +100,14 @@ class ApiServices {
     var respString = await response.stream.bytesToString();
     print('Api destination---url $url-----${respString}--------------');
 
-    var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
+    // var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
 
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Text('Response received: $respString'),
-        duration: Duration(seconds: 3),
-      ),
-    );
+    // scaffoldMessenger.showSnackBar(
+    //   SnackBar(
+    //     content: Text('Response received: $respString'),
+    //     duration: Duration(seconds: 3),
+    //   ),
+    // );
 
     return json.decode(respString);
   }
@@ -117,18 +117,18 @@ class ApiServices {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.basestatusoffline}";
     print('Api robotbasestatus--------${url}--------------');
 
-    var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
+    // var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
 
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     print('Api destination-----url $url---${respString}--------------');
-    scaffoldMessenger.showSnackBar(
-      SnackBar(
-        content: Text('Response received: $respString'),
-        duration: Duration(seconds: 3),
-      ),
-    );
+    // scaffoldMessenger.showSnackBar(
+    //   SnackBar(
+    //     content: Text('Response received: $respString'),
+    //     duration: Duration(seconds: 3),
+    //   ),
+    // );
     return json.decode(respString);
   }
 

@@ -115,7 +115,8 @@ class ApiConstants {
 
   // static String baseUrl = "http://54.163.176.141/";
   // static String baseUrl = "http://54.211.212.147";
-  static String baseUrl = "http://54.152.17.211";
+  // static String baseUrl = "http://54.152.17.211";
+  static String baseUrl = "http://3.88.46.127";
 
   static String addUrl = "/url/add/";
   static String getUrl = "/url/list/";

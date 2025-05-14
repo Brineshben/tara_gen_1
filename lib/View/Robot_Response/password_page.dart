@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -8,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
+import 'package:ihub/View/Robot_Response/change_password_page.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:pinput/pinput.dart';
 
@@ -46,7 +45,7 @@ class _PasswordPageState extends State<PasswordPage> {
         body: Stack(
           children: [
             GetX<BackgroudController>(
-              builder: (BackgroudController controller) {
+              builder: (controller) {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
@@ -69,53 +68,53 @@ class _PasswordPageState extends State<PasswordPage> {
                     Padding(
                       padding: const EdgeInsets.only(top: 30, left: 20),
                       child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          GestureDetector(
-                            onTap: () async {
-                              Navigator.pop(context);
-                            },
-                            child: Container(
-                              height: 60.h,
-                              width: 60.h,
-                              decoration: BoxDecoration(
-                                  color: Colors.black.withOpacity(0.2),
-                                  borderRadius: BorderRadius.circular(15).r),
-                              child: Icon(
-                                Icons.arrow_back_outlined,
-                                color: Colors.black,
-                              ),
+                          Container(
+                            height: 60.h,
+                            width: 60.h,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(15).r,
+                            ),
+                            child: const Icon(Icons.arrow_back_outlined,
+                                color: Colors.black),
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "PASSWORD",
+                            style: GoogleFonts.oxygen(
+                              color: Colors.black,
+                              fontSize: 25.h,
+                              fontWeight: FontWeight.w700,
                             ),
                           ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          Center(
-                            child: Text(
-                              "PASSWORD",
-                              style: GoogleFonts.oxygen(
-                                  color: Colors.black,
-                                  fontSize: 25.h,
-                                  fontWeight: FontWeight.w700),
-                            ),
-                          ),
+                          // SizedBox(width: 20),
+                          // IconButton(
+                          //   icon: Icon(
+                          //     Icons.password,
+                          //     size: 30,
+                          //   ),
+                          //   onPressed: () {
+                          //     Navigator.pop(context);
+                          //     Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (_) => const ChangePasswordPage()),
+                          //     );
+                          //   },
+                          // ),
                         ],
                       ),
                     ),
                     GetX<BatteryController>(
                       builder: (batteryController) {
-                        int batteryLevel = int.tryParse(batteryController
-                                    .background
-                                    .value
-                                    ?.data
-                                    ?.first
-                                    .robot
-                                    ?.batteryStatus ??
-                                "0") ??
+                        int batteryLevel = int.tryParse(
+                              batteryController.background.value?.data?.first
+                                      .robot?.batteryStatus ??
+                                  "0",
+                            ) ??
                             0;
-                        return BatteryIcon(
-                          batteryLevel: batteryLevel,
-                        );
+                        return BatteryIcon(batteryLevel: batteryLevel);
                       },
                     ),
                   ],
@@ -133,10 +132,8 @@ class _PasswordPageState extends State<PasswordPage> {
                       obscureText: true,
                       autofocus: true,
                       defaultPinTheme: defaultPinTheme.copyWith(
-                        textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                        ),
+                        textStyle: const TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       keyboardType: TextInputType.number,
                       closeKeyboardWhenCompleted: true,
@@ -146,23 +143,11 @@ class _PasswordPageState extends State<PasswordPage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => const Maintanance(),
-                            ),
+                                builder: (context) => const Maintanance()),
                           );
                         } else {
                           setState(() => isError = true);
                           FocusScope.of(context).unfocus();
-
-                          submit(
-                            message: 'Wrong Password',
-                            actionName: "Try again",
-                            iconData: Icons.error,
-                            iconColor: Colors.red,
-                            onPressed: () {
-                              Get.back();
-                              _pinController.clear();
-                            },
-                          );
                         }
                       },
                     ),
@@ -171,87 +156,6 @@ class _PasswordPageState extends State<PasswordPage> {
               ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  submit({
-    String? title,
-    required String message,
-    required String actionName,
-    required IconData iconData,
-    required Color iconColor,
-    required Function() onPressed,
-  }) {
-    return Get.dialog(
-      barrierDismissible: false,
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: Colors.transparent,
-        child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              colors: [Color(0xFF0F2027), Color(0xFF203A43), Color(0xFF2C5364)],
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-            ),
-            borderRadius: BorderRadius.circular(20),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.4),
-                blurRadius: 10,
-                offset: Offset(0, 6),
-              ),
-            ],
-          ),
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(iconData, color: iconColor, size: 50),
-              if (title != null) ...[
-                SizedBox(height: 12),
-                Text(
-                  title,
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.orbitron(
-                    color: Colors.cyanAccent,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-              ],
-              SizedBox(height: 16),
-              Text(
-                message,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.cyanAccent, fontSize: 16),
-              ),
-              SizedBox(height: 24),
-              FilledButton(
-                onPressed: onPressed,
-                style: FilledButton.styleFrom(
-                  backgroundColor: Colors.white.withOpacity(0.1),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-                  // shadowColor: Colors.grey.withOpacity(0.2),
-                  elevation: 2,
-                ),
-                child: Text(
-                  actionName,
-                  style: TextStyle(
-                    color: Colors.cyanAccent,
-                    fontSize: 16,
-                    letterSpacing: 1.1,
-                  ),
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

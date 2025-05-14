@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
 import 'package:ihub/View/Settings/About_robot.dart';
+import 'package:ihub/View/Settings/settings.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
@@ -125,10 +126,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
               ),
               GestureDetector(
                 onDoubleTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AboutRobot()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => AboutRobot()),
+                  // );
                 },
                 child: SingleChildScrollView(
                   child: Column(
@@ -662,102 +663,191 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             )
                           : SizedBox(); // Use SizedBox() instead of Text("") for better UI handling
                     }),
-                    Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            ColorUtils.userdetailcolor,
-                            ColorUtils.userdetailcolor
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Material(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadius.circular(10),
-                        child: FloatingActionButton.extended(
-                          heroTag: "navigate_btn",
-                          backgroundColor: Colors.transparent,
-                          onPressed: () {
-                            Navigator.push(context, MaterialPageRoute(
-                              builder: (context) {
-                                return Navigation(
-                                  robotid: Get.find<BatteryController>()
-                                          .background
-                                          .value
-                                          ?.data
-                                          ?.first
-                                          .robot
-                                          ?.roboId ??
-                                      "",
-                                );
-                              },
-                            ));
-                          },
-                          icon: Icon(Icons.arrow_forward_ios,
-                              color: Colors.white),
-                          label: Text("NAVIGATE",
-                              style: GoogleFonts.poppins(
-                                color: Colors.white,
-                                fontSize: 18.h,
-                                fontWeight: FontWeight.bold,
-                              )),
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        highlightColor: Colors.blue,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return Navigation(
+                                robotid: Get.find<BatteryController>()
+                                        .background
+                                        .value
+                                        ?.data
+                                        ?.first
+                                        .robot
+                                        ?.roboId ??
+                                    "",
+                              );
+                            },
+                          ));
+                        },
+                        child: Ink(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: Colors.blueGrey.shade200, width: 1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset("assets/navigatioin.png",
+                                      width: 30),
+                                  SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "NAVIGATIONS",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Control robot movement',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                Container(
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        ColorUtils.userdetailcolor,
-                        ColorUtils.userdetailcolor
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(
-                        10), // Ensure proper border radius
-                  ),
-                  child: Material(
-                    color: Colors.transparent, // Ensure the gradient is visible
-                    borderRadius: BorderRadius.circular(10),
-                    child: FloatingActionButton.extended(
-                      heroTag: "settings_btn",
-                      backgroundColor: Colors.transparent,
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          PageRouteBuilder(
-                            transitionDuration: Duration(milliseconds: 300),
-                            pageBuilder:
-                                (context, animation, secondaryAnimation) =>
-                                    PasswordPage(),
-                            transitionsBuilder: (context, animation,
-                                secondaryAnimation, child) {
-                              return FadeTransition(
-                                  opacity: animation, child: child);
-                            },
-                          ),
-                        );
-                        // Navigator.push(context, MaterialPageRoute(
-                        //   builder: (context) {
-                        //     return otp();
-                        //   },
-                        // ));
-                      },
-                      icon: Icon(Icons.settings, color: Colors.white),
-                      label: Text("SETTINGS ",
-                          style: GoogleFonts.poppins(
+                // Container(
+                //   decoration: BoxDecoration(
+                //     gradient: const LinearGradient(
+                //       colors: [
+                //         ColorUtils.userdetailcolor,
+                //         ColorUtils.userdetailcolor
+                //       ],
+                //       begin: Alignment.topLeft,
+                //       end: Alignment.bottomRight,
+                //     ),
+                //     borderRadius: BorderRadius.circular(
+                //         10), // Ensure proper border radius
+                //   ),
+                //   child: Material(
+                //     color: Colors.transparent, // Ensure the gradient is visible
+                //     borderRadius: BorderRadius.circular(10),
+                //     child: FloatingActionButton.extended(
+                //       heroTag: "settings_btn",
+                //       backgroundColor: Colors.transparent,
+                //       onPressed: () {
+                //         Navigator.push(
+                //           context,
+                //           PageRouteBuilder(
+                //             transitionDuration: Duration(milliseconds: 300),
+                //             pageBuilder:
+                //                 (context, animation, secondaryAnimation) =>
+                //                     PasswordPage(),
+                //             transitionsBuilder: (context, animation,
+                //                 secondaryAnimation, child) {
+                //               return FadeTransition(
+                //                   opacity: animation, child: child);
+                //             },
+                //           ),
+                //         );
+                //         // Navigator.push(context, MaterialPageRoute(
+                //         //   builder: (context) {
+                //         //     return otp();
+                //         //   },
+                //         // ));
+                //       },
+                //       icon: Icon(Icons.settings, color: Colors.white),
+                //       label: Text("SETTINGS ",
+                //           style: GoogleFonts.poppins(
+                //             color: Colors.white,
+                //             fontSize: 18.h,
+                //             fontWeight: FontWeight.bold,
+                //           )),
+                //     ),
+                //   ),
+                // ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        highlightColor: Colors.blue,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: Duration(milliseconds: 300),
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      PasswordPage(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return FadeTransition(
+                                    opacity: animation, child: child);
+                              },
+                            ),
+                          );
+                        },
+                        child: Ink(
+                          padding: const EdgeInsets.all(15),
+                          decoration: BoxDecoration(
                             color: Colors.white,
-                            fontSize: 18.h,
-                            fontWeight: FontWeight.bold,
-                          )),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                                color: Colors.blueGrey.shade200, width: 1),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset("assets/setting.png", width: 30),
+                                  SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "SETTINGS",
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Manage robot preferences',
+                                        style: TextStyle(
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ],
             ),
