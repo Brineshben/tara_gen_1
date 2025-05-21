@@ -1,21 +1,25 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:ihub/Model/background_model.dart';
+import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/Utils/header.dart';
+import 'package:ihub/Utils/pinning_helper.dart';
+import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
-import 'package:ihub/View/Settings/About_robot.dart';
-import 'package:ihub/View/Settings/settings.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/EnquiryListController.dart';
@@ -23,8 +27,6 @@ import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
 import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
-import '../../Utils/colors.dart';
-import '../Home_Screen/battery_Widget.dart';
 import 'Navigation.dart';
 
 class Homepage extends StatefulWidget {
@@ -51,12 +53,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<Enquirylistcontroller>().fetchEnquiryList(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
-    Get.find<BackgroudController>().fetchBackground(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+    // fetchBackground(
+    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      print("Timer");
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
@@ -69,16 +69,62 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
       if (isBatteryscreen ?? false) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const BatterySplash();
-          },
-        ));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BatterySplash()),
+        );
+
         timer.cancel();
       }
+
       fetchAndUpdateBaseUrl();
       Get.find<RobotresponseapiController>().fetchObsResultList();
     });
+  }
+
+  Future<void> fetchBackground(int userID) async {
+    Map<String, dynamic> resp = await ApiServices.background(userId: userID);
+    if (resp['status'] == "ok") {
+      BackgroundModel backgrounddata = BackgroundModel.fromJson(resp);
+      final imagePath = backgrounddata.backgroundImage;
+
+      if (imagePath != null) {
+        await updateImageColor(imagePath);
+      }
+    }
+  }
+
+  Future<void> updateImageColor(String imageUrl) async {
+    try {
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode == 200) {
+        final tempDir = await getTemporaryDirectory();
+        final tempFile = File('${tempDir.path}/temp_image.jpg');
+
+        await tempFile.writeAsBytes(response.bodyBytes);
+
+        final PaletteGenerator paletteGenerator =
+            await PaletteGenerator.fromImageProvider(
+          FileImage(tempFile),
+          size: const Size(200, 200),
+          maximumColorCount: 20,
+        );
+
+        final dominantColor =
+            paletteGenerator.dominantColor?.color ?? Colors.black;
+        final brightness = ThemeData.estimateBrightnessForColor(dominantColor);
+
+        Get.find<BatteryController>().foregroundColor.value =
+            brightness == Brightness.dark ? Colors.white : Colors.black;
+
+        print("Updated color from URL image: $dominantColor");
+      } else {
+        print("Image download failed: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error processing image color: $e");
+    }
   }
 
   @override
@@ -116,10 +162,12 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           controller.backgroundModel.value?.backgroundImage ??
                               "",
                       fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          Image.asset("assets/images.jpg", fit: BoxFit.cover),
-                      errorWidget: (context, url, error) =>
-                          Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
                     ),
                   );
                 },
@@ -135,152 +183,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GetX<BatteryController>(
-                        builder: (BatteryController controller) {
-                          Color? roboColor;
-                          // int? batteryLevel;
-                          // String? data;
-                          String? quality;
-                          bool? brake;
-                          bool? EmergencyStop;
-                          if (controller.background.value?.data!.isNotEmpty ??
-                              false) {
-                            roboColor = controller.background.value?.data?.first
-                                        .robot?.map !=
-                                    null
-                                ? (controller.background.value?.data?.first
-                                            .robot?.map ??
-                                        false)
-                                    ? Colors.green
-                                    : Colors.red
-                                : null;
-
-                            quality = controller.background.value?.data?.first
-                                    .robot?.quality ??
-                                "";
-                            brake = controller.background.value?.data?.first
-                                .robot?.motorBrakeReleased;
-
-                            EmergencyStop = controller.background.value?.data
-                                ?.first.robot?.emergencyStop;
-                          }
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Container(
-                                    margin: EdgeInsets.only(
-                                      left: 10.w,
-                                      top: 40.h,
-                                      right: 10.w,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(20.r),
-                                    ),
-                                    width: size.width * 0.15,
-                                    height: size.height * 0.070,
-                                    child: Center(
-                                      child: Row(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                left: 8, top: 8, bottom: 8),
-                                            child: Container(
-                                              height: size.height * 0.060,
-                                              width: size.width * 0.060,
-                                              child: SvgPicture.asset(
-                                                  "assets/reshot-icon-map-marker-KS456ZT2P3.svg",
-                                                  color: roboColor),
-                                            ),
-                                          ),
-                                          Text(
-                                            "Q: ${quality ?? 0}",
-                                            style: GoogleFonts.roboto(
-                                              color: Colors.white,
-                                              fontSize: 15.h,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                  if (EmergencyStop ?? false)
-                                    Container(
-                                      margin: EdgeInsets.only(
-                                          left: 1.w, top: 40.h, right: 1.w),
-                                      child: Center(
-                                        child: Container(
-                                          height: size.height * 0.060,
-                                          width: size.width * 0.060,
-                                          child: SvgPicture.asset(
-                                            "assets/alert-icon-orange.svg",
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  if (brake ?? false)
-                                    Center(
-                                      child: Container(
-                                          margin: EdgeInsets.only(
-                                              left: 10.w,
-                                              top: 40.h,
-                                              right: 10.w),
-                                          height: size.height * 0.060,
-                                          width: size.width * 0.060,
-                                          child: Image.asset("assets/brake.png",
-                                              fit: BoxFit.contain)),
-                                    ),
-                                  Padding(
-                                    padding: const EdgeInsets.only(top: 30),
-                                    child: InkWell(
-                                      onTap: () async {
-                                        final Uri url = Uri.parse(
-                                          'http://192.168.11.2/admin/index.html#/functions/wifi/client?freq=5GHz',
-                                        );
-                                        await launchUrl(
-                                          url,
-                                          mode: LaunchMode.inAppWebView,
-                                        );
-                                      },
-                                      child: Center(
-                                        child: Icon(
-                                          Icons.router,
-                                          size: 40,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              GetX<BatteryController>(
-                                builder: (BatteryController controller) {
-                                  int? batteryLevel;
-
-                                  batteryLevel = int.tryParse(controller
-                                              .background
-                                              .value
-                                              ?.data
-                                              ?.first
-                                              .robot
-                                              ?.batteryStatus ??
-                                          "0") ??
-                                      0;
-
-                                  print("batettegdshgfcdshuf$batteryLevel");
-
-                                  return BatteryIcon(
-                                    batteryLevel: batteryLevel,
-                                  );
-                                },
-                              ),
-                            ],
-                          );
-                        },
+                      Header(
+                        isBack: false,
+                        screenName: "HOME",
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 100).h,
@@ -312,7 +217,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             height: 100.h,
                                             width: 280.w,
                                             child: DefaultTextStyle(
-                                              style: GoogleFonts.orbitron(
+                                              style: GoogleFonts.poppins(
                                                   color: Colors.white,
                                                   fontSize: 30.h,
                                                   fontWeight: FontWeight.bold,
@@ -320,7 +225,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                                     Shadow(
                                                       blurRadius: 5.0,
                                                       color: Colors.black
-                                                          .withOpacity(0.7),
+                                                          .withOpacity(0.2),
                                                       offset: Offset(2, 2),
                                                     ),
                                                   ]),
@@ -355,7 +260,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             height: 100.h,
                                             width: 280.w,
                                             child: DefaultTextStyle(
-                                              style: GoogleFonts.orbitron(
+                                              style: GoogleFonts.poppins(
                                                   color: Colors.white,
                                                   fontSize: 30.h,
                                                   fontWeight: FontWeight.bold,
@@ -398,7 +303,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             height: 100.h,
                                             width: double.infinity,
                                             child: DefaultTextStyle(
-                                              style: GoogleFonts.orbitron(
+                                              style: GoogleFonts.poppins(
                                                   color: Colors.white,
                                                   fontSize: 30.h,
                                                   fontWeight: FontWeight.bold,
@@ -622,51 +527,65 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     Obx(() {
                       final controller = Get.find<RobotresponseapiController>();
                       return controller.link.value != ''
-                          ? Container(
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  colors: [
-                                    ColorUtils.userdetailcolor,
-                                    ColorUtils.userdetailcolor,
-                                  ],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
+                          ? Material(
+                              color: Colors.transparent,
+                              child: InkWell(
                                 borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Material(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(10),
-                                child: FloatingActionButton.extended(
-                                  heroTag: "link_btn",
-                                  backgroundColor: Colors.transparent,
-                                  onPressed: () async {
-                                    final Uri url =
-                                        Uri.parse(controller.link.value);
-                                    await launchUrl(
-                                      url,
-                                      mode: LaunchMode.inAppWebView,
-                                    );
-                                  },
-                                  icon:
-                                      Icon(Icons.language, color: Colors.white),
-                                  label: Text(
-                                    controller.name.value,
-                                    style: GoogleFonts.poppins(
-                                      color: Colors.white,
-                                      fontSize: 18.h,
-                                      fontWeight: FontWeight.bold,
+                                highlightColor: Colors.blue,
+                                onTap: () async {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => InAppWebViewScreen(
+                                        url: controller.link.value,
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: Ink(
+                                  padding: const EdgeInsets.all(10),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: Colors.blueGrey.shade200,
+                                        width: 1),
+                                  ),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.language,
+                                            color: Colors.black,
+                                            size: 30,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            controller.name.value,
+                                            style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             )
-                          : SizedBox(); // Use SizedBox() instead of Text("") for better UI handling
+                          : SizedBox();
                     }),
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                         highlightColor: Colors.blue,
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
@@ -685,10 +604,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           ));
                         },
                         child: Ink(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                                 color: Colors.blueGrey.shade200, width: 1),
                           ),
@@ -786,9 +705,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                         highlightColor: Colors.blue,
-                        onTap: () {
+                        onTap: () async {
                           Navigator.push(
                             context,
                             PageRouteBuilder(
@@ -805,10 +724,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           );
                         },
                         child: Ink(
-                          padding: const EdgeInsets.all(15),
+                          padding: const EdgeInsets.all(10),
                           decoration: BoxDecoration(
                             color: Colors.white,
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(10),
                             border: Border.all(
                                 color: Colors.blueGrey.shade200, width: 1),
                           ),

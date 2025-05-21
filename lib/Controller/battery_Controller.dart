@@ -16,10 +16,15 @@ class BatteryController extends GetxController {
   bool popupshow = false;
   bool popupshow2 = false;
   var roboId;
+
+  Rx<Color> foregroundColor = Colors.black.obs;
+
   void resetStatus() {
     isLoading.value = false;
     isError.value = false;
   }
+
+  RxBool isRotale = false.obs;
 
   Future<void> fetchBattery(int userID) async {
     isLoading.value = true;

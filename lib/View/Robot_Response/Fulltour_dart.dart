@@ -43,9 +43,9 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                       controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                 ),
               );
             },
@@ -57,43 +57,76 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
               Padding(
                 padding: const EdgeInsets.only(left: 20, top: 20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.3),
-                            //     blurRadius: 10,
-                            //     spreadRadius: 0,
-                            //   ),
-                            // ],
-                            borderRadius: BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.black,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context);
+                          },
+                          child: Container(
+                            height: 60.h,
+                            width: 60.h,
+                            decoration: BoxDecoration(
+                                color: Colors.black.withOpacity(0.2),
+                                // boxShadow: [
+                                //   BoxShadow(
+                                //     color: Colors.grey.withOpacity(0.3),
+                                //     blurRadius: 10,
+                                //     spreadRadius: 0,
+                                //   ),
+                                // ],
+                                borderRadius: BorderRadius.circular(15).r),
+                            child: Icon(
+                              Icons.arrow_back_outlined,
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Center(
+                          child: Text(
+                            "ADD NEW NAVIGATION LIST",
+                            style: GoogleFonts.oxygen(
+                                color: Colors.black,
+                                fontSize: 25.h,
+                                fontWeight: FontWeight.w700),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        "ADD NEW NAVIGATION LIST",
-                        style: GoogleFonts.oxygen(
-                            color: Colors.black,
-                            fontSize: 25.h,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
+                    // Obx(
+                    //   () => Material(
+                    //     color: Colors.transparent,
+                    //     child: InkWell(
+                    //       borderRadius: BorderRadius.circular(12),
+                    //       onTap: () {
+                    //         // fullTourController.pickTime(context);
+                    //       },
+                    //       child: Ink(
+                    //         padding: EdgeInsets.symmetric(
+                    //           horizontal: 12,
+                    //           vertical: 8,
+                    //         ),
+                    //         decoration: BoxDecoration(
+                    //           color: Colors.white54,
+                    //           borderRadius: BorderRadius.circular(12),
+                    //         ),
+                    //         child: Text(
+                    //           // "⏰ ${fullTourController.selectedTime.value.format(context)}",
+                    //           'time',
+                    //           style: TextStyle(
+                    //             color: Colors.black,
+                    //             fontSize: 14,
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

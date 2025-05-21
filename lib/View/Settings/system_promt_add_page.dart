@@ -21,6 +21,8 @@ class AddSystemPrompt extends StatefulWidget {
 
 class _AddSystemPromptState extends State<AddSystemPrompt> {
   final TextEditingController textController = TextEditingController();
+  final TextEditingController questionController = TextEditingController();
+  final TextEditingController answerController = TextEditingController();
   final promptController = Get.find<PromptController>();
 
   @override
@@ -32,6 +34,8 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
   @override
   void dispose() {
     textController.dispose();
+    questionController.dispose();
+    answerController.dispose();
     super.dispose();
   }
 
@@ -44,17 +48,13 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
-        title: Row(
-          children: [
-            Text(
-              "SYSTEM PROMPT",
-              style: GoogleFonts.oxygen(
-                color: Colors.white,
-                fontSize: 25.h,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-          ],
+        title: Text(
+          "BEHAVIOUR PROTOCOL",
+          style: GoogleFonts.oxygen(
+            color: Colors.white,
+            fontSize: 25.h,
+            fontWeight: FontWeight.w700,
+          ),
         ),
       ),
       body: Stack(
@@ -78,11 +78,38 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
                 children: [
                   SizedBox(height: 20),
                   TextFormField(
+                    maxLength: 300,
                     controller: textController,
                     maxLines: 6,
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: "Enter prompt",
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: questionController,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Enter question",
+                      labelStyle: TextStyle(color: Colors.white),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  TextFormField(
+                    controller: answerController,
+                    maxLength: 200,
+                    maxLines: 3,
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: "Enter answer",
                       labelStyle: TextStyle(color: Colors.white),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
@@ -96,12 +123,20 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
                       onPressed: () async {
                         if (widget.isEdit) {
                           await promptController.editPrompt(
-                              id: widget.id, prompt: textController.text);
+                            id: widget.id,
+                            prompt: textController.text,
+                            q: questionController.text,
+                            ans: answerController.text,
+                          );
                         } else {
                           await promptController.addPrompt(
-                              prompt: textController.text);
+                            prompt: textController.text,
+                            q: questionController.text,
+                            ans: answerController.text,
+                          );
                         }
                       },
+                      icon: Icon(Icons.send),
                       label: Text("Submit"),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.green,

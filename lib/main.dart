@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:ihub/View/Login_Page/login.dart';
-import 'package:ihub/View/Splash/Battery_Splash.dart';
+import 'package:ihub/View/Splash/video_splash.dart';
 
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
@@ -16,7 +15,6 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await ApiConstants.loadBaseUrl1();
-
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -27,6 +25,7 @@ Future<void> main() async {
   cameras = await availableCameras();
   final sharedPrefs = SharedPrefs();
   await sharedPrefs.initialize();
+
   runApp(const MyApp());
 }
 
@@ -43,7 +42,8 @@ class MyApp extends StatelessWidget {
         title: 'Tara',
         debugShowCheckedModeBanner: false,
         // home: LoadingSplash(),
-        home: LoginPage(),
+        // home: LoginPage(),
+        home: SplashVideoScreen(),
         // home: BatterySplash(),
       ),
     );

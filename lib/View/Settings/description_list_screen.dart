@@ -8,6 +8,7 @@ import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/description_controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/colors.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/Add_Description.dart';
 
@@ -56,44 +57,15 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                         controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                     errorWidget: (context, url, error) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   ),
                 );
               },
             ),
             Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, top: 30),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Navigator.pop(context),
-                        child: Container(
-                          height: 60.h,
-                          width: 60.h,
-                          decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15).r,
-                          ),
-                          child: const Icon(Icons.arrow_back_outlined,
-                              color: Colors.black),
-                        ),
-                      ),
-                      const SizedBox(width: 10),
-                      Text(
-                        "TIME DESCRIPTION LIST",
-                        style: GoogleFonts.oxygen(
-                          color: Colors.black,
-                          fontSize: 25.h,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Expanded(
                   child: GetX<DescriptionController>(
                     builder: (controller) {
@@ -258,25 +230,14 @@ class _DescriptionListScreenState extends State<DescriptionListScreen> {
                 ),
               ],
             ),
-            Positioned(
-              right: 0,
-              child: GetX<BatteryController>(
-                builder: (BatteryController controller) {
-                  int? batteryLevel;
-
-                  batteryLevel = int.tryParse(controller.background.value?.data
-                              ?.first.robot?.batteryStatus ??
-                          "0") ??
-                      0;
-
-                  print("batettegdshgfcdshuf$batteryLevel");
-
-                  return BatteryIcon(
-                    batteryLevel: batteryLevel,
-                  );
-                },
-              ),
-            )
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: "TIME DESCRIPTION LIST",
+                ),
+              ],
+            ),
           ],
         ),
       ),

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
 import 'package:ihub/Controller/description_controller.dart';
+import 'package:ihub/Controller/language_controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/speed/controller/speed_controller.dart';
 
@@ -32,7 +33,6 @@ class HandleControllers {
     Get.put(BackgroudController());
     Get.put(SessionController());
     Get.put(CustomerdetailsController());
-    // Get.put(PopupController());
     Get.put(UpdateStatusController());
     Get.put(SessionIDController());
     Get.put(BatteryController());
@@ -52,6 +52,7 @@ class HandleControllers {
     Get.put(DescriptionController());
     Get.put(PromptController());
     Get.put(SpeedController());
+    Get.put(LanguageController());
   }
 
   static deleteAllGetControllers() async {
@@ -60,7 +61,6 @@ class HandleControllers {
     await Get.delete<BackgroudController>();
     await Get.delete<SessionController>();
     await Get.delete<CustomerdetailsController>();
-    // Get.delete<PopupController>();
     await Get.delete<UpdateStatusController>();
     await Get.delete<SessionIDController>();
     await Get.delete<BatteryController>();
@@ -79,5 +79,6 @@ class HandleControllers {
     await Get.delete<DescriptionController>();
     await Get.delete<PromptController>();
     await Get.delete<SpeedController>();
+    await Get.delete<LanguageController>();
   }
 }

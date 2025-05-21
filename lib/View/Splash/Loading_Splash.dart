@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:ihub/View/Login_Page/login.dart';
+import 'package:ihub/View/Splash/video_splash.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Service/Api_Service.dart';
@@ -25,7 +26,8 @@ class _LoadingSplashState extends State<LoadingSplash> {
         Navigator.pushReplacement(context, MaterialPageRoute(
           builder: (context) {
             timer.cancel();
-            return LoginPage();
+            // return LoginPage();
+            return SplashVideoScreen();
           },
         ));
       }
@@ -40,55 +42,21 @@ class _LoadingSplashState extends State<LoadingSplash> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 50),
-              child: Center(
-                child: SizedBox(
-                  width: size.width * 0.3,
-                  height: size.width * 0.3,
-                  child: Image.asset(
-                    'assets/splash.jpg',
-                    fit: BoxFit.cover,
-                  ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SizedBox(
+                width: size.width * 0.3,
+                height: size.width * 0.3,
+                child: Image.asset(
+                  'assets/splash.jpg',
+                  fit: BoxFit.cover,
                 ),
               ),
-            ),
-            Lottie.asset("assets/loading.json", width: 80),
-            // SizedBox(
-            //   height: 50.h,
-            //   width: 280.w,
-            //   child: DefaultTextStyle(
-            //     style: GoogleFonts.inter(
-            //         color: Colors.white,
-            //         fontSize: 30.h,
-            //         fontWeight: FontWeight.bold,
-            //         shadows: [
-            //           Shadow(
-            //             blurRadius: 5.0,
-            //             color: Colors.black.withOpacity(0.7),
-            //             offset: Offset(2, 2),
-            //           ),
-            //         ]),
-            // child: Center(
-            //   child: AnimatedTextKit(
-            //     animatedTexts: [
-            //       TypewriterAnimatedText(
-            //         'LOADING....',
-            //         speed: Duration(seconds: 1),
-            //         // Adjust typing speed
-            //         cursor: '|', // Optional cursor
-            //       ),
-            //     ],
-            //     repeatForever: true,
-            //     // Ensures continuous looping
-            //     isRepeatingAnimation: true,
-            //   ),
-            // )
-            // ),
-            // ),
-          ],
+              Lottie.asset("assets/loading.json", width: 80),
+            ],
+          ),
         ),
       ),
     );

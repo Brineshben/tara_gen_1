@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -60,9 +61,9 @@ class _ApiKeyState extends State<ApiKey> {
                         controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                     errorWidget: (context, url, error) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   ),
                 );
               },
@@ -112,21 +113,30 @@ class _ApiKeyState extends State<ApiKey> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Container(
-                            margin: EdgeInsets.only(
-                                left: 40.w, bottom: 15, right: 40.w, top: 50.w),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  'NEW API KEY',
-                                  style: TextStyle(
-                                      fontSize: 25.h,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blue),
+                          GetX<BatteryController>(
+                            builder: (controller) {
+                              return Container(
+                                margin: EdgeInsets.only(
+                                    left: 40.w,
+                                    bottom: 15,
+                                    right: 40.w,
+                                    top: 50.w),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      'NEW API KEY',
+                                      style: TextStyle(
+                                        fontSize: 25.h,
+                                        fontWeight: FontWeight.bold,
+                                        color: controller.foregroundColor.value,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                           Container(
                             margin: EdgeInsets.only(left: 40.w, right: 40.w),
@@ -218,24 +228,13 @@ class _ApiKeyState extends State<ApiKey> {
                 ],
               ),
             ),
-            Positioned(
-              right: 0,
-              child: GetX<BatteryController>(
-                builder: (BatteryController controller) {
-                  int? batteryLevel;
-
-                  batteryLevel = int.tryParse(controller.background.value?.data
-                              ?.first.robot?.batteryStatus ??
-                          "0") ??
-                      0;
-
-                  print("batettegdshgfcdshuf$batteryLevel");
-
-                  return BatteryIcon(
-                    batteryLevel: batteryLevel,
-                  );
-                },
-              ),
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: "ADD API KEY",
+                ),
+              ],
             ),
           ],
         ),

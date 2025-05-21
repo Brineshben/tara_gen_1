@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Robot_Response/change_password_page.dart';
 import 'package:ihub/View/Settings/settings.dart';
@@ -45,16 +46,16 @@ class _PasswordPageState extends State<PasswordPage> {
         body: Stack(
           children: [
             GetX<BackgroudController>(
-              builder: (controller) {
+              builder: (BackgroudController controller) {
                 return Positioned.fill(
                   child: CachedNetworkImage(
                     imageUrl:
                         controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                     errorWidget: (context, url, error) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   ),
                 );
               },
@@ -65,58 +66,63 @@ class _PasswordPageState extends State<PasswordPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 30, left: 20),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: 60.h,
-                            width: 60.h,
-                            decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15).r,
-                            ),
-                            child: const Icon(Icons.arrow_back_outlined,
-                                color: Colors.black),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            "PASSWORD",
-                            style: GoogleFonts.oxygen(
-                              color: Colors.black,
-                              fontSize: 25.h,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          // SizedBox(width: 20),
-                          // IconButton(
-                          //   icon: Icon(
-                          //     Icons.password,
-                          //     size: 30,
-                          //   ),
-                          //   onPressed: () {
-                          //     Navigator.pop(context);
-                          //     Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //           builder: (_) => const ChangePasswordPage()),
-                          //     );
-                          //   },
-                          // ),
-                        ],
-                      ),
-                    ),
-                    GetX<BatteryController>(
-                      builder: (batteryController) {
-                        int batteryLevel = int.tryParse(
-                              batteryController.background.value?.data?.first
-                                      .robot?.batteryStatus ??
-                                  "0",
-                            ) ??
-                            0;
-                        return BatteryIcon(batteryLevel: batteryLevel);
-                      },
-                    ),
+                    //     Padding(
+                    //       padding: const EdgeInsets.only(top: 30, left: 20),
+                    //       child: Row(
+                    //         children: [
+                    //           GestureDetector(
+                    //             onTap: () {
+                    //               Navigator.pop(context);
+                    //             },
+                    //             child: Container(
+                    //               height: 60.h,
+                    //               width: 60.h,
+                    //               decoration: BoxDecoration(
+                    //                 color: Colors.black.withOpacity(0.2),
+                    //                 borderRadius: BorderRadius.circular(15).r,
+                    //               ),
+                    //               child: const Icon(Icons.arrow_back_outlined,
+                    //                   color: Colors.black),
+                    //             ),
+                    //           ),
+                    //           SizedBox(width: 10),
+                    //           Text(
+                    //             "PASSWORD",
+                    //             style: GoogleFonts.oxygen(
+                    //               color: Colors.black,
+                    //               fontSize: 25.h,
+                    //               fontWeight: FontWeight.w700,
+                    //             ),
+                    //           ),
+                    //           // SizedBox(width: 20),
+                    //           // IconButton(
+                    //           //   icon: Icon(
+                    //           //     Icons.password,
+                    //           //     size: 30,
+                    //           //   ),
+                    //           //   onPressed: () {
+                    //           //     Navigator.pop(context);
+                    //           //     Navigator.push(
+                    //           //       context,
+                    //           //       MaterialPageRoute(
+                    //           //           builder: (_) => const ChangePasswordPage()),
+                    //           //     );
+                    //           //   },
+                    //           // ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     GetX<BatteryController>(
+                    //       builder: (batteryController) {
+                    //         int batteryLevel = int.tryParse(
+                    //               batteryController.background.value?.data?.first
+                    //                       .robot?.batteryStatus ??
+                    //                   "0",
+                    //             ) ??
+                    //             0;
+                    //         return BatteryIcon(batteryLevel: batteryLevel);
+                    //       },
+                    //     ),
                   ],
                 ),
               ],
@@ -154,6 +160,14 @@ class _PasswordPageState extends State<PasswordPage> {
                   ],
                 ),
               ),
+            ),
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: "PASSWORD",
+                ),
+              ],
             ),
           ],
         ),

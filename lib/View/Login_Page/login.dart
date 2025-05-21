@@ -30,13 +30,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _hideSystemUI();
-    initialize();
+    // initialize();
     super.initState();
   }
 
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
   Future<void> initialize() async {
@@ -56,7 +55,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: SafeArea(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Utils/header.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Nav_description_controller.dart';
@@ -43,51 +44,51 @@ class _AddDescriptionState extends State<AddDescription> {
                       controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                 ),
               );
             },
           ),
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 20, bottom: 40),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        "PLACE DESCRIPTION LIST",
-                        style: GoogleFonts.oxygen(
-                            color: Colors.black,
-                            fontSize: 25.h,
-                            fontWeight: FontWeight.w700),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.only(left: 20, top: 20, bottom: 40),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.start,
+              //     children: [
+              //       GestureDetector(
+              //         onTap: () {
+              //           Navigator.pop(context);
+              //         },
+              //         child: Container(
+              //           height: 60.h,
+              //           width: 60.h,
+              //           decoration: BoxDecoration(
+              //               color: Colors.black.withOpacity(0.2),
+              //               borderRadius: BorderRadius.circular(15).r),
+              //           child: Icon(
+              //             Icons.arrow_back_outlined,
+              //             color: Colors.black,
+              //           ),
+              //         ),
+              //       ),
+              //       SizedBox(
+              //         width: 10,
+              //       ),
+              //       Center(
+              //         child: Text(
+              //           "PLACE DESCRIPTION LIST",
+              //           style: GoogleFonts.oxygen(
+              //               color: Colors.black,
+              //               fontSize: 25.h,
+              //               fontWeight: FontWeight.w700),
+              //         ),
+              //       ),
+              //     ],
+              //   ),
+              // ),
               Expanded(
                 child: GetX<NavigateDescriptionController>(
                   builder: (NavigateDescriptionController controller) {
@@ -330,6 +331,14 @@ class _AddDescriptionState extends State<AddDescription> {
                           );
                   },
                 ),
+              ),
+            ],
+          ),
+          Column(
+            children: [
+              Header(
+                isBack: true,
+                screenName: "PLACE DESCRIPTION LIST",
               ),
             ],
           ),

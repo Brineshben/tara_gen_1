@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:pinput/pinput.dart';
@@ -96,16 +97,25 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                         ],
                       ),
                     ),
-                    GetX<BatteryController>(
-                      builder: (batteryController) {
-                        int batteryLevel = int.tryParse(
-                              batteryController.background.value?.data?.first
-                                      .robot?.batteryStatus ??
-                                  "0",
-                            ) ??
-                            0;
-                        return BatteryIcon(batteryLevel: batteryLevel);
-                      },
+                    // GetX<BatteryController>(
+                    //   builder: (batteryController) {
+                    //     int batteryLevel = int.tryParse(
+                    //           batteryController.background.value?.data?.first
+                    //                   .robot?.batteryStatus ??
+                    //               "0",
+                    //         ) ??
+                    //         0;
+                    //     return BatteryIcon(batteryLevel: batteryLevel);
+                    //   },
+                    // ),
+
+                    Column(
+                      children: [
+                        Header(
+                          isBack: true,
+                          screenName: "",
+                        ),
+                      ],
                     ),
                   ],
                 ),
