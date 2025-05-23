@@ -7,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/header.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Volume_Controller.dart';
@@ -50,188 +52,93 @@ class _VolumeControlState extends State<VolumeControl> {
                       controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                 ),
               );
             },
           ),
+          Center(
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 100),
+                child: GetX<VolumeController>(
+                  builder: (VolumeController controller) {
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GetX<BatteryController>(
+                          builder: (BatteryController batteryController) {
+                            return Column(
+                              children: [
+                                Icon(Icons.volume_up,
+                                    size: 50,
+                                    color: batteryController
+                                        .foregroundColor.value),
+                                Text(
+                                  "Volume: ${controller.roboVolume.value}%",
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: batteryController
+                                          .foregroundColor.value),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+
+                        SizedBox(
+                          width: 300.w, // Adjust width as needed
+                          child: Slider(
+                            value: controller.roboVolume.value.toDouble(),
+                            activeColor: Colors.green,
+                            min: 0,
+                            max: 150,
+                            divisions: 10,
+                            label: "${controller.roboVolume.value}%",
+                            onChanged: (value) {
+                              controller.roboVolume.value = value.toInt();
+                            },
+                            onChangeEnd: (value) {
+                              Get.find<VolumeController>()
+                                  .fetchvolume(widget.robotid, value.toInt());
+                            },
+                          ),
+                        ),
+
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.center,
+                        //   children: [
+                        //     ElevatedButton(
+                        //       onPressed: _decreaseVolume,
+                        //       child: const Icon(Icons.remove),
+                        //     ),
+                        //     const SizedBox(width: 20),
+                        //     ElevatedButton(
+                        //       onPressed: _increaseVolume,
+                        //       child: const Icon(Icons.add),
+                        //     ),
+                        //   ],
+                        // ),
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ),
+          ),
           Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, top: 40, bottom: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                      child: Container(
-                        height: 60.h,
-                        width: 60.h,
-                        decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(15).r),
-                        child: Icon(
-                          Icons.arrow_back_outlined,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Text(
-                      "VOLUME",
-                      style: GoogleFonts.oxygen(
-                          color: Colors.black,
-                          fontSize: 25.h,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ],
-                ),
-              ),
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: GetX<VolumeController>(
-                    builder: (VolumeController controller) {
-                      return Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.volume_up,
-                            size: 50,
-                            color: Colors.black,
-                          ),
-                          Text("Volume: ${controller.roboVolume.value}%",
-                              style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black)),
-                          SizedBox(
-                            width: 300.w, // Adjust width as needed
-                            child: Slider(
-                              value: controller.roboVolume.value.toDouble(),
-                              min: 0,
-                              max: 150,
-                              divisions: 10,
-                              label: "${controller.roboVolume.value}%",
-                              onChanged: (value) {
-                                controller.roboVolume.value = value.toInt();
-                              },
-                              onChangeEnd: (value) {
-                                Get.find<VolumeController>()
-                                    .fetchvolume(widget.robotid, value.toInt());
-                              },
-                            ),
-                          ),
-
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     ElevatedButton(
-                          //       onPressed: _decreaseVolume,
-                          //       child: const Icon(Icons.remove),
-                          //     ),
-                          //     const SizedBox(width: 20),
-                          //     ElevatedButton(
-                          //       onPressed: _increaseVolume,
-                          //       child: const Icon(Icons.add),
-                          //     ),
-                          //   ],
-                          // ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
+              Header(
+                isBack: true,
+                screenName: "VOLUME CONTROLLER", page: false,
               ),
             ],
-          )
+          ),
         ],
       ),
-      // floatingActionButton: Container(
-      //   margin:
-      //       EdgeInsets.only(left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
-      //   child: Row(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       Container(
-      //         decoration: BoxDecoration(
-      //           color: Colors.red,
-      //           borderRadius: BorderRadius.circular(20.r),
-      //           boxShadow: [
-      //             BoxShadow(
-      //               color: Colors.black.withOpacity(0.2),
-      //               spreadRadius: 1,
-      //               blurRadius: 6,
-      //             ),
-      //           ],
-      //         ),
-      //         width: size.width * 0.28,
-      //         height: 50.h,
-      //         child: Center(
-      //           child: Text(
-      //             "Stop",
-      //             style: GoogleFonts.inter(
-      //               color: Colors.white,
-      //               fontSize: 18.h,
-      //               fontWeight: FontWeight.bold,
-      //             ),
-      //           ),
-      //         ),
-      //       )
-      //       // FloatingActionButton(
-      //       //   backgroundColor: Colors.red,
-      //       //   onPressed: () {},
-      //       //   child: TextButton(onPressed: () {  },
-      //       //   child: Text("STOP"),),
-      //       // ),
-      //     ],
-      //   ),
-      // ),
     );
-    // return Scaffold(
-    //   appBar: AppBar(title: const Text("Volume Control")),
-    //   body: Center(
-    //     child: Column(
-    //       mainAxisAlignment: MainAxisAlignment.center,
-    //       children: [
-    //         const Icon(Icons.volume_up, size: 50),
-    //         Text("Volume: ${_volume.toInt()}%",
-    //             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-    //         Slider(
-    //           value: _volume,
-    //           min: 0,
-    //           max:50,
-    //           divisions: 10,
-    //           label: "${_volume.toInt()}%",
-    //           onChanged: (value) {
-    //             setState(() {
-    //               _volume = value;
-    //             });
-    //           },
-    //         ),
-    //         Row(
-    //           mainAxisAlignment: MainAxisAlignment.center,
-    //           children: [
-    //             ElevatedButton(
-    //               onPressed: _decreaseVolume,
-    //               child: const Icon(Icons.remove),
-    //             ),
-    //             const SizedBox(width: 20),
-    //             ElevatedButton(
-    //               onPressed: _increaseVolume,
-    //               child: const Icon(Icons.add),
-    //             ),
-    //           ],
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 }

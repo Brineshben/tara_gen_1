@@ -29,15 +29,21 @@ class PromptService {
   }
 
   static Future<Map<String, dynamic>?> addPrompt({
-    required String commandPromt,
+    required String prompt,
+    required String question,
+    required String answer,
   }) async {
+    var prommt =
+        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer:m $answer";
     final url =
         Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.commandPrompt}");
 
     try {
       final requestBody = jsonEncode({
-        'command_prompt': commandPromt,
+        'command_prompt': prommt,
       });
+
+      print('enterPromt $prommt');
 
       print('URL: $url');
       print('Request Body: $requestBody');

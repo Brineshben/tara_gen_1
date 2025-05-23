@@ -3,7 +3,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Service/url_service.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -63,187 +65,202 @@ class _AddUrlPageState extends State<AddUrlPage> {
                   ),
                 ),
               ),
-              Positioned.fill(
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+              Padding(
+                padding: const EdgeInsets.only(top: 120),
+                child: SingleChildScrollView(
+                  keyboardDismissBehavior:
+                      ScrollViewKeyboardDismissBehavior.onDrag,
+                  child: Center(
+                    child: SizedBox(
+                      width: MediaQuery.sizeOf(context).width * 0.8,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30.w, vertical: 2.h),
+                            child: TextFormField(
+                              maxLength: 30,
+                              cursorColor: ColorUtils.userdetailcolor,
+                              controller: _nameController,
+                              textInputAction: TextInputAction.done,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorUtils.userdetailcolor,
+                                      width: 2),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorUtils.userdetailcolor),
+                                ),
+                                labelText: 'NAME',
+                                labelStyle: TextStyle(
+                                    color: ColorUtils.userdetailcolor,
+                                    fontSize: 16.h),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 30.w, vertical: 2.h),
+                            child: TextFormField(
+                              cursorColor: ColorUtils.userdetailcolor,
+                              controller: _urlController,
+                              textInputAction: TextInputAction.done,
+                              style: TextStyle(color: Colors.white),
+                              decoration: InputDecoration(
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorUtils.userdetailcolor,
+                                      width: 2),
+                                ),
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: ColorUtils.userdetailcolor),
+                                ),
+                                labelText: 'LINK',
+                                labelStyle: TextStyle(
+                                    color: ColorUtils.userdetailcolor,
+                                    fontSize: 16.h),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      Get.back();
-                                    },
-                                    child: Container(
-                                      height: 60.h,
-                                      width: 60.h,
-                                      decoration: BoxDecoration(
-                                          color: Colors.white.withOpacity(0.2),
-                                          borderRadius:
-                                              BorderRadius.circular(15).r),
-                                      child: Icon(
-                                        Icons.arrow_back_outlined,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 30.w, vertical: 5.h),
-                                    child: Text(
-                                      'ADD WEB LINK',
-                                      style: GoogleFonts.roboto(
-                                        color: Colors.white,
-                                        fontSize: 30.h,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 5.h),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 30.w, vertical: 2.h),
-                                child: TextFormField(
-                                  cursorColor: ColorUtils.userdetailcolor,
-                                  controller: _nameController,
-                                  textInputAction: TextInputAction.done,
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: ColorUtils.userdetailcolor,
-                                          width: 2),
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: ColorUtils.userdetailcolor),
-                                    ),
-                                    labelText: 'NAME',
-                                    labelStyle: TextStyle(
-                                        color: ColorUtils.userdetailcolor,
-                                        fontSize: 16.h),
-                                  ),
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: Colors.white,
+                                  highlightColor: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  onTap: () async {
+                                    if (_nameController.text.isEmpty ||
+                                        _urlController.text.isEmpty) {
+                                      submit(
+                                        title: "Validation Error",
+                                        message:
+                                            "Name and URL must not be empty.",
+                                        actionName: "Close",
+                                        iconData: Icons.warning,
+                                        iconColor: Colors.orange,
+                                      );
+                                      return;
+                                    }
+
+                                    final Uri? parsedUrl =
+                                        Uri.tryParse(_urlController.text);
+                                    if (parsedUrl == null ||
+                                        !(parsedUrl.isScheme("http") ||
+                                            parsedUrl.isScheme("https"))) {
+                                      submit(
+                                        title: "Invalid URL",
+                                        message:
+                                            "Please enter a valid URL (must start with http or https).",
+                                        actionName: "Close",
+                                        iconData: Icons.link_off,
+                                        iconColor: Colors.red,
+                                      );
+                                      return;
+                                    }
+
+                                    // Map<String, dynamic> response =
+                                    //     await UrlService.addUrl(
+                                    //         name: _nameController.text,
+                                    //         urlpage: _urlController.text);
+
+                                    // print('addurlresponse$response');
+
+                                    // if (response['status'] == 'ok') {
+                                    //   submit(
+                                    //     title: "SUCCESS",
+                                    //     message: "URL added successfully",
+                                    //     actionName: "Close",
+                                    //     iconData: Icons.done,
+                                    //     iconColor: Colors.green,
+                                    //   );
+                                    // Get.find<RobotresponseapiController>()
+                                    //     .getUrl();
+                                    // } else {
+                                    //   ProductAppPopUps.submit(
+                                    //     title: "FAILED",
+                                    //     message: "Failed to add URL",
+                                    //     actionName: "Close",
+                                    //     iconData: Icons.info,
+                                    //     iconColor: Colors.red,
+                                    //   );
+                                    // }
+
+                                    await UrlService.storeUrl(
+                                        name: _nameController.text,
+                                        urlpage: _urlController.text);
+
+                                    Get.back();
+                                  },
+                                  child: buildInfoCard(size, 'ADD'),
                                 ),
                               ),
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 30.w, vertical: 2.h),
-                                child: TextFormField(
-                                  cursorColor: ColorUtils.userdetailcolor,
-                                  controller: _urlController,
-                                  textInputAction: TextInputAction.done,
-                                  style: TextStyle(color: Colors.white),
-                                  decoration: InputDecoration(
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: ColorUtils.userdetailcolor,
-                                          width: 2),
-                                    ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: ColorUtils.userdetailcolor),
-                                    ),
-                                    labelText: 'LINK',
-                                    labelStyle: TextStyle(
-                                        color: ColorUtils.userdetailcolor,
-                                        fontSize: 16.h),
-                                  ),
-                                ),
-                              ),
-                              SizedBox(height: 20),
-                              Center(
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: Colors.white,
-                                    highlightColor:
-                                        Colors.white.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    onTap: () async {
-                                      if (_nameController.text.isEmpty ||
-                                          _urlController.text.isEmpty) {
-                                        submit(
-                                          title: "Validation Error",
-                                          message:
-                                              "Name and URL must not be empty.",
-                                          actionName: "Close",
-                                          iconData: Icons.warning,
-                                          iconColor: Colors.orange,
-                                        );
-                                        return;
-                                      }
+                              Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  splashColor: Colors.white,
+                                  highlightColor: Colors.white.withOpacity(0.3),
+                                  borderRadius: BorderRadius.circular(20.r),
+                                  onTap: () async {
+                                    SharedPreferences prefs =
+                                        await SharedPreferences.getInstance();
+                                    if (_nameController.text.isEmpty &&
+                                        _urlController.text.isEmpty) {
+                                      submit(
+                                        title: "Nothing to Delete",
+                                        message:
+                                            "No URL or Name found to delete.",
+                                        actionName: "Close",
+                                        iconData: Icons.info_outline,
+                                        iconColor: Colors.orange,
+                                      );
+                                      return;
+                                    }
 
-                                      final Uri? parsedUrl =
-                                          Uri.tryParse(_urlController.text);
-                                      if (parsedUrl == null ||
-                                          !(parsedUrl.isScheme("http") ||
-                                              parsedUrl.isScheme("https"))) {
-                                        submit(
-                                          title: "Invalid URL",
-                                          message:
-                                              "Please enter a valid URL (must start with http or https).",
-                                          actionName: "Close",
-                                          iconData: Icons.link_off,
-                                          iconColor: Colors.red,
-                                        );
-                                        return;
-                                      }
+                                    await prefs.remove('url');
+                                    await prefs.remove('name');
 
-                                      // Map<String, dynamic> response =
-                                      //     await UrlService.addUrl(
-                                      //         name: _nameController.text,
-                                      //         urlpage: _urlController.text);
+                                    _nameController.clear();
+                                    _urlController.clear();
 
-                                      // print('addurlresponse$response');
+                                    submit(
+                                      title: "Deleted",
+                                      message:
+                                          "URL and Name have been deleted successfully.",
+                                      actionName: "Close",
+                                      iconData: Icons.delete_outline,
+                                      iconColor: Colors.red,
+                                    );
 
-                                      // if (response['status'] == 'ok') {
-                                      //   submit(
-                                      //     title: "SUCCESS",
-                                      //     message: "URL added successfully",
-                                      //     actionName: "Close",
-                                      //     iconData: Icons.done,
-                                      //     iconColor: Colors.green,
-                                      //   );
-                                      // Get.find<RobotresponseapiController>()
-                                      //     .getUrl();
-                                      // } else {
-                                      //   ProductAppPopUps.submit(
-                                      //     title: "FAILED",
-                                      //     message: "Failed to add URL",
-                                      //     actionName: "Close",
-                                      //     iconData: Icons.info,
-                                      //     iconColor: Colors.red,
-                                      //   );
-                                      // }
-
-                                      await UrlService.storeUrl(
-                                          name: _nameController.text,
-                                          urlpage: _urlController.text);
-
-                                      Get.back();
-                                    },
-                                    child: buildInfoCard(size, 'ADD'),
-                                  ),
+                                    await Get.find<RobotresponseapiController>()
+                                        .getUrl();
+                                  },
+                                  child: buildInfoCard(size, 'DELETE'),
                                 ),
                               ),
                             ],
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
+              ),
+              Column(
+                children: [
+                  Header(
+                    isBack: true,
+                    screenName: "DESCRIPTION OPTIONS", page: false,
+                  ),
+                ],
               ),
             ],
           ),

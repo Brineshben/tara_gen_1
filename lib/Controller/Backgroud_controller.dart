@@ -9,6 +9,8 @@ class BackgroudController extends GetxController {
   RxBool isError = false.obs;
   Rx<BackgroundModel?> backgroundModel = Rx(null);
 
+  String defaultIMage = "assets/default_image.jpg";
+
   void resetStatus() {
     isLoading.value = false;
     isError.value = false;
@@ -19,7 +21,6 @@ class BackgroudController extends GetxController {
     isLoaded.value = false;
     try {
       Map<String, dynamic> resp = await ApiServices.background(userId: userID);
-      print('bggggggg resp ${resp}');
       if (resp['status'] == "ok") {
         BackgroundModel backgrounddata = BackgroundModel.fromJson(resp);
         backgroundModel.value = backgrounddata;

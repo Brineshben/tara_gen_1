@@ -6,7 +6,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
+import 'package:ihub/Utils/header.dart';
 import 'package:ihub/speed/view/speed_page.dart';
 
 class ChargeEntryView extends StatefulWidget {
@@ -68,84 +70,12 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                         controller.backgroundModel.value?.backgroundImage ?? "",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                     errorWidget: (context, url, error) =>
-                        Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                        Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   ),
                 );
               },
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    top: 30,
-                    right: 20,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () async {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 60.h,
-                          width: 60.h,
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15).r),
-                          child: Icon(
-                            Icons.arrow_back_outlined,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 10),
-                        child: Text(
-                          "Battery Config",
-                          style: GoogleFonts.oxygen(
-                              color: Colors.black,
-                              fontSize: 25.h,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                      Spacer(),
-                      GestureDetector(
-                        onDoubleTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => SpeedControllerPage(),
-                            ),
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            Image.asset(
-                              "assets/speedometer.png",
-                              width: 90,
-                            ),
-                            Text(
-                              "Speed",
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
             ),
             Obx(
               () => settingsController.isLoading.value
@@ -314,6 +244,50 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                         ),
                       ),
                     ),
+            ),
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: "BATTERY CONFIG", page: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            GetX<BatteryController>(
+              builder: (controller) {
+                return GestureDetector(
+                  onDoubleTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SpeedControllerPage(),
+                      ),
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        "assets/speedometer.png",
+                        width: 90,
+                      ),
+                      Text(
+                        "Speed",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: controller.foregroundColor.value,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
           ],
         ),

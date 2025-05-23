@@ -2,32 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class BatteryIcon extends StatelessWidget {
-  final int batteryLevel; // Battery percentage (0 - 100)
-  final double segmentHeight;
-  final double segmentWidth;
-  final Color highColor;
-  final Color mediumColor;
-  final Color lowColor;
+  final int batteryLevel;
+  final Color color;
 
   const BatteryIcon({
-    Key? key,
     required this.batteryLevel,
-    this.segmentHeight = 20,
-    this.segmentWidth = 12,
-    this.highColor = Colors.green,
-    this.mediumColor = Colors.orange,
-    this.lowColor = Colors.red,
-  }) : super(key: key);
+    required this.color,
+  });
 
   @override
   Widget build(BuildContext context) {
-    int filledSegments = (batteryLevel / 25).ceil();
-
-    // Determine color based on battery level
-    Color currentColor = batteryLevel > 50
-        ? highColor
-        : (batteryLevel > 25 ? mediumColor : lowColor);
-
     // return Row(
     //   mainAxisSize: MainAxisSize.min,
     //   crossAxisAlignment: CrossAxisAlignment.center,
@@ -75,14 +59,14 @@ class BatteryIcon extends StatelessWidget {
       padding: const EdgeInsets.only(top: 40),
       child: Column(
         children: [
-          Text(
-            "$batteryLevel%",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          // Text(
+          //   "$batteryLevel%",
+          //   style: TextStyle(
+          //     color: color,
+          //     fontSize: 20,
+          //     fontWeight: FontWeight.bold,
+          //   ),
+          // ),
           batteryLevel > 30
               ? Lottie.asset('assets/yellow.json',
                   height: MediaQuery.of(context).size.height * 0.2)
@@ -91,6 +75,14 @@ class BatteryIcon extends StatelessWidget {
                       height: MediaQuery.of(context).size.height * 0.2)
                   : Lottie.asset('assets/red.json',
                       height: MediaQuery.of(context).size.height * 0.2)),
+          Text(
+            "$batteryLevel%",
+            style: TextStyle(
+              color: color,
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );

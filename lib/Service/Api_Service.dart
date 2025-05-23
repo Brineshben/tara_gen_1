@@ -272,21 +272,29 @@ class ApiServices {
 
 // delete map from local
   static Future<Map<String, dynamic>> deleteFileLocal({
-    required bool status,
+    required String robotId,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.deletefile}";
-    print("urlurlurlurlurlurlurl:$url");
-    Map apiBody = {"status": status};
-    // try {
-    print("apibody:$apiBody");
-    var request = http.Request('POST', Uri.parse(url));
-    request.body = (json.encode(apiBody));
-    request.headers.addAll({'Content-Type': 'application/json'});
-    http.StreamedResponse response = await request.send();
-    var respString = await response.stream.bytesToString();
-    print('filedelete ${respString}');
-    print(json.decode(respString));
-    return json.decode(respString);
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.delteMap}$robotId/";
+      print("DELETE URL: $url");
+
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      print('Response status: ${response.statusCode}');
+      print('Response Body: ${response.body}');
+
+      if (response.body.trim().isEmpty) {
+        return {'status': 'ok', 'detail': 'Map deleted successfully'};
+      }
+
+      return json.decode(response.body);
+    } catch (e) {
+      print('Error in deleteFileLocal: $e');
+      return {'status': 'error', 'detail': e.toString()};
+    }
   }
 
   ///check battery
@@ -338,7 +346,7 @@ class ApiServices {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.fetch_refresh_status}";
 
     Map apiBody = {"status": true};
-    var request = http.Request('GET', Uri.parse(url));
+    var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
@@ -687,5 +695,46 @@ class ApiServices {
     );
     print('deleteresponce ${response.body}');
     return jsonDecode(response.body);
+  }
+
+  // get language
+  static Future<Map<String, dynamic>> fetchLanguages() async {
+    try {
+      String url = "${ApiConstants.baseUrl}${ApiConstants.getLanguage}";
+      final response = await http.get(Uri.parse(url));
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
+  static Future<Map<String, dynamic>> setLanguage({
+    required String language,
+    required String id,
+    String roboName = "Tara10",
+  }) async {
+    try {
+      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}";
+
+      final body = jsonEncode({
+        id: {
+          "language": language,
+          "robo_name": roboName,
+        }
+      });
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json", // important for JSON body
+        },
+        body: body,
+      );
+
+      print('language response: ${response.body}');
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
   }
 }

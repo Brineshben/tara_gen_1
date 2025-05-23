@@ -11,6 +11,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/Utils/header.dart';
+import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/settings.dart';
 
@@ -261,23 +263,39 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
   // DELETE MAP FROM LOCAL
   _deleteMap() async {
-    Map<String, dynamic> resp = await ApiServices.deleteFileLocal(
-      status: true,
-    );
-    print('deletemapresponcelocal ${resp}');
-    if (resp['status'] == true) {
-      FocusManager.instance.primaryFocus?.unfocus();
-      ProductAppPopUps.submit(
-        title: "SUCCESS",
-        message: "Map deleted successfully",
-        actionName: "Close",
-        iconData: Icons.done,
-        iconColor: Colors.green,
+    try {
+      Map<String, dynamic> resp = await ApiServices.deleteFileLocal(
+        robotId: roboId,
       );
-    } else {
+
+      print('deletemapresponcelocal $resp');
+      print('robotIdddddddddddd $roboId');
+
+      if (resp['status'] == "ok") {
+        FocusManager.instance.primaryFocus?.unfocus();
+        ProductAppPopUps.submit(
+          title: "SUCCESS",
+          message: resp['detail'] ?? "Map deleted successfully",
+          actionName: "Close",
+          iconData: Icons.done,
+          iconColor: Colors.green,
+        );
+        _selectedFile = null;
+      } else {
+        ProductAppPopUps.submit(
+          title: "Failed",
+          message: resp['detail'] ?? "Something went wrong!",
+          actionName: "Close",
+          iconData: Icons.error_outline,
+          iconColor: Colors.red,
+        );
+        _selectedFile = null;
+      }
+    } catch (e) {
+      print('Error in _deleteMap: $e');
       ProductAppPopUps.submit(
-        title: "Failed",
-        message: resp['message'].toString(),
+        title: "Error",
+        message: "Something went wrong: $e",
         actionName: "Close",
         iconData: Icons.error_outline,
         iconColor: Colors.red,
@@ -303,9 +321,9 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                       controller.backgroundModel.value?.backgroundImage ?? "",
                   fit: BoxFit.cover,
                   placeholder: (context, url) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                   errorWidget: (context, url, error) =>
-                      Image.asset("assets/images.jpg", fit: BoxFit.cover),
+                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
                 ),
               );
             },
@@ -313,47 +331,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           SingleChildScrollView(
             child: Column(
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    top: 20,
-                    bottom: 10,
-                    right: 15,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context);
-                        },
-                        child: Container(
-                          height: 60.h,
-                          width: 60.h,
-                          decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(15).r),
-                          child: Icon(
-                            Icons.arrow_back_outlined,
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Center(
-                        child: Text(
-                          "ADD MAP",
-                          style: GoogleFonts.oxygen(
-                              color: Colors.black,
-                              fontSize: 25.h,
-                              fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
                 Center(
                   child: Padding(
                     padding: const EdgeInsets.all(16.0),
@@ -368,8 +345,11 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             highlightColor: Colors.white.withOpacity(0.3),
                             borderRadius: BorderRadius.circular(20.r),
                             child: buildInfoCard(size, 'SELECT MAP'),
-                            onTap: () {
-                              _pickFile();
+                            onTap: () async {
+                              await LockTaskService.stopLockTask();
+                              await Future.delayed(Duration(milliseconds: 300));
+                              await _pickFile();
+                              await LockTaskService.startLockTask();
                             },
                           ),
                         ),
@@ -406,24 +386,14 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               ],
             ),
           ),
-          Positioned(
-              right: 0,
-              child: GetX<BatteryController>(
-                builder: (BatteryController controller) {
-                  int? batteryLevel;
-
-                  batteryLevel = int.tryParse(controller.background.value?.data
-                              ?.first.robot?.batteryStatus ??
-                          "0") ??
-                      0;
-
-                  print("batettegdshgfcdshuf$batteryLevel");
-
-                  return BatteryIcon(
-                    batteryLevel: batteryLevel,
-                  );
-                },
-              )),
+          Column(
+            children: [
+              Header(
+                isBack: true,
+                screenName: "MANAGE MAP", page: false,
+              ),
+            ],
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
@@ -438,7 +408,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           ),
           onPressed: () async {
             Map response = await ApiServices.mapRestart();
-            if (response['data']['status'] == true) {
+            if (response['updated_data']['status'] == true) {
               Get.snackbar(
                 'Success',
                 'Map restarted successfully!',

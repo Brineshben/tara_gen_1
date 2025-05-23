@@ -130,6 +130,7 @@ class ApiConstants {
   static String volumeoffline = "/volume/set/";
   static String volumeinitialoffline = "/volume/get/";
   static String deletefile = "/delete-status/";
+  static String delteMap = "/stcm_files/delete/";
   static String apikey = "/api-key/upload/";
   static String fullTour = "/tour/update/";
   static String reboot = "/update-reboot-status/";
@@ -145,7 +146,8 @@ class ApiConstants {
   static String deactivate_command_prompt = "/deactivate_command_prompt/";
 
   // map kill
-  static String fetch_refresh_status = "/fetch_refresh_status/";
+  // static String fetch_refresh_status = "/fetch_refresh_status/";
+  static String fetch_refresh_status = "/start_stop_button_press/";
 
   // speed
   static String updateSpeed = "/speed/value/";
@@ -153,6 +155,10 @@ class ApiConstants {
 
   // charging dock
   static String chargingDock = "/charging/set/";
+
+  //  get language
+  static String getLanguage = "/robot/languages/list/";
+  static String setLanguage = "/robot/update-robots/ ";
 
   ///online
   static String login = "/accounts/login/";

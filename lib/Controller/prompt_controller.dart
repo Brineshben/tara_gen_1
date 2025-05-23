@@ -26,8 +26,10 @@ class PromptController extends GetxController {
 
   Future<void> addPrompt({
     required String prompt,
+    required String q,
+    required String ans,
   }) async {
-    if (prompt.isEmpty) {
+    if (prompt.isEmpty || q.isEmpty || ans.isEmpty) {
       Get.snackbar(
         margin: EdgeInsets.all(20),
         "Error",
@@ -41,7 +43,9 @@ class PromptController extends GetxController {
     isLoading.value = true;
 
     final response = await PromptService.addPrompt(
-      commandPromt: prompt,
+      answer: ans,
+      prompt: prompt,
+      question: q,
     );
 
     isLoading.value = false;
@@ -74,12 +78,13 @@ class PromptController extends GetxController {
   }
 
   // edit
-
   Future<void> editPrompt({
     required String prompt,
     required String id,
+    required String q,
+    required String ans,
   }) async {
-    if (prompt.isEmpty) {
+    if (prompt.isEmpty || q.isEmpty || ans.isEmpty) {
       Get.snackbar(
         margin: EdgeInsets.all(20),
         "Error",

@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:math';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -23,21 +21,21 @@ class BatterySplash extends StatefulWidget {
 
 class _BatterySplashState extends State<BatterySplash> {
   Timer? messageTimer;
-
   bool isRotale = false;
 
   @override
   void initState() {
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      print("Timer");
+    messageTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
+      print("Timer in battery screen");
       bool? chargeStatus = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+
       if (!(chargeStatus ?? true)) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const Homepage();
-          },
-        ));
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Homepage()),
+        );
+
         timer.cancel();
       }
     });

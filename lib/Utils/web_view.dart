@@ -1,0 +1,37 @@
+import 'package:flutter/material.dart';
+import 'package:ihub/Utils/header.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class InAppWebViewScreen extends StatelessWidget {
+  final String url;
+
+  const InAppWebViewScreen({Key? key, required this.url}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(url));
+
+    return SafeArea(
+      child: Scaffold(
+        body: Stack(
+          children: [
+            WebViewWidget(
+              controller: controller,
+            ),
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: "",
+                  isEnableRouter: false, page: false,
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
