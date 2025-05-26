@@ -1,14 +1,13 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
-import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:ihub/View/Home_Screen/battery_Widget.dart';
-import 'package:ihub/View/Settings/description_list_screen.dart';
-import 'package:ihub/View/Settings/description_time.dart';
+import 'package:ihub/View/Settings/time_description_list_screen.dart';
+import 'package:ihub/View/Settings/place_description.dart';
 import 'package:ihub/View/Settings/settings.dart';
 
 class DescriptionOption extends StatelessWidget {
@@ -22,14 +21,30 @@ class DescriptionOption extends StatelessWidget {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      child: Container(
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -51,7 +66,7 @@ class DescriptionOption extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => AddDescription()),
+                            builder: (context) => PlaceDescription()),
                       );
                       ;
                     },
@@ -69,7 +84,7 @@ class DescriptionOption extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DescriptionListScreen(),
+                          builder: (context) => TimeDescription(),
                         ),
                       );
                     },

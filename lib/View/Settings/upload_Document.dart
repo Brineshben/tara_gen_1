@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +16,7 @@ import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/settings.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
@@ -35,6 +37,8 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     }
     super.initState();
   }
+
+  bool isUploading = false;
 
   Future<void> _pickFile() async {
     String? initialDirectory = "/storage/emulated/0/Download";
@@ -162,10 +166,9 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
     print("Selected Robot ID: $roboId");
 
-    var request = http.MultipartRequest(
+    var request = await http.MultipartRequest(
       'POST',
       Uri.parse('${ApiConstants.baseUrl1}/stcm_files/create/'),
-      // Uri.parse('http://192.168.1.31:8000/stcm_files/create/'),
     );
 
     request.files.add(
@@ -268,9 +271,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
         robotId: roboId,
       );
 
-      print('deletemapresponcelocal $resp');
-      print('robotIdddddddddddd $roboId');
-
       if (resp['status'] == "ok") {
         FocusManager.instance.primaryFocus?.unfocus();
         ProductAppPopUps.submit(
@@ -282,6 +282,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
         );
         _selectedFile = null;
       } else {
+        print('mapdelete ${resp['detail']}');
         ProductAppPopUps.submit(
           title: "Failed",
           message: resp['detail'] ?? "Something went wrong!",
@@ -316,74 +317,326 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                      child: Container(
+                        color: Colors.black.withOpacity(0),
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
           ),
-          SingleChildScrollView(
-            child: Column(
-              children: [
-                Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 100),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Colors.white,
-                            highlightColor: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(20.r),
-                            child: buildInfoCard(size, 'SELECT MAP'),
-                            onTap: () async {
-                              await LockTaskService.stopLockTask();
-                              await Future.delayed(Duration(milliseconds: 300));
-                              await _pickFile();
-                              await LockTaskService.startLockTask();
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Colors.white,
-                            highlightColor: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(20.r),
-                            child: buildInfoCard(size, 'UPLOAD MAP'),
-                            onTap: () {
-                              _uploadFile();
-                            },
-                          ),
-                        ),
-                        SizedBox(height: 20),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            splashColor: Colors.white,
-                            highlightColor: Colors.white.withOpacity(0.3),
-                            borderRadius: BorderRadius.circular(20.r),
-                            child: buildInfoCardRed(size, 'DELETE MAP'),
-                            onTap: () {
-                              _deleteMap();
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Wrap(
+                spacing: 20,
+                children: [
+                  SizedBox(height: 100),
+                  Row(
+                    spacing: 20,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SettingsCard(
+                        iconPath: 'assets/select.png',
+                        subtitle: "Select a map file from your device",
+                        title: 'SELECT MAP',
+                        backgroundColor: Colors.white,
+                        onTap: () async {
+                          await LockTaskService.stopLockTask();
+                          await Future.delayed(Duration(milliseconds: 300));
+                          await _pickFile();
+                          await LockTaskService.startLockTask();
+                        },
+                      ),
+                      SettingsCard(
+                        iconPath: 'assets/upload.png',
+                        subtitle: "Upload the selected map to the robot",
+                        title: 'UPLOAD MAP',
+                        backgroundColor: Colors.white,
+                        onTap: () {
+                          _uploadFile();
+                        },
+                      ),
+                    ],
                   ),
-                ),
-              ],
+                  SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    spacing: 20,
+                    children: [
+                      SettingsCard(
+                        iconPath: 'assets/reload.png',
+                        subtitle: "Restart the map service",
+                        title: 'REFRESH MAP',
+                        backgroundColor: Colors.white,
+                        onTap: () async {
+                          Get.dialog(Dialog(
+                            backgroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.all(20),
+                              width: 300,
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Image.asset(
+                                    "assets/reload.png",
+                                    width: 60,
+                                    color: Colors.green,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "REFRESH MAP?",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.blueGrey,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "Refreshing the map may take 2 to 3 minutes. Are you sure you want to continue?",
+                                    style: TextStyle(fontSize: 14),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () => Get.back(),
+                                        style: ElevatedButton.styleFrom(
+                                          foregroundColor: Colors.red,
+                                          backgroundColor: Colors.white,
+                                        ),
+                                        child: const Text("No"),
+                                      ),
+                                      ElevatedButton(
+                                        onPressed: () async {
+                                          Map response =
+                                              await ApiServices.mapRestart();
+                                          if (response['updated_data']
+                                                  ['status'] ==
+                                              true) {
+                                            Get.snackbar(
+                                              'Success',
+                                              'Map restarted successfully!',
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.green,
+                                              colorText: Colors.white,
+                                              duration: Duration(seconds: 2),
+                                              margin: EdgeInsets.all(20),
+                                            );
+                                          } else {
+                                            Get.snackbar(
+                                              'Failed',
+                                              'Map not restarted',
+                                              snackPosition:
+                                                  SnackPosition.BOTTOM,
+                                              backgroundColor: Colors.red,
+                                              colorText: Colors.white,
+                                              duration: Duration(seconds: 2),
+                                              margin: EdgeInsets.all(20),
+                                            );
+                                          }
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor: Colors.green,
+                                        ),
+                                        child: const Text(
+                                          "Yes",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ));
+                        },
+                      ),
+                      SettingsCard(
+                        iconPath: 'assets/delete.png',
+                        subtitle: "Delete the map from the robot",
+                        title: 'DELETE MAP',
+                        backgroundColor: Colors.white,
+                        onTap: () {
+                          Get.dialog(
+                            Dialog(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Container(
+                                padding: const EdgeInsets.all(20),
+                                width: 300,
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      "assets/delete.png",
+                                      width: 60,
+                                      color: Colors.red,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "DELETE MAP?",
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 10),
+                                    Text(
+                                      "Are you sure you want to delete the map from the robot? This action cannot be undone",
+                                      style: TextStyle(fontSize: 14),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () => Get.back(),
+                                          style: ElevatedButton.styleFrom(
+                                            foregroundColor: Colors.red,
+                                            backgroundColor: Colors.white,
+                                          ),
+                                          child: const Text("No"),
+                                        ),
+                                        ElevatedButton(
+                                          onPressed: () async {
+                                            _deleteMap();
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                            backgroundColor: Colors.red,
+                                          ),
+                                          child: const Text(
+                                            "Yes",
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     splashColor: Colors.white,
+                  //     highlightColor: Colors.white.withOpacity(0.3),
+                  //     borderRadius: BorderRadius.circular(40.r),
+                  //     child: buildInfoCard(size, 'SELECT MAP'),
+                  //     onTap: () async {
+                  //       await LockTaskService.stopLockTask();
+                  //       await Future.delayed(Duration(milliseconds: 300));
+                  //       await _pickFile();
+                  //       await LockTaskService.startLockTask();
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     splashColor: Colors.white,
+                  //     highlightColor: Colors.white.withOpacity(0.3),
+                  //     borderRadius: BorderRadius.circular(40),
+                  //     child: buildInfoCard(size, 'UPLOAD MAP'),
+                  //     onTap: () {
+                  //       _uploadFile();
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     splashColor: Colors.white,
+                  //     highlightColor: Colors.white.withOpacity(0.3),
+                  //     borderRadius: BorderRadius.circular(20.r),
+                  //     child:
+                  //         buildInfoCard(size, 'DELETE MAP', color: Colors.red),
+                  //     onTap: () {
+                  //       _deleteMap();
+                  //     },
+                  //   ),
+                  // ),
+                  // SizedBox(height: 20),
+                  // Material(
+                  //   color: Colors.transparent,
+                  //   child: InkWell(
+                  //     splashColor: Colors.white,
+                  //     highlightColor: Colors.blue,
+                  //     borderRadius: BorderRadius.circular(40.r),
+                  //     child: buildInfoCard(
+                  //       size,
+                  //       'REFRESH',
+                  //       color: Colors.green,
+                  //     ),
+                  //     onTap: () async {
+                  //       Map response = await ApiServices.mapRestart();
+                  //       if (response['updated_data']['status'] == true) {
+                  //         Get.snackbar(
+                  //           'Success',
+                  //           'Map restarted successfully!',
+                  //           snackPosition: SnackPosition.BOTTOM,
+                  //           backgroundColor: Colors.green,
+                  //           colorText: Colors.white,
+                  //           duration: Duration(seconds: 2),
+                  //           margin: EdgeInsets.all(20),
+                  //         );
+                  //       } else {
+                  //         Get.snackbar(
+                  //           'Failed',
+                  //           'Map not restarted',
+                  //           snackPosition: SnackPosition.BOTTOM,
+                  //           backgroundColor: Colors.red,
+                  //           colorText: Colors.white,
+                  //           duration: Duration(seconds: 2),
+                  //           margin: EdgeInsets.all(20),
+                  //         );
+                  //       }
+                  //     },
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           ),
           Column(
@@ -394,77 +647,34 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               ),
             ],
           ),
+          // if (isUploading)
+          //   Center(
+          //     child: Container(
+          //         width: 200,
+          //         height: 70,
+          //         decoration: BoxDecoration(
+          //             color: Colors.white,
+          //             borderRadius: BorderRadius.circular(10),
+          //             border: Border.all(color: Colors.blueGrey)),
+          //         child: Row(
+          //           mainAxisAlignment: MainAxisAlignment.center,
+          //           children: [
+          //             CircularProgressIndicator(
+          //               color: Colors.black,
+          //             ),
+          //             SizedBox(width: 10),
+          //             Text(
+          //               "Please wait...",
+          //               style: TextStyle(
+          //                 fontSize: 16,
+          //                 fontWeight: FontWeight.bold,
+          //               ),
+          //             ),
+          //           ],
+          //         )),
+          //   ),
         ],
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      floatingActionButton: Padding(
-        padding: const EdgeInsets.all(20),
-        child: FloatingActionButton.extended(
-          backgroundColor: Colors.white,
-          icon: Icon(Icons.refresh, color: Colors.black),
-          label: Text(
-            'Refresh',
-            style: TextStyle(color: Colors.black),
-          ),
-          onPressed: () async {
-            Map response = await ApiServices.mapRestart();
-            if (response['updated_data']['status'] == true) {
-              Get.snackbar(
-                'Success',
-                'Map restarted successfully!',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.green,
-                colorText: Colors.white,
-                duration: Duration(seconds: 2),
-                margin: EdgeInsets.all(20),
-              );
-            } else {
-              Get.snackbar(
-                'Failed',
-                'Map not restarted',
-                snackPosition: SnackPosition.BOTTOM,
-                backgroundColor: Colors.red,
-                colorText: Colors.white,
-                duration: Duration(seconds: 2),
-                margin: EdgeInsets.all(20),
-              );
-            }
-          },
-        ),
       ),
     );
   }
-}
-
-Widget buildInfoCardRed(Size size, String title) {
-  return Ink(
-    decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [Colors.red, Colors.red],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(20.r),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.white,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset(0, 0),
-        ),
-      ],
-    ),
-    width: size.width * 0.28,
-    height: size.height * 0.075,
-    child: Center(
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          color: Colors.white,
-          fontSize: 18.h,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    ),
-  );
 }

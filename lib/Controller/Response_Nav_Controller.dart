@@ -28,7 +28,7 @@ class ResponseNavController extends GetxController {
 
     try {
       Map<String, dynamic> resp =
-          await ApiServices.Resposefornav(userId: roboid);
+          await ApiServices.resposefornav(userId: roboid);
 
       ResponseNavModel pass = ResponseNavModel.fromJson(resp);
       passwordApi.value = pass;

@@ -13,10 +13,9 @@ import 'package:ihub/Model/background_model.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
-import 'package:ihub/View/Splash/Battery_Splash.dart';
+import 'package:ihub/View/Settings/settings.dart';
 import 'package:lottie/lottie.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:path_provider/path_provider.dart';
@@ -53,8 +52,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<Enquirylistcontroller>().fetchEnquiryList(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-    // fetchBackground(
-    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       Get.find<BatteryController>().fetchBattery(
@@ -68,14 +65,14 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      if (isBatteryscreen ?? false) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BatterySplash()),
-        );
+      // if (isBatteryscreen ?? false) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => BatterySplash()),
+      //   );
 
-        timer.cancel();
-      }
+      //   timer.cancel();
+      // }
 
       fetchAndUpdateBaseUrl();
       Get.find<RobotresponseapiController>().fetchObsResultList();
@@ -183,9 +180,72 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Header(
-                        isBack: false,
-                        screenName: "HOME",
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(top: 30, left: 20),
+                            child: Container(
+                              width: 200,
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(40),
+                                border: Border.all(color: Colors.blue),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.shade400,
+                                    spreadRadius: 1,
+                                    blurRadius: 5,
+                                  ),
+                                ],
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    radius: 30.r,
+                                    backgroundColor: Colors.black,
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "assets/taraprofile.jpg",
+                                        width: 100.w,
+                                        height: 100.h,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Stack(
+                                    // crossAxisAlignment:
+                                    //     CrossAxisAlignment.start,
+                                    children: [
+                                      Image.asset(
+                                        "assets/logo1.png",
+                                        width: 130,
+                                      ),
+                                      Positioned(
+                                        top: 6,
+                                        left: 7,
+                                        child: Text(
+                                          "POWERED BY",
+                                          style: TextStyle(
+                                            fontSize: 5,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Spacer(),
+                          Header(
+                            isBack: false,
+                            screenName: '',
+                          ),
+                        ],
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 100).h,
@@ -195,8 +255,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             builder: (controller) {
                               bool? listening =
                                   controller.responseData.value.listening;
-                              bool? waiting =
-                                  controller.responseData.value.waiting;
+                              // bool? waiting =  controller.responseData.value.waiting;
                               bool? speaking =
                                   controller.responseData.value.speaking;
                               return SizedBox(
@@ -246,51 +305,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                             ),
                                           ),
                                         ],
-                                      ),
-                                    if (waiting == true)
-                                      Column(
-                                        children: [
-                                          Center(
-                                            child: Lottie.asset(
-                                              "assets/Animation - 1739525563341.json",
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: 100.h,
-                                            width: 280.w,
-                                            child: DefaultTextStyle(
-                                              style: GoogleFonts.poppins(
-                                                  color: Colors.white,
-                                                  fontSize: 30.h,
-                                                  fontWeight: FontWeight.bold,
-                                                  shadows: [
-                                                    Shadow(
-                                                      blurRadius: 5.0,
-                                                      color: Colors.black
-                                                          .withOpacity(0.7),
-                                                      offset: Offset(2, 2),
-                                                    ),
-                                                  ]),
-                                              child: Center(
-                                                child: AnimatedTextKit(
-                                                  animatedTexts: [
-                                                    TypewriterAnimatedText(
-                                                      'THINKING....',
-                                                      speed: Duration(
-                                                          milliseconds: 50),
-                                                      cursor: '|',
-                                                    ),
-                                                  ],
-                                                  repeatForever: true,
-                                                  isRepeatingAnimation: true,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    if (speaking == true)
+                                      )
+                                    else if (speaking == true)
                                       Column(
                                         children: [
                                           Center(
@@ -315,22 +331,25 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                                       offset: Offset(2, 2),
                                                     ),
                                                   ]),
-                                              child: Center(
-                                                child: AnimatedTextKit(
-                                                  animatedTexts: [
-                                                    TypewriterAnimatedText(
-                                                      'SPEAKING....',
-                                                      speed: Duration(
-                                                          milliseconds: 50),
-                                                      // Adjust typing speed
-                                                      cursor:
-                                                          '|', // Optional cursor
-                                                    ),
-                                                  ],
-                                                  repeatForever: true,
-                                                  isRepeatingAnimation: true,
-                                                ),
-                                              ),
+                                              // child: Center(
+                                              //   child: AnimatedTextKit(
+                                              //     animatedTexts: [
+                                              //       TypewriterAnimatedText(
+                                              //         'SPEAKING....',
+                                              //         speed: Duration(
+                                              //             milliseconds: 50),
+                                              //         // Adjust typing speed
+                                              //         cursor:
+                                              //             '|', // Optional cursor
+                                              //       ),
+                                              //     ],
+                                              //     repeatForever: true,
+                                              //     isRepeatingAnimation: true,
+                                              //   ),
+                                              // ),
+
+                                              child: Lottie.asset(
+                                                  "assets/speaking.json"),
                                             ),
                                           ),
                                           // Align(
@@ -385,6 +404,61 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                           //   ),
                                           // )
                                         ],
+                                      )
+                                    else
+                                      // Column(
+                                      //   children: [
+                                      // Center(
+                                      //   child: Lottie.asset(
+                                      //     "assets/Animation - 1739525563341.json",
+                                      //     fit: BoxFit.fitHeight,
+                                      //   ),
+                                      // ),
+                                      // SizedBox(
+                                      //   height: 100.h,
+                                      //   width: 280.w,
+                                      //   child: DefaultTextStyle(
+                                      //     style: GoogleFonts.poppins(
+                                      //         color: Colors.white,
+                                      //         fontSize: 30.h,
+                                      //         fontWeight: FontWeight.bold,
+                                      //         shadows: [
+                                      //           Shadow(
+                                      //             blurRadius: 5.0,
+                                      //             color: Colors.black
+                                      //                 .withOpacity(0.7),
+                                      //             offset: Offset(2, 2),
+                                      //           ),
+                                      //         ]),
+                                      //     //   child: Center(
+                                      //     //     child: AnimatedTextKit(
+                                      //     //       animatedTexts: [
+                                      //     //         TypewriterAnimatedText(
+                                      //     //           'THINKING....',
+                                      //     //           speed: Duration(
+                                      //     //               milliseconds: 80),
+                                      //     //           cursor: '|',
+                                      //     //         ),
+                                      //     //       ],
+                                      //     //       repeatForever: true,
+                                      //     //       isRepeatingAnimation: true,
+                                      //     //     ),
+                                      //     //   ),
+                                      //     // ),
+                                      //     // ),
+
+                                      //     child: Lottie.asset(
+                                      //       "assets/speaking.json",
+                                      //       width: 200,
+                                      //     ),
+                                      //   ),
+                                      // )
+                                      // ],
+                                      // ),
+
+                                      Lottie.asset(
+                                        "assets/speaking.json",
+                                        width: 200,
                                       ),
                                     controller.robotResponseModel.value?.text !=
                                                 null &&
@@ -512,201 +586,175 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
               ),
             ],
           ),
-          floatingActionButton: Container(
-            margin: EdgeInsets.only(
-                left: 30.w, top: 120.h, right: 20.w, bottom: 20.h),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  spacing: 20,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Obx(() {
-                      final controller = Get.find<RobotresponseapiController>();
-                      return controller.link.value != ''
-                          ? Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                borderRadius: BorderRadius.circular(10),
-                                highlightColor: Colors.blue,
-                                onTap: () async {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => InAppWebViewScreen(
-                                        url: controller.link.value,
-                                      ),
+          floatingActionButton: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(left: 40, bottom: 20),
+                    child: Column(
+                      children: [
+                        Obx(() {
+                          final controller =
+                              Get.find<RobotresponseapiController>();
+                          return controller.link.value != ''
+                              ? Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(40),
+                                    onTap: () async {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              InAppWebViewScreen(
+                                            url: controller.link.value,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    // child: Ink(
+                                    //   padding: const EdgeInsets.all(10),
+                                    //   decoration: BoxDecoration(
+                                    //     color: Colors.white,
+                                    //     borderRadius: BorderRadius.circular(10),
+                                    //     border: Border.all(
+                                    //         color: Colors.blueGrey.shade200,
+                                    //         width: 1),
+                                    //   ),
+                                    //   child: Column(
+                                    //     crossAxisAlignment:
+                                    //         CrossAxisAlignment.start,
+                                    //     mainAxisAlignment:
+                                    //         MainAxisAlignment.spaceAround,
+                                    //     children: [
+                                    //       Row(
+                                    //         children: [
+                                    //           Icon(
+                                    //             Icons.language,
+                                    //             color: Colors.black,
+                                    //             size: 30,
+                                    //           ),
+                                    //           SizedBox(width: 10),
+                                    //           Text(
+                                    //             controller.name.value,
+                                    //             style: TextStyle(
+                                    //               fontSize: 18,
+                                    //               fontWeight: FontWeight.bold,
+                                    //               color: Colors.black,
+                                    //             ),
+                                    //           ),
+                                    //         ],
+                                    //       ),
+                                    //     ],
+                                    //   ),
+                                    // ),
+
+                                    child: buildInfoCard(
+                                      size,
+                                      controller.name.value,
+                                      color: Colors.black,
                                     ),
+                                  ),
+                                )
+                              : SizedBox();
+                        }),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(40),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return Navigation(
+                                    robotid: Get.find<BatteryController>()
+                                            .background
+                                            .value
+                                            ?.data
+                                            ?.first
+                                            .robot
+                                            ?.roboId ??
+                                        "",
                                   );
                                 },
-                                child: Ink(
-                                  padding: const EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                    border: Border.all(
-                                        color: Colors.blueGrey.shade200,
-                                        width: 1),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceAround,
-                                    children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.language,
-                                            color: Colors.black,
-                                            size: 30,
-                                          ),
-                                          SizedBox(width: 10),
-                                          Text(
-                                            controller.name.value,
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            )
-                          : SizedBox();
-                    }),
-                    Material(
-                      color: Colors.transparent,
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        highlightColor: Colors.blue,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return Navigation(
-                                robotid: Get.find<BatteryController>()
-                                        .background
-                                        .value
-                                        ?.data
-                                        ?.first
-                                        .robot
-                                        ?.roboId ??
-                                    "",
-                              );
+                              ));
                             },
-                          ));
-                        },
-                        child: Ink(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: Colors.blueGrey.shade200, width: 1),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset("assets/navigatioin.png",
-                                      width: 30),
-                                  SizedBox(width: 20),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "NAVIGATIONS",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Control robot movement',
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
+                            // child: Ink(
+                            //   width: 330.h,
+                            //   padding: EdgeInsets.all(16),
+                            //   decoration: BoxDecoration(
+                            //     color: const Color(0xFF0470C8),
+                            //     borderRadius: BorderRadius.circular(15),
+                            //     border: Border.all(
+                            //       color: Colors.grey.shade200,
+                            //     ),
+                            //   ),
+                            // child: Column(
+                            //   crossAxisAlignment: CrossAxisAlignment.start,
+                            //   mainAxisAlignment:
+                            //       MainAxisAlignment.spaceAround,
+                            //   children: [
+                            //     Row(
+                            //       children: [
+                            //         Image.asset("assets/arrow.png",
+                            //             width: 35),
+                            //         SizedBox(width: 20),
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Text(
+                            //               "NAVIGATIONS",
+                            //               style: TextStyle(
+                            //                 fontSize: 19.h,
+                            //                 fontWeight: FontWeight.bold,
+                            //                 color: Colors.black,
+                            //               ),
+                            //             ),
+                            //             Text(
+                            //               'Control robot movement',
+                            //               style: TextStyle(
+                            //                 fontSize: 17.h,
+                            //                 color: Colors.black54,
+                            //               ),
+                            //             ),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     ),
+                            //   ],
+                            // ),
+                            //   child: Center(
+                            //     child: Text(
+                            //       "NAVIGATIONS",
+                            //       style: TextStyle(
+                            //         fontSize: 20,
+                            //         color: Colors.white,
+                            //         fontWeight: FontWeight.bold,
+                            //       ),
+                            //     ),
+                            //   ),
+                            // ),
+
+                            child: buildInfoCard(
+                              size,
+                              'NAVIGATIONS',
+                              color: Colors.black,
+                            ),
                           ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
-                // Container(
-                //   decoration: BoxDecoration(
-                //     gradient: const LinearGradient(
-                //       colors: [
-                //         ColorUtils.userdetailcolor,
-                //         ColorUtils.userdetailcolor
-                //       ],
-                //       begin: Alignment.topLeft,
-                //       end: Alignment.bottomRight,
-                //     ),
-                //     borderRadius: BorderRadius.circular(
-                //         10), // Ensure proper border radius
-                //   ),
-                //   child: Material(
-                //     color: Colors.transparent, // Ensure the gradient is visible
-                //     borderRadius: BorderRadius.circular(10),
-                //     child: FloatingActionButton.extended(
-                //       heroTag: "settings_btn",
-                //       backgroundColor: Colors.transparent,
-                //       onPressed: () {
-                //         Navigator.push(
-                //           context,
-                //           PageRouteBuilder(
-                //             transitionDuration: Duration(milliseconds: 300),
-                //             pageBuilder:
-                //                 (context, animation, secondaryAnimation) =>
-                //                     PasswordPage(),
-                //             transitionsBuilder: (context, animation,
-                //                 secondaryAnimation, child) {
-                //               return FadeTransition(
-                //                   opacity: animation, child: child);
-                //             },
-                //           ),
-                //         );
-                //         // Navigator.push(context, MaterialPageRoute(
-                //         //   builder: (context) {
-                //         //     return otp();
-                //         //   },
-                //         // ));
-                //       },
-                //       icon: Icon(Icons.settings, color: Colors.white),
-                //       label: Text("SETTINGS ",
-                //           style: GoogleFonts.poppins(
-                //             color: Colors.white,
-                //             fontSize: 18.h,
-                //             fontWeight: FontWeight.bold,
-                //           )),
-                //     ),
-                //   ),
-                // ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Material(
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20, bottom: 20),
+                    child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(10),
-                        highlightColor: Colors.blue,
+                        borderRadius: BorderRadius.circular(40),
                         onTap: () async {
                           Navigator.push(
                             context,
@@ -723,53 +771,62 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             ),
                           );
                         },
-                        child: Ink(
-                          padding: const EdgeInsets.all(10),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
-                                color: Colors.blueGrey.shade200, width: 1),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Row(
-                                children: [
-                                  Image.asset("assets/setting.png", width: 30),
-                                  SizedBox(width: 20),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "SETTINGS",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.black,
-                                        ),
-                                      ),
-                                      Text(
-                                        'Manage robot preferences',
-                                        style: TextStyle(
-                                          color: Colors.black54,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
+                        // child: Ink(
+                        //   width: 330.h,
+                        //   padding: const EdgeInsets.all(16),
+                        //   decoration: BoxDecoration(
+                        //     color: const Color(0xFF0470C8),
+                        //     borderRadius: BorderRadius.circular(15),
+                        //     border: Border.all(
+                        //       color: Colors.grey.shade200,
+                        //     ),
+                        //   ),
+                        // child: Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //         Image.asset("assets/management.png",
+                        //             width: 35),
+                        //         SizedBox(width: 20),
+                        //         Column(
+                        //           crossAxisAlignment:
+                        //               CrossAxisAlignment.start,
+                        //           children: [
+                        //             Text(
+                        //               "SETTINGS",
+                        //               style: TextStyle(
+                        //                 fontSize: 19.h,
+                        //                 fontWeight: FontWeight.bold,
+                        //                 color: Colors.black,
+                        //               ),
+                        //             ),
+                        //             Text(
+                        //               'Manage robot preferences',
+                        //               style: TextStyle(
+                        //                 fontSize: 17.h,
+                        //                 color: Colors.black54,
+                        //               ),
+                        //             ),
+                        //           ],
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ],
+                        // ),
+                        // ),
+                        child: buildInfoCard(
+                          size,
+                          "SETTINGS",
+                          color: Colors.black,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           )),
     );
   }

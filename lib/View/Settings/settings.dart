@@ -1,11 +1,11 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,18 +13,14 @@ import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:ihub/Utils/native_loader.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
-import 'package:ihub/View/Home_Screen/battery_Widget.dart';
+import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/description_option.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
-import 'package:image/image.dart' as img;
-import 'package:image_picker/image_picker.dart';
 import 'package:palette_generator/palette_generator.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -35,6 +31,7 @@ import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../Login_Page/login.dart' as login_page;
 import '../Robot_Response/Fulltour_dart.dart';
+import '../Robot_Response/language_list.dart';
 import 'ApiKey.dart';
 import 'Volume_page.dart';
 
@@ -102,7 +99,7 @@ class _MaintananceState extends State<Maintanance> {
 
   bool isLoading = false;
 
-  File? _imageFile;
+  File? imageFile;
   Future<void> _pickImageFromDownloads() async {
     isLoading = true;
     String? initialDirectory = "/storage/emulated/0/Download";
@@ -116,7 +113,7 @@ class _MaintananceState extends State<Maintanance> {
       File originalImage = File(result.files.single.path!);
 
       setState(() {
-        _imageFile = originalImage;
+        imageFile = originalImage;
       });
 
       await _processImageForColor(originalImage);
@@ -211,26 +208,42 @@ class _MaintananceState extends State<Maintanance> {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      child: Container(
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 100, right: 50, left: 50),
+            padding: const EdgeInsets.only(top: 130, right: 50, left: 50),
             child: SingleChildScrollView(
               child: Column(
                 children: [
                   Wrap(
-                    spacing: 20.0,
-                    runSpacing: 20.0,
+                    spacing: 10.0,
+                    runSpacing: 10.0,
                     alignment: WrapAlignment.center,
                     children: [
                       // GestureDetector(
@@ -318,7 +331,7 @@ class _MaintananceState extends State<Maintanance> {
                       // ),
 
                       SettingsCard(
-                        iconPath: 'assets/key.png',
+                        iconPath: 'assets/cryptography.png',
                         subtitle: 'Manage your API keys securely',
                         title: 'API KEY',
                         backgroundColor: Colors.white,
@@ -340,19 +353,45 @@ class _MaintananceState extends State<Maintanance> {
                         },
                       ),
                       SettingsCard(
+                        iconPath: 'assets/language.png',
+                        subtitle: 'Tap to Select language',
+                        title: 'SELECT LANGUAGE',
+                        backgroundColor: Colors.white,
+                        onTap: () async {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => LanguageList()),
+                          );
+                        },
+                      ),
+                      SettingsCard(
+                          iconPath: 'assets/3d-wifi.png',
+                          subtitle: 'Configure your Wi-Fi router settings',
+                          title: 'ROUTER SETTINGS',
+                          backgroundColor: Colors.white,
+                          onTap: () async {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => InAppWebViewScreen(
+                                  url:
+                                      'http://192.168.11.2/admin/index.html#/functions/wifi/client?freq=5GHz',
+                                ),
+                              ),
+                            );
+                          }),
+
+                      SettingsCard(
                         iconPath: 'assets/robo.png',
                         subtitle: 'Preparing for mapping',
                         title: 'MAPPING',
                         backgroundColor: Colors.white,
                         onTap: () async {
-                          // await LockTaskService.stopLockTask();
-                          // await Future.delayed(Duration(milliseconds: 300));
                           openAnotherApp();
-                          // await LockTaskService.startLockTask();
                         },
                       ),
                       SettingsCard(
-                        iconPath: 'assets/change.png',
+                        iconPath: 'assets/image.png',
                         subtitle: 'Select and set a new wallpaper',
                         title: 'CHANGE WALLPAPER',
                         backgroundColor: Colors.white,
@@ -435,7 +474,7 @@ class _MaintananceState extends State<Maintanance> {
                         },
                       ),
                       SettingsCard(
-                        iconPath: 'assets/destination.png',
+                        iconPath: 'assets/destination11.png',
                         subtitle: "Create a new full tour itinerary",
                         title: 'ADD FULL TOUR',
                         backgroundColor: Colors.white,
@@ -561,7 +600,7 @@ class _MaintananceState extends State<Maintanance> {
                       SettingsCard(
                         iconPath: 'assets/exit.png',
                         subtitle: 'Exit app and close everything',
-                        title: 'Exit',
+                        title: 'EXIT',
                         backgroundColor: Colors.white,
                         onTap: () async {
                           await SharedPrefs().removeLoginData();
@@ -585,7 +624,8 @@ class _MaintananceState extends State<Maintanance> {
                   child: Text(
                     "Version: 2.0.4",
                     style: GoogleFonts.poppins(
-                        color: controller.foregroundColor.value, fontSize: 12),
+                        color: controller.foregroundColor.value,
+                        fontSize: 10.h),
                   ),
                 ),
               );
@@ -631,31 +671,28 @@ class _MaintananceState extends State<Maintanance> {
   }
 }
 
-Widget buildInfoCard(Size size, String title) {
-  return Ink(
+Widget buildInfoCard(Size size, String title, {Color color = Colors.black}) {
+  return Container(
+    width: size.width * 0.20,
+    padding: EdgeInsets.symmetric(horizontal: 20),
     decoration: BoxDecoration(
-      gradient: LinearGradient(
-        colors: [ColorUtils.userdetailcolor, ColorUtils.userdetailcolor],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-      ),
-      borderRadius: BorderRadius.circular(20.r),
+      borderRadius: BorderRadius.circular(40),
+      color: Colors.white,
+      border: Border.all(color: Colors.blue),
       boxShadow: [
         BoxShadow(
-          color: Colors.white,
-          spreadRadius: 0,
-          blurRadius: 0,
-          offset: Offset(0, 0),
+          color: Colors.grey.shade400,
+          spreadRadius: 1,
+          blurRadius: 5,
         ),
       ],
     ),
-    width: size.width * 0.28,
-    height: size.height * 0.08,
+    height: 55,
     child: Center(
       child: Text(
         title,
         style: GoogleFonts.poppins(
-          color: Colors.white,
+          color: color,
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -724,18 +761,20 @@ class SettingsCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: backgroundColor ?? Colors.white, // ✅ use given or default
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.blueGrey.shade200, width: 1),
+            border: Border.all(
+              color: Colors.grey.shade200,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Image.asset(iconPath, width: 30),
-              const SizedBox(height: 10),
+              Image.asset(iconPath, width: 35.h),
+              const SizedBox(height: 15),
               Text(
                 title,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 19.h,
                   fontWeight: FontWeight.bold,
                   color: titleColor ?? Colors.black, // ✅ use given or default
                 ),
@@ -743,6 +782,8 @@ class SettingsCard extends StatelessWidget {
               Text(
                 subtitle,
                 style: TextStyle(
+                  fontSize: 16.h,
+                  fontWeight: FontWeight.bold,
                   color:
                       subtitleColor ?? Colors.black54, // ✅ use given or default
                 ),

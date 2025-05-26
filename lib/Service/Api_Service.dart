@@ -449,6 +449,7 @@ class ApiServices {
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+    print('navigation list $respString');
     return json.decode(respString);
   }
 
@@ -581,8 +582,7 @@ class ApiServices {
   }
 
   ///Responsefornav
-
-  static Future<Map<String, dynamic>> Resposefornav({
+  static Future<Map<String, dynamic>> resposefornav({
     required String userId,
   }) async {
     String url =
@@ -590,11 +590,11 @@ class ApiServices {
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+    print('navigationListdata $respString');
     return json.decode(respString);
   }
 
   ///Send Responseadta
-
   static Future<Map<String, dynamic>> sendResponseData({
     required String RobotID,
     required bool status,

@@ -100,23 +100,6 @@ class AboutRobot extends StatelessWidget {
                       fontWeight: FontWeight.w500),
                 ),
               ),
-              // GetX<BatteryController>(
-              //   builder: (BatteryController controller) {
-              //     int? batteryLevel;
-
-              //     batteryLevel = int.tryParse(controller.background.value?.data
-              //                 ?.first.robot?.batteryStatus ??
-              //             "0") ??
-              //         0;
-
-              //     print("batettegdshgfcdshuf$batteryLevel");
-
-              //     return BatteryIcon(
-              //       batteryLevel: batteryLevel,
-              //     );
-              //   },
-              // ),
-
               Column(
                 children: [
                   Header(
@@ -134,7 +117,6 @@ class AboutRobot extends StatelessWidget {
               alt: 'A 3D model of an astronaut',
               ar: true,
               autoRotate: true,
-              // iosSrc: 'https://modelviewer.dev/shared-assets/models/Astronaut.usdz',
               disableZoom: false,
             ),
           ),

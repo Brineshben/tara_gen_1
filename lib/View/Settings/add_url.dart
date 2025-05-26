@@ -1,8 +1,12 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Service/url_service.dart';
 import 'package:ihub/Utils/header.dart';
@@ -53,17 +57,37 @@ class _AddUrlPageState extends State<AddUrlPage> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              Positioned.fill(
-                child: Center(
-                  child: SizedBox(
-                    width: size.width * 0.5,
-                    height: size.width * 0.5,
-                    child: Lottie.asset(
-                      "assets/loginimage.json",
-                      fit: BoxFit.fitHeight,
+              GetX<BackgroudController>(
+                builder: (BackgroudController controller) {
+                  return Positioned.fill(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: controller
+                                  .backgroundModel.value?.backgroundImage ??
+                              "",
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Image.asset(
+                              controller.defaultIMage,
+                              fit: BoxFit.cover),
+                          errorWidget: (context, url, error) => Image.asset(
+                              controller.defaultIMage,
+                              fit: BoxFit.cover),
+                        ),
+                        BackdropFilter(
+                          filter: ImageFilter.blur(
+                              sigmaX: 10.0,
+                              sigmaY: 10.0), // Adjust blur strength
+                          child: Container(
+                            color: Colors.black.withOpacity(
+                                0), // Required for BackdropFilter to work
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
               Padding(
                 padding: const EdgeInsets.only(top: 120),
@@ -200,7 +224,11 @@ class _AddUrlPageState extends State<AddUrlPage> {
 
                                     Get.back();
                                   },
-                                  child: buildInfoCard(size, 'ADD'),
+                                  child: buildInfoCard(
+                                    size,
+                                    'ADD',
+                                    color: Colors.green,
+                                  ),
                                 ),
                               ),
                               Material(
@@ -208,7 +236,7 @@ class _AddUrlPageState extends State<AddUrlPage> {
                                 child: InkWell(
                                   splashColor: Colors.white,
                                   highlightColor: Colors.white.withOpacity(0.3),
-                                  borderRadius: BorderRadius.circular(20.r),
+                                  borderRadius: BorderRadius.circular(40),
                                   onTap: () async {
                                     SharedPreferences prefs =
                                         await SharedPreferences.getInstance();
@@ -243,7 +271,11 @@ class _AddUrlPageState extends State<AddUrlPage> {
                                     await Get.find<RobotresponseapiController>()
                                         .getUrl();
                                   },
-                                  child: buildInfoCard(size, 'DELETE'),
+                                  child: buildInfoCard(
+                                    size,
+                                    'DELETE',
+                                    color: Colors.red,
+                                  ),
                                 ),
                               ),
                             ],
@@ -258,7 +290,7 @@ class _AddUrlPageState extends State<AddUrlPage> {
                 children: [
                   Header(
                     isBack: true,
-                    screenName: "DESCRIPTION OPTIONS",
+                    screenName: "WEBSITE LINK",
                   ),
                 ],
               ),

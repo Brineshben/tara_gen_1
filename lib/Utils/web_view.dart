@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ihub/Utils/header.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class InAppWebViewScreen extends StatelessWidget {
@@ -15,21 +14,8 @@ class InAppWebViewScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
-        body: Stack(
-          children: [
-            WebViewWidget(
-              controller: controller,
-            ),
-            Column(
-              children: [
-                Header(
-                  isBack: true,
-                  screenName: "",
-                  isEnableRouter: false,
-                ),
-              ],
-            ),
-          ],
+        body: WebViewWidget(
+          controller: controller,
         ),
       ),
     );

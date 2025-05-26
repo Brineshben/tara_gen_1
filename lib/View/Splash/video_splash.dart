@@ -11,6 +11,7 @@ import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Service/sharedPreference.dart';
 import 'package:ihub/View/Login_Page/login.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
+import 'package:ihub/View/homepagee.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:video_player/video_player.dart';
 
@@ -50,11 +51,12 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
     Future.delayed(const Duration(seconds: 10), () async {
       if (loginApi != null) {
         await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-        // await fetchBackground(loginApi.user?.id ?? 0);
+
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const Homepage()),
+          MaterialPageRoute(builder: (context) => Homepage()),
           (route) => false,
         );
+        await fetchBackground(loginApi.user?.id ?? 0);
       } else {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => const LoginPage()),

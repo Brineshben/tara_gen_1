@@ -21,8 +21,10 @@ class VolumeController extends GetxController {
     isLoading.value = true;
     isLoaded.value = false;
     try {
-      Map<String, dynamic> resp =
-          await ApiServices.volume(roboid: RobotId, volume: volume);
+      Map<String, dynamic> resp = await ApiServices.volume(
+        roboid: RobotId,
+        volume: volume == 100 ? 90 : volume,
+      );
       print("------respvolumecontrol------$resp");
       if (resp['current_volume'] != null) {
         roboVolume.value = resp['current_volume'];

@@ -10,7 +10,7 @@ class NavigateController extends GetxController {
   RxBool isError = false.obs;
   Rx<NavigationListModel?> Navifateedata = Rx(null);
 
-  RxList<NavigationData?> DataList = RxList();
+  RxList<NavigationData?> dataList = RxList();
 
   Future<void> navigateData() async {
     isLoading.value = true;
@@ -20,7 +20,7 @@ class NavigateController extends GetxController {
       if (resp['status'] == 'ok') {
         Navifateedata.value = NavigationListModel.fromJson(resp);
         print(" Navifateedata.value${Navifateedata.value?.data}");
-        DataList.value = Navifateedata.value?.data ?? [];
+        dataList.value = Navifateedata.value?.data ?? [];
         isLoading.value = true;
       } else {
         isError.value = true;

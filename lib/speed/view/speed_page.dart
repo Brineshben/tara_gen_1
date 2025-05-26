@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,14 +41,30 @@ class _SpeedControllerPageState extends State<SpeedControllerPage> {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      child: Container(
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
+                      ),
+                    ),
+                  ],
                 ),
               );
             },

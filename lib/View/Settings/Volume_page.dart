@@ -1,12 +1,10 @@
+import 'dart:ui';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/header.dart';
 
@@ -47,14 +45,30 @@ class _VolumeControlState extends State<VolumeControl> {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               return Positioned.fill(
-                child: CachedNetworkImage(
-                  imageUrl:
-                      controller.backgroundModel.value?.backgroundImage ?? "",
-                  fit: BoxFit.cover,
-                  placeholder: (context, url) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
-                  errorWidget: (context, url, error) =>
-                      Image.asset(controller.defaultIMage, fit: BoxFit.cover),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      child: Container(
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -95,7 +109,7 @@ class _VolumeControlState extends State<VolumeControl> {
                             value: controller.roboVolume.value.toDouble(),
                             activeColor: Colors.green,
                             min: 0,
-                            max: 150,
+                            max: 100,
                             divisions: 10,
                             label: "${controller.roboVolume.value}%",
                             onChanged: (value) {

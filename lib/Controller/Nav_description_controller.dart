@@ -29,7 +29,7 @@ class NavigateDescriptionController extends GetxController {
           textControllers = List.generate(
               dataList.length,
               (index) => TextEditingController(
-                  text: dataList[index]?.description ?? "No Data Found"));
+                  text: dataList[index]?.description ?? ""));
 
           isLoaded.value = true;
           update(); // Notify UI to update
