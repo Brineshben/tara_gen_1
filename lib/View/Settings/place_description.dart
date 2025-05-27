@@ -71,42 +71,6 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
           ),
           Column(
             children: [
-              // Padding(
-              //   padding: const EdgeInsets.only(left: 20, top: 20, bottom: 40),
-              //   child: Row(
-              //     mainAxisAlignment: MainAxisAlignment.start,
-              //     children: [
-              //       GestureDetector(
-              //         onTap: () {
-              //           Navigator.pop(context);
-              //         },
-              //         child: Container(
-              //           height: 60.h,
-              //           width: 60.h,
-              //           decoration: BoxDecoration(
-              //               color: Colors.black.withOpacity(0.2),
-              //               borderRadius: BorderRadius.circular(15).r),
-              //           child: Icon(
-              //             Icons.arrow_back_outlined,
-              //             color: Colors.black,
-              //           ),
-              //         ),
-              //       ),
-              //       SizedBox(
-              //         width: 10,
-              //       ),
-              //       Center(
-              //         child: Text(
-              //           "PLACE DESCRIPTION LIST",
-              //           style: GoogleFonts.oxygen(
-              //               color: Colors.black,
-              //               fontSize: 25.h,
-              //               fontWeight: FontWeight.w700),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
               Expanded(
                 child: GetX<NavigateDescriptionController>(
                   builder: (NavigateDescriptionController controller) {
@@ -139,7 +103,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                     elevation: 2,
                                     child: ExpansionTile(
                                       onExpansionChanged: (value) {
-                                         FocusScope.of(context).unfocus();
+                                        FocusScope.of(context).unfocus();
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -175,7 +139,8 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                 height: size.height * 0.25,
                                                 child: TextFormField(
                                                   controller: controller
-                                                      .textControllers[index],
+                                                          .descriptionControllers[
+                                                      index],
                                                   style: const TextStyle(
                                                       color: Colors.white),
                                                   minLines: null,
@@ -235,6 +200,70 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                       filled: true),
                                                   maxLines: 7,
                                                 ),
+                                              ),
+                                              SizedBox(height: 20),
+                                              Text("NAME",
+                                                  style: TextStyle(
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w500)),
+                                              SizedBox(height: 10),
+                                              TextFormField(
+                                                controller: controller
+                                                    .textControllers[index],
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                                minLines: null,
+                                                validator: (val) =>
+                                                    val!.trim().isEmpty
+                                                        ? 'Please Enter Name.'
+                                                        : null,
+                                                decoration: InputDecoration(
+                                                    hintStyle: const TextStyle(
+                                                        color: Colors.white38),
+                                                    contentPadding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 10.h,
+                                                            horizontal: 10.w),
+                                                    hintText: "Enter Name",
+                                                    border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                              .all(
+                                                        Radius.circular(10.0),
+                                                      ).r,
+                                                    ),
+                                                    enabledBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.blue,
+                                                              width: 1.0),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10))
+                                                              .r,
+                                                    ),
+                                                    focusedBorder:
+                                                        OutlineInputBorder(
+                                                      borderSide:
+                                                          const BorderSide(
+                                                              color:
+                                                                  Colors.blue,
+                                                              width: 1.0),
+                                                      borderRadius:
+                                                          const BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          10.0))
+                                                              .r,
+                                                    ),
+                                                    fillColor:
+                                                        Colors.blueGrey[900],
+                                                    filled: true),
                                               ),
                                               SizedBox(height: 10),
                                               Row(
@@ -318,11 +347,15 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                       ),
                                                     ),
                                                     onTap: () async {
-                                                     
                                                       Map<String, dynamic>
                                                           resp =
                                                           await ApiServices.navigateDescriptionSubmit(
-                                                              data: controller
+                                                              description:
+                                                                  controller
+                                                                      .descriptionControllers[
+                                                                          index]
+                                                                      .text,
+                                                              name: controller
                                                                   .textControllers[
                                                                       index]
                                                                   .text,
@@ -332,7 +365,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                                       ?.id ??
                                                                   0);
 
-                                                                           FocusScope.of(context)
+                                                      FocusScope.of(context)
                                                           .unfocus();
 
                                                       if (resp['status'] ==
@@ -353,8 +386,6 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                           duration: Duration(
                                                               seconds: 2),
                                                         );
-
-                                               
                                                       } else {
                                                         Get.snackbar(
                                                           "Failed",
@@ -373,8 +404,6 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                           duration: Duration(
                                                               seconds: 2),
                                                         );
-
-                                                        
                                                       }
                                                     },
                                                   ),

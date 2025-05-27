@@ -9,6 +9,7 @@ class NavigateDescriptionController extends GetxController {
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<NavigationListModel?> Navifateedata = Rx(null);
+  List<TextEditingController> descriptionControllers = [];
   List<TextEditingController> textControllers = [];
 
   RxList<NavigationData?> dataList = RxList();
@@ -25,14 +26,18 @@ class NavigateDescriptionController extends GetxController {
         if (Navifateedata.value != null) {
           dataList.assignAll(Navifateedata.value!.data ?? []);
 
-          // Initialize TextEditingControllers with the existing description from API
-          textControllers = List.generate(
+          descriptionControllers = List.generate(
               dataList.length,
               (index) => TextEditingController(
                   text: dataList[index]?.description ?? ""));
 
+          textControllers = List.generate(
+              dataList.length,
+              (index) =>
+                  TextEditingController(text: dataList[index]?.name ?? ""));
+
           isLoaded.value = true;
-          update(); // Notify UI to update
+          update();
         }
       } else {
         isError.value = true;

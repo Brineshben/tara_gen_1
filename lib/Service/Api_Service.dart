@@ -456,14 +456,16 @@ class ApiServices {
   ///check navigateDescriptionSubmit
   static Future<Map<String, dynamic>> navigateDescriptionSubmit({
     required int userId,
-    required String data,
+    required String description,
+    required String name,
   }) async {
     // String url =
     //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
     String url =
         "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {
-      "description": data,
+      "description": description,
+      "name": name,
     };
     print("Navigationoffline$url");
     var request = http.Request('PUT', Uri.parse(url));
