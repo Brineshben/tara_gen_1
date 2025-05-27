@@ -185,26 +185,26 @@ class _LoginPageState extends State<LoginPage> {
                               ),
 
                               /// Forgot Password
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 10.w, vertical: 5.h),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Text(
-                                        "Forgot Password?",
-                                        style: TextStyle(
-                                          fontSize: 15.h,
-                                          color: Colors.blue[900],
-                                          fontStyle: FontStyle.italic,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              // Padding(
+                              //   padding: EdgeInsets.symmetric(
+                              //       horizontal: 10.w, vertical: 5.h),
+                              //   child: Row(
+                              //     mainAxisAlignment: MainAxisAlignment.end,
+                              //     children: [
+                              //       InkWell(
+                              //         onTap: () {},
+                              //         child: Text(
+                              //           "Forgot Password?",
+                              //           style: TextStyle(
+                              //             fontSize: 15.h,
+                              //             color: Colors.blue[900],
+                              //             fontStyle: FontStyle.italic,
+                              //           ),
+                              //         ),
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
 
                               SizedBox(height: 50.h),
 

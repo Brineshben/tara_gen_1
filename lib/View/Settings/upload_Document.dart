@@ -420,6 +420,16 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                     style: TextStyle(fontSize: 14),
                                     textAlign: TextAlign.center,
                                   ),
+                                  const SizedBox(height: 10),
+                                  Text(
+                                    "Make sure the robot is at the charging dock before proceeding.",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
                                   const SizedBox(height: 20),
                                   Row(
                                     mainAxisAlignment:
@@ -435,25 +445,22 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                       ),
                                       ElevatedButton(
                                         onPressed: () async {
-                                          Map response =
-                                              await ApiServices.mapRestart();
-                                          if (response['updated_data']
-                                                  ['status'] ==
-                                              true) {
+                                          Get.back();
+                                          try {
                                             Get.snackbar(
-                                              'Success',
-                                              'Map restarted successfully!',
+                                              'Failed',
+                                              'Map not restarted',
                                               snackPosition:
                                                   SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.green,
+                                              backgroundColor: Colors.red,
                                               colorText: Colors.white,
                                               duration: Duration(seconds: 2),
                                               margin: EdgeInsets.all(20),
                                             );
-                                          } else {
+                                          } catch (e) {
                                             Get.snackbar(
                                               'Failed',
-                                              'Map not restarted',
+                                              '$e',
                                               snackPosition:
                                                   SnackPosition.BOTTOM,
                                               backgroundColor: Colors.red,
@@ -533,6 +540,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                         ),
                                         ElevatedButton(
                                           onPressed: () async {
+                                            Get.back();
                                             _deleteMap();
                                           },
                                           style: ElevatedButton.styleFrom(

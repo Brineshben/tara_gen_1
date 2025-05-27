@@ -29,14 +29,40 @@ class PromptController extends GetxController {
     required String q,
     required String ans,
   }) async {
-    if (prompt.isEmpty || q.isEmpty || ans.isEmpty) {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Error",
-        "Please fill field",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+    if (prompt.isEmpty && (q.isEmpty || ans.isEmpty)) {
+      if (prompt.isEmpty && q.isEmpty && ans.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter Prompt or both Question and Answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else if (prompt.isEmpty && q.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter a question",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else if (prompt.isEmpty && ans.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter an answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Please enter both Question and Answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      }
       return;
     }
 
@@ -84,21 +110,51 @@ class PromptController extends GetxController {
     required String q,
     required String ans,
   }) async {
-    if (prompt.isEmpty || q.isEmpty || ans.isEmpty) {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Error",
-        "Please fill field",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+    if (prompt.isEmpty && (q.isEmpty || ans.isEmpty)) {
+      if (prompt.isEmpty && q.isEmpty && ans.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter Prompt or both Question and Answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else if (prompt.isEmpty && q.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter a question",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else if (prompt.isEmpty && ans.isEmpty) {
+        Get.snackbar(
+          "Error",
+          "Please enter an answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      } else {
+        Get.snackbar(
+          "Error",
+          "Please enter both Question and Answer",
+          margin: EdgeInsets.all(20),
+          backgroundColor: Colors.red.withOpacity(0.8),
+          colorText: Colors.white,
+        );
+      }
       return;
     }
 
     isLoading.value = true;
 
-    final response =
-        await PromptService.editPrompt(commandPromt: prompt, id: id);
+    final response = await PromptService.editPrompt(
+      prompt: prompt,
+      id: id,
+      answer: ans,
+      question: q,
+    );
 
     isLoading.value = false;
 

@@ -20,6 +20,7 @@ import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/description_option.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
+import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -515,85 +516,143 @@ class _MaintananceState extends State<Maintanance> {
                         subtitle: 'Restart your robot to refresh settings',
                         title: 'RESTART',
                         backgroundColor: Colors.white,
-                        onTap: () {
-                          login_page.checkInternet2(
+                        onTap: () async {
+                          final confirmRestart = await showDialog<bool>(
                             context: context,
-                            function: () async {
-                              try {
-                                Map<String, dynamic> resp =
-                                    await ApiServices.logoutoffline(true)
-                                        .timeout(Duration(seconds: 3));
-                                if (resp['message'] ==
-                                    "Reboot status updated") {
-                                  FocusManager.instance.primaryFocus?.unfocus();
-                                  ProductAppPopUps.submitLogOut2(
-                                    title: "SUCCESS",
-                                    message: "Robot Restarted",
-                                    actionName: "OK",
-                                    iconData: Icons.done,
-                                    iconColor: Colors.green,
-                                    context: context,
-                                  );
-                                } else {
-                                  ProductAppPopUps.submit(
-                                    title: "FAILED",
-                                    message: "Api Response Issue",
-                                    actionName: "Close",
-                                    iconData: Icons.info_outline,
-                                    iconColor: Colors.red,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                'Restart Robot',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 20),
+                              ),
+                              content: Text(
+                                'Are you sure you want to restart the robot?',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  child: Text('Cancel'),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.orange,
+                                    foregroundColor: Colors.white,
+                                  ),
+                                  child: Text('Restart'),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (confirmRestart == true) {
+                            login_page.checkInternet2(
+                              context: context,
+                              function: () async {
+                                try {
+                                  Map<String, dynamic> resp =
+                                      await ApiServices.logoutoffline(true)
+                                          .timeout(Duration(seconds: 3));
+                                  if (resp['message'] ==
+                                      "Reboot status updated") {
+                                    Navigator.of(context).pushAndRemoveUntil(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                LoadingSplash()),
+                                        (_) => false);
+                                  }
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content:
+                                            Text('Something went wrong $e')),
                                   );
                                 }
-                              } catch (e) {
-                                ProductAppPopUps.submit(
-                                  title: "FAILED",
-                                  message: "Something went wrong.",
-                                  actionName: "Close",
-                                  iconData: Icons.info_outline,
-                                  iconColor: Colors.red,
-                                );
-                              }
-                            },
-                          );
+                              },
+                            );
+                          }
                         },
                       ),
+
                       SettingsCard(
                         iconPath: 'assets/power-on.png',
                         subtitle: 'Turn off your robot completely',
                         title: 'POWER OFF',
                         backgroundColor: Colors.white,
                         onTap: () async {
-                          try {
-                            Map<String, dynamic> resp =
-                                await ApiServices.logout()
-                                    .timeout(Duration(seconds: 3));
-                            print("POWERPOWERPOWER$resp");
-                            if (resp['message'] == "Robot turned OFF") {
-                              FocusManager.instance.primaryFocus?.unfocus();
-                              ProductAppPopUps.submitLogOut(
-                                title: "SUCCESS",
-                                message: resp['message'].toString(),
-                                actionName: "Close",
-                                iconData: Icons.done,
-                                iconColor: Colors.green,
-                                context: context,
-                              );
-                            } else {
-                              ProductAppPopUps.submit(
-                                title: "FAILED",
-                                message: "Api issue",
-                                actionName: "Close",
-                                iconData: Icons.info_outline,
-                                iconColor: Colors.red,
+                          final shouldTurnOff = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                'Power Off',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              content: Text(
+                                'Are you sure you want to turn off the robot?',
+                                style: TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.grey[700],
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                  ),
+                                  child: Text('Cancel',
+                                      style: TextStyle(fontSize: 14)),
+                                ),
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context, true),
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.redAccent,
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text('Turn Off',
+                                      style: TextStyle(fontSize: 14)),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (shouldTurnOff == true) {
+                            try {
+                              Map<String, dynamic> resp =
+                                  await ApiServices.logout()
+                                      .timeout(Duration(seconds: 3));
+
+                              if (resp['message'] == "Robot turned OFF") {
+                                Navigator.of(context).pushAndRemoveUntil(
+                                    MaterialPageRoute(
+                                        builder: (context) => LoadingSplash()),
+                                    (_) => false);
+                              }
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                    content: Text('Something went wrong $e')),
                               );
                             }
-                          } catch (e) {
-                            ProductAppPopUps.submit(
-                              title: "FAILED",
-                              message: "Something went wrong.",
-                              actionName: "Close",
-                              iconData: Icons.info_outline,
-                              iconColor: Colors.red,
-                            );
                           }
                         },
                       ),
@@ -603,8 +662,70 @@ class _MaintananceState extends State<Maintanance> {
                         title: 'EXIT',
                         backgroundColor: Colors.white,
                         onTap: () async {
-                          await SharedPrefs().removeLoginData();
-                          exit(0);
+                          final shouldExit = await showDialog<bool>(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(16)),
+                              backgroundColor: Colors.white,
+                              title: Text(
+                                'Exit App',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              content: Text(
+                                'Are you sure you want to exit the app?',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              actionsPadding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 5),
+                              actions: [
+                                TextButton(
+                                  onPressed: () =>
+                                      Navigator.pop(context, false),
+                                  style: TextButton.styleFrom(
+                                    foregroundColor: Colors.grey[700],
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                  ),
+                                  child: Text(
+                                    'Cancel',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                                TextButton(
+                                  onPressed: () async {
+                                    await SharedPrefs().removeLoginData();
+                                    exit(0);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    backgroundColor: Colors.redAccent,
+                                    foregroundColor: Colors.white,
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 16, vertical: 8),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Exit',
+                                    style: TextStyle(fontSize: 14),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          );
+
+                          if (shouldExit == true) {
+                            await SharedPrefs().removeLoginData();
+                            exit(0);
+                          }
                         },
                       ),
                     ],
@@ -676,7 +797,7 @@ Widget buildInfoCard(Size size, String title, {Color color = Colors.black}) {
     width: size.width * 0.20,
     padding: EdgeInsets.symmetric(horizontal: 20),
     decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(40),
+      borderRadius: BorderRadius.circular(15),
       color: Colors.white,
       border: Border.all(color: Colors.blue),
       boxShadow: [

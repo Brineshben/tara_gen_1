@@ -138,6 +138,9 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                             BorderRadius.circular(15)),
                                     elevation: 2,
                                     child: ExpansionTile(
+                                      onExpansionChanged: (value) {
+                                         FocusScope.of(context).unfocus();
+                                      },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(15),
@@ -315,6 +318,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                       ),
                                                     ),
                                                     onTap: () async {
+                                                     
                                                       Map<String, dynamic>
                                                           resp =
                                                           await ApiServices.navigateDescriptionSubmit(
@@ -328,27 +332,49 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                                       ?.id ??
                                                                   0);
 
+                                                                           FocusScope.of(context)
+                                                          .unfocus();
+
                                                       if (resp['status'] ==
                                                           'ok') {
-                                                        ProductAppPopUps.submit(
-                                                          title: "Success",
-                                                          message:
-                                                              resp['message'],
-                                                          actionName: "Close",
-                                                          iconData: Icons.done,
-                                                          iconColor:
+                                                        Get.snackbar(
+                                                          "Updated",
+                                                          "Description submitted successfully.",
+                                                          backgroundColor:
                                                               Colors.green,
+                                                          colorText:
+                                                              Colors.white,
+                                                          snackPosition:
+                                                              SnackPosition
+                                                                  .BOTTOM,
+                                                          margin:
+                                                              EdgeInsets.all(
+                                                                  16),
+                                                          duration: Duration(
+                                                              seconds: 2),
                                                         );
+
+                                               
                                                       } else {
-                                                        ProductAppPopUps.submit(
-                                                          title: "FAILED",
-                                                          message:
+                                                        Get.snackbar(
+                                                          "Failed",
+                                                          resp['message'] ??
                                                               "Something went wrong.",
-                                                          actionName: "Close",
-                                                          iconData: Icons
-                                                              .info_outline,
-                                                          iconColor: Colors.red,
+                                                          backgroundColor:
+                                                              Colors.red,
+                                                          colorText:
+                                                              Colors.white,
+                                                          snackPosition:
+                                                              SnackPosition
+                                                                  .BOTTOM,
+                                                          margin:
+                                                              EdgeInsets.all(
+                                                                  16),
+                                                          duration: Duration(
+                                                              seconds: 2),
                                                         );
+
+                                                        
                                                       }
                                                     },
                                                   ),

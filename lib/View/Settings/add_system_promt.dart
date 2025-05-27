@@ -28,19 +28,24 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
   @override
   void initState() {
     super.initState();
-
     if (widget.isEdit) {
-      final text = widget.prompt;
+      // Remove the unwanted sentence
+      final cleanedText = widget.prompt.replaceAll(
+        'If the following question is asked:',
+        '',
+      );
+
+      print('cleanedPrompt: $cleanedText');
 
       final roleMatch = RegExp(r'Role:\s*(.*?)\s*(?=Question:|Answer:|$)',
               caseSensitive: false, dotAll: true)
-          .firstMatch(text);
+          .firstMatch(cleanedText);
       final questionMatch = RegExp(r'Question:\s*(.*?)\s*(?=Answer:|$)',
               caseSensitive: false, dotAll: true)
-          .firstMatch(text);
+          .firstMatch(cleanedText);
       final answerMatch =
           RegExp(r'Answer:\s*(.*)', caseSensitive: false, dotAll: true)
-              .firstMatch(text);
+              .firstMatch(cleanedText);
 
       textController.text = roleMatch?.group(1)?.trim() ?? '';
       questionController.text = questionMatch?.group(1)?.trim() ?? '';

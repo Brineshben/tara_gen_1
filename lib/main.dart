@@ -9,7 +9,7 @@ import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
 import 'Utils/api_constant.dart';
 
-late List<CameraDescription> cameras;
+// late List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,9 +22,11 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  cameras = await availableCameras();
+  // cameras = await availableCameras();
   final sharedPrefs = SharedPrefs();
   await sharedPrefs.initialize();
+
+  HandleControllers.createGetControllers();
 
   runApp(const MyApp());
 }
@@ -33,7 +35,6 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    HandleControllers.createGetControllers();
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,

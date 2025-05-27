@@ -36,7 +36,6 @@ class _NavigationState extends State<Navigation> {
 
   void startMessageTimer() {
     messageTimer?.cancel();
-
     messageTimer = Timer.periodic(Duration(seconds: 5), (timer) {
       if (!(Get.isDialogOpen ?? false) &&
           !Get.find<ResponseNavController>().isLoading.value) {

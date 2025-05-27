@@ -158,7 +158,7 @@ class ApiConstants {
 
   //  get language
   static String getLanguage = "/robot/languages/list/";
-  static String setLanguage = "/robot/update-robots/ ";
+  static String setLanguage = "/robot/languages/edit/";
 
   ///online
   static String login = "/accounts/login/";

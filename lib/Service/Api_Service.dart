@@ -711,19 +711,15 @@ class ApiServices {
   static Future<Map<String, dynamic>> setLanguage({
     required String language,
     required String id,
-    String roboName = "Tara10",
   }) async {
     try {
-      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}";
+      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}$id/";
 
       final body = jsonEncode({
-        id: {
-          "language": language,
-          "robo_name": roboName,
-        }
+        "language": language,
       });
 
-      final response = await http.post(
+      final response = await http.put(
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json", // important for JSON body

@@ -156,7 +156,8 @@ class _PasswordPageState extends State<PasswordPage> {
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       keyboardType: TextInputType.number,
-                      closeKeyboardWhenCompleted: true,
+                      textInputAction: TextInputAction.none,
+                      closeKeyboardWhenCompleted: false,
                       onCompleted: (pin) {
                         if (pin == '5678') {
                           setState(() => isError = false);
@@ -167,7 +168,6 @@ class _PasswordPageState extends State<PasswordPage> {
                           );
                         } else {
                           setState(() => isError = true);
-                          FocusScope.of(context).unfocus();
                         }
                       },
                     ),

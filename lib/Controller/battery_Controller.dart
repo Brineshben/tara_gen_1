@@ -53,16 +53,6 @@ class BatteryController extends GetxController {
                 ),
                 title: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () => Get.back(),
-                          child: const Icon(Icons.close_outlined,
-                              color: Colors.grey),
-                        )
-                      ],
-                    ),
                     Center(
                       child: SizedBox(
                         width: 120.w,
@@ -96,17 +86,6 @@ class BatteryController extends GetxController {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      FilledButton(
-                        onPressed: () => Get.back(),
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(
-                              ColorUtils.userdetailcolor),
-                        ),
-                        child: Text(
-                          "OK",
-                          style: TextStyle(color: Colors.white, fontSize: 16.h),
-                        ),
-                      ),
                       FilledButton(
                         onPressed: () => Get.back(),
                         style: ButtonStyle(

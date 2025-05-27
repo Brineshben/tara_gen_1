@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -8,23 +7,18 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:ihub/Model/background_model.dart';
-import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
 import 'package:ihub/View/Settings/settings.dart';
+import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:lottie/lottie.dart';
-import 'package:palette_generator/palette_generator.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/EnquiryListController.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
-import '../../Controller/batteryOfflineController.dart';
 import '../../Controller/battery_Controller.dart';
 import 'Navigation.dart';
 
@@ -57,7 +51,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      Get.find<BatteryOfflineController>().fetchOfflineBattery();
+      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
       Get.find<BackgroudController>().fetchBackground(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
@@ -65,63 +59,18 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      // if (isBatteryscreen ?? false) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => BatterySplash()),
-      //   );
+      if (isBatteryscreen ?? false) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => BatterySplash()),
+        );
 
-      //   timer.cancel();
-      // }
+        timer.cancel();
+      }
 
       fetchAndUpdateBaseUrl();
       Get.find<RobotresponseapiController>().fetchObsResultList();
     });
-  }
-
-  Future<void> fetchBackground(int userID) async {
-    Map<String, dynamic> resp = await ApiServices.background(userId: userID);
-    if (resp['status'] == "ok") {
-      BackgroundModel backgrounddata = BackgroundModel.fromJson(resp);
-      final imagePath = backgrounddata.backgroundImage;
-
-      if (imagePath != null) {
-        await updateImageColor(imagePath);
-      }
-    }
-  }
-
-  Future<void> updateImageColor(String imageUrl) async {
-    try {
-      final response = await http.get(Uri.parse(imageUrl));
-
-      if (response.statusCode == 200) {
-        final tempDir = await getTemporaryDirectory();
-        final tempFile = File('${tempDir.path}/temp_image.jpg');
-
-        await tempFile.writeAsBytes(response.bodyBytes);
-
-        final PaletteGenerator paletteGenerator =
-            await PaletteGenerator.fromImageProvider(
-          FileImage(tempFile),
-          size: const Size(200, 200),
-          maximumColorCount: 20,
-        );
-
-        final dominantColor =
-            paletteGenerator.dominantColor?.color ?? Colors.black;
-        final brightness = ThemeData.estimateBrightnessForColor(dominantColor);
-
-        Get.find<BatteryController>().foregroundColor.value =
-            brightness == Brightness.dark ? Colors.white : Colors.black;
-
-        print("Updated color from URL image: $dominantColor");
-      } else {
-        print("Image download failed: ${response.statusCode}");
-      }
-    } catch (e) {
-      print("Error processing image color: $e");
-    }
   }
 
   @override
@@ -132,8 +81,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   }
 
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
   @override

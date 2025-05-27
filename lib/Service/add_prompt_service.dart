@@ -34,7 +34,7 @@ class PromptService {
     required String answer,
   }) async {
     var prommt =
-        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer:m $answer";
+        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer: $answer";
     final url =
         Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.commandPrompt}");
 
@@ -73,15 +73,19 @@ class PromptService {
   }
 
   static Future<Map<String, dynamic>?> editPrompt({
-    required String commandPromt,
     required String id,
+    required String prompt,
+    required String question,
+    required String answer,
   }) async {
+    var prommt =
+        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer:m $answer";
     final url = Uri.parse(
         "${ApiConstants.baseUrl1}${ApiConstants.command_prompt_edit}");
 
     try {
       final requestBody = jsonEncode({
-        'command_prompt': commandPromt,
+        'command_prompt': prommt,
         'command_prompt_id': id,
       });
 
