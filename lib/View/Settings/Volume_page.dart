@@ -102,7 +102,6 @@ class _VolumeControlState extends State<VolumeControl> {
                             );
                           },
                         ),
-
                         SizedBox(
                           width: 300.w, // Adjust width as needed
                           child: Slider(
@@ -121,21 +120,6 @@ class _VolumeControlState extends State<VolumeControl> {
                             },
                           ),
                         ),
-
-                        // Row(
-                        //   mainAxisAlignment: MainAxisAlignment.center,
-                        //   children: [
-                        //     ElevatedButton(
-                        //       onPressed: _decreaseVolume,
-                        //       child: const Icon(Icons.remove),
-                        //     ),
-                        //     const SizedBox(width: 20),
-                        //     ElevatedButton(
-                        //       onPressed: _increaseVolume,
-                        //       child: const Icon(Icons.add),
-                        //     ),
-                        //   ],
-                        // ),
                       ],
                     );
                   },

@@ -465,7 +465,7 @@ class ApiServices {
         "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {
       "description": description,
-      "name": name,
+      "name1": name,
     };
     print("Navigationoffline$url");
     var request = http.Request('PUT', Uri.parse(url));

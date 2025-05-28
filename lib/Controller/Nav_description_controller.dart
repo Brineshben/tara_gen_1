@@ -14,7 +14,7 @@ class NavigateDescriptionController extends GetxController {
 
   RxList<NavigationData?> dataList = RxList();
 
-  Future<void> NavigateData() async {
+  Future<void> getNavigation() async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
@@ -33,8 +33,9 @@ class NavigateDescriptionController extends GetxController {
 
           textControllers = List.generate(
               dataList.length,
-              (index) =>
-                  TextEditingController(text: dataList[index]?.name ?? ""));
+              (index) => TextEditingController(
+                    text: dataList[index]?.name1 ?? "",
+                  ));
 
           isLoaded.value = true;
           update();
@@ -49,7 +50,7 @@ class NavigateDescriptionController extends GetxController {
         'Failed', // Title
         'Error in Robot Response Navigation Control', // Message
         snackPosition: SnackPosition.BOTTOM, // Position (TOP or BOTTOM)
-        backgroundColor: Colors.blueGrey,
+        backgroundColor: Colors.black.withOpacity(0.3),
         colorText: Colors.white,
         borderRadius: 10,
         margin: EdgeInsets.all(10),

@@ -30,14 +30,17 @@ class NavigationListModel {
 class NavigationData {
   int? id;
   String? name;
+  String? name1;
   String? description;
   String? video;
 
-  NavigationData({this.id, this.name, this.description, this.video});
+  NavigationData(
+      {this.id, this.name, this.description, this.video, this.name1});
 
   NavigationData.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
+    name1 = json['name1'];
     description = json['description'];
     video = json['video'];
   }
@@ -46,6 +49,7 @@ class NavigationData {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
     data['name'] = this.name;
+    data['name1'] = this.name1;
     data['description'] = this.description;
     data['video'] = this.video;
     return data;

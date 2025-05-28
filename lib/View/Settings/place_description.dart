@@ -23,7 +23,7 @@ class PlaceDescription extends StatefulWidget {
 class _PlaceDescriptionState extends State<PlaceDescription> {
   @override
   void initState() {
-    Get.find<NavigateDescriptionController>().NavigateData();
+    Get.find<NavigateDescriptionController>().getNavigation();
     super.initState();
   }
 

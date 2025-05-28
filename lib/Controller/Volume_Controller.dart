@@ -27,7 +27,8 @@ class VolumeController extends GetxController {
       );
       print("------respvolumecontrol------$resp");
       if (resp['current_volume'] != null) {
-        roboVolume.value = resp['current_volume'];
+        roboVolume.value =
+            resp['current_volume'] > 100 ? 100 : resp['current_volume'];
         isLoaded.value = true;
       }
     } catch (e) {
@@ -66,7 +67,8 @@ class VolumeController extends GetxController {
           await ApiServices.volumeinitial(roboid: RobotId);
       print("------resp------$resp");
       if (resp['current_volume'] != null) {
-        roboVolume.value = resp['current_volume'];
+        roboVolume.value =
+            resp['current_volume'] > 100 ? 100 : resp['current_volume'];
         isLoaded.value = true;
       }
     } catch (e) {
