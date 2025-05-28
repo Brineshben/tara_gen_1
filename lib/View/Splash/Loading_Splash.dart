@@ -1,11 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:ihub/Controller/Login_api_controller.dart';
-import 'package:ihub/Model/login_model.dart';
-import 'package:ihub/Service/sharedPreference.dart';
-import 'package:ihub/View/Login_Page/login.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:lottie/lottie.dart';
 
@@ -20,34 +16,38 @@ class LoadingSplash extends StatefulWidget {
 
 class _LoadingSplashState extends State<LoadingSplash> {
   Timer? messageTimer;
+  String? _errorText;
 
   @override
   void initState() {
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    super.initState();
+    messageTimer = Timer.periodic(const Duration(seconds: 2), (timer) async {
       _startAppLogic();
     });
-    super.initState();
   }
 
   Future<void> _startAppLogic() async {
-    Map<String, dynamic> resp = await ApiServices.loading();
-    LoginModel? loginApi = await SharedPrefs().getLoginData();
-
-    if (resp['status'] == "ON") {
-      if (loginApi != null) {
-        await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-        FocusManager.instance.primaryFocus?.unfocus();
+    try {
+      Map<String, dynamic> resp = await ApiServices.loading();
+      if (resp['status'] == "ON") {
+        messageTimer?.cancel(); // Stop further checks
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Homepage()),
           (route) => false,
         );
-      } else {
-        FocusManager.instance.primaryFocus?.unfocus();
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => const LoginPage()),
-          (route) => false,
-        );
       }
+    } on SocketException catch (_) {
+      setState(() {
+        _errorText = "No internet connection";
+      });
+    } on HttpException catch (_) {
+      setState(() {
+        _errorText = "Couldn't reach the server";
+      });
+    } catch (e) {
+      setState(() {
+        _errorText = "Something went wrong";
+      });
     }
   }
 
@@ -69,9 +69,22 @@ class _LoadingSplashState extends State<LoadingSplash> {
               ),
             ),
             Lottie.asset("assets/loading.json", width: 100),
+            if (_errorText != null) ...[
+              const SizedBox(height: 20),
+              Text(
+                _errorText!,
+                style: const TextStyle(color: Colors.white),
+              ),
+            ],
           ],
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    messageTimer?.cancel();
+    super.dispose();
   }
 }

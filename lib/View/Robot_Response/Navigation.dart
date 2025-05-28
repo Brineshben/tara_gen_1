@@ -108,16 +108,79 @@ class _NavigationState extends State<Navigation> {
                 builder: (NavigateController controller) {
                   return Column(
                     children: [
-                      controller.isLoading.value
-                          ? Center(
-                              child: SizedBox(
-                                height: 500,
-                                width: 200,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: Colors.blue,
-                                  ),
+                      GetX<RobotresponseapiController>(
+                        builder: (controller) {
+                          bool? listening =
+                              controller.responseData.value.listening;
+                          // bool? waiting = controller
+                          //     .responseData.value.waiting;
+                          bool? speaking =
+                              controller.responseData.value.speaking;
+                          return SizedBox(
+                            // height: size.width * 0.25,
+                            width: size.width * 0.3,
+                            child: Column(
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    if (listening == true)
+                                      Lottie.asset(
+                                        "assets/listening.json",
+                                        width: 200,
+                                      )
+                                    else if (speaking == true)
+                                      Lottie.asset(
+                                        "assets/speaking.json",
+                                        width: 200,
+                                      )
+                                    else
+                                      Lottie.asset(
+                                        "assets/thinking.json",
+                                        width: 200,
+                                      ),
+                                  ],
                                 ),
+                                if (controller.robotResponseModel.value?.text !=
+                                        "" &&
+                                    listening == true)
+                                  Container(
+                                    padding: EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.4),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        controller.robotResponseModel.value
+                                                ?.text ??
+                                            "",
+                                        style: TextStyle(
+                                            fontSize: 18, color: Colors.white),
+                                      ),
+                                    ),
+                                  )
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                      controller.isLoading.value
+                          // ? Center(
+                          //     child: SizedBox(
+                          //       height: 500,
+                          //       width: 200,
+                          //       child: Center(
+                          //         child: CircularProgressIndicator(
+                          //           color: Colors.blue,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   )
+                          ? Center(
+                              child: Lottie.asset(
+                                "assets/loading1.json",
+                                width: 200,
                               ),
                             )
                           : controller.dataList.isNotEmpty
@@ -127,289 +190,7 @@ class _NavigationState extends State<Navigation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        SizedBox(height: 100),
-                                        GetX<RobotresponseapiController>(
-                                          builder: (controller) {
-                                            bool? listening = controller
-                                                .responseData.value.listening;
-                                            // bool? waiting = controller
-                                            //     .responseData.value.waiting;
-                                            bool? speaking = controller
-                                                .responseData.value.speaking;
-                                            return SizedBox(
-                                              // height: size.width * 0.25,
-                                              width: size.width * 0.3,
-                                              child: Column(
-                                                children: [
-                                                  if (listening == true)
-                                                    Column(
-                                                      children: [
-                                                        Center(
-                                                          child: Lottie.asset(
-                                                            "assets/Animation - 1739525563341.json",
-                                                            fit: BoxFit
-                                                                .fitHeight,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 100.h,
-                                                          width: 280.w,
-                                                          child:
-                                                              DefaultTextStyle(
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        30.h,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    shadows: [
-                                                                  Shadow(
-                                                                    blurRadius:
-                                                                        5.0,
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.2),
-                                                                    offset:
-                                                                        Offset(
-                                                                            2,
-                                                                            2),
-                                                                  ),
-                                                                ]),
-                                                            child: Center(
-                                                              child:
-                                                                  AnimatedTextKit(
-                                                                animatedTexts: [
-                                                                  TypewriterAnimatedText(
-                                                                    'LISTENING....',
-                                                                    speed: Duration(
-                                                                        milliseconds:
-                                                                            50),
-                                                                    cursor: '|',
-                                                                  ),
-                                                                ],
-                                                                repeatForever:
-                                                                    true,
-                                                                isRepeatingAnimation:
-                                                                    true,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    )
-                                                  else if (speaking == true)
-                                                    Column(
-                                                      children: [
-                                                        Center(
-                                                          child: Lottie.asset(
-                                                            "assets/Animation - 1739525563341.json",
-                                                            fit: BoxFit
-                                                                .fitHeight,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 100.h,
-                                                          width:
-                                                              double.infinity,
-                                                          child:
-                                                              DefaultTextStyle(
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        30.h,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    shadows: [
-                                                                  Shadow(
-                                                                    blurRadius:
-                                                                        5.0,
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.7),
-                                                                    offset:
-                                                                        Offset(
-                                                                            2,
-                                                                            2),
-                                                                  ),
-                                                                ]),
-                                                            child: Center(
-                                                              child:
-                                                                  AnimatedTextKit(
-                                                                animatedTexts: [
-                                                                  TypewriterAnimatedText(
-                                                                    'SPEAKING....',
-                                                                    speed: Duration(
-                                                                        milliseconds:
-                                                                            50),
-                                                                    // Adjust typing speed
-                                                                    cursor:
-                                                                        '|', // Optional cursor
-                                                                  ),
-                                                                ],
-                                                                repeatForever:
-                                                                    true,
-                                                                isRepeatingAnimation:
-                                                                    true,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        // Align(
-                                                        //   alignment: Alignment.bottomCenter,
-                                                        //   child: Padding(
-                                                        //     padding: EdgeInsets.only(bottom: 20.h),
-                                                        //     child: GestureDetector(
-                                                        //       onTap: () async {
-                                                        //         try {
-                                                        //           Map<String, dynamic> resp =
-                                                        //               await ApiServices.stopTalk(
-                                                        //                   status: true);
-                                                        //
-                                                        //           ProductAppPopUps.submit(
-                                                        //             title: "Update",
-                                                        //             message: resp['message'] ??
-                                                        //                 "Something went wrong.",
-                                                        //             actionName: "Close",
-                                                        //             iconData: Icons.done,
-                                                        //             iconColor: Colors.green,
-                                                        //           );
-                                                        //         } catch (e) {}
-                                                        //       },
-                                                        //       child: Container(
-                                                        //         decoration: BoxDecoration(
-                                                        //           color: Colors.red,
-                                                        //           borderRadius:
-                                                        //               BorderRadius.circular(20.r),
-                                                        //           boxShadow: [
-                                                        //             BoxShadow(
-                                                        //               color: Colors.black
-                                                        //                   .withOpacity(0.2),
-                                                        //               spreadRadius: 1,
-                                                        //               blurRadius: 6,
-                                                        //             ),
-                                                        //           ],
-                                                        //         ),
-                                                        //         width: 100.w,
-                                                        //         height: 50.h,
-                                                        //         child: Center(
-                                                        //           child: Text(
-                                                        //             "STOP",
-                                                        //             style: GoogleFonts.orbitron(
-                                                        //               color: Colors.white,
-                                                        //               fontSize: 18.h,
-                                                        //               fontWeight: FontWeight.bold,
-                                                        //             ),
-                                                        //           ),
-                                                        //         ),
-                                                        //       ),
-                                                        //     ),
-                                                        //   ),
-                                                        // )
-                                                      ],
-                                                    )
-                                                  else
-                                                    Column(
-                                                      children: [
-                                                        Center(
-                                                          child: Lottie.asset(
-                                                            "assets/Animation - 1739525563341.json",
-                                                            fit: BoxFit
-                                                                .fitHeight,
-                                                          ),
-                                                        ),
-                                                        SizedBox(
-                                                          height: 100.h,
-                                                          width: 280.w,
-                                                          child:
-                                                              DefaultTextStyle(
-                                                            style: GoogleFonts
-                                                                .poppins(
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontSize:
-                                                                        30.h,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    shadows: [
-                                                                  Shadow(
-                                                                    blurRadius:
-                                                                        5.0,
-                                                                    color: Colors
-                                                                        .black
-                                                                        .withOpacity(
-                                                                            0.7),
-                                                                    offset:
-                                                                        Offset(
-                                                                            2,
-                                                                            2),
-                                                                  ),
-                                                                ]),
-                                                            child: Center(
-                                                              child:
-                                                                  AnimatedTextKit(
-                                                                animatedTexts: [
-                                                                  TypewriterAnimatedText(
-                                                                    'THINKING....',
-                                                                    speed: Duration(
-                                                                        milliseconds:
-                                                                            80),
-                                                                    cursor: '|',
-                                                                  ),
-                                                                ],
-                                                                repeatForever:
-                                                                    true,
-                                                                isRepeatingAnimation:
-                                                                    true,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  if (controller
-                                                              .robotResponseModel
-                                                              .value
-                                                              ?.text !=
-                                                          "" &&
-                                                      listening == true)
-                                                    Container(
-                                                      padding:
-                                                          EdgeInsets.all(8),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black
-                                                            .withOpacity(0.4),
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(12),
-                                                      ),
-                                                      child: Center(
-                                                        child: Text(
-                                                          controller
-                                                                  .robotResponseModel
-                                                                  .value
-                                                                  ?.text ??
-                                                              "",
-                                                          style: TextStyle(
-                                                              fontSize: 18,
-                                                              color:
-                                                                  Colors.white),
-                                                        ),
-                                                      ),
-                                                    )
-                                                ],
-                                              ),
-                                            );
-                                          },
-                                        ),
+                                        // SizedBox(height: 100),
                                         Wrap(
                                           children: List.generate(
                                             controller.dataList.length,

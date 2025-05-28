@@ -43,35 +43,24 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
   }
 
   Future<void> _startAppLogic() async {
-    Map<String, dynamic> resp = await ApiServices.loading();
     LoginModel? loginApi = await SharedPrefs().getLoginData();
 
-    if (resp['status'] == "ON") {
-      Future.delayed(const Duration(seconds: 10), () async {
-        await fetchBackground(loginApi?.user?.id ?? 0);
+    Future.delayed(const Duration(seconds: 10), () async {
+      await fetchBackground(loginApi?.user?.id ?? 0);
 
-        if (loginApi != null) {
-          await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-          FocusManager.instance.primaryFocus?.unfocus();
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Homepage()),
-            (route) => false,
-          );
-        } else {
-          FocusManager.instance.primaryFocus?.unfocus();
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-            (route) => false,
-          );
-        }
-      });
-    } else {
-      FocusManager.instance.primaryFocus?.unfocus();
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => const LoadingSplash()),
-        (route) => false,
-      );
-    }
+      if (loginApi != null) {
+        await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Homepage()),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+          (route) => false,
+        );
+      }
+    });
   }
 
   Future<void> fetchBackground(int userID) async {

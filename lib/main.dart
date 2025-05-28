@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:ihub/View/Splash/video_splash.dart';
 
 import 'Service/controller_handling.dart';
@@ -42,10 +43,8 @@ class MyApp extends StatelessWidget {
       child: GetMaterialApp(
         title: 'Tara',
         debugShowCheckedModeBanner: false,
-        // home: LoadingSplash(),
-        // home: LoginPage(),
         home: SplashVideoScreen(),
-        // home: BatterySplash(),
+        // home: Homepage(),
       ),
     );
   }

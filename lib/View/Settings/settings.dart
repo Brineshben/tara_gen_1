@@ -658,8 +658,8 @@ class _MaintananceState extends State<Maintanance> {
                       ),
                       SettingsCard(
                         iconPath: 'assets/exit.png',
-                        subtitle: 'Exit app and close everything',
-                        title: 'EXIT',
+                        subtitle: 'Logout app and close everything',
+                        title: 'LOGOUT',
                         backgroundColor: Colors.white,
                         onTap: () async {
                           final shouldExit = await showDialog<bool>(
@@ -669,7 +669,7 @@ class _MaintananceState extends State<Maintanance> {
                                   borderRadius: BorderRadius.circular(16)),
                               backgroundColor: Colors.white,
                               title: Text(
-                                'Exit App',
+                                'Logout App',
                                 style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 20,
@@ -677,7 +677,7 @@ class _MaintananceState extends State<Maintanance> {
                                 ),
                               ),
                               content: Text(
-                                'Are you sure you want to exit the app?',
+                                'Are you sure you want to logout the app?',
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.black54,
@@ -702,7 +702,13 @@ class _MaintananceState extends State<Maintanance> {
                                 TextButton(
                                   onPressed: () async {
                                     await SharedPrefs().removeLoginData();
-                                    exit(0);
+                                    Navigator.pushAndRemoveUntil(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              login_page.LoginPage()),
+                                      (route) => false,
+                                    );
                                   },
                                   style: TextButton.styleFrom(
                                     backgroundColor: Colors.redAccent,
@@ -714,7 +720,7 @@ class _MaintananceState extends State<Maintanance> {
                                     ),
                                   ),
                                   child: Text(
-                                    'Exit',
+                                    'Logout',
                                     style: TextStyle(fontSize: 14),
                                   ),
                                 ),
