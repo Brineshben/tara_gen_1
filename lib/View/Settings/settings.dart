@@ -238,7 +238,11 @@ class _MaintananceState extends State<Maintanance> {
             },
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 130, right: 50, left: 50),
+            padding: EdgeInsets.only(
+              top: MediaQuery.sizeOf(context).height * 0.2,
+              right: 50,
+              left: 50,
+            ),
             child: SingleChildScrollView(
               child: Column(
                 children: [
@@ -561,11 +565,17 @@ class _MaintananceState extends State<Maintanance> {
                                           .timeout(Duration(seconds: 3));
                                   if (resp['message'] ==
                                       "Reboot status updated") {
-                                    Navigator.of(context).pushAndRemoveUntil(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                LoadingSplash()),
-                                        (_) => false);
+                                    setState(() {
+                                      isLoading = true;
+                                    });
+                                    Future.delayed(Duration(seconds: 4), () {
+                                      setState(() {});
+                                      Navigator.of(context).pushAndRemoveUntil(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  LoadingSplash()),
+                                          (_) => false);
+                                    });
                                   }
                                 } catch (e) {
                                   ScaffoldMessenger.of(context).showSnackBar(
@@ -736,6 +746,7 @@ class _MaintananceState extends State<Maintanance> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 20),
                 ],
               ),
             ),
@@ -772,9 +783,10 @@ class _MaintananceState extends State<Maintanance> {
                   width: 200,
                   height: 70,
                   decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.blueGrey)),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.blueGrey),
+                  ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

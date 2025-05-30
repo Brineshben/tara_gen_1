@@ -36,7 +36,7 @@ class _NavigationState extends State<Navigation> {
 
   void startMessageTimer() {
     messageTimer?.cancel();
-    messageTimer = Timer.periodic(Duration(seconds: 5), (timer) {
+    messageTimer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (!(Get.isDialogOpen ?? false) &&
           !Get.find<ResponseNavController>().isLoading.value) {
         Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
@@ -74,28 +74,30 @@ class _NavigationState extends State<Navigation> {
             ),
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
+                final bgImage =
+                    controller.backgroundModel.value?.backgroundImage;
+
                 return Positioned.fill(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl:
-                            controller.backgroundModel.value?.backgroundImage ??
-                                "",
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                            controller.defaultIMage,
-                            fit: BoxFit.cover),
-                        errorWidget: (context, url, error) => Image.asset(
-                            controller.defaultIMage,
-                            fit: BoxFit.cover),
-                      ),
+                      (bgImage != null && bgImage.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: bgImage,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Image.asset(
+                                  controller.defaultIMage,
+                                  fit: BoxFit.cover),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  controller.defaultIMage,
+                                  fit: BoxFit.cover),
+                            )
+                          : Image.asset(controller.defaultIMage,
+                              fit: BoxFit.cover),
                       BackdropFilter(
-                        filter: ImageFilter.blur(
-                            sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                         child: Container(
-                          color: Colors.black.withOpacity(
-                              0), // Required for BackdropFilter to work
+                          color: Colors.black.withOpacity(0),
                         ),
                       ),
                     ],
@@ -108,12 +110,12 @@ class _NavigationState extends State<Navigation> {
                 builder: (NavigateController controller) {
                   return Column(
                     children: [
+                      SizedBox(height: 70),
                       GetX<RobotresponseapiController>(
                         builder: (controller) {
                           bool? listening =
                               controller.responseData.value.listening;
-                          // bool? waiting = controller
-                          //     .responseData.value.waiting;
+                          // bool? waiting = controller.responseData.value.waiting;
                           bool? speaking =
                               controller.responseData.value.speaking;
                           return SizedBox(
@@ -121,26 +123,130 @@ class _NavigationState extends State<Navigation> {
                             width: size.width * 0.3,
                             child: Column(
                               children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    if (listening == true)
-                                      Lottie.asset(
-                                        "assets/listening.json",
-                                        width: 200,
-                                      )
-                                    else if (speaking == true)
-                                      Lottie.asset(
-                                        "assets/speaking.json",
-                                        width: 200,
-                                      )
-                                    else
-                                      Lottie.asset(
-                                        "assets/thinking.json",
-                                        width: 200,
+                                // Column(
+                                //   mainAxisAlignment: MainAxisAlignment.start,
+                                //   children: [
+                                //     if (listening == true)
+                                //       Lottie.asset(
+                                //         "assets/listening.json",
+                                //         width: 200,
+                                //       )
+                                //     else if (speaking == true)
+                                //       Lottie.asset(
+                                //         "assets/speaking.json",
+                                //         width: 200,
+                                //       )
+                                //     else
+                                //       Lottie.asset(
+                                //         "assets/thinking.json",
+                                //         width: 200,
+                                //       ),
+                                //   ],
+                                // ),
+
+                                if (listening == true)
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 280.w,
+                                    child: DefaultTextStyle(
+                                      style: GoogleFonts.orbitron(
+                                          color: Colors.white,
+                                          fontSize: 30.h,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Center(
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              'LISTENING....',
+                                              speed: Duration(milliseconds: 50),
+                                              // Adjust typing speed
+                                              cursor: '|', // Optional cursor
+                                            ),
+                                          ],
+                                          repeatForever: true,
+                                          // Ensures continuous looping
+                                          isRepeatingAnimation: true,
+                                        ),
                                       ),
-                                  ],
-                                ),
+                                    ),
+                                  )
+                                else if (speaking == true)
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: double.infinity,
+                                    child: DefaultTextStyle(
+                                      style: GoogleFonts.orbitron(
+                                          color: Colors.white,
+                                          fontSize: 30.h,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Center(
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              'SPEAKING....',
+                                              speed: Duration(milliseconds: 50),
+                                              // Adjust typing speed
+                                              cursor: '|', // Optional cursor
+                                            ),
+                                          ],
+                                          repeatForever: true,
+                                          // Ensures continuous looping
+                                          isRepeatingAnimation: true,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                else
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 280.w,
+                                    child: DefaultTextStyle(
+                                      style: GoogleFonts.orbitron(
+                                          color: Colors.white,
+                                          fontSize: 30.h,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Center(
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              'THINKING....',
+                                              speed: Duration(milliseconds: 50),
+                                              // Adjust typing speed
+                                              cursor: '|', // Optional cursor
+                                            ),
+                                          ],
+                                          repeatForever: true,
+                                          // Ensures continuous looping
+                                          isRepeatingAnimation: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+
                                 if (controller.robotResponseModel.value?.text !=
                                         "" &&
                                     listening == true)
@@ -166,21 +272,15 @@ class _NavigationState extends State<Navigation> {
                         },
                       ),
                       controller.isLoading.value
-                          // ? Center(
-                          //     child: SizedBox(
-                          //       height: 500,
-                          //       width: 200,
-                          //       child: Center(
-                          //         child: CircularProgressIndicator(
-                          //           color: Colors.blue,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   )
                           ? Center(
-                              child: Lottie.asset(
-                                "assets/loading1.json",
+                              child: SizedBox(
+                                height: 200,
                                 width: 200,
+                                child: Center(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.blue,
+                                  ),
+                                ),
                               ),
                             )
                           : controller.dataList.isNotEmpty
@@ -402,11 +502,8 @@ class _NavigationState extends State<Navigation> {
                               : Center(
                                   child: Row(
                                     children: [
-                                      SizedBox(
-                                        height: 500,
-                                      ),
                                       Text(
-                                        "Oops..No Data Found in Destination List..",
+                                        "Oops..No Data Found",
                                         style: GoogleFonts.poppins(
                                             color: Colors.red,
                                             fontSize: 20.h,
@@ -524,50 +621,49 @@ class _NavigationState extends State<Navigation> {
                           border: Border.all(
                               color: Colors.blueGrey.shade200, width: 1),
                         ),
-                        // child: Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //   children: [
-                        //     Row(
-                        //       children: [
-                        //         Image.asset("assets/destination11.png",
-                        //             width: 30),
-                        //         SizedBox(width: 20),
-                        //         Column(
-                        //           crossAxisAlignment: CrossAxisAlignment.start,
-                        //           children: [
-                        //             Text(
-                        //               "FULL TOUR",
-                        //               style: TextStyle(
-                        //                 fontSize: 16.h,
-                        //                 fontWeight: FontWeight.bold,
-                        //                 color: Colors.black,
-                        //               ),
-                        //             ),
-                        //             Text(
-                        //               'Robot Navigate to places',
-                        //               style: TextStyle(
-                        //                   fontSize: 16.h,
-                        //                   // fontStyle: FontStyle.italic,
-                        //                   color: Colors.black54,
-                        //                   fontWeight: FontWeight.bold),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ),
-                        child: Center(
-                          child: Text(
-                            "FULL TOUR",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Row(
+                              children: [
+                                Image.asset("assets/destination11.png",
+                                    width: 30),
+                                SizedBox(width: 20),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "FULL TOUR",
+                                      style: TextStyle(
+                                        fontSize: 16.h,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Text(
+                                      'Robot Navigate to places',
+                                      style: TextStyle(
+                                          fontSize: 16.h,
+                                          color: Colors.black54,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
-                          ),
+                          ],
                         ),
+                        // child: Center(
+                        //   child: Text(
+                        //     "FULL TOUR",
+                        //     style: TextStyle(
+                        //       fontSize: 18,
+                        //       fontWeight: FontWeight.bold,
+                        //       color: Colors.black,
+                        //     ),
+                        //   ),
+                        // ),
                       ),
                     ),
                   ),
@@ -628,6 +724,7 @@ class _NavigationState extends State<Navigation> {
                                           ),
                                           ElevatedButton(
                                             onPressed: () async {
+                                              Get.back();
                                               navigateToLocationByName('home');
                                             },
                                             style: ElevatedButton.styleFrom(

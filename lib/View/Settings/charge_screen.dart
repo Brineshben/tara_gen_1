@@ -47,21 +47,6 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
               width: ScreenUtil().screenWidth,
               height: ScreenUtil().screenHeight,
             ),
-            Positioned.fill(
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  Image.asset("assets/stockimage.jpg", fit: BoxFit.cover),
-                  BackdropFilter(
-                    filter: ImageFilter.blur(
-                      sigmaX: 5.0,
-                      sigmaY: 5.0,
-                    ), // Blur level
-                    child: Container(color: Colors.blue.withOpacity(0.2)),
-                  ),
-                ],
-              ),
-            ),
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
                 return Positioned.fill(
@@ -274,14 +259,16 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
             ),
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            GetX<BatteryController>(
-              builder: (controller) {
-                return GestureDetector(
-                  onDoubleTap: () {
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15.r),
+                  onTap: () async {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -289,26 +276,35 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                       ),
                     );
                   },
-                  child: Column(
-                    children: [
-                      Image.asset(
-                        "assets/speedometer.png",
-                        width: 90,
-                      ),
-                      Text(
-                        "Speed",
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: controller.foregroundColor.value,
-                          fontWeight: FontWeight.bold,
+                  child: Ink(
+                    width: 100,
+                    height: 120,
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset(
+                          "assets/speedometer.png",
+                          width: 90,
                         ),
-                      ),
-                    ],
+                        Text(
+                          "SPEED",
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                );
-              },
-            ),
-          ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

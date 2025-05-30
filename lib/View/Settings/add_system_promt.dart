@@ -1,7 +1,11 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:lottie/lottie.dart';
 
@@ -81,17 +85,40 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Center(
-              child: SizedBox(
-                width: size.width * 0.5,
-                height: size.width * 0.5,
-                child: Lottie.asset(
-                  "assets/loginimage.json",
-                  fit: BoxFit.fitHeight,
+          SizedBox(
+            width: ScreenUtil().screenWidth,
+            height: ScreenUtil().screenHeight,
+          ),
+          GetX<BackgroudController>(
+            builder: (BackgroudController controller) {
+              return Positioned.fill(
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                    ),
+                    BackdropFilter(
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      child: Container(
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ),
+              );
+            },
           ),
           SingleChildScrollView(
             child: Padding(

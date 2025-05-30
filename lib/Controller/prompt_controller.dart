@@ -13,9 +13,6 @@ class PromptController extends GetxController {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-
-      print('iiiiiiiiiiiiiiiincrontrooler');
-
       promptModel.value = await PromptService.fetchPrompt();
     } catch (e) {
       errorMessage.value = 'Failed to fetch data';
@@ -82,14 +79,14 @@ class PromptController extends GetxController {
       if (response['status'] == 'ok') {
         await fetchPrompt();
         Get.back();
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Success",
-          response['message'] ?? "Prompt submitted successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        // Get.snackbar(
+        //   margin: EdgeInsets.all(20),
+        //   "Success",
+        //   response['message'] ?? "Prompt submitted successfully",
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.TOP,
+        // );
       } else {
         Get.snackbar(
           margin: EdgeInsets.all(20),
@@ -164,14 +161,14 @@ class PromptController extends GetxController {
       if (response['status'] == 'ok') {
         await fetchPrompt();
         Get.back();
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Success",
-          response['message'] ?? "Prompt submitted successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        // Get.snackbar(
+        //   margin: EdgeInsets.all(20),
+        //   "Success",
+        //   response['message'] ?? "Prompt submitted successfully",
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.TOP,
+        // );
       } else {
         Get.snackbar(
           margin: EdgeInsets.all(20),

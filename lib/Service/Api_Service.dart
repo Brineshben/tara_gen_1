@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../Utils/api_constant.dart';
@@ -453,6 +450,22 @@ class ApiServices {
     return json.decode(respString);
   }
 
+  ///check Navigationoffline
+
+  static Future<Map<String, dynamic>> setHOme() async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.setHome}";
+    Map apiBody = {
+      "status": true,
+    };
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print('homeButtonresponcse $respString');
+    return json.decode(respString);
+  }
+
   ///check navigateDescriptionSubmit
   static Future<Map<String, dynamic>> navigateDescriptionSubmit({
     required int userId,
@@ -472,7 +485,9 @@ class ApiServices {
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
+
     var respString = await response.stream.bytesToString();
+    print('placedesresponcse $respString');
     return json.decode(respString);
   }
 

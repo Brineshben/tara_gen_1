@@ -44,23 +44,18 @@ class DescriptionController extends GetxController {
       description: description,
     );
 
-    print('Controller Response: $response');
-
-    print('kllllllllllllllllllll');
-
     if (response != null) {
-      print('notnullllllllllll');
       if (response['status'] == 'ok') {
         await fetchDescription();
         Get.back();
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Success",
-          response['message'] ?? "Description submitted successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        // Get.snackbar(
+        //   margin: EdgeInsets.all(20),
+        //   "Success",
+        //   response['message'] ?? "Description submitted successfully",
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.TOP,
+        // );
       } else {
         Get.snackbar(
           margin: EdgeInsets.all(20),
@@ -97,23 +92,18 @@ class DescriptionController extends GetxController {
       id: id,
     );
 
-    print('Controller Response: $response');
-
-    print('kllllllllllllllllllll');
-
     if (response != null) {
-      print('notnullllllllllll');
       if (response['status'] == 'ok') {
         await fetchDescription();
         Get.back();
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Success",
-          response['message'] ?? "Description edited successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.TOP,
-        );
+        // Get.snackbar(
+        //   margin: EdgeInsets.all(20),
+        //   "Success",
+        //   response['message'] ?? "Description edited successfully",
+        //   backgroundColor: Colors.green,
+        //   colorText: Colors.white,
+        //   snackPosition: SnackPosition.TOP,
+        // );
       } else {
         Get.snackbar(
           margin: EdgeInsets.all(20),

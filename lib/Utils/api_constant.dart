@@ -120,6 +120,7 @@ class ApiConstants {
 
   static String addUrl = "/url/add/";
   static String getUrl = "/url/list/";
+  static String setHome = "/home/set/";
 
   ///offline
   static String poweroffoffline = "/update-reboot-status/";

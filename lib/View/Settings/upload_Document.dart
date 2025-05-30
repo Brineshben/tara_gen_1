@@ -447,16 +447,63 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                                         onPressed: () async {
                                           Get.back();
                                           try {
-                                            Get.snackbar(
-                                              'Failed',
-                                              'Map not restarted',
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.red,
-                                              colorText: Colors.white,
-                                              duration: Duration(seconds: 2),
-                                              margin: EdgeInsets.all(20),
-                                            );
+                                            Map<String, dynamic> response =
+                                                await ApiServices.mapRestart();
+
+                                            if (response['updated_data']
+                                                    ['status'] ==
+                                                true) {
+                                              isUploading = true;
+                                              setState(() {});
+
+                                              await Future.delayed(
+                                                  Duration(seconds: 10));
+
+                                              isUploading = false;
+                                              setState(() {});
+
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                SnackBar(
+                                                  content: Row(
+                                                    children: [
+                                                      Icon(Icons.check_circle,
+                                                          color: Colors.white),
+                                                      SizedBox(width: 8),
+                                                      Text(
+                                                        'Restarting the map...',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+
+                                                  backgroundColor:
+                                                      Colors.green.shade600,
+                                                  duration:
+                                                      Duration(seconds: 5),
+                                                  elevation: 4,
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.zero,
+                                                  ),
+                                                  // Remove behavior and margin for full-width default look
+                                                ),
+                                              );
+                                            } else {
+                                              Get.snackbar(
+                                                'Failed',
+                                                'Map not restarted',
+                                                snackPosition:
+                                                    SnackPosition.BOTTOM,
+                                                backgroundColor: Colors.red,
+                                                colorText: Colors.white,
+                                                duration: Duration(seconds: 2),
+                                                margin: EdgeInsets.all(20),
+                                              );
+                                            }
                                           } catch (e) {
                                             Get.snackbar(
                                               'Failed',
@@ -563,86 +610,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                       ),
                     ],
                   ),
-                  // Material(
-                  //   color: Colors.transparent,
-                  //   child: InkWell(
-                  //     splashColor: Colors.white,
-                  //     highlightColor: Colors.white.withOpacity(0.3),
-                  //     borderRadius: BorderRadius.circular(40.r),
-                  //     child: buildInfoCard(size, 'SELECT MAP'),
-                  //     onTap: () async {
-                  //       await LockTaskService.stopLockTask();
-                  //       await Future.delayed(Duration(milliseconds: 300));
-                  //       await _pickFile();
-                  //       await LockTaskService.startLockTask();
-                  //     },
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20),
-                  // Material(
-                  //   color: Colors.transparent,
-                  //   child: InkWell(
-                  //     splashColor: Colors.white,
-                  //     highlightColor: Colors.white.withOpacity(0.3),
-                  //     borderRadius: BorderRadius.circular(40),
-                  //     child: buildInfoCard(size, 'UPLOAD MAP'),
-                  //     onTap: () {
-                  //       _uploadFile();
-                  //     },
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20),
-                  // Material(
-                  //   color: Colors.transparent,
-                  //   child: InkWell(
-                  //     splashColor: Colors.white,
-                  //     highlightColor: Colors.white.withOpacity(0.3),
-                  //     borderRadius: BorderRadius.circular(20.r),
-                  //     child:
-                  //         buildInfoCard(size, 'DELETE MAP', color: Colors.red),
-                  //     onTap: () {
-                  //       _deleteMap();
-                  //     },
-                  //   ),
-                  // ),
-                  // SizedBox(height: 20),
-                  // Material(
-                  //   color: Colors.transparent,
-                  //   child: InkWell(
-                  //     splashColor: Colors.white,
-                  //     highlightColor: Colors.blue,
-                  //     borderRadius: BorderRadius.circular(40.r),
-                  //     child: buildInfoCard(
-                  //       size,
-                  //       'REFRESH',
-                  //       color: Colors.green,
-                  //     ),
-                  //     onTap: () async {
-                  //       Map response = await ApiServices.mapRestart();
-                  //       if (response['updated_data']['status'] == true) {
-                  //         Get.snackbar(
-                  //           'Success',
-                  //           'Map restarted successfully!',
-                  //           snackPosition: SnackPosition.BOTTOM,
-                  //           backgroundColor: Colors.green,
-                  //           colorText: Colors.white,
-                  //           duration: Duration(seconds: 2),
-                  //           margin: EdgeInsets.all(20),
-                  //         );
-                  //       } else {
-                  //         Get.snackbar(
-                  //           'Failed',
-                  //           'Map not restarted',
-                  //           snackPosition: SnackPosition.BOTTOM,
-                  //           backgroundColor: Colors.red,
-                  //           colorText: Colors.white,
-                  //           duration: Duration(seconds: 2),
-                  //           margin: EdgeInsets.all(20),
-                  //         );
-                  //       }
-                  //     },
-                  //   ),
-                  // ),
                 ],
               ),
             ),
@@ -655,32 +622,32 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               ),
             ],
           ),
-          // if (isUploading)
-          //   Center(
-          //     child: Container(
-          //         width: 200,
-          //         height: 70,
-          //         decoration: BoxDecoration(
-          //             color: Colors.white,
-          //             borderRadius: BorderRadius.circular(10),
-          //             border: Border.all(color: Colors.blueGrey)),
-          //         child: Row(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           children: [
-          //             CircularProgressIndicator(
-          //               color: Colors.black,
-          //             ),
-          //             SizedBox(width: 10),
-          //             Text(
-          //               "Please wait...",
-          //               style: TextStyle(
-          //                 fontSize: 16,
-          //                 fontWeight: FontWeight.bold,
-          //               ),
-          //             ),
-          //           ],
-          //         )),
-          //   ),
+          if (isUploading)
+            Center(
+              child: Container(
+                  width: 200,
+                  height: 70,
+                  decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.blueGrey)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Please wait...",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
         ],
       ),
     );

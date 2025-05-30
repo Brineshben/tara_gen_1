@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/Navigate_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/popups.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
@@ -24,24 +23,20 @@ class BatterySplash extends StatefulWidget {
 
 class _BatterySplashState extends State<BatterySplash> {
   Timer? messageTimer;
-  bool isRotale = false;
 
   @override
   void initState() {
-    Get.find<NavigateController>().navigateData();
-
     messageTimer =
         Timer.periodic(const Duration(milliseconds: 500), (timer) async {
       print("Timer in battery screen");
-      bool? chargeStatus = await Get.find<BatteryController>().fetchCharging(
+      bool chargeStatus = await Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      if (!(chargeStatus ?? true)) {
+      if (!chargeStatus) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const Homepage()),
         );
-
         timer.cancel();
       }
     });
@@ -54,124 +49,44 @@ class _BatterySplashState extends State<BatterySplash> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
         backgroundColor: Colors.black,
-        body: GestureDetector(
-          onTap: () {
-            isRotale = !isRotale;
-            setState(() {});
-          },
-          child: SingleChildScrollView(
-            child: Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 100),
-                  child: Column(
-                    children: [
-                      GetX<BatteryController>(
-                        builder: (BatteryController controller) {
-                          String? data;
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            GetX<BatteryController>(
+              builder: (BatteryController controller) {
+                String? data;
 
-                          if (controller.background.value?.data!.isNotEmpty ??
-                              false) {
-                            data = controller.background.value?.data?.first
-                                    .robot?.batteryStatus ??
-                                "";
-                          }
+                if (controller.background.value?.data!.isNotEmpty ?? false) {
+                  data = controller
+                          .background.value?.data?.first.robot?.batteryStatus ??
+                      "0";
+                }
 
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "${data ?? "0"}%",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 50,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
-                            ],
-                          );
-                        },
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${data ?? "0"}%",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
                       ),
-                      // Center(
-                      //   child: Transform.rotate(
-                      //     angle: 3 * pi / 2,
-                      //     child: SizedBox(
-                      //       width: size.width * 0.35,
-                      //       height: size.width * 0.35,
-                      //       child: Lottie.asset(
-                      //         "assets/battery.json",
-                      //         fit: BoxFit.fitHeight,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                      isRotale
-                          ? Center(
-                              child: SizedBox(
-                                height: size.width * 0.45,
-                                child: Lottie.asset(
-                                  "assets/rotate.json",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            )
-                          : Center(
-                              child: SizedBox(
-                                height: size.width * 0.45,
-                                child: Lottie.asset(
-                                  "assets/still.json",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-
-                      // SizedBox(
-                      //   height: 50.h,
-                      //   width: 280.w,
-                      //   child: DefaultTextStyle(
-                      //     style: GoogleFonts.inter(
-                      //         color: Colors.white,
-                      //         fontSize: 30.h,
-                      //         fontWeight: FontWeight.bold,
-                      //         shadows: [
-                      //           Shadow(
-                      //             blurRadius: 5.0,
-                      //             color: Colors.black.withOpacity(0.7),
-                      //             offset: Offset(2, 2),
-                      //           ),
-                      //         ]),
-                      //     child: Center(
-                      //       child: AnimatedTextKit(
-                      //         animatedTexts: [
-                      //           TypewriterAnimatedText(
-                      //             'CHARGING....',
-                      //             speed: Duration(milliseconds: 150),
-                      //             cursor: '|',
-                      //           ),
-                      //         ],
-                      //         repeatForever: true,
-                      //         isRepeatingAnimation: true,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
-                  ),
-                ),
-                Positioned(
-                  top: 180,
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: Icon(
-                    Icons.bolt,
-                    color: Colors.white,
-                    size: 50,
-                  ),
-                )
-              ],
+                    )
+                  ],
+                );
+              },
             ),
-          ),
+            Center(
+              child: SizedBox(
+                height: size.width * 0.38,
+                child: Lottie.asset(
+                  "assets/charging.json",
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ],
         ),
         floatingActionButton: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 30),
@@ -260,7 +175,7 @@ class _BatterySplashState extends State<BatterySplash> {
                                   ElevatedButton(
                                     onPressed: () async {
                                       Get.back();
-                                      navigateToLocationByName('home');
+                                      navigateToLocationByName();
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.green,
@@ -307,72 +222,45 @@ class _BatterySplashState extends State<BatterySplash> {
         ));
   }
 
-  void navigateToLocationByName(String name) async {
+  void navigateToLocationByName() async {
     try {
-      final controller = Get.find<NavigateController>();
+      final resp = await ApiServices.setHOme();
 
-      final item = controller.dataList.firstWhere(
-        (e) => e?.name?.toLowerCase() == name.toLowerCase(),
-        orElse: () => null,
-      );
-
-      if (item == null) {
-        ProductAppPopUps.submit(
-          title: "NOT FOUND",
-          message: "$name location not found.",
-          actionName: "Close",
-          iconData: Icons.info_outline,
-          iconColor: Colors.orange,
-        );
-        return;
-      }
-
-      await ApiServices.destination(id: item.id ?? 0);
-      await Future.delayed(Duration(seconds: 2));
-
-      final resp = await ApiServices.robotbasestatus();
-      final bool status = resp['status'] == true;
-      final String message =
-          status ? "Heading to ${item.name}" : "Command already received";
-
-      Get.dialog(
-        AlertDialog(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          title: Column(
-            children: [
-              Center(
-                child: SizedBox(
-                  width: 180.w,
-                  height: 180.h,
-                  child: Lottie.asset("assets/navigate.json"),
+      if (resp['status'] == true) {
+        Get.dialog(
+          AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Column(
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: 180.w,
+                    height: 180.h,
+                    child: Lottie.asset("assets/navigate.json"),
+                  ),
                 ),
-              ),
-              Text(
-                "COMMAND RECEIVED",
-                style: GoogleFonts.orbitron(
-                  color: Colors.black,
-                  fontSize: 20.h,
-                  fontWeight: FontWeight.bold,
+                Text(
+                  "COMMAND RECEIVED",
+                  style: GoogleFonts.orbitron(
+                    color: Colors.black,
+                    fontSize: 20.h,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
+              ],
+            ),
+            content: Text(
+              "Heading to the home location",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.oxygen(
+                color: Colors.black,
+                fontSize: 15.h,
               ),
-            ],
-          ),
-          content: Text(
-            message.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.oxygen(
-              color: Colors.black,
-              fontSize: 15.h,
             ),
           ),
-        ),
-      );
-
-      Future.delayed(Duration(seconds: 3), () {
-        if (Get.isDialogOpen ?? false) Get.back();
-        if (Get.isDialogOpen ?? false) Get.back();
-      });
+        );
+      }
     } catch (e) {
       ProductAppPopUps.submit(
         title: "FAILED",

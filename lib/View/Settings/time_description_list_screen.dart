@@ -31,21 +31,6 @@ class _TimeDescriptionState extends State<TimeDescription> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.white, // makes it white
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => AddDescriptionPage(
-                          id: 0,
-                          isEdit: false,
-                          description: '',
-                          time: null,
-                        )));
-          },
-          child: Icon(Icons.add, color: Colors.black), // icon color
-        ),
         body: Stack(
           children: [
             GetX<BackgroudController>(
@@ -116,7 +101,6 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                   child: ListTile(
                                     onTap: () {
                                       Get.dialog(
-                                        barrierDismissible: false,
                                         AlertDialog(
                                           shape: const RoundedRectangleBorder(
                                             borderRadius: BorderRadius.all(
@@ -141,7 +125,7 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                           actions: [
                                             OutlinedButton(
                                               onPressed: () {
-                                                Get.back();
+                                                Navigator.of(context).pop();
                                               },
                                               style: OutlinedButton.styleFrom(
                                                 side: BorderSide(
@@ -156,7 +140,8 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                             ),
                                             OutlinedButton(
                                               onPressed: () {
-                                                Get.back();
+                                                Navigator.of(context).pop();
+
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -181,6 +166,8 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                             ),
                                             FilledButton(
                                               onPressed: () async {
+                                                Navigator.of(context).pop();
+
                                                 final response =
                                                     await ApiServices
                                                         .deleteDescription(
@@ -188,20 +175,19 @@ class _TimeDescriptionState extends State<TimeDescription> {
 
                                                 if (response['status'] ==
                                                     "ok") {
-                                                  Get.back();
-                                                  Get.snackbar(
-                                                    margin: EdgeInsets.all(20),
-                                                    "Success",
-                                                    response['message'] ??
-                                                        "Description deleted successfully",
-                                                    backgroundColor:
-                                                        Colors.green,
-                                                    colorText: Colors.white,
-                                                    snackPosition:
-                                                        SnackPosition.TOP,
-                                                    duration:
-                                                        Duration(seconds: 3),
-                                                  );
+                                                  // Get.snackbar(
+                                                  //   margin: EdgeInsets.all(20),
+                                                  //   "Success",
+                                                  //   response['message'] ??
+                                                  //       "Description deleted successfully",
+                                                  //   backgroundColor:
+                                                  //       Colors.green,
+                                                  //   colorText: Colors.white,
+                                                  //   snackPosition:
+                                                  //       SnackPosition.TOP,
+                                                  //   duration:
+                                                  //       Duration(seconds: 3),
+                                                  // );
 
                                                   Get.find<
                                                           DescriptionController>()
@@ -266,6 +252,63 @@ class _TimeDescriptionState extends State<TimeDescription> {
               ],
             ),
           ],
+        ),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(15.r),
+                  onTap: () async {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AddDescriptionPage(
+                          id: 0,
+                          isEdit: false,
+                          description: '',
+                          time: null,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Ink(
+                    width: 100,
+                    height: 130,
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.r),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Image.asset("assets/more.png"),
+                        SizedBox(height: 5),
+                        Text(
+                          "ADD",
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          "DESCRIPTION",
+                          style: TextStyle(
+                            fontSize: 8,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

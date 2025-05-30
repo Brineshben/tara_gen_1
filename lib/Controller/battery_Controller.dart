@@ -14,7 +14,7 @@ class BatteryController extends GetxController {
   RxBool isError = false.obs;
   Rx<BatteryModel?> background = Rx(null);
   bool popupshow = false;
-  bool popupshow2 = false;
+
   var roboId;
 
   Rx<Color> foregroundColor = Colors.black.obs;
@@ -26,7 +26,7 @@ class BatteryController extends GetxController {
 
   RxBool isRotale = false.obs;
 
-  Future<void> fetchBattery(int userID) async {
+  Future<bool> fetchBattery(int userID) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
@@ -44,8 +44,8 @@ class BatteryController extends GetxController {
             0;
 
         if (batteryStatus <= 30 && batteryStatus >= 0) {
-          if (!popupshow2) {
-            popupshow2 = true;
+          if (!popupshow) {
+            popupshow = true;
             await Get.dialog(
               AlertDialog(
                 shape: const RoundedRectangleBorder(
@@ -104,67 +104,48 @@ class BatteryController extends GetxController {
             );
           }
         }
-      }
-    } catch (e) {
-      isLoaded.value = false;
-      // Get.snackbar(
-      //   'Failed', // Title
-      //   'Error in Robot Response Battery Details',
-      //   snackPosition: SnackPosition.BOTTOM,
-      //   backgroundColor: Colors.blueGrey,
-      //   colorText: Colors.white,
-      //   borderRadius: 10,
-      //   margin: EdgeInsets.all(10),
-      //   duration: Duration(seconds: 3), // Auto dismiss time
-      //   icon: Icon(Icons.check_circle, color: Colors.white),
-      // );
 
-      print("Error fetching battery data: $e");
-    } finally {
-      resetStatus();
-    }
-  }
-
-  Future<bool?> fetchCharging(int userID) async {
-    isLoading.value = true;
-    isLoaded.value = false;
-    try {
-      Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
-
-      if (resp['status'] == "ok") {
-        print("--------Responsessssss: $resp-------");
-        BatteryModel batteryData = BatteryModel.fromJson(resp);
-        background.value = batteryData;
-        print("background.value: ${batteryData}");
-
-        bool? charge = background.value?.data?.first.robot?.charging;
-
+        bool charge = background.value?.data?.first.robot?.charging ?? false;
         print("BATTERT-IS-CHARGING $charge");
-        if (charge == true) {
-          return true;
-        } else {
-          return false;
-        }
+        return charge;
       }
     } catch (e) {
       isLoaded.value = false;
-      print("bennn");
-      // Get.snackbar(
-      //   'Failed', // Title
-      //   'Error in Robot Response Battery Details',
-      //   snackPosition: SnackPosition.BOTTOM,
-      //   backgroundColor: Colors.blueGrey,
-      //   colorText: Colors.white,
-      //   borderRadius: 10,
-      //   margin: EdgeInsets.all(10),
-      //   duration: Duration(seconds: 3), // Auto dismiss time
-      //   icon: Icon(Icons.check_circle, color: Colors.white),
-      // );
-
       print("Error fetching battery data: $e");
     } finally {
       resetStatus();
     }
-    return null;
+    return false;
   }
+
+  // Future<bool?> fetchCharging(int userID) async {
+  //   isLoading.value = true;
+  //   isLoaded.value = false;
+  //   try {
+  //     Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
+
+  //     if (resp['status'] == "ok") {
+  //       print("--------Responsessssss: $resp-------");
+  //       BatteryModel batteryData = BatteryModel.fromJson(resp);
+  //       background.value = batteryData;
+  //       print("background.value: ${batteryData}");
+
+  //       bool? charge = background.value?.data?.first.robot?.charging;
+  //       print("BATTERT-IS-CHARGING $charge");
+  //       if (charge == true) {
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     }
+  //   } catch (e) {
+  //     isLoaded.value = false;
+  //     print("bennn");
+
+  //     print("Error fetching battery data: $e");
+  //   } finally {
+  //     resetStatus();
+  //   }
+  //   return null;
+  // }
 }

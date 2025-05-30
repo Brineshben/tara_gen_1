@@ -40,6 +40,4 @@ class MainActivity : FlutterActivity() {
         }
     }
 
-    // ❌ Don't override onUserLeaveHint (causes app to minimize)
-    // ❌ Don't override onBackPressed (unless needed)
 }

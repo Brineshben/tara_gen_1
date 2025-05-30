@@ -24,13 +24,10 @@ class BackgroudController extends GetxController {
       if (resp['status'] == "ok") {
         BackgroundModel backgrounddata = BackgroundModel.fromJson(resp);
         backgroundModel.value = backgrounddata;
-        print('backgrouodimageis ${backgroundModel.value?.backgroundImage}');
         isLoaded.value = true;
       }
     } catch (e) {
       isLoaded.value = false;
-      print("---------list error----------- $e");
-
       print(e);
     } finally {
       resetStatus();

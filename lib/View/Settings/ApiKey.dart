@@ -56,14 +56,15 @@ class _ApiKeyState extends State<ApiKey> {
             ),
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
+                final bgImage =
+                    controller.backgroundModel.value?.backgroundImage;
+
                 return Positioned.fill(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
                       CachedNetworkImage(
-                        imageUrl:
-                            controller.backgroundModel.value?.backgroundImage ??
-                                "",
+                        imageUrl: bgImage ?? '',
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Image.asset(
                             controller.defaultIMage,
@@ -73,11 +74,9 @@ class _ApiKeyState extends State<ApiKey> {
                             fit: BoxFit.cover),
                       ),
                       BackdropFilter(
-                        filter: ImageFilter.blur(
-                            sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                         child: Container(
-                          color: Colors.black.withOpacity(
-                              0), // Required for BackdropFilter to work
+                          color: Colors.black.withOpacity(0),
                         ),
                       ),
                     ],
@@ -88,42 +87,6 @@ class _ApiKeyState extends State<ApiKey> {
             SingleChildScrollView(
               child: Column(
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20, top: 30),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context);
-                          },
-                          child: Container(
-                            height: 60.h,
-                            width: 60.h,
-                            decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(15).r),
-                            child: Icon(
-                              Icons.arrow_back_outlined,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Center(
-                          child: Text(
-                            "ADD API KEY",
-                            style: GoogleFonts.poppins(
-                                color: Colors.black,
-                                fontSize: 25.h,
-                                fontWeight: FontWeight.w700),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   Center(
                     child: Form(
                       key: _formKey,

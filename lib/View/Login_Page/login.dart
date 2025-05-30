@@ -1,10 +1,14 @@
+import 'dart:ui';
+
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
-import 'package:lottie/lottie.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 
 import '../../Controller/Login_api_controller.dart';
 import '../../Model/login_model.dart';
@@ -13,7 +17,6 @@ import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../Robot_Response/homepage.dart';
-import '../Settings/settings.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -30,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _hideSystemUI();
-    // initialize();
+    initialize();
     super.initState();
   }
 
@@ -63,30 +66,65 @@ class _LoginPageState extends State<LoginPage> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: [
-              Positioned.fill(
-                child: Center(
-                  child: SizedBox(
-                    width: size.width * 0.5,
-                    height: size.width * 0.5,
-                    child: Lottie.asset(
-                      "assets/loginimage.json",
-                      fit: BoxFit.fitHeight,
+              // Positioned.fill(
+              //   child: Center(
+              //     child: SizedBox(
+              //       width: size.width * 0.5,
+              //       height: size.width * 0.5,
+              //       child: Lottie.asset(
+              //         "assets/loginimage.json",
+              //         fit: BoxFit.fitHeight,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+
+              GetX<BackgroudController>(
+                builder: (BackgroudController controller) {
+                  final bgImage =
+                      controller.backgroundModel.value?.backgroundImage;
+
+                  return Positioned.fill(
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        (bgImage != null && bgImage.isNotEmpty)
+                            ? CachedNetworkImage(
+                                imageUrl: bgImage,
+                                fit: BoxFit.cover,
+                                placeholder: (context, url) => Image.asset(
+                                    controller.defaultIMage,
+                                    fit: BoxFit.cover),
+                                errorWidget: (context, url, error) =>
+                                    Image.asset(controller.defaultIMage,
+                                        fit: BoxFit.cover),
+                              )
+                            : Image.asset(controller.defaultIMage,
+                                fit: BoxFit.cover),
+                        BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                          child: Container(
+                            color: Colors.black.withOpacity(0),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
-              Positioned.fill(
-                child: Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          keyboardDismissBehavior:
-                              ScrollViewKeyboardDismissBehavior.onDrag,
-                          child: Column(
+
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: SingleChildScrollView(
+                        keyboardDismissBehavior:
+                            ScrollViewKeyboardDismissBehavior.onDrag,
+                        child: GetX<BatteryController>(
+                            builder: (batteryController) {
+                          return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
@@ -95,7 +133,8 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Text(
                                   'Hello !',
                                   style: GoogleFonts.roboto(
-                                    color: Colors.white,
+                                    color:
+                                        batteryController.foregroundColor.value,
                                     fontSize: 30.h,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -107,7 +146,8 @@ class _LoginPageState extends State<LoginPage> {
                                 child: Text(
                                   'Sign in to your account',
                                   style: GoogleFonts.roboto(
-                                    color: Colors.grey,
+                                    color:
+                                        batteryController.foregroundColor.value,
                                     fontSize: 13.h,
                                     fontWeight: FontWeight.bold,
                                   ),
@@ -123,7 +163,10 @@ class _LoginPageState extends State<LoginPage> {
                                   cursorColor: ColorUtils.userdetailcolor,
                                   controller: _usernameController,
                                   textInputAction: TextInputAction.next,
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color:
+                                        batteryController.foregroundColor.value,
+                                  ),
                                   decoration: InputDecoration(
                                     focusedBorder: UnderlineInputBorder(
                                       borderSide: BorderSide(
@@ -147,7 +190,10 @@ class _LoginPageState extends State<LoginPage> {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: 30.w, vertical: 5.h),
                                 child: TextFormField(
-                                  style: TextStyle(color: Colors.white),
+                                  style: TextStyle(
+                                    color:
+                                        batteryController.foregroundColor.value,
+                                  ),
                                   cursorColor: ColorUtils.userdetailcolor,
                                   textInputAction: TextInputAction.done,
                                   obscureText: _obscureText,
@@ -176,130 +222,112 @@ class _LoginPageState extends State<LoginPage> {
                                         _obscureText
                                             ? Icons.visibility_off
                                             : Icons.visibility,
-                                        color: Colors.white,
+                                        color: batteryController
+                                            .foregroundColor.value,
                                       ),
                                     ),
                                   ),
                                 ),
                               ),
 
-                              /// Forgot Password
-                              // Padding(
-                              //   padding: EdgeInsets.symmetric(
-                              //       horizontal: 10.w, vertical: 5.h),
-                              //   child: Row(
-                              //     mainAxisAlignment: MainAxisAlignment.end,
-                              //     children: [
-                              //       InkWell(
-                              //         onTap: () {},
-                              //         child: Text(
-                              //           "Forgot Password?",
-                              //           style: TextStyle(
-                              //             fontSize: 15.h,
-                              //             color: Colors.blue[900],
-                              //             fontStyle: FontStyle.italic,
-                              //           ),
-                              //         ),
-                              //       ),
-                              //     ],
-                              //   ),
-                              // ),
-
                               SizedBox(height: 50.h),
 
-                              /// Login Button
-                              Center(
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    splashColor: Colors.white,
-                                    highlightColor:
-                                        Colors.white.withOpacity(0.3),
-                                    borderRadius: BorderRadius.circular(20.r),
-                                    onTap: () async {
-                                      checkInternet2(
-                                        context: context,
-                                        function: () async {
-                                          String user =
-                                              _usernameController.text.trim();
-                                          String psw =
-                                              _passwordController.text.trim();
-                                          if (user.isNotEmpty) {
-                                            if (psw.isNotEmpty) {
-                                              await Get.find<
-                                                      UserAuthController>()
-                                                  .fetchUserData(
-                                                      username: user,
-                                                      password: psw);
-                                              if (Get.find<UserAuthController>()
-                                                  .isLoaded
-                                                  .value) {
-                                                print(
-                                                    "User ID: ${Get.find<UserAuthController>().loginData.value?.user?.id ?? 0}");
+                              GetX<UserAuthController>(
+                                  builder: (authcontroller) {
+                                return Center(
+                                  child: Material(
+                                    color: Colors.transparent,
+                                    child: InkWell(
+                                      splashColor: Colors.white,
+                                      highlightColor:
+                                          Colors.white.withOpacity(0.3),
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      onTap: () async {
+                                        checkInternet2(
+                                          context: context,
+                                          function: () async {
+                                            final user =
+                                                _usernameController.text.trim();
+                                            final psw =
+                                                _passwordController.text.trim();
 
-                                                Navigator.pushReplacement(
-                                                  context,
-                                                  PageRouteBuilder(
-                                                    transitionDuration:
-                                                        Duration(
-                                                            milliseconds: 300),
-                                                    pageBuilder: (context,
-                                                            animation,
-                                                            secondaryAnimation) =>
-                                                        Homepage(),
-                                                    transitionsBuilder:
-                                                        (context,
-                                                            animation,
-                                                            secondaryAnimation,
-                                                            child) {
-                                                      return FadeTransition(
-                                                          opacity: animation,
-                                                          child: child);
-                                                    },
-                                                  ),
-                                                );
-
-                                                ProductAppPopUps.submit(
-                                                  title: "SUCCESS",
-                                                  message: "Login successful",
-                                                  actionName: "Close",
-                                                  iconData: Icons.done,
-                                                  iconColor: Colors.green,
-                                                );
-                                              }
-                                            } else {
+                                            if (user.isEmpty) {
                                               ProductAppPopUps.submit(
                                                 title: "FAILED",
                                                 message:
-                                                    "Please Enter your Password.",
+                                                    "Please enter your username.",
                                                 actionName: "Close",
                                                 iconData: Icons.error_outline,
                                                 iconColor: Colors.red,
                                               );
+                                              return;
                                             }
-                                          } else {
-                                            ProductAppPopUps.submit(
-                                              title: "FAILED",
-                                              message:
-                                                  "Please Enter Your Username.",
-                                              actionName: "Close",
-                                              iconData: Icons.error_outline,
-                                              iconColor: Colors.red,
+
+                                            if (psw.isEmpty) {
+                                              ProductAppPopUps.submit(
+                                                title: "FAILED",
+                                                message:
+                                                    "Please enter your password.",
+                                                actionName: "Close",
+                                                iconData: Icons.error_outline,
+                                                iconColor: Colors.red,
+                                              );
+                                              return;
+                                            }
+
+                                            authcontroller.login(
+                                              username: user,
+                                              password: psw,
+                                              context: context,
                                             );
-                                          }
-                                        },
-                                      );
-                                    },
-                                    child: buildInfoCard(size, 'LOGIN'),
+                                          },
+                                        );
+                                      },
+                                      // child: buildInfoCard(size, 'LOGIN'),
+                                      child: Container(
+                                        width: size.width * 0.20,
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          color: Colors.white,
+                                          border:
+                                              Border.all(color: Colors.blue),
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: Colors.grey.shade400,
+                                              spreadRadius: 1,
+                                              blurRadius: 5,
+                                            ),
+                                          ],
+                                        ),
+                                        height: 55,
+                                        child: Center(
+                                          child: authcontroller.isLoading.value
+                                              ? CircularProgressIndicator(
+                                                  color: Colors.black,
+                                                )
+                                              : Text(
+                                                  "LOGIN",
+                                                  style: GoogleFonts.poppins(
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                        ),
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
+                                );
+                              }),
                             ],
-                          ),
-                        ),
+                          );
+                        }),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],

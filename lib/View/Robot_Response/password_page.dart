@@ -45,28 +45,30 @@ class _PasswordPageState extends State<PasswordPage> {
           children: [
             GetX<BackgroudController>(
               builder: (BackgroudController controller) {
+                final bgImage =
+                    controller.backgroundModel.value?.backgroundImage;
+
                 return Positioned.fill(
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      CachedNetworkImage(
-                        imageUrl:
-                            controller.backgroundModel.value?.backgroundImage ??
-                                "",
-                        fit: BoxFit.cover,
-                        placeholder: (context, url) => Image.asset(
-                            controller.defaultIMage,
-                            fit: BoxFit.cover),
-                        errorWidget: (context, url, error) => Image.asset(
-                            controller.defaultIMage,
-                            fit: BoxFit.cover),
-                      ),
+                      (bgImage != null && bgImage.isNotEmpty)
+                          ? CachedNetworkImage(
+                              imageUrl: bgImage,
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) => Image.asset(
+                                  controller.defaultIMage,
+                                  fit: BoxFit.cover),
+                              errorWidget: (context, url, error) => Image.asset(
+                                  controller.defaultIMage,
+                                  fit: BoxFit.cover),
+                            )
+                          : Image.asset(controller.defaultIMage,
+                              fit: BoxFit.cover),
                       BackdropFilter(
-                        filter: ImageFilter.blur(
-                            sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                        filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                         child: Container(
-                          color: Colors.black.withOpacity(
-                              0), // Required for BackdropFilter to work
+                          color: Colors.black.withOpacity(0),
                         ),
                       ),
                     ],

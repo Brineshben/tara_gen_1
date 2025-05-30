@@ -16,7 +16,6 @@ import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
-import '../../Controller/EnquiryListController.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
 import '../../Controller/battery_Controller.dart';
@@ -39,37 +38,36 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    _hideSystemUI();
 
     Get.find<RobotresponseapiController>().getUrl();
 
-    _hideSystemUI();
+    // Get.find<Enquirylistcontroller>().fetchEnquiryList(
+    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-    Get.find<Enquirylistcontroller>().fetchEnquiryList(
+    Get.find<BackgroudController>().fetchBackground(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      Get.find<BatteryController>().fetchBattery(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      bool isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
+        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+      );
+
+      fetchAndUpdateBaseUrl();
+      Get.find<RobotresponseapiController>().fetchObsResultList();
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
-      Get.find<BackgroudController>().fetchBackground(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      // bool isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
-      if (isBatteryscreen ?? false) {
+      if (isBatteryscreen) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => BatterySplash()),
         );
-
         timer.cancel();
       }
-
-      fetchAndUpdateBaseUrl();
-      Get.find<RobotresponseapiController>().fetchObsResultList();
     });
   }
 
@@ -87,7 +85,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return WillPopScope(
       onWillPop: () async {
         return false;
@@ -155,7 +152,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                   backgroundColor: Colors.black,
                                   child: ClipOval(
                                     child: Image.asset(
-                                      "assets/taraprofile.jpg",
+                                      "assets/taraLogo.png",
                                       width: 100.w,
                                       height: 100.h,
                                     ),
@@ -198,30 +195,162 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                       builder: (controller) {
                         bool? listening =
                             controller.responseData.value.listening;
-                        // bool? waiting =  controller.responseData.value.waiting;
+                        bool? waiting = controller.responseData.value.waiting;
                         bool? speaking = controller.responseData.value.speaking;
                         return Column(
                           children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if (listening == true)
-                                  Lottie.asset(
-                                    "assets/listening.json",
-                                    width: 300,
-                                  )
-                                else if (speaking == true)
-                                  Lottie.asset(
-                                    "assets/speaking.json",
-                                    width: 300,
-                                  )
-                                else
-                                  Lottie.asset(
-                                    "assets/thinking.json",
-                                    width: 300,
+                            // Column(
+                            //   mainAxisAlignment: MainAxisAlignment.start,
+                            //   children: [
+                            //     if (listening == true)
+                            //       Lottie.asset(
+                            //         "assets/listening.json",
+                            //         width: 300,
+                            //       )
+                            //     else if (speaking == true)
+                            //       Lottie.asset(
+                            //         "assets/speaking.json",
+                            //         width: 300,
+                            //       )
+                            //     else
+                            // Lottie.asset(
+                            //   "assets/thinking.json",
+                            //   width: 300,
+                            // ),
+                            //   ],
+                            // ),
+
+                            if (listening == true)
+                              Column(
+                                children: [
+                                  Center(
+                                    child: Lottie.asset(
+                                      "assets/Animation - 1739525563341.json",
+                                      fit: BoxFit.fitHeight,
+                                    ),
                                   ),
-                              ],
-                            ),
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 280.w,
+                                    child: DefaultTextStyle(
+                                      style: GoogleFonts.orbitron(
+                                          color: Colors.white,
+                                          fontSize: 30.h,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Center(
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              'LISTENING....',
+                                              speed: Duration(milliseconds: 50),
+                                              // Adjust typing speed
+                                              cursor: '|', // Optional cursor
+                                            ),
+                                          ],
+                                          repeatForever: true,
+                                          // Ensures continuous looping
+                                          isRepeatingAnimation: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            else if (speaking == true)
+                              Column(children: [
+                                Center(
+                                  child: Lottie.asset(
+                                    "assets/Animation - 1739525563341.json",
+                                    fit: BoxFit.fitHeight,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 100.h,
+                                  width: double.infinity,
+                                  child: DefaultTextStyle(
+                                    style: GoogleFonts.orbitron(
+                                        color: Colors.white,
+                                        fontSize: 30.h,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 5.0,
+                                            color:
+                                                Colors.black.withOpacity(0.7),
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ]),
+                                    child: Center(
+                                      child: AnimatedTextKit(
+                                        animatedTexts: [
+                                          TypewriterAnimatedText(
+                                            'SPEAKING....',
+                                            speed: Duration(milliseconds: 50),
+                                            // Adjust typing speed
+                                            cursor: '|', // Optional cursor
+                                          ),
+                                        ],
+                                        repeatForever: true,
+                                        // Ensures continuous looping
+                                        isRepeatingAnimation: true,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ])
+                            else
+                              Column(
+                                children: [
+                                  Center(
+                                    child: Lottie.asset(
+                                      "assets/Animation - 1739525563341.json",
+                                      fit: BoxFit.fitHeight,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 100.h,
+                                    width: 280.w,
+                                    child: DefaultTextStyle(
+                                      style: GoogleFonts.orbitron(
+                                          color: Colors.white,
+                                          fontSize: 30.h,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 5.0,
+                                              color:
+                                                  Colors.black.withOpacity(0.7),
+                                              offset: Offset(2, 2),
+                                            ),
+                                          ]),
+                                      child: Center(
+                                        child: AnimatedTextKit(
+                                          animatedTexts: [
+                                            TypewriterAnimatedText(
+                                              'THINKING....',
+                                              speed: Duration(milliseconds: 50),
+                                              // Adjust typing speed
+                                              cursor: '|', // Optional cursor
+                                            ),
+                                          ],
+                                          repeatForever: true,
+                                          // Ensures continuous looping
+                                          isRepeatingAnimation: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
                             controller.robotResponseModel.value?.text != null &&
                                     controller.robotResponseModel.value?.text !=
                                         ''
@@ -423,6 +552,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                 )
                               : SizedBox();
                         }),
+                        SizedBox(height: 20),
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
