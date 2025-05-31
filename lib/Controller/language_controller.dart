@@ -22,6 +22,12 @@ class LanguageController extends GetxController {
     }
   }
 
+  setLanguage() async {
+    final batteryController = Get.find<BatteryController>();
+    selectedLanguage.value =
+        batteryController.background.value?.data?[0].robot?.language ?? '';
+  }
+
   final batteryController = Get.find<BatteryController>();
 
   void setSelectedLanguage(String lang) async {

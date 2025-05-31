@@ -4,10 +4,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
-import 'package:lottie/lottie.dart';
+import 'package:ihub/Utils/header.dart';
 
 class AddSystemPrompt extends StatefulWidget {
   final String id;
@@ -70,19 +70,18 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-        title: Text(
-          "BEHAVIOUR PROTOCOL",
-          style: GoogleFonts.oxygen(
-            color: Colors.white,
-            fontSize: 25.h,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
+      // appBar: AppBar(
+      //   iconTheme: IconThemeData(color: Colors.white),
+      //   backgroundColor: Colors.transparent,
+      //   title: Text(
+      //     "BEHAVIOUR PROTOCOL",
+      //     style: GoogleFonts.oxygen(
+      //       color: Colors.white,
+      //       fontSize: 25.h,
+      //       fontWeight: FontWeight.w700,
+      //     ),
+      //   ),
+      // ),
       body: Stack(
         children: [
           SizedBox(
@@ -122,82 +121,94 @@ class _AddSystemPromptState extends State<AddSystemPrompt> {
           ),
           SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  TextFormField(
-                    maxLength: 300,
-                    controller: textController,
-                    maxLines: 6,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: "Enter prompt",
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+              padding: const EdgeInsets.symmetric(horizontal: 50),
+              child: GetX<BatteryController>(builder: (controller) {
+                return Column(
+                  children: [
+                    SizedBox(height: 120),
+                    TextFormField(
+                      maxLength: 300,
+                      controller: textController,
+                      maxLines: 6,
+                      style: TextStyle(color: controller.foregroundColor.value),
+                      decoration: InputDecoration(
+                        labelText: "Enter prompt",
+                        labelStyle: TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: questionController,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: "Enter question",
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: questionController,
+                      style: TextStyle(color: controller.foregroundColor.value),
+                      decoration: InputDecoration(
+                        labelText: "Enter question",
+                        labelStyle: TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: answerController,
-                    maxLength: 200,
-                    maxLines: 3,
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: "Enter answer",
-                      labelStyle: TextStyle(color: Colors.white),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: answerController,
+                      maxLength: 200,
+                      maxLines: 3,
+                      style: TextStyle(color: controller.foregroundColor.value),
+                      decoration: InputDecoration(
+                        labelText: "Enter answer",
+                        labelStyle: TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 30),
-                  SizedBox(
-                    width: 200,
-                    child: ElevatedButton.icon(
-                      onPressed: () async {
-                        if (widget.isEdit) {
-                          await promptController.editPrompt(
-                            id: widget.id,
-                            prompt: textController.text,
-                            q: questionController.text,
-                            ans: answerController.text,
-                          );
-                        } else {
-                          await promptController.addPrompt(
-                            prompt: textController.text,
-                            q: questionController.text,
-                            ans: answerController.text,
-                          );
-                        }
-                      },
-                      icon: Icon(Icons.send),
-                      label: Text("Submit"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 15),
-                        textStyle: const TextStyle(fontSize: 16),
+                    const SizedBox(height: 30),
+                    SizedBox(
+                      width: 200,
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          if (widget.isEdit) {
+                            await promptController.editPrompt(
+                              id: widget.id,
+                              prompt: textController.text,
+                              q: questionController.text,
+                              ans: answerController.text,
+                            );
+                          } else {
+                            await promptController.addPrompt(
+                              prompt: textController.text,
+                              q: questionController.text,
+                              ans: answerController.text,
+                            );
+                          }
+                        },
+                        icon: Icon(Icons.send),
+                        label: Text("Submit"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 15),
+                          textStyle: const TextStyle(fontSize: 16),
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                );
+              }),
             ),
+          ),
+          Column(
+            children: [
+              Header(
+                isBack: true,
+                screenName: widget.isEdit
+                    ? "UPDATE BEHAVIOR PROTOCOL"
+                    : "ADD BEHAVIOR PROTOCOL",
+              ),
+            ],
           ),
         ],
       ),

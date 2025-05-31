@@ -670,104 +670,104 @@ class _NavigationState extends State<Navigation> {
                   Row(
                     spacing: 20,
                     children: [
-                      Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(15.r),
-                          onTap: () async {
-                            Get.dialog(
-                              Dialog(
-                                backgroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Container(
-                                  padding: const EdgeInsets.all(20),
-                                  width: 300,
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Lottie.asset(
-                                        "assets/home.json",
-                                        width: 100,
-                                        height: 100,
-                                        repeat: true,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Navigate Home?",
-                                        style: TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.blueGrey,
-                                        ),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Text(
-                                        "Do you want to send the robot to the home location now?",
-                                        style: TextStyle(fontSize: 14),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                      const SizedBox(height: 20),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceEvenly,
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () => Get.back(),
-                                            style: ElevatedButton.styleFrom(
-                                              foregroundColor: Colors.red,
-                                              backgroundColor: Colors.white,
-                                            ),
-                                            child: const Text("No"),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async {
-                                              Get.back();
-                                              navigateToLocationByName('home');
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor: Colors.green,
-                                            ),
-                                            child: const Text(
-                                              "Yes, Start",
-                                              style: TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                          child: Ink(
-                            width: 100,
-                            height: 120,
-                            padding: EdgeInsets.all(15),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(15.r),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Lottie.asset("assets/home.json"),
-                                Text(
-                                  "HOME",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                      // Material(
+                      //   color: Colors.transparent,
+                      //   child: InkWell(
+                      //     borderRadius: BorderRadius.circular(15.r),
+                      //     onTap: () async {
+                      //       Get.dialog(
+                      //         Dialog(
+                      //           backgroundColor: Colors.white,
+                      //           shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(20),
+                      //           ),
+                      //           child: Container(
+                      //             padding: const EdgeInsets.all(20),
+                      //             width: 300,
+                      //             child: Column(
+                      //               mainAxisSize: MainAxisSize.min,
+                      //               children: [
+                      //                 Lottie.asset(
+                      //                   "assets/home.json",
+                      //                   width: 100,
+                      //                   height: 100,
+                      //                   repeat: true,
+                      //                 ),
+                      //                 const SizedBox(height: 10),
+                      //                 Text(
+                      //                   "Navigate Home?",
+                      //                   style: TextStyle(
+                      //                     fontSize: 18,
+                      //                     fontWeight: FontWeight.bold,
+                      //                     color: Colors.blueGrey,
+                      //                   ),
+                      //                   textAlign: TextAlign.center,
+                      //                 ),
+                      //                 const SizedBox(height: 10),
+                      //                 Text(
+                      //                   "Do you want to send the robot to the home location now?",
+                      //                   style: TextStyle(fontSize: 14),
+                      //                   textAlign: TextAlign.center,
+                      //                 ),
+                      //                 const SizedBox(height: 20),
+                      //                 Row(
+                      //                   mainAxisAlignment:
+                      //                       MainAxisAlignment.spaceEvenly,
+                      //                   children: [
+                      //                     ElevatedButton(
+                      //                       onPressed: () => Get.back(),
+                      //                       style: ElevatedButton.styleFrom(
+                      //                         foregroundColor: Colors.red,
+                      //                         backgroundColor: Colors.white,
+                      //                       ),
+                      //                       child: const Text("No"),
+                      //                     ),
+                      //                     ElevatedButton(
+                      //                       onPressed: () async {
+                      //                         Get.back();
+                      //                         navigateToLocationByName('home');
+                      //                       },
+                      //                       style: ElevatedButton.styleFrom(
+                      //                         backgroundColor: Colors.green,
+                      //                       ),
+                      //                       child: const Text(
+                      //                         "Yes, Start",
+                      //                         style: TextStyle(
+                      //                             color: Colors.white),
+                      //                       ),
+                      //                     ),
+                      //                   ],
+                      //                 ),
+                      //               ],
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       );
+                      //     },
+                      //     child: Ink(
+                      //       width: 100,
+                      //       height: 120,
+                      //       padding: EdgeInsets.all(15),
+                      //       decoration: BoxDecoration(
+                      //         color: Colors.white,
+                      //         borderRadius: BorderRadius.circular(15.r),
+                      //       ),
+                      //       child: Column(
+                      //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //         children: [
+                      //           Lottie.asset("assets/home.json"),
+                      //           Text(
+                      //             "HOME",
+                      //             style: TextStyle(
+                      //               fontSize: 12,
+                      //               fontWeight: FontWeight.bold,
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
                       Material(
                         color: Colors.transparent,
                         child: InkWell(

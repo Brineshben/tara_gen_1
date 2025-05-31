@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -127,25 +128,57 @@ class _MaintananceState extends State<Maintanance> {
         colorText: Colors.white,
       );
     }
-
     isLoading = false;
   }
 
 // process image
-  Future<void> _processImageForColor(File originalFile) async {
-    final paletteGenerator = await PaletteGenerator.fromImageProvider(
-      FileImage(originalFile),
-      size: const Size(500, 500),
-      maximumColorCount: 20,
-    );
+  // Future<void> _processImageForColor(File originalFile) async {
+  //   final paletteGenerator = await PaletteGenerator.fromImageProvider(
+  //     FileImage(originalFile),
+  //     size: const Size(500, 500),
+  //     maximumColorCount: 20,
+  //   );
 
-    final dominantColor = paletteGenerator.dominantColor?.color ?? Colors.white;
-    final brightness = ThemeData.estimateBrightnessForColor(dominantColor);
+  //   final dominantColor = paletteGenerator.dominantColor?.color ?? Colors.white;
+  //   final brightness = ThemeData.estimateBrightnessForColor(dominantColor);
+
+  //   Get.find<BatteryController>().foregroundColor.value =
+  //       brightness == Brightness.dark ? Colors.white : Colors.black;
+
+  //   print("Updated color: $dominantColor, brightness: $brightness");
+  // }
+
+  Future<void> _processImageForColor(File originalFile) async {
+    final avgColor = await getAverageColor(originalFile);
+    final brightness = ThemeData.estimateBrightnessForColor(avgColor);
 
     Get.find<BatteryController>().foregroundColor.value =
         brightness == Brightness.dark ? Colors.white : Colors.black;
 
-    print("Updated color: $dominantColor, brightness: $brightness");
+    print("Average color: $avgColor, brightness: $brightness");
+  }
+
+  Future<Color> getAverageColor(File imageFile) async {
+    final bytes = await imageFile.readAsBytes();
+    final codec = await ui.instantiateImageCodec(bytes);
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+
+    final byteData = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    if (byteData == null) return Colors.transparent;
+
+    final Uint8List pixels = byteData.buffer.asUint8List();
+    int length = pixels.lengthInBytes;
+
+    int r = 0, g = 0, b = 0, count = 0;
+
+    for (int i = 0; i < length; i += 4) {
+      r += pixels[i];
+      g += pixels[i + 1];
+      b += pixels[i + 2];
+      count++;
+    }
+    return Color.fromARGB(255, r ~/ count, g ~/ count, b ~/ count);
   }
 
 // upload image
@@ -416,6 +449,29 @@ class _MaintananceState extends State<Maintanance> {
                               isLoading = false;
                             });
                           }
+
+                          // final confirmed = await showDialog<bool>(
+                          //   context: context,
+                          //   builder: (context) => AlertDialog(
+                          //     title: Text('Note About Wallpaper'),
+                          //     content: Text(
+                          //       'The app will try to adjust the icon and text colors based on your image. '
+                          //       'But if the image has mixed colors or low contrast, it may still affect readability. '
+                          //       'Please pick a clear and clean wallpaper for the best result.',
+                          //     ),
+                          //     actions: [
+                          //       TextButton(
+                          //         onPressed: () =>
+                          //             Navigator.pop(context, false),
+                          //         child: Text('Cancel'),
+                          //       ),
+                          //       TextButton(
+                          //         onPressed: () => Navigator.pop(context, true),
+                          //         child: Text('Continue'),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // );
                         },
                       ),
                       SettingsCard(

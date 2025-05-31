@@ -23,6 +23,7 @@ class _LanguageListState extends State<LanguageList> {
   void initState() {
     super.initState();
     languageController.fetchLanguages();
+    languageController.setLanguage();
   }
 
   Widget build(BuildContext context) {
@@ -36,7 +37,6 @@ class _LanguageListState extends State<LanguageList> {
           GetX<BackgroudController>(
             builder: (BackgroudController controller) {
               final bgImage = controller.backgroundModel.value?.backgroundImage;
-
               return Positioned.fill(
                 child: Stack(
                   fit: StackFit.expand,

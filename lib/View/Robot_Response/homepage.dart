@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -42,18 +43,16 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
-    // Get.find<Enquirylistcontroller>().fetchEnquiryList(
-    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
-    Get.find<BackgroudController>().fetchBackground(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      // get robot wifi ip
+      fetchAndUpdateBaseUrl();
+
+      // fetch robot battery data
       bool isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
       );
 
-      fetchAndUpdateBaseUrl();
+      // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
@@ -71,10 +70,33 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     });
   }
 
+  Timer? _debounceTimer;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    // Cancel previous timer if any
+    _debounceTimer?.cancel();
+
+    final robotresponce = Get.find<RobotresponseapiController>();
+    robotresponce.robotResponseModel.value = null;
+
+    // Start new timer to delay fetchBackground
+    _debounceTimer = Timer(Duration(seconds: 5), () {
+      if (mounted) {
+        Get.find<BackgroudController>().fetchBackground(
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+        );
+      }
+    });
+  }
+
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _timer?.cancel();
+    _debounceTimer?.cancel();
     super.dispose();
   }
 
@@ -195,7 +217,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                       builder: (controller) {
                         bool? listening =
                             controller.responseData.value.listening;
-                        bool? waiting = controller.responseData.value.waiting;
+                        // bool? waiting = controller.responseData.value.waiting;
                         bool? speaking = controller.responseData.value.speaking;
                         return Column(
                           children: [
@@ -774,5 +796,85 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
         ),
       ],
     );
+  }
+}
+
+class AnimatedCircleWave extends StatefulWidget {
+  const AnimatedCircleWave({super.key});
+
+  @override
+  State<AnimatedCircleWave> createState() => _AnimatedCircleWaveState();
+}
+
+class _AnimatedCircleWaveState extends State<AnimatedCircleWave>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    _controller = AnimationController(
+      duration: const Duration(seconds: 4),
+      vsync: this,
+    )..repeat(); // repeat the animation
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose(); // clean up
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Center(
+        child: AnimatedBuilder(
+          animation: _controller,
+          builder: (_, __) {
+            return CustomPaint(
+              painter: WavePainter(_controller.value),
+              child: const SizedBox(
+                width: 20,
+                height: 20,
+              ),
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class WavePainter extends CustomPainter {
+  final double animationValue;
+  WavePainter(this.animationValue);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final radius = size.width / 2;
+    final center = Offset(radius, radius);
+
+    final paint = Paint()
+      ..shader = LinearGradient(
+        colors: [
+          Colors.blueAccent,
+          Colors.purpleAccent,
+          Colors.pinkAccent,
+        ],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        tileMode: TileMode.mirror,
+        transform: GradientRotation(2 * pi * animationValue),
+      ).createShader(Rect.fromCircle(center: center, radius: radius));
+
+    canvas.drawCircle(center, radius, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant WavePainter oldDelegate) {
+    return oldDelegate.animationValue != animationValue;
   }
 }

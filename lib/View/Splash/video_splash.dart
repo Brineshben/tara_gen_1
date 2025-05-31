@@ -120,8 +120,8 @@
 // }
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Model/login_model.dart';
 import 'package:ihub/Service/sharedPreference.dart';
@@ -170,6 +170,7 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 50),
             SizedBox(
               width: size.width * 0.3,
               height: size.width * 0.3,
@@ -178,7 +179,24 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
                 fit: BoxFit.cover,
               ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              'T          A          R          A',
+              style: GoogleFonts.robotoCondensed(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Lottie.asset("assets/loading.json", width: 100),
+            Spacer(),
+            Image.asset(
+              "assets/logo1.png",
+              width: 100,
+            )
           ],
         ),
       ),
