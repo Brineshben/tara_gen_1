@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 
 class LockTaskService {
-  static const platform = MethodChannel('com.example.ihub/locktask');
+  static const platform = MethodChannel('com.ihub.tara/locktask');
 
   static Future<void> stopLockTask() async {
     try {

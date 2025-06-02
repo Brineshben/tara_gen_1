@@ -64,12 +64,18 @@ class _MaintananceState extends State<Maintanance> {
   // }
 
   bool isTraining = false;
-
+  String version = "";
   @override
   void initState() {
     _hideSystemUI();
+    // getVersion();
     super.initState();
   }
+
+  // getVersion() async {
+  //   PackageInfo packageInfo = await PackageInfo.fromPlatform();
+  //   version = packageInfo.version;
+  // }
 
   Future<void> startTraining() async {
     try {
