@@ -26,7 +26,7 @@ class BatteryController extends GetxController {
 
   RxBool isRotale = false.obs;
 
-  Future<bool> fetchBattery(int userID) async {
+  Future<void> fetchBattery(int userID) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
@@ -107,7 +107,6 @@ class BatteryController extends GetxController {
 
         bool charge = background.value?.data?.first.robot?.charging ?? false;
         print("BATTERT-IS-CHARGING $charge");
-        return charge;
       }
     } catch (e) {
       isLoaded.value = false;
@@ -115,37 +114,36 @@ class BatteryController extends GetxController {
     } finally {
       resetStatus();
     }
-    return false;
   }
 
-  // Future<bool?> fetchCharging(int userID) async {
-  //   isLoading.value = true;
-  //   isLoaded.value = false;
-  //   try {
-  //     Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
+  Future<bool?> fetchCharging(int userID) async {
+    isLoading.value = true;
+    isLoaded.value = false;
+    try {
+      Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
 
-  //     if (resp['status'] == "ok") {
-  //       print("--------Responsessssss: $resp-------");
-  //       BatteryModel batteryData = BatteryModel.fromJson(resp);
-  //       background.value = batteryData;
-  //       print("background.value: ${batteryData}");
+      if (resp['status'] == "ok") {
+        print("--------Responsessssss: $resp-------");
+        BatteryModel batteryData = BatteryModel.fromJson(resp);
+        background.value = batteryData;
+        print("background.value: ${batteryData}");
 
-  //       bool? charge = background.value?.data?.first.robot?.charging;
-  //       print("BATTERT-IS-CHARGING $charge");
-  //       if (charge == true) {
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     isLoaded.value = false;
-  //     print("bennn");
+        bool? charge = background.value?.data?.first.robot?.charging;
+        print("BATTERT-IS-CHARGING $charge");
+        if (charge == true) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    } catch (e) {
+      isLoaded.value = false;
+      print("bennn");
 
-  //     print("Error fetching battery data: $e");
-  //   } finally {
-  //     resetStatus();
-  //   }
-  //   return null;
-  // }
+      print("Error fetching battery data: $e");
+    } finally {
+      resetStatus();
+    }
+    return null;
+  }
 }

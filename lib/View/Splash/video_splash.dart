@@ -170,7 +170,7 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 50),
+            // const SizedBox(height: 50),
             SizedBox(
               width: size.width * 0.3,
               height: size.width * 0.3,
@@ -192,11 +192,11 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
             ),
             const SizedBox(height: 20),
             Lottie.asset("assets/loading.json", width: 100),
-            Spacer(),
-            Image.asset(
-              "assets/logo1.png",
-              width: 100,
-            )
+            // Spacer(),
+            // Image.asset(
+            //   "assets/logo1.png",
+            //   width: 100,
+            // )
           ],
         ),
       ),

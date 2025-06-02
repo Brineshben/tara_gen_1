@@ -39,7 +39,7 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
     'afternoon',
     'evening',
     'night',
-    'all time'
+    // 'all time'
   ];
   String? _selectedTime;
 
@@ -54,6 +54,15 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
   void dispose() {
     textController.dispose();
     super.dispose();
+  }
+
+  Color getOppositeColor(Color color) {
+    return Color.fromARGB(
+      color.alpha,
+      255 - color.red,
+      255 - color.green,
+      255 - color.blue,
+    );
   }
 
   @override
@@ -101,7 +110,8 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
                   children: [
                     SizedBox(height: 120),
                     DropdownButtonFormField<String>(
-                      dropdownColor: Colors.white,
+                      dropdownColor:
+                          getOppositeColor(controller.foregroundColor.value),
                       value: _selectedTime,
                       items: _timeOptions.map((time) {
                         return DropdownMenuItem(
@@ -109,7 +119,8 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
                           child: Text(
                             time[0].toUpperCase() + time.substring(1),
                             style: GoogleFonts.poppins(
-                              color: Colors.black,
+                              color: controller.foregroundColor.value,
+                              fontSize: 14,
                             ),
                           ),
                         );

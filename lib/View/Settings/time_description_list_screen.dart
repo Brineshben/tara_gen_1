@@ -72,7 +72,6 @@ class _TimeDescriptionState extends State<TimeDescription> {
                       if (controller.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
                       final dataList =
                           controller.descriptionModel.value?.data ?? [];
 
@@ -80,7 +79,7 @@ class _TimeDescriptionState extends State<TimeDescription> {
                         return const Center(
                           child: Text(
                             'No descriptions found',
-                            style: TextStyle(color: Colors.black),
+                            style: TextStyle(color: Colors.red),
                           ),
                         );
                       }

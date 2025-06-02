@@ -48,7 +48,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      bool isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
+      Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
       );
 
@@ -57,10 +57,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
-      // bool isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      if (isBatteryscreen) {
+      if (isBatteryscreen ?? false) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => BatterySplash()),
@@ -75,8 +75,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
-    // Cancel previous timer if any
     _debounceTimer?.cancel();
 
     final robotresponce = Get.find<RobotresponseapiController>();

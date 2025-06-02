@@ -26,17 +26,17 @@ class _BatterySplashState extends State<BatterySplash> {
 
   @override
   void initState() {
-    messageTimer =
-        Timer.periodic(const Duration(milliseconds: 500), (timer) async {
+    messageTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       print("Timer in battery screen");
-      bool chargeStatus = await Get.find<BatteryController>().fetchBattery(
+      bool? chargeStatus = await Get.find<BatteryController>().fetchCharging(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-      if (!chargeStatus) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const Homepage()),
-        );
+      if (!(chargeStatus ?? true)) {
+        Navigator.push(context, MaterialPageRoute(
+          builder: (context) {
+            return const Homepage();
+          },
+        ));
         timer.cancel();
       }
     });

@@ -50,10 +50,13 @@ class _NavigationState extends State<Navigation> {
 
   @override
   void initState() {
-    _hideSystemUI();
-    startMessageTimer();
-    Get.find<NavigateController>().navigateData();
     super.initState();
+
+    _hideSystemUI();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Get.find<NavigateController>().navigateData();
+      startMessageTimer();
+    });
   }
 
   void _hideSystemUI() {
@@ -64,7 +67,6 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     return Scaffold(
         body: Stack(
           children: [
@@ -295,8 +297,7 @@ class _NavigationState extends State<Navigation> {
                                           children: List.generate(
                                             controller.dataList.length,
                                             (index) => Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
+                                              padding: const EdgeInsets.all(8),
                                               child: Material(
                                                 color: Colors.transparent,
                                                 child: InkWell(
@@ -971,7 +972,7 @@ class _NavigationState extends State<Navigation> {
           ),
         ],
       ),
-      width: size.width * 0.28,
+      width: size.width * 0.25,
       height: size.height * 0.080,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

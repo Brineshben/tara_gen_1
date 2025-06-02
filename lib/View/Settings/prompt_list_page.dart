@@ -78,7 +78,7 @@ class _PromptListPageState extends State<PromptListPage> {
                     return const Center(
                       child: Text(
                         'No prompt found',
-                        style: TextStyle(color: Colors.black),
+                        style: TextStyle(color: Colors.red),
                       ),
                     );
                   }
@@ -215,8 +215,9 @@ class _PromptListPageState extends State<PromptListPage> {
                                   ),
                                 );
                               },
-                              title:
-                                  Text(item.commandPrompt ?? 'No Description'),
+                              title: Text(
+                                item.commandPrompt ?? 'No Description',
+                              ),
                             ),
                           );
                         },

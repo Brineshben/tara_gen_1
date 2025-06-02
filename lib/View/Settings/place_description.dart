@@ -79,7 +79,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                             child: Text(
                             "No description found",
                             style: TextStyle(
-                              color: Colors.black,
+                              color: Colors.red,
                               fontWeight: FontWeight.bold,
                             ),
                           ))
