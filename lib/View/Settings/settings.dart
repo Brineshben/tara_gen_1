@@ -19,7 +19,6 @@ import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/description_option.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
@@ -65,18 +64,6 @@ class _MaintananceState extends State<Maintanance> {
   // }
 
   bool isTraining = false;
-  String version = "";
-  @override
-  void initState() {
-    _hideSystemUI();
-    // getVersion();
-    super.initState();
-  }
-
-  getVersion() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    version = packageInfo.version;
-  }
 
   Future<void> startTraining() async {
     try {

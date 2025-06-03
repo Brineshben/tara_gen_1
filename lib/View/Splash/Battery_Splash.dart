@@ -28,7 +28,7 @@ class _BatterySplashState extends State<BatterySplash> {
   void initState() {
     messageTimer = Timer.periodic(const Duration(seconds: 3), (timer) async {
       print("Timer in battery screen");
-      bool? chargeStatus = await Get.find<BatteryController>().fetchCharging(
+      bool? chargeStatus = await Get.find<BatteryController>().fetchBattery(
           Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
       if (!(chargeStatus ?? true)) {

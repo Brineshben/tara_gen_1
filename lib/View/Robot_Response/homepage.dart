@@ -48,7 +48,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      Get.find<BatteryController>().fetchBattery(
+      bool? isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
       );
 
@@ -57,8 +57,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
-      bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
       if (isBatteryscreen ?? false) {
         Navigator.pushReplacement(
@@ -370,6 +370,16 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                   ),
                                 ],
                               ),
+
+                            Center(
+                                child: SizedBox(
+                              width: size.width * 0.8,
+                              height: size.width * 0.3,
+                              child: Lottie.asset(
+                                "assets/Animation - 1739429937775.json",
+                                fit: BoxFit.fitHeight,
+                              ),
+                            )),
 
                             controller.robotResponseModel.value?.text != null &&
                                     controller.robotResponseModel.value?.text !=
