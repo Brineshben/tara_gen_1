@@ -371,15 +371,15 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                 ],
                               ),
 
-                            Center(
-                                child: SizedBox(
-                              width: size.width * 0.8,
-                              height: size.width * 0.3,
-                              child: Lottie.asset(
-                                "assets/Animation - 1739429937775.json",
-                                fit: BoxFit.fitHeight,
-                              ),
-                            )),
+                            // Center(
+                            //     child: SizedBox(
+                            //   width: size.width * 0.8,
+                            //   height: size.width * 0.3,
+                            //   child: Lottie.asset(
+                            //     "assets/Animation - 1739429937775.json",
+                            //     fit: BoxFit.fitHeight,
+                            //   ),
+                            // )),
 
                             controller.robotResponseModel.value?.text != null &&
                                     controller.robotResponseModel.value?.text !=
@@ -804,85 +804,5 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
         ),
       ],
     );
-  }
-}
-
-class AnimatedCircleWave extends StatefulWidget {
-  const AnimatedCircleWave({super.key});
-
-  @override
-  State<AnimatedCircleWave> createState() => _AnimatedCircleWaveState();
-}
-
-class _AnimatedCircleWaveState extends State<AnimatedCircleWave>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    )..repeat(); // repeat the animation
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose(); // clean up
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Center(
-        child: AnimatedBuilder(
-          animation: _controller,
-          builder: (_, __) {
-            return CustomPaint(
-              painter: WavePainter(_controller.value),
-              child: const SizedBox(
-                width: 20,
-                height: 20,
-              ),
-            );
-          },
-        ),
-      ),
-    );
-  }
-}
-
-class WavePainter extends CustomPainter {
-  final double animationValue;
-  WavePainter(this.animationValue);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final radius = size.width / 2;
-    final center = Offset(radius, radius);
-
-    final paint = Paint()
-      ..shader = LinearGradient(
-        colors: [
-          Colors.blueAccent,
-          Colors.purpleAccent,
-          Colors.pinkAccent,
-        ],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        tileMode: TileMode.mirror,
-        transform: GradientRotation(2 * pi * animationValue),
-      ).createShader(Rect.fromCircle(center: center, radius: radius));
-
-    canvas.drawCircle(center, radius, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant WavePainter oldDelegate) {
-    return oldDelegate.animationValue != animationValue;
   }
 }

@@ -39,7 +39,7 @@ class _AddDescriptionPageState extends State<AddDescriptionPage> {
     'afternoon',
     'evening',
     'night',
-    // 'all time'
+    'all time'
   ];
   String? _selectedTime;
 

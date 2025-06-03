@@ -138,7 +138,7 @@ class ApiConstants {
 
   //  description
   static String description = "/add_wishing_commands/";
-  static String edit_wishing_commands = "/edit_wishing_commands/";
+  static String edit_description = "/wishing/update/";
   static String deactivate_description = "/deactivate_description/";
 
   // prompt

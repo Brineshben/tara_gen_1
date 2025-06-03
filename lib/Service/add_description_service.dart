@@ -71,19 +71,18 @@ class DescriptionService {
     required String id,
   }) async {
     final url = Uri.parse(
-        "${ApiConstants.baseUrl1}${ApiConstants.edit_wishing_commands}");
+        "${ApiConstants.baseUrl1}${ApiConstants.edit_description}$id/");
 
     try {
       final requestBody = jsonEncode({
         'time_of_day': timeOfDay,
         'description': description,
-        'description_id': id,
       });
 
       print('URL: $url');
       print('Request Body: $requestBody');
 
-      final response = await http.post(
+      final response = await http.put(
         url,
         headers: {
           'Content-Type': 'application/json',
