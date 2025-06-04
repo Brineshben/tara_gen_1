@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -45,7 +44,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
@@ -586,7 +585,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(15),
                             onTap: () {
                               Navigator.push(context, MaterialPageRoute(
                                 builder: (context) {
@@ -675,7 +674,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     child: Material(
                       color: Colors.transparent,
                       child: InkWell(
-                        borderRadius: BorderRadius.circular(40),
+                        borderRadius: BorderRadius.circular(15),
                         onTap: () async {
                           Navigator.push(
                             context,

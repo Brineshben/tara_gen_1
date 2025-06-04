@@ -10,7 +10,6 @@ import 'package:ihub/Utils/header.dart';
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Nav_description_controller.dart';
 import '../../Service/Api_Service.dart';
-import '../../Utils/popups.dart';
 import 'VideoPlayer.dart';
 
 class PlaceDescription extends StatefulWidget {
@@ -202,70 +201,70 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                 ),
                                               ),
                                               SizedBox(height: 20),
-                                              Text("NAME",
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontWeight:
-                                                          FontWeight.w500)),
-                                              SizedBox(height: 10),
-                                              TextFormField(
-                                                controller: controller
-                                                    .textControllers[index],
-                                                style: const TextStyle(
-                                                    color: Colors.white),
-                                                minLines: null,
-                                                validator: (val) =>
-                                                    val!.trim().isEmpty
-                                                        ? 'Please Enter Name.'
-                                                        : null,
-                                                decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                        color: Colors.white38),
-                                                    contentPadding:
-                                                        EdgeInsets.symmetric(
-                                                            vertical: 10.h,
-                                                            horizontal: 10.w),
-                                                    hintText: "Enter Name",
-                                                    border: OutlineInputBorder(
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                              .all(
-                                                        Radius.circular(10.0),
-                                                      ).r,
-                                                    ),
-                                                    enabledBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide:
-                                                          const BorderSide(
-                                                              color:
-                                                                  Colors.blue,
-                                                              width: 1.0),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10))
-                                                              .r,
-                                                    ),
-                                                    focusedBorder:
-                                                        OutlineInputBorder(
-                                                      borderSide:
-                                                          const BorderSide(
-                                                              color:
-                                                                  Colors.blue,
-                                                              width: 1.0),
-                                                      borderRadius:
-                                                          const BorderRadius
-                                                                  .all(Radius
-                                                                      .circular(
-                                                                          10.0))
-                                                              .r,
-                                                    ),
-                                                    fillColor:
-                                                        Colors.blueGrey[900],
-                                                    filled: true),
-                                              ),
-                                              SizedBox(height: 10),
+                                              // Text("NAME",
+                                              //     style: TextStyle(
+                                              //         fontSize: 12,
+                                              //         fontWeight:
+                                              //             FontWeight.w500)),
+                                              // SizedBox(height: 10),
+                                              // TextFormField(
+                                              //   controller: controller
+                                              //       .textControllers[index],
+                                              //   style: const TextStyle(
+                                              //       color: Colors.white),
+                                              //   minLines: null,
+                                              //   validator: (val) =>
+                                              //       val!.trim().isEmpty
+                                              //           ? 'Please Enter Name.'
+                                              //           : null,
+                                              //   decoration: InputDecoration(
+                                              //       hintStyle: const TextStyle(
+                                              //           color: Colors.white38),
+                                              //       contentPadding:
+                                              //           EdgeInsets.symmetric(
+                                              //               vertical: 10.h,
+                                              //               horizontal: 10.w),
+                                              //       hintText: "Enter Name",
+                                              //       border: OutlineInputBorder(
+                                              //         borderRadius:
+                                              //             const BorderRadius
+                                              //                 .all(
+                                              //           Radius.circular(10.0),
+                                              //         ).r,
+                                              //       ),
+                                              //       enabledBorder:
+                                              //           OutlineInputBorder(
+                                              //         borderSide:
+                                              //             const BorderSide(
+                                              //                 color:
+                                              //                     Colors.blue,
+                                              //                 width: 1.0),
+                                              //         borderRadius:
+                                              //             const BorderRadius
+                                              //                     .all(Radius
+                                              //                         .circular(
+                                              //                             10))
+                                              //                 .r,
+                                              //       ),
+                                              //       focusedBorder:
+                                              //           OutlineInputBorder(
+                                              //         borderSide:
+                                              //             const BorderSide(
+                                              //                 color:
+                                              //                     Colors.blue,
+                                              //                 width: 1.0),
+                                              //         borderRadius:
+                                              //             const BorderRadius
+                                              //                     .all(Radius
+                                              //                         .circular(
+                                              //                             10.0))
+                                              //                 .r,
+                                              //       ),
+                                              //       fillColor:
+                                              //           Colors.blueGrey[900],
+                                              //       filled: true),
+                                              // ),
+                                              // SizedBox(height: 10),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,

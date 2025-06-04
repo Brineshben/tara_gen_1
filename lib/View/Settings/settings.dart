@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/FulltourController.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
@@ -861,7 +862,7 @@ class _MaintananceState extends State<Maintanance> {
 }
 
 Widget buildInfoCard(Size size, String title, {Color color = Colors.black}) {
-  return Container(
+  return Ink(
     width: size.width * 0.20,
     padding: EdgeInsets.symmetric(horizontal: 20),
     decoration: BoxDecoration(
@@ -944,6 +945,8 @@ class SettingsCard extends StatelessWidget {
       color: Colors.transparent,
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
+        splashColor: Colors.blue.withOpacity(0.3),
+        highlightColor: Colors.green.withOpacity(0.3),
         onTap: onTap,
         child: Ink(
           padding: const EdgeInsets.all(15),

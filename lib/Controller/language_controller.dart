@@ -35,7 +35,11 @@ class LanguageController extends GetxController {
     String id = batteryController.roboId.value;
 
     try {
-      final response = await ApiServices.setLanguage(id: id, language: lang);
+      final response = await ApiServices.setLanguage(
+        id: id,
+        language: lang,
+        robotId: batteryController.roboId.value,
+      );
 
       // ✅ Show success message from API
       if (response['status'] == 'ok') {

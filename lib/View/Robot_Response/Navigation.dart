@@ -301,8 +301,8 @@ class _NavigationState extends State<Navigation> {
                                               child: Material(
                                                 color: Colors.transparent,
                                                 child: InkWell(
-                                                    splashColor: Colors.white,
-                                                    highlightColor: Colors.white
+                                                    splashColor: Colors.blue,
+                                                    highlightColor: Colors.green
                                                         .withOpacity(0.3),
                                                     borderRadius:
                                                         BorderRadius.circular(
@@ -542,7 +542,8 @@ class _NavigationState extends State<Navigation> {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
-                      highlightColor: Colors.blue,
+                      highlightColor: Colors.green.withOpacity(0.3),
+                      splashColor: Colors.blue,
                       onTap: () async {
                         try {
                           Map<String, dynamic> resp =
@@ -645,9 +646,10 @@ class _NavigationState extends State<Navigation> {
                                     Text(
                                       'Robot Navigate to places',
                                       style: TextStyle(
-                                          fontSize: 16.h,
-                                          color: Colors.black54,
-                                          fontWeight: FontWeight.bold),
+                                        fontSize: 12,
+                                        color: Colors.black54,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                     ),
                                   ],
                                 ),
@@ -772,6 +774,8 @@ class _NavigationState extends State<Navigation> {
                       Material(
                         color: Colors.transparent,
                         child: InkWell(
+                          splashColor: Colors.blue,
+                          highlightColor: Colors.green.withOpacity(0.3),
                           borderRadius: BorderRadius.circular(15.r),
                           onTap: () async {
                             Get.dialog(
@@ -959,35 +963,37 @@ class _NavigationState extends State<Navigation> {
 
   Widget buildInfoCard2(String title) {
     final Size size = MediaQuery.of(context).size;
-    return Ink(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.blueGrey.shade300, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white,
-            spreadRadius: 0.01,
-            offset: Offset(0, 0),
-          ),
-        ],
-      ),
-      width: size.width * 0.25,
-      height: size.height * 0.080,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Text(
-              title.toUpperCase(),
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 18.h,
-                fontWeight: FontWeight.bold,
+    return InkWell(
+      child: Ink(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20.r),
+          border: Border.all(color: Colors.blueGrey.shade300, width: 1),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.white,
+              spreadRadius: 0.01,
+              offset: Offset(0, 0),
+            ),
+          ],
+        ),
+        width: size.width * 0.25,
+        height: size.height * 0.080,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: Text(
+                title.toUpperCase(),
+                style: GoogleFonts.poppins(
+                  color: Colors.black,
+                  fontSize: 18.h,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

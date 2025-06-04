@@ -41,7 +41,6 @@ class _BatterySplashState extends State<BatterySplash> {
         timer.cancel();
       }
     });
-
     super.initState();
   }
 
@@ -124,6 +123,8 @@ class _BatterySplashState extends State<BatterySplash> {
                 color: Colors.transparent,
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.r),
+                  splashColor: Colors.blue,
+                  highlightColor: Colors.green.withOpacity(0.3),
                   onTap: () async {
                     Get.dialog(
                       Dialog(

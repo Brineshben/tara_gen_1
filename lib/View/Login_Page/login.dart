@@ -33,7 +33,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _hideSystemUI();
-    // initialize();
+    initialize();
     super.initState();
   }
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get.dart';
+import 'package:ihub/Controller/FulltourController.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:get_it/get_it.dart';
 
@@ -45,6 +47,9 @@ class SharedPrefs {
   Future<bool> removeLoginData() async {
     final sharedPrefs = GetIt.instance<SharedPrefs>();
     final prefs = sharedPrefs.prefs;
+    FullTourControllerNew fullTourController = Get.find();
+    fullTourController.clearData();
+
     bool done = await prefs.remove("loginData");
     return done;
   }

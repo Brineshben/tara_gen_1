@@ -8,11 +8,8 @@ class FullTourControllerNew extends GetxController {
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
   Rx<NavigationListModel?> fullTourData = Rx(null);
- RxList<NavigationData>  dataNavigation =  <NavigationData>[].obs;
- RxList<NavigationData>  newDataNavigation =  <NavigationData>[].obs;
-
-
-
+  RxList<NavigationData> dataNavigation = <NavigationData>[].obs;
+  RxList<NavigationData> newDataNavigation = <NavigationData>[].obs;
 
   Future<void> fetchFullTourData() async {
     isLoading.value = true;
@@ -24,7 +21,7 @@ class FullTourControllerNew extends GetxController {
 
       if (resp['status'] == 'ok') {
         fullTourData.value = NavigationListModel.fromJson(resp);
-        dataNavigation.value =fullTourData.value?.data ?? [] ;
+        dataNavigation.value = fullTourData.value?.data ?? [];
         isLoaded.value = true;
       } else {
         isError.value = true;
@@ -36,14 +33,18 @@ class FullTourControllerNew extends GetxController {
     }
   }
 
-  void  addData( NavigationData item){
-    newDataNavigation.value.add(item);
+  void addData(NavigationData item) {
+    newDataNavigation.add(item);
     newDataNavigation.refresh();
   }
 
-  void removeData (NavigationData item ){
-    newDataNavigation.value.remove(item);
+  void removeData(NavigationData item) {
+    newDataNavigation.remove(item);
     newDataNavigation.refresh();
+  }
+
+  void clearData() {
+    dataNavigation.clear();
+    newDataNavigation.clear();
   }
 }
-

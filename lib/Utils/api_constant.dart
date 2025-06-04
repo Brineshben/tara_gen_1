@@ -90,7 +90,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.1.31:8000";
+  static String _defaultBaseUrl1 = "http://192.168.1.38:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -142,9 +142,9 @@ class ApiConstants {
   static String deactivate_description = "/deactivate_description/";
 
   // prompt
-  static String commandPrompt = "/command_prompt/";
-  static String command_prompt_edit = "/command_prompt_edit/";
-  static String deactivate_command_prompt = "/deactivate_command_prompt/";
+  static String promptget = "/prompt/list/";
+  static String promptcreate = "/prompt/create/";
+  static String promptUpdate = "/prompt/update/";
 
   // map kill
   // static String fetch_refresh_status = "/fetch_refresh_status/";
@@ -159,7 +159,7 @@ class ApiConstants {
 
   //  get language
   static String getLanguage = "/robot/languages/list/";
-  static String setLanguage = "/robot/languages/edit/";
+  static String setLanguage = "/robot/update-robots/";
 
   ///online
   static String login = "/accounts/login/";

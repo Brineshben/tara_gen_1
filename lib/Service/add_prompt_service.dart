@@ -1,32 +1,69 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:ihub/Model/system_prompt_model.dart';
 import 'package:ihub/Utils/api_constant.dart';
 
 class PromptService {
-  static Future<SystemPromptModel> fetchPrompt() async {
-    final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.commandPrompt}");
+  // static Future<Map<String, dynamic>?> fetchPrompt() async {
+  //   final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
 
-    print('urrrrrrrrrl $url');
-    try {
-      final response = await http.get(url);
-      print('HTTP status: ${response.statusCode}');
-      print('HTTP body: ${response.body}');
+  //   try {
+  //     final response = await http.get(url);
+  //     print('HTTP status: ${response.statusCode}');
+  //     print('prompt body: ${response.body}');
 
-      if (response.statusCode == 200) {
-        final jsonData = jsonDecode(response.body);
-        print('promptresponce $jsonData');
-        return SystemPromptModel.fromJson(jsonData);
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error in fetchDescription: $e');
-      rethrow;
-    }
+  //     if (response.statusCode == 200) {
+  //       final jsonData = jsonDecode(response.body);
+  //       return jsonData;
+  //     } else {
+  //       throw Exception('Failed to load data');
+  //     }
+  //   } catch (e) {
+  //     print('Error in fetchDescription: $e');
+  //     rethrow;
+  //   }
+  // }
+  static Future<Map<String, dynamic>>? fetchPrompt() async {
+    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
+    // final url = Uri.parse("http://192.168.1.38:8000/prompt/list/");
+    var request = http.Request('GET', url);
+    request.headers.addAll({'Content-Type': 'application/json'});
+
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print('promptbody $respString');
+    return json.decode(respString);
   }
+
+  // static Future<Map<String, dynamic>?> fetchPrompt() async {
+  //   try {
+  //     final response = await http.get(url);
+
+  //     print('HTTP status: ${response.statusCode}');
+  //     print('prompt body: ${response.body}');
+
+  //     if (response.statusCode == 200) {
+  //       final jsonData = jsonDecode(response.body);
+
+  //       // Validate JSON structure
+  //       if (jsonData is Map<String, dynamic> &&
+  //           jsonData.containsKey("status") &&
+  //           jsonData["status"] == "ok" &&
+  //           jsonData.containsKey("data")) {
+  //         return jsonData;
+  //       } else {
+  //         print("Invalid response format");
+  //         return null;
+  //       }
+  //     } else {
+  //       print("Server returned error: ${response.statusCode}");
+  //       return null;
+  //     }
+  //   } catch (e) {
+  //     print('Error in fetchPrompt: $e');
+  //     return null;
+  //   }
+  // }
 
   static Future<Map<String, dynamic>?> addPrompt({
     required String prompt,
@@ -35,8 +72,7 @@ class PromptService {
   }) async {
     var prommt =
         "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer: $answer";
-    final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.commandPrompt}");
+    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
 
     try {
       final requestBody = jsonEncode({
@@ -80,8 +116,8 @@ class PromptService {
   }) async {
     var prommt =
         "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer:m $answer";
-    final url = Uri.parse(
-        "${ApiConstants.baseUrl1}${ApiConstants.command_prompt_edit}");
+    final url =
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptUpdate}");
 
     try {
       final requestBody = jsonEncode({

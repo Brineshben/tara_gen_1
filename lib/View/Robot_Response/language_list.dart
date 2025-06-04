@@ -69,7 +69,6 @@ class _LanguageListState extends State<LanguageList> {
             if (languageController.isLoading.value) {
               return const Center(child: CircularProgressIndicator());
             }
-
             return Column(
               children: [
                 Expanded(

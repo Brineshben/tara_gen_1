@@ -137,6 +137,7 @@ class ApiServices {
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
+    print("robotresponce$respString");
     return json.decode(respString);
   }
 
@@ -703,16 +704,16 @@ class ApiServices {
   }
 
 // DELETE PROMPT
-  static deletePrompt(int id) async {
-    String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.deactivate_command_prompt}";
-    final response = await http.post(
-      Uri.parse(url),
-      body: {'pk': id.toString()},
-    );
-    print('deleteresponce ${response.body}');
-    return jsonDecode(response.body);
-  }
+  // static deletePrompt(int id) async {
+  //   String url =
+  //       "${ApiConstants.baseUrl1}${ApiConstants.deactivate_command_prompt}";
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     body: {'pk': id.toString()},
+  //   );
+  //   print('deleteresponce ${response.body}');
+  //   return jsonDecode(response.body);
+  // }
 
   // get language
   static Future<Map<String, dynamic>> fetchLanguages() async {
@@ -728,15 +729,18 @@ class ApiServices {
   static Future<Map<String, dynamic>> setLanguage({
     required String language,
     required String id,
+    required String robotId,
   }) async {
     try {
-      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}$id/";
+      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}";
 
       final body = jsonEncode({
-        "language": language,
+        robotId: {
+          "language": "ENGLISH(en-IN)",
+        }
       });
 
-      final response = await http.put(
+      final response = await http.post(
         Uri.parse(url),
         headers: {
           "Content-Type": "application/json", // important for JSON body
@@ -747,7 +751,9 @@ class ApiServices {
       print('language response: ${response.body}');
       return jsonDecode(response.body);
     } catch (e) {
-      throw Exception('Error: $e');
+      print('updatelan $e');
     }
+
+    throw Exception("Failed to set language");
   }
 }

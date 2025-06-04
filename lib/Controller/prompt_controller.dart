@@ -1,21 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ihub/Model/system_prompt_model.dart';
 import 'package:ihub/Service/add_prompt_service.dart';
 
 class PromptController extends GetxController {
-  var promptModel = Rxn<SystemPromptModel>();
-
   var isLoading = false.obs;
-  var errorMessage = ''.obs;
+  var promptresponce;
 
   fetchPrompt() async {
+    print('dfdsfds');
     try {
       isLoading.value = true;
-      errorMessage.value = '';
-      promptModel.value = await PromptService.fetchPrompt();
+      promptresponce = await PromptService.fetchPrompt();
+      print('controllerpromptresponce $promptresponce');
     } catch (e) {
-      errorMessage.value = 'Failed to fetch data';
+      print('getpromt error $e');
     } finally {
       isLoading.value = false;
     }
