@@ -9,6 +9,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
+import 'package:ihub/Utils/communication_status.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:lottie/lottie.dart';
@@ -117,157 +118,24 @@ class _NavigationState extends State<Navigation> {
                         builder: (controller) {
                           bool? listening =
                               controller.responseData.value.listening;
-                          // bool? waiting = controller.responseData.value.waiting;
                           bool? speaking =
                               controller.responseData.value.speaking;
                           return SizedBox(
-                            // height: size.width * 0.25,
                             width: size.width * 0.3,
                             child: Column(
                               children: [
-                                // Column(
-                                //   mainAxisAlignment: MainAxisAlignment.start,
-                                //   children: [
-                                //     if (listening == true)
-                                //       Lottie.asset(
-                                //         "assets/listening.json",
-                                //         width: 200,
-                                //       )
-                                //     else if (speaking == true)
-                                //       Lottie.asset(
-                                //         "assets/speaking.json",
-                                //         width: 200,
-                                //       )
-                                //     else
-                                //       Lottie.asset(
-                                //         "assets/thinking.json",
-                                //         width: 200,
-                                //       ),
-                                //   ],
-                                // ),
-
                                 if (listening == true)
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: 280.w,
-                                    child: DefaultTextStyle(
-                                      style: GoogleFonts.orbitron(
-                                          color: Colors.white,
-                                          fontSize: 30.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              'LISTENING....',
-                                              speed: Duration(milliseconds: 50),
-                                              // Adjust typing speed
-                                              cursor: '|', // Optional cursor
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          // Ensures continuous looping
-                                          isRepeatingAnimation: true,
-                                        ),
-                                      ),
-                                    ),
+                                  RobotCommunicationStatus(
+                                    text: "LISTENING...",
                                   )
                                 else if (speaking == true)
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: double.infinity,
-                                    child: DefaultTextStyle(
-                                      style: GoogleFonts.orbitron(
-                                          color: Colors.white,
-                                          fontSize: 30.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              'SPEAKING....',
-                                              speed: Duration(milliseconds: 50),
-                                              // Adjust typing speed
-                                              cursor: '|', // Optional cursor
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          // Ensures continuous looping
-                                          isRepeatingAnimation: true,
-                                        ),
-                                      ),
-                                    ),
+                                  RobotCommunicationStatus(
+                                    text: "SPEAKING...",
                                   )
                                 else
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: 280.w,
-                                    child: DefaultTextStyle(
-                                      style: GoogleFonts.orbitron(
-                                          color: Colors.white,
-                                          fontSize: 30.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              'THINKING....',
-                                              speed: Duration(milliseconds: 50),
-                                              // Adjust typing speed
-                                              cursor: '|', // Optional cursor
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          // Ensures continuous looping
-                                          isRepeatingAnimation: true,
-                                        ),
-                                      ),
-                                    ),
+                                  RobotCommunicationStatus(
+                                    text: "THINKING...",
                                   ),
-
-                                if (controller.robotResponseModel.value?.text !=
-                                        "" &&
-                                    listening == true)
-                                  Container(
-                                    padding: EdgeInsets.all(8),
-                                    decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        controller.robotResponseModel.value
-                                                ?.text ??
-                                            "",
-                                        style: TextStyle(
-                                            fontSize: 18, color: Colors.white),
-                                      ),
-                                    ),
-                                  )
                               ],
                             ),
                           );
@@ -275,14 +143,13 @@ class _NavigationState extends State<Navigation> {
                       ),
                       controller.isLoading.value
                           ? Center(
-                              child: SizedBox(
-                                height: 200,
-                                width: 200,
-                                child: Center(
-                                  child: CircularProgressIndicator(
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 200),
+                                  CircularProgressIndicator(
                                     color: Colors.blue,
                                   ),
-                                ),
+                                ],
                               ),
                             )
                           : controller.dataList.isNotEmpty
@@ -292,7 +159,7 @@ class _NavigationState extends State<Navigation> {
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        // SizedBox(height: 100),
+                                        SizedBox(height: 20),
                                         Wrap(
                                           children: List.generate(
                                             controller.dataList.length,
@@ -501,17 +368,20 @@ class _NavigationState extends State<Navigation> {
                                   ),
                                 )
                               : Center(
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Oops..No Data Found",
-                                        style: GoogleFonts.poppins(
-                                            color: Colors.red,
-                                            fontSize: 20.h,
-                                            fontWeight: FontWeight.w700),
-                                      ),
-                                    ],
-                                    mainAxisAlignment: MainAxisAlignment.center,
+                                  child: SizedBox(
+                                    height: 200,
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        Text(
+                                          "Oops..No Data Found",
+                                          style: GoogleFonts.poppins(
+                                              color: Colors.red,
+                                              fontSize: 20.h,
+                                              fontWeight: FontWeight.w700),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                     ],

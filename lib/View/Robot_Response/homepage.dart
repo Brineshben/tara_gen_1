@@ -10,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/EnquiryListController.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
+import 'package:ihub/Utils/communication_status.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/Navigation.dart';
@@ -222,79 +223,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         ),
                       ],
                     ),
-                    Column(
-                      children: [
-                        // look camera
-                        Lottie.asset(
-                          "assets/look_camera.json",
-                          width: 300,
-                        ),
 
-                        // face
-                        // Lottie.asset(
-                        //   "assets/Animation - 1739429937775.json",
-                        //   width: 270,
-                        // ),
-                        Text(
-                          'Please look at the camera',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
-                      ],
-                    ),
-
-                    GetX<RobotresponseapiController>(
-                      builder: (controller) {
-                        bool? listening =
-                            controller.responseData.value.listening;
-                        bool? speaking = controller.responseData.value.speaking;
-                        return Column(
-                          children: [
-                            if (listening == true)
-                              RobotCommunicationStatus(
-                                text: "LISTENING...",
-                              )
-                            else if (speaking == true)
-                              RobotCommunicationStatus(
-                                text: "SPEAKING...",
-                              )
-                            else
-                              RobotCommunicationStatus(
-                                text: "THINKING...",
-                              ),
-                            controller.robotResponseModel.value?.text != null &&
-                                    controller.robotResponseModel.value?.text !=
-                                        ''
-                                ? Padding(
-                                    padding: const EdgeInsets.only(bottom: 20),
-                                    child: Container(
-                                      width: MediaQuery.of(context).size.width *
-                                          0.5,
-                                      padding: EdgeInsets.all(8),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black45,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          controller.robotResponseModel.value
-                                                  ?.text ??
-                                              '',
-                                          style: TextStyle(
-                                              fontSize: 15,
-                                              color: Colors.white),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                : SizedBox(),
-                          ],
-                        );
-                      },
-                    ),
                     // GetX<Enquirylistcontroller>(
                     //   builder: (Enquirylistcontroller controller) {
                     //     if (controller.isLoading.value) {
@@ -387,6 +316,53 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   ],
                 ),
               ),
+              GetX<RobotresponseapiController>(
+                builder: (controller) {
+                  bool? listening = controller.responseData.value.listening;
+                  bool? speaking = controller.responseData.value.speaking;
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 200),
+                      if (listening == true)
+                        RobotCommunicationStatus(
+                          text: "LISTENING...",
+                        )
+                      else if (speaking == true)
+                        RobotCommunicationStatus(
+                          text: "SPEAKING...",
+                        )
+                      else
+                        RobotCommunicationStatus(
+                          text: "THINKING...",
+                        ),
+                      SizedBox(height: 90),
+                      controller.robotResponseModel.value?.text != null &&
+                              controller.robotResponseModel.value?.text != ''
+                          ? Padding(
+                              padding: const EdgeInsets.only(bottom: 50),
+                              child: Container(
+                                width: MediaQuery.of(context).size.width * 0.5,
+                                padding: EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.black45,
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    controller.robotResponseModel.value?.text ??
+                                        '',
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.white),
+                                  ),
+                                ),
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  );
+                },
+              ),
             ],
           ),
           floatingActionButton: Column(
@@ -466,90 +442,81 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                               : SizedBox();
                         }),
                         SizedBox(height: 20),
-                        // Material(
-                        //   color: Colors.transparent,
-                        //   child: InkWell(
-                        //     borderRadius: BorderRadius.circular(15),
-                        //     onTap: () {
-                        //       Navigator.push(context, MaterialPageRoute(
-                        //         builder: (context) {
-                        //           return Navigation(
-                        //             robotid: Get.find<BatteryController>()
-                        //                     .background
-                        //                     .value
-                        //                     ?.data
-                        //                     ?.first
-                        //                     .robot
-                        //                     ?.roboId ??
-                        //                 "",
-                        //           );
-                        //         },
-                        //       ));
-                        //     },
-                        //     // child: Ink(
-                        //     //   width: 330.h,
-                        //     //   padding: EdgeInsets.all(16),
-                        //     //   decoration: BoxDecoration(
-                        //     //     color: Colors.white,
-                        //     //     borderRadius: BorderRadius.circular(15),
-                        //     //     border: Border.all(
-                        //     //       color: Colors.grey.shade200,
-                        //     //     ),
-                        //     //   ),
-                        //     //   child: Column(
-                        //     //     crossAxisAlignment: CrossAxisAlignment.start,
-                        //     //     mainAxisAlignment:
-                        //     //         MainAxisAlignment.spaceAround,
-                        //     //     children: [
-                        //     //       Row(
-                        //     //         children: [
-                        //     //           Image.asset("assets/arrow.png",
-                        //     //               width: 35),
-                        //     //           SizedBox(width: 20),
-                        //     //           Column(
-                        //     //             crossAxisAlignment:
-                        //     //                 CrossAxisAlignment.start,
-                        //     //             children: [
-                        //     //               Text(
-                        //     //                 "NAVIGATIONS",
-                        //     //                 style: TextStyle(
-                        //     //                   fontSize: 19.h,
-                        //     //                   fontWeight: FontWeight.bold,
-                        //     //                   color: Colors.black,
-                        //     //                 ),
-                        //     //               ),
-                        //     //               Text(
-                        //     //                 'Control robot movement',
-                        //     //                 style: TextStyle(
-                        //     //                   fontSize: 17.h,
-                        //     //                   color: Colors.black54,
-                        //     //                 ),
-                        //     //               ),
-                        //     //             ],
-                        //     //           ),
-                        //     //         ],
-                        //     //       ),
-                        //     //     ],
-                        //     //   ),
-                        //     // child: Center(
-                        //     //   child: Text(
-                        //     //     "NAVIGATIONS",
-                        //     //     style: TextStyle(
-                        //     //       fontSize: 20,
-                        //     //       color: Colors.white,
-                        //     //       fontWeight: FontWeight.bold,
-                        //     //     ),
-                        //     //   ),
-                        //     // ),
-                        //     // ),
+                        Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            borderRadius: BorderRadius.circular(15),
+                            onTap: () {
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return Navigation(
+                                    robotid: Get.find<BatteryController>()
+                                            .background
+                                            .value
+                                            ?.data
+                                            ?.first
+                                            .robot
+                                            ?.roboId ??
+                                        "",
+                                  );
+                                },
+                              ));
+                            },
+                            child: Ink(
+                              width: 330.h,
+                              padding: EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                                border: Border.all(
+                                  color: Colors.grey.shade200,
+                                ),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Image.asset("assets/arrow.png",
+                                          width: 35),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "NAVIGATIONS",
+                                            style: TextStyle(
+                                              fontSize: 19.h,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black,
+                                            ),
+                                          ),
+                                          Text(
+                                            'Control robot movement',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              fontWeight: FontWeight.bold,
+                                              color: Colors.black54,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
 
-                        //     // child: buildInfoCard(
-                        //     //   size,
-                        //     //   'NAVIGATIONS',
-                        //     //   color: Colors.black,
-                        //     // ),
-                        //   ),
-                        // ),
+                            // child: buildInfoCard(
+                            //   size,
+                            //   'NAVIGATIONS',
+                            //   color: Colors.black,
+                            // ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -682,58 +649,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                 color: Colors.white,
                 fontSize: 15.h,
                 fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class RobotCommunicationStatus extends StatelessWidget {
-  final String text;
-  const RobotCommunicationStatus({
-    super.key,
-    required this.text,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Center(
-        //   child: Lottie.asset(
-        //     "assets/Animation - 1739525563341.json",
-        //     fit: BoxFit.fitHeight,
-        //   ),
-        // ),
-        SizedBox(
-          height: 100.h,
-          width: 280.w,
-          child: DefaultTextStyle(
-            style: GoogleFonts.poppins(
-                color: Colors.white,
-                fontSize: 30.h,
-                fontWeight: FontWeight.bold,
-                shadows: [
-                  Shadow(
-                    blurRadius: 5.0,
-                    color: Colors.black.withOpacity(0.7),
-                    offset: Offset(2, 2),
-                  ),
-                ]),
-            child: Center(
-              child: AnimatedTextKit(
-                animatedTexts: [
-                  TypewriterAnimatedText(
-                    text,
-                    speed: Duration(milliseconds: 50),
-                    cursor: '|',
-                  ),
-                ],
-                repeatForever: true,
-                isRepeatingAnimation: true,
               ),
             ),
           ),
