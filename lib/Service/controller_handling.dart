@@ -5,6 +5,7 @@ import 'package:ihub/Controller/CustomerDetails_Controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
 import 'package:ihub/Controller/description_controller.dart';
 import 'package:ihub/Controller/language_controller.dart';
+import 'package:ihub/Controller/no_internet_controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/speed/controller/speed_controller.dart';
 
@@ -52,6 +53,7 @@ class HandleControllers {
     Get.put(DescriptionController());
     Get.put(PromptController());
     Get.put(SpeedController());
+    Get.put(ConnectivityController());
     Get.put(LanguageController());
   }
 
@@ -80,5 +82,6 @@ class HandleControllers {
     await Get.delete<PromptController>();
     await Get.delete<SpeedController>();
     await Get.delete<LanguageController>();
+    await Get.delete<ConnectivityController>();
   }
 }

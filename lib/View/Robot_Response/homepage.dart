@@ -7,12 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
+import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -44,7 +46,12 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
       // get robot wifi ip
-      // fetchAndUpdateBaseUrl();
+      fetchAndUpdateBaseUrl();
+
+      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
+
+      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
+      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
       // fetch robot battery data
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
@@ -54,10 +61,14 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
-      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
-
-      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
+      Map<String, dynamic> resp = await ApiServices.loading();
+      if (resp['status'] != "ON") {
+        messageTimer?.cancel();
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => LoadingSplash()),
+          (route) => false,
+        );
+      }
 
       if (isBatteryscreen ?? false) {
         Navigator.pushReplacement(
@@ -210,6 +221,24 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         ),
                       ],
                     ),
+                    Column(
+                      children: [
+                        Lottie.asset(
+                          "assets/look_camera.json",
+                          width: 300,
+                        ),
+                        Text(
+                          'Please look at the camera',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                    Spacer(),
+
                     GetX<RobotresponseapiController>(
                       builder: (controller) {
                         bool? listening =
@@ -218,158 +247,20 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         bool? speaking = controller.responseData.value.speaking;
                         return Column(
                           children: [
-                            // Column(
-                            //   mainAxisAlignment: MainAxisAlignment.start,
-                            //   children: [
-                            //     if (listening == true)
-                            //       Lottie.asset(
-                            //         "assets/listening.json",
-                            //         width: 300,
-                            //       )
-                            //     else if (speaking == true)
-                            //       Lottie.asset(
-                            //         "assets/speaking.json",
-                            //         width: 300,
-                            //       )
-                            //     else
-                            // Lottie.asset(
-                            //   "assets/thinking.json",
-                            //   width: 300,
-                            // ),
-                            //   ],
-                            // ),
-
                             if (listening == true)
-                              Column(
-                                children: [
-                                  Center(
-                                    child: Lottie.asset(
-                                      "assets/Animation - 1739525563341.json",
-                                      fit: BoxFit.fitHeight,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: 280.w,
-                                    child: DefaultTextStyle(
-                                      style: GoogleFonts.orbitron(
-                                          color: Colors.white,
-                                          fontSize: 30.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              'LISTENING....',
-                                              speed: Duration(milliseconds: 50),
-                                              // Adjust typing speed
-                                              cursor: '|', // Optional cursor
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          // Ensures continuous looping
-                                          isRepeatingAnimation: true,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              RobotCommunicationStatus(
+                                text: "LISTENING...",
                               )
                             else if (speaking == true)
-                              Column(children: [
-                                Center(
-                                  child: Lottie.asset(
-                                    "assets/Animation - 1739525563341.json",
-                                    fit: BoxFit.fitHeight,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 100.h,
-                                  width: double.infinity,
-                                  child: DefaultTextStyle(
-                                    style: GoogleFonts.orbitron(
-                                        color: Colors.white,
-                                        fontSize: 30.h,
-                                        fontWeight: FontWeight.bold,
-                                        shadows: [
-                                          Shadow(
-                                            blurRadius: 5.0,
-                                            color:
-                                                Colors.black.withOpacity(0.7),
-                                            offset: Offset(2, 2),
-                                          ),
-                                        ]),
-                                    child: Center(
-                                      child: AnimatedTextKit(
-                                        animatedTexts: [
-                                          TypewriterAnimatedText(
-                                            'SPEAKING....',
-                                            speed: Duration(milliseconds: 50),
-                                            // Adjust typing speed
-                                            cursor: '|', // Optional cursor
-                                          ),
-                                        ],
-                                        repeatForever: true,
-                                        // Ensures continuous looping
-                                        isRepeatingAnimation: true,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ])
+                              RobotCommunicationStatus(
+                                text: "SPEAKING...",
+                              )
                             else
-                              Column(
-                                children: [
-                                  Center(
-                                    child: Lottie.asset(
-                                      "assets/Animation - 1739525563341.json",
-                                      fit: BoxFit.fitHeight,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 100.h,
-                                    width: 280.w,
-                                    child: DefaultTextStyle(
-                                      style: GoogleFonts.orbitron(
-                                          color: Colors.white,
-                                          fontSize: 30.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              'THINKING....',
-                                              speed: Duration(milliseconds: 50),
-                                              // Adjust typing speed
-                                              cursor: '|', // Optional cursor
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          // Ensures continuous looping
-                                          isRepeatingAnimation: true,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              RobotCommunicationStatus(
+                                text: "THINKING...",
                               ),
 
+                            // face
                             // Center(
                             //     child: SizedBox(
                             //   width: size.width * 0.8,
@@ -379,7 +270,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             //     fit: BoxFit.fitHeight,
                             //   ),
                             // )),
-
                             controller.robotResponseModel.value?.text != null &&
                                     controller.robotResponseModel.value?.text !=
                                         ''
@@ -582,90 +472,90 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                               : SizedBox();
                         }),
                         SizedBox(height: 20),
-                        Material(
-                          color: Colors.transparent,
-                          child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return Navigation(
-                                    robotid: Get.find<BatteryController>()
-                                            .background
-                                            .value
-                                            ?.data
-                                            ?.first
-                                            .robot
-                                            ?.roboId ??
-                                        "",
-                                  );
-                                },
-                              ));
-                            },
-                            // child: Ink(
-                            //   width: 330.h,
-                            //   padding: EdgeInsets.all(16),
-                            //   decoration: BoxDecoration(
-                            //     color: const Color(0xFF0470C8),
-                            //     borderRadius: BorderRadius.circular(15),
-                            //     border: Border.all(
-                            //       color: Colors.grey.shade200,
-                            //     ),
-                            //   ),
-                            // child: Column(
-                            //   crossAxisAlignment: CrossAxisAlignment.start,
-                            //   mainAxisAlignment:
-                            //       MainAxisAlignment.spaceAround,
-                            //   children: [
-                            //     Row(
-                            //       children: [
-                            //         Image.asset("assets/arrow.png",
-                            //             width: 35),
-                            //         SizedBox(width: 20),
-                            //         Column(
-                            //           crossAxisAlignment:
-                            //               CrossAxisAlignment.start,
-                            //           children: [
-                            //             Text(
-                            //               "NAVIGATIONS",
-                            //               style: TextStyle(
-                            //                 fontSize: 19.h,
-                            //                 fontWeight: FontWeight.bold,
-                            //                 color: Colors.black,
-                            //               ),
-                            //             ),
-                            //             Text(
-                            //               'Control robot movement',
-                            //               style: TextStyle(
-                            //                 fontSize: 17.h,
-                            //                 color: Colors.black54,
-                            //               ),
-                            //             ),
-                            //           ],
-                            //         ),
-                            //       ],
-                            //     ),
-                            //   ],
-                            // ),
-                            //   child: Center(
-                            //     child: Text(
-                            //       "NAVIGATIONS",
-                            //       style: TextStyle(
-                            //         fontSize: 20,
-                            //         color: Colors.white,
-                            //         fontWeight: FontWeight.bold,
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
+                        // Material(
+                        //   color: Colors.transparent,
+                        //   child: InkWell(
+                        //     borderRadius: BorderRadius.circular(15),
+                        //     onTap: () {
+                        //       Navigator.push(context, MaterialPageRoute(
+                        //         builder: (context) {
+                        //           return Navigation(
+                        //             robotid: Get.find<BatteryController>()
+                        //                     .background
+                        //                     .value
+                        //                     ?.data
+                        //                     ?.first
+                        //                     .robot
+                        //                     ?.roboId ??
+                        //                 "",
+                        //           );
+                        //         },
+                        //       ));
+                        //     },
+                        //     // child: Ink(
+                        //     //   width: 330.h,
+                        //     //   padding: EdgeInsets.all(16),
+                        //     //   decoration: BoxDecoration(
+                        //     //     color: const Color(0xFF0470C8),
+                        //     //     borderRadius: BorderRadius.circular(15),
+                        //     //     border: Border.all(
+                        //     //       color: Colors.grey.shade200,
+                        //     //     ),
+                        //     //   ),
+                        //     // child: Column(
+                        //     //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //     //   mainAxisAlignment:
+                        //     //       MainAxisAlignment.spaceAround,
+                        //     //   children: [
+                        //     //     Row(
+                        //     //       children: [
+                        //     //         Image.asset("assets/arrow.png",
+                        //     //             width: 35),
+                        //     //         SizedBox(width: 20),
+                        //     //         Column(
+                        //     //           crossAxisAlignment:
+                        //     //               CrossAxisAlignment.start,
+                        //     //           children: [
+                        //     //             Text(
+                        //     //               "NAVIGATIONS",
+                        //     //               style: TextStyle(
+                        //     //                 fontSize: 19.h,
+                        //     //                 fontWeight: FontWeight.bold,
+                        //     //                 color: Colors.black,
+                        //     //               ),
+                        //     //             ),
+                        //     //             Text(
+                        //     //               'Control robot movement',
+                        //     //               style: TextStyle(
+                        //     //                 fontSize: 17.h,
+                        //     //                 color: Colors.black54,
+                        //     //               ),
+                        //     //             ),
+                        //     //           ],
+                        //     //         ),
+                        //     //       ],
+                        //     //     ),
+                        //     //   ],
+                        //     // ),
+                        //     //   child: Center(
+                        //     //     child: Text(
+                        //     //       "NAVIGATIONS",
+                        //     //       style: TextStyle(
+                        //     //         fontSize: 20,
+                        //     //         color: Colors.white,
+                        //     //         fontWeight: FontWeight.bold,
+                        //     //       ),
+                        //     //     ),
+                        //     //   ),
+                        //     // ),
 
-                            child: buildInfoCard(
-                              size,
-                              'NAVIGATIONS',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
+                        //     child: buildInfoCard(
+                        //       size,
+                        //       'NAVIGATIONS',
+                        //       color: Colors.black,
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -797,6 +687,58 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                 color: Colors.white,
                 fontSize: 15.h,
                 fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class RobotCommunicationStatus extends StatelessWidget {
+  final String text;
+  const RobotCommunicationStatus({
+    super.key,
+    required this.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Center(
+          child: Lottie.asset(
+            "assets/Animation - 1739525563341.json",
+            fit: BoxFit.fitHeight,
+          ),
+        ),
+        SizedBox(
+          height: 100.h,
+          width: 280.w,
+          child: DefaultTextStyle(
+            style: GoogleFonts.poppins(
+                color: Colors.white,
+                fontSize: 30.h,
+                fontWeight: FontWeight.bold,
+                shadows: [
+                  Shadow(
+                    blurRadius: 5.0,
+                    color: Colors.black.withOpacity(0.7),
+                    offset: Offset(2, 2),
+                  ),
+                ]),
+            child: Center(
+              child: AnimatedTextKit(
+                animatedTexts: [
+                  TypewriterAnimatedText(
+                    text,
+                    speed: Duration(milliseconds: 50),
+                    cursor: '|',
+                  ),
+                ],
+                repeatForever: true,
+                isRepeatingAnimation: true,
               ),
             ),
           ),

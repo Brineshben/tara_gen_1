@@ -2,215 +2,121 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
-import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/Utils/header.dart';
 
-class AddSystemPrompt extends StatefulWidget {
+class PromptInputScreen extends StatefulWidget {
   final String id;
-  final String prompt;
+  final String initialPrompt;
   final bool isEdit;
-  const AddSystemPrompt(
-      {super.key,
-      required this.id,
-      required this.prompt,
-      required this.isEdit});
+
+  const PromptInputScreen({
+    super.key,
+    required this.id,
+    required this.initialPrompt,
+    required this.isEdit,
+  });
 
   @override
-  State<AddSystemPrompt> createState() => _AddSystemPromptState();
+  State<PromptInputScreen> createState() => _PromptInputScreenState();
 }
 
-class _AddSystemPromptState extends State<AddSystemPrompt> {
-  final TextEditingController textController = TextEditingController();
-  final TextEditingController questionController = TextEditingController();
-  final TextEditingController answerController = TextEditingController();
-  final promptController = Get.find<PromptController>();
+class _PromptInputScreenState extends State<PromptInputScreen> {
+  final TextEditingController promtTextController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    if (widget.isEdit) {
-      // Remove the unwanted sentence
-      final cleanedText = widget.prompt.replaceAll(
-        'If the following question is asked:',
-        '',
-      );
-
-      print('cleanedPrompt: $cleanedText');
-
-      final roleMatch = RegExp(r'Role:\s*(.*?)\s*(?=Question:|Answer:|$)',
-              caseSensitive: false, dotAll: true)
-          .firstMatch(cleanedText);
-      final questionMatch = RegExp(r'Question:\s*(.*?)\s*(?=Answer:|$)',
-              caseSensitive: false, dotAll: true)
-          .firstMatch(cleanedText);
-      final answerMatch =
-          RegExp(r'Answer:\s*(.*)', caseSensitive: false, dotAll: true)
-              .firstMatch(cleanedText);
-
-      textController.text = roleMatch?.group(1)?.trim() ?? '';
-      questionController.text = questionMatch?.group(1)?.trim() ?? '';
-      answerController.text = answerMatch?.group(1)?.trim() ?? '';
-    }
-  }
-
-  @override
-  void dispose() {
-    textController.dispose();
-    questionController.dispose();
-    answerController.dispose();
-    super.dispose();
+    promtTextController.text = widget.initialPrompt;
   }
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return Scaffold(
-      // appBar: AppBar(
-      //   iconTheme: IconThemeData(color: Colors.white),
-      //   backgroundColor: Colors.transparent,
-      //   title: Text(
-      //     "BEHAVIOUR PROTOCOL",
-      //     style: GoogleFonts.oxygen(
-      //       color: Colors.white,
-      //       fontSize: 25.h,
-      //       fontWeight: FontWeight.w700,
-      //     ),
-      //   ),
-      // ),
-      body: Stack(
-        children: [
-          SizedBox(
-            width: ScreenUtil().screenWidth,
-            height: ScreenUtil().screenHeight,
-          ),
-          GetX<BackgroudController>(
-            builder: (BackgroudController controller) {
-              return Positioned.fill(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          controller.backgroundModel.value?.backgroundImage ??
-                              "",
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
-                      errorWidget: (context, url, error) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(
-                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
-                      child: Container(
-                        color: Colors.black.withOpacity(
-                            0), // Required for BackdropFilter to work
+      body: SingleChildScrollView(
+        child: Stack(
+          children: [
+            GetX<BackgroudController>(
+              builder: (BackgroudController controller) {
+                return Positioned.fill(
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CachedNetworkImage(
+                        imageUrl:
+                            controller.backgroundModel.value?.backgroundImage ??
+                                "",
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Image.asset(
+                            controller.defaultIMage,
+                            fit: BoxFit.cover),
+                        errorWidget: (context, url, error) => Image.asset(
+                            controller.defaultIMage,
+                            fit: BoxFit.cover),
                       ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          ),
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 50),
-              child: GetX<BatteryController>(builder: (controller) {
-                return Column(
-                  children: [
-                    SizedBox(height: 120),
-                    TextFormField(
-                      maxLength: 300,
-                      controller: textController,
-                      maxLines: 6,
-                      style: TextStyle(color: controller.foregroundColor.value),
-                      decoration: InputDecoration(
-                        labelText: "Enter prompt",
-                        labelStyle: TextStyle(color: Colors.blue),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+                      BackdropFilter(
+                        filter: ImageFilter.blur(
+                            sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                        child: Container(
+                          color: Colors.black.withOpacity(
+                              0), // Required for BackdropFilter to work
                         ),
                       ),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: questionController,
-                      style: TextStyle(color: controller.foregroundColor.value),
-                      decoration: InputDecoration(
-                        labelText: "Enter question",
-                        labelStyle: TextStyle(color: Colors.blue),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20),
-                    TextFormField(
-                      controller: answerController,
-                      maxLength: 200,
-                      maxLines: 3,
-                      style: TextStyle(color: controller.foregroundColor.value),
-                      decoration: InputDecoration(
-                        labelText: "Enter answer",
-                        labelStyle: TextStyle(color: Colors.blue),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    SizedBox(
-                      width: 200,
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          if (widget.isEdit) {
-                            await promptController.editPrompt(
-                              id: widget.id,
-                              prompt: textController.text,
-                              q: questionController.text,
-                              ans: answerController.text,
-                            );
-                          } else {
-                            await promptController.addPrompt(
-                              prompt: textController.text,
-                              q: questionController.text,
-                              ans: answerController.text,
-                            );
-                          }
-                        },
-                        icon: Icon(Icons.send),
-                        label: Text("Submit"),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
-              }),
+              },
             ),
-          ),
-          Column(
-            children: [
-              Header(
-                isBack: true,
-                screenName: widget.isEdit
-                    ? "UPDATE BEHAVIOR PROTOCOL"
-                    : "ADD BEHAVIOR PROTOCOL",
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 120),
+              child: Column(
+                children: [
+                  const SizedBox(height: 120),
+                  TextFormField(
+                    maxLength: 300,
+                    controller: promtTextController,
+                    maxLines: 6,
+                    style: const TextStyle(color: Colors.black),
+                    decoration: InputDecoration(
+                      labelText: "Enter prompt",
+                      labelStyle: const TextStyle(color: Colors.blue),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                  ),
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: 200,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        final promptController = Get.find<PromptController>();
+
+                        if (widget.isEdit) {
+                          promptController.editPrompt(
+                              id: widget.id, prompt: promtTextController.text);
+                        } else {
+                          promptController.addPrompt(
+                              prompt: promtTextController.text);
+                        }
+                      },
+                      child: widget.isEdit ? Text("UPDATE") : Text("CREATE"),
+                    ),
+                  )
+                ],
               ),
-            ],
-          ),
-        ],
+            ),
+            Column(
+              children: [
+                Header(
+                  isBack: true,
+                  screenName: widget.isEdit ? "EDIT PROMPT" : "ADD PROMPT",
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

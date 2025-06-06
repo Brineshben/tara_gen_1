@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:lottie/lottie.dart';
 
@@ -64,10 +65,22 @@ class _LoadingSplashState extends State<LoadingSplash> {
               width: size.width * 0.3,
               height: size.width * 0.3,
               child: Image.asset(
-                'assets/splash.jpg',
+                'assets/taraLogo.png',
                 fit: BoxFit.cover,
               ),
             ),
+            const SizedBox(height: 10),
+            Text(
+              'T          A          R          A',
+              style: GoogleFonts.robotoCondensed(
+                textStyle: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const SizedBox(height: 20),
             Lottie.asset("assets/loading.json", width: 100),
             if (_errorText != null) ...[
               const SizedBox(height: 20),

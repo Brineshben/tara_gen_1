@@ -10,7 +10,9 @@
         android:label="Tara"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
+        android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true">
+        
         <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing" android:value="true"/>
 
         <activity

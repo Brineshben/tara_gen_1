@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/View/Settings/time_description_list_screen.dart';
@@ -60,7 +61,7 @@ class DescriptionOption extends StatelessWidget {
                     splashColor: Colors.white,
                     highlightColor: Colors.white.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(20.r),
-                    child: buildInfoCard(
+                    child: optionMenu(
                         MediaQuery.of(context).size, 'Place Description'),
                     onTap: () {
                       Navigator.push(
@@ -78,7 +79,7 @@ class DescriptionOption extends StatelessWidget {
                     splashColor: Colors.white,
                     highlightColor: Colors.white.withOpacity(0.3),
                     borderRadius: BorderRadius.circular(20.r),
-                    child: buildInfoCard(
+                    child: optionMenu(
                         MediaQuery.of(context).size, 'Time Description'),
                     onTap: () {
                       Navigator.push(
@@ -102,6 +103,36 @@ class DescriptionOption extends StatelessWidget {
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget optionMenu(Size size, String title, {Color color = Colors.black}) {
+    return Ink(
+      width: size.width * 0.30,
+      padding: EdgeInsets.symmetric(horizontal: 20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white,
+        border: Border.all(color: Colors.blue),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.shade400,
+            spreadRadius: 1,
+            blurRadius: 5,
+          ),
+        ],
+      ),
+      height: 55,
+      child: Center(
+        child: Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: color,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
     );
   }

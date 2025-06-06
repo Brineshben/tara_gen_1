@@ -720,6 +720,7 @@ class ApiServices {
     try {
       String url = "${ApiConstants.baseUrl}${ApiConstants.getLanguage}";
       final response = await http.get(Uri.parse(url));
+      print('getlanguagelist${response.body}');
       return jsonDecode(response.body);
     } catch (e) {
       throw Exception('Error: $e');
@@ -728,17 +729,16 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> setLanguage({
     required String language,
-    required String id,
     required String robotId,
   }) async {
     try {
       String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}";
-
       final body = jsonEncode({
         robotId: {
-          "language": "ENGLISH(en-IN)",
+          "language": language,
         }
       });
+      print('body $body');
 
       final response = await http.post(
         Uri.parse(url),

@@ -26,24 +26,23 @@ class LanguageController extends GetxController {
     final batteryController = Get.find<BatteryController>();
     selectedLanguage.value =
         batteryController.background.value?.data?[0].robot?.language ?? '';
+    print('currently selected language ${selectedLanguage.value} ');
   }
 
-  final batteryController = Get.find<BatteryController>();
-
   void setSelectedLanguage(String lang) async {
+    final batteryController = Get.find<BatteryController>();
+
     selectedLanguage.value = lang;
-    String id = batteryController.roboId.value;
 
     try {
       final response = await ApiServices.setLanguage(
-        id: id,
         language: lang,
-        robotId: batteryController.roboId.value,
+        robotId: batteryController.roboId,
       );
 
-      // ✅ Show success message from API
       if (response['status'] == 'ok') {
         Get.snackbar(
+          margin: EdgeInsets.all(20),
           "Success",
           response['message'] ?? "Language updated successfully",
           backgroundColor: Colors.green,
@@ -51,7 +50,6 @@ class LanguageController extends GetxController {
           snackPosition: SnackPosition.BOTTOM,
         );
       } else {
-        // ❌ Show server error message
         Get.snackbar(
           "Failed",
           response['message'] ?? "Something went wrong",
@@ -61,7 +59,8 @@ class LanguageController extends GetxController {
         );
       }
     } catch (e) {
-      // ❌ Show exception error
+      print('updatelan $e');
+
       Get.snackbar(
         "Error",
         e.toString(),

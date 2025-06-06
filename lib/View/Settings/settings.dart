@@ -414,15 +414,15 @@ class _MaintananceState extends State<Maintanance> {
                             );
                           }),
 
-                      SettingsCard(
-                        iconPath: 'assets/robo.png',
-                        subtitle: 'Preparing for mapping',
-                        title: 'MAPPING',
-                        backgroundColor: Colors.white,
-                        onTap: () async {
-                          openAnotherApp();
-                        },
-                      ),
+                      // SettingsCard(
+                      //   iconPath: 'assets/robo.png',
+                      //   subtitle: 'Preparing for mapping',
+                      //   title: 'MAPPING',
+                      //   backgroundColor: Colors.white,
+                      //   onTap: () async {
+                      //     openAnotherApp();
+                      //   },
+                      // ),
                       SettingsCard(
                         iconPath: 'assets/image.png',
                         subtitle: 'Select and set a new wallpaper',
@@ -469,18 +469,18 @@ class _MaintananceState extends State<Maintanance> {
                           // );
                         },
                       ),
-                      SettingsCard(
-                        iconPath: 'assets/map.png',
-                        subtitle: "Upload a new map for your tour",
-                        title: 'UPLOAD MAP',
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FileUploadScreen()));
-                        },
-                      ),
+                      // SettingsCard(
+                      //   iconPath: 'assets/map.png',
+                      //   subtitle: "Upload a new map for your tour",
+                      //   title: 'UPLOAD MAP',
+                      //   backgroundColor: Colors.white,
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => FileUploadScreen()));
+                      //   },
+                      // ),
                       SettingsCard(
                         iconPath: 'assets/prompt.png',
                         subtitle: 'Manage Behavior Protocol',
@@ -529,18 +529,18 @@ class _MaintananceState extends State<Maintanance> {
                                   builder: (context) => AddUrlPage()));
                         },
                       ),
-                      SettingsCard(
-                        iconPath: 'assets/destination11.png',
-                        subtitle: "Create a new full tour itinerary",
-                        title: 'ADD FULL TOUR',
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ListAnimationdData()));
-                        },
-                      ),
+                      // SettingsCard(
+                      //   iconPath: 'assets/destination11.png',
+                      //   subtitle: "Create a new full tour itinerary",
+                      //   title: 'ADD FULL TOUR',
+                      //   backgroundColor: Colors.white,
+                      //   onTap: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => ListAnimationdData()));
+                      //   },
+                      // ),
                       SettingsCard(
                         iconPath: 'assets/high-volume.png',
                         subtitle: 'Adjust the controller volume',
@@ -811,7 +811,7 @@ class _MaintananceState extends State<Maintanance> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   child: Text(
-                    "Version: 2.0.4",
+                    "Version: 2.1.3",
                     style: GoogleFonts.poppins(
                         color: controller.foregroundColor.value,
                         fontSize: 10.h),

@@ -77,7 +77,6 @@ class _LanguageListState extends State<LanguageList> {
                       if (controller.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
                       }
-
                       return Padding(
                         padding: const EdgeInsets.only(top: 90, bottom: 20),
                         child: ListView.builder(
@@ -96,8 +95,7 @@ class _LanguageListState extends State<LanguageList> {
                                 groupValue: controller.selectedLanguage.value,
                                 onChanged: (value) {
                                   if (value != null) {
-                                    controller.setSelectedLanguage(value
-                                        .toString()); // ✅ only this line needed
+                                    controller.setSelectedLanguage(value);
                                     setState(() {});
                                   }
                                 },

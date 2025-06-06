@@ -90,7 +90,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.1.38:8000";
+  static String _defaultBaseUrl1 = "http://192.168.1.3:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -145,6 +145,12 @@ class ApiConstants {
   static String promptget = "/prompt/list/";
   static String promptcreate = "/prompt/create/";
   static String promptUpdate = "/prompt/update/";
+
+  // qa
+  static String getqaLsit = "/qas/list/";
+  static String createQA = "/qas/create/";
+  static String updateQA = "/qas/update/";
+  static String deleteQA = "/qas/delete/";
 
   // map kill
   // static String fetch_refresh_status = "/fetch_refresh_status/";

@@ -1,31 +1,14 @@
 import 'dart:convert';
 
+import 'package:get/get_utils/get_utils.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Model/qa_model.dart';
 import 'package:ihub/Utils/api_constant.dart';
 
 class PromptService {
-  // static Future<Map<String, dynamic>?> fetchPrompt() async {
-  //   final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
-
-  //   try {
-  //     final response = await http.get(url);
-  //     print('HTTP status: ${response.statusCode}');
-  //     print('prompt body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final jsonData = jsonDecode(response.body);
-  //       return jsonData;
-  //     } else {
-  //       throw Exception('Failed to load data');
-  //     }
-  //   } catch (e) {
-  //     print('Error in fetchDescription: $e');
-  //     rethrow;
-  //   }
-  // }
+  // FETCH PROMTP
   static Future<Map<String, dynamic>>? fetchPrompt() async {
     final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
-    // final url = Uri.parse("http://192.168.1.38:8000/prompt/list/");
     var request = http.Request('GET', url);
     request.headers.addAll({'Content-Type': 'application/json'});
 
@@ -35,120 +18,130 @@ class PromptService {
     return json.decode(respString);
   }
 
-  // static Future<Map<String, dynamic>?> fetchPrompt() async {
-  //   try {
-  //     final response = await http.get(url);
-
-  //     print('HTTP status: ${response.statusCode}');
-  //     print('prompt body: ${response.body}');
-
-  //     if (response.statusCode == 200) {
-  //       final jsonData = jsonDecode(response.body);
-
-  //       // Validate JSON structure
-  //       if (jsonData is Map<String, dynamic> &&
-  //           jsonData.containsKey("status") &&
-  //           jsonData["status"] == "ok" &&
-  //           jsonData.containsKey("data")) {
-  //         return jsonData;
-  //       } else {
-  //         print("Invalid response format");
-  //         return null;
-  //       }
-  //     } else {
-  //       print("Server returned error: ${response.statusCode}");
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     print('Error in fetchPrompt: $e');
-  //     return null;
-  //   }
-  // }
-
-  static Future<Map<String, dynamic>?> addPrompt({
+// ADD PROMT
+  static Future<Map<String, dynamic>>? addPrompt({
     required String prompt,
-    required String question,
-    required String answer,
   }) async {
-    var prommt =
-        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer: $answer";
-    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
-
-    try {
-      final requestBody = jsonEncode({
-        'command_prompt': prommt,
-      });
-
-      print('enterPromt $prommt');
-
-      print('URL: $url');
-      print('Request Body: $requestBody');
-
-      final response = await http.post(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: requestBody,
-      );
-
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
-      if (response.statusCode == 201) {
-        return jsonDecode(response.body);
-      }
-    } catch (e) {
-      print('Exception in submitDescription: $e');
-      return {
-        'success': false,
-        'message': 'Error: $e',
-      };
-    }
-    return null;
+    final url =
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptcreate}");
+    final response = await http.post(
+      url,
+      body: jsonEncode({'command_prompt': prompt}),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    );
+    print('deleteresponce ${response.body}');
+    return jsonDecode(response.body);
   }
 
-  static Future<Map<String, dynamic>?> editPrompt({
-    required String id,
+// UPDATE PROMPT
+  static Future<Map<String, dynamic>>? editPrompt({
     required String prompt,
-    required String question,
-    required String answer,
+    required String id,
   }) async {
-    var prommt =
-        "Role:$prompt. \nIf the following question is asked: \nQuestion: $question\nAnswer:m $answer";
+    print('promtpID $id');
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptUpdate}");
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptUpdate}$id/");
 
     try {
-      final requestBody = jsonEncode({
-        'command_prompt': prommt,
-        'command_prompt_id': id,
-      });
-
-      print('URL: $url');
-      print('Request Body: $requestBody');
-
-      final response = await http.post(
+      final response = await http.put(
         url,
+        body: jsonEncode({'command_prompt': prompt}), // ✅ proper JSON body
         headers: {
           'Content-Type': 'application/json',
         },
-        body: requestBody,
       );
-
-      print('Response Status Code: ${response.statusCode}');
-      print('Response Body: ${response.body}');
-
-      if (response.statusCode == 200) {
-        return jsonDecode(response.body);
-      }
+      print('editresponcepromtp ${response.body}');
+      return jsonDecode(response.body);
     } catch (e) {
-      print('Exception in submitDescription: $e');
-      return {
-        'success': false,
-        'message': 'Error: $e',
-      };
+      print("Edit prompt error: $e");
+      return {'status': 'error', 'message': e.toString()};
     }
-    return null;
+  }
+
+// GET QA LIST
+  static Future<QAmodel?> fetchQAList(String promptId) async {
+    try {
+      print('promptId $promptId');
+      final url = Uri.parse(
+          "${ApiConstants.baseUrl1}${ApiConstants.getqaLsit}$promptId/");
+      print('qalistl $url');
+
+      var request = http.Request('GET', url);
+      request.headers.addAll({'Content-Type': 'application/json'});
+
+      http.StreamedResponse response = await request.send();
+      var respString = await response.stream.bytesToString();
+      print('qalist $respString');
+
+      final jsonData = json.decode(respString);
+      return QAmodel.fromJson(jsonData);
+    } catch (e) {
+      print("❌ Error in fetchQAList: $e");
+      return null;
+    }
+  }
+
+// CREATE QA
+  static Future<Map<String, dynamic>?> createQA({
+    required String promptId,
+    required String question,
+    required String answer,
+  }) async {
+    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.createQA}");
+
+    final response = await http.post(
+      url,
+      body: {
+        'prompt': promptId,
+        'question': question,
+        'answer': answer,
+      },
+    );
+    return jsonDecode(response.body);
+  }
+
+// UPDATE QA
+  static Future<Map<String, dynamic>?> updateQA({
+    required String id,
+    required String question,
+    required String answer,
+  }) async {
+    final url =
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.updateQA}$id/");
+
+    final response = await http.put(
+      url,
+      body: {
+        'question': question,
+        'answer': answer,
+      },
+    );
+    return jsonDecode(response.body);
+  }
+
+  // DELETE QA
+  static Future<Map<String, dynamic>?> deleteQA(String id) async {
+    final url =
+        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.deleteQA}$id/");
+    print('Delete URL: $url');
+
+    var request = http.Request('DELETE', url);
+    request.headers.addAll({'Content-Type': 'application/json'});
+
+    try {
+      http.StreamedResponse response = await request.send();
+      final respString = await response.stream.bytesToString();
+
+      if (respString.trim().isEmpty) {
+        return {'status': 'ok', 'message': 'Deleted successfully'};
+      }
+
+      return json.decode(respString);
+    } catch (e) {
+      print("Error deleting QA: $e");
+      return {'status': 'error', 'message': 'Something went wrong'};
+    }
   }
 }
