@@ -7,21 +7,24 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/EnquiryListController.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
+import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
+import 'package:ihub/View/Robot_Response/subcategory.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Login_api_controller.dart';
 import '../../Controller/RobotresponseApi_controller.dart';
 import '../../Controller/battery_Controller.dart';
-import 'Navigation.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -190,8 +193,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                                 ),
                                 SizedBox(width: 5),
                                 Stack(
-                                  // crossAxisAlignment:
-                                  //     CrossAxisAlignment.start,
                                   children: [
                                     Image.asset(
                                       "assets/logo1.png",
@@ -223,10 +224,17 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     ),
                     Column(
                       children: [
+                        // look camera
                         Lottie.asset(
                           "assets/look_camera.json",
                           width: 300,
                         ),
+
+                        // face
+                        // Lottie.asset(
+                        //   "assets/Animation - 1739429937775.json",
+                        //   width: 270,
+                        // ),
                         Text(
                           'Please look at the camera',
                           style: TextStyle(
@@ -237,13 +245,11 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         )
                       ],
                     ),
-                    Spacer(),
 
                     GetX<RobotresponseapiController>(
                       builder: (controller) {
                         bool? listening =
                             controller.responseData.value.listening;
-                        // bool? waiting = controller.responseData.value.waiting;
                         bool? speaking = controller.responseData.value.speaking;
                         return Column(
                           children: [
@@ -259,17 +265,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                               RobotCommunicationStatus(
                                 text: "THINKING...",
                               ),
-
-                            // face
-                            // Center(
-                            //     child: SizedBox(
-                            //   width: size.width * 0.8,
-                            //   height: size.width * 0.3,
-                            //   child: Lottie.asset(
-                            //     "assets/Animation - 1739429937775.json",
-                            //     fit: BoxFit.fitHeight,
-                            //   ),
-                            // )),
                             controller.robotResponseModel.value?.text != null &&
                                     controller.robotResponseModel.value?.text !=
                                         ''
@@ -310,10 +305,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     //             right: 20.w,
                     //             bottom: 350.h),
                     //         child: Wrap(
-                    //           spacing: 10.w, // Space between items
-                    //           runSpacing: 10.h, // Space between rows
+                    //           spacing: 10.w,
+                    //           runSpacing: 10.h,
                     //           children: List.generate(
-                    //             4, // Number of shimmer placeholders
+                    //             4,
                     //             (index) => Shimmer.fromColors(
                     //               baseColor: Colors.grey[400]!,
                     //               highlightColor: Colors.grey[200]!,
@@ -360,11 +355,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                     //             right: 20.w,
                     //             bottom: 350.h),
                     //         child: Wrap(
-                    //           spacing: 10.w, // Space between items
-                    //           runSpacing: 10.h, // Space between rows
+                    //           spacing: 10.w,
+                    //           runSpacing: 10.h,
                     //           children: List.generate(
                     //             controller.enquiryData.length,
-                    //             // items is your list of data
                     //             (index) => GestureDetector(
                     //               onTap: () {
                     //                 Navigator.push(context, MaterialPageRoute(
@@ -496,64 +490,64 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         //     //   width: 330.h,
                         //     //   padding: EdgeInsets.all(16),
                         //     //   decoration: BoxDecoration(
-                        //     //     color: const Color(0xFF0470C8),
+                        //     //     color: Colors.white,
                         //     //     borderRadius: BorderRadius.circular(15),
                         //     //     border: Border.all(
                         //     //       color: Colors.grey.shade200,
                         //     //     ),
                         //     //   ),
-                        //     // child: Column(
-                        //     //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //     //   mainAxisAlignment:
-                        //     //       MainAxisAlignment.spaceAround,
-                        //     //   children: [
-                        //     //     Row(
-                        //     //       children: [
-                        //     //         Image.asset("assets/arrow.png",
-                        //     //             width: 35),
-                        //     //         SizedBox(width: 20),
-                        //     //         Column(
-                        //     //           crossAxisAlignment:
-                        //     //               CrossAxisAlignment.start,
-                        //     //           children: [
-                        //     //             Text(
-                        //     //               "NAVIGATIONS",
-                        //     //               style: TextStyle(
-                        //     //                 fontSize: 19.h,
-                        //     //                 fontWeight: FontWeight.bold,
-                        //     //                 color: Colors.black,
+                        //     //   child: Column(
+                        //     //     crossAxisAlignment: CrossAxisAlignment.start,
+                        //     //     mainAxisAlignment:
+                        //     //         MainAxisAlignment.spaceAround,
+                        //     //     children: [
+                        //     //       Row(
+                        //     //         children: [
+                        //     //           Image.asset("assets/arrow.png",
+                        //     //               width: 35),
+                        //     //           SizedBox(width: 20),
+                        //     //           Column(
+                        //     //             crossAxisAlignment:
+                        //     //                 CrossAxisAlignment.start,
+                        //     //             children: [
+                        //     //               Text(
+                        //     //                 "NAVIGATIONS",
+                        //     //                 style: TextStyle(
+                        //     //                   fontSize: 19.h,
+                        //     //                   fontWeight: FontWeight.bold,
+                        //     //                   color: Colors.black,
+                        //     //                 ),
                         //     //               ),
-                        //     //             ),
-                        //     //             Text(
-                        //     //               'Control robot movement',
-                        //     //               style: TextStyle(
-                        //     //                 fontSize: 17.h,
-                        //     //                 color: Colors.black54,
+                        //     //               Text(
+                        //     //                 'Control robot movement',
+                        //     //                 style: TextStyle(
+                        //     //                   fontSize: 17.h,
+                        //     //                   color: Colors.black54,
+                        //     //                 ),
                         //     //               ),
-                        //     //             ),
-                        //     //           ],
-                        //     //         ),
-                        //     //       ],
-                        //     //     ),
-                        //     //   ],
-                        //     // ),
-                        //     //   child: Center(
-                        //     //     child: Text(
-                        //     //       "NAVIGATIONS",
-                        //     //       style: TextStyle(
-                        //     //         fontSize: 20,
-                        //     //         color: Colors.white,
-                        //     //         fontWeight: FontWeight.bold,
+                        //     //             ],
+                        //     //           ),
+                        //     //         ],
                         //     //       ),
+                        //     //     ],
+                        //     //   ),
+                        //     // child: Center(
+                        //     //   child: Text(
+                        //     //     "NAVIGATIONS",
+                        //     //     style: TextStyle(
+                        //     //       fontSize: 20,
+                        //     //       color: Colors.white,
+                        //     //       fontWeight: FontWeight.bold,
                         //     //     ),
                         //     //   ),
                         //     // ),
+                        //     // ),
 
-                        //     child: buildInfoCard(
-                        //       size,
-                        //       'NAVIGATIONS',
-                        //       color: Colors.black,
-                        //     ),
+                        //     // child: buildInfoCard(
+                        //     //   size,
+                        //     //   'NAVIGATIONS',
+                        //     //   color: Colors.black,
+                        //     // ),
                         //   ),
                         // ),
                       ],
@@ -581,56 +575,57 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             ),
                           );
                         },
-                        // child: Ink(
-                        //   width: 330.h,
-                        //   padding: const EdgeInsets.all(16),
-                        //   decoration: BoxDecoration(
-                        //     color: const Color(0xFF0470C8),
-                        //     borderRadius: BorderRadius.circular(15),
-                        //     border: Border.all(
-                        //       color: Colors.grey.shade200,
-                        //     ),
-                        //   ),
-                        // child: Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        //   children: [
-                        //     Row(
-                        //       children: [
-                        //         Image.asset("assets/management.png",
-                        //             width: 35),
-                        //         SizedBox(width: 20),
-                        //         Column(
-                        //           crossAxisAlignment:
-                        //               CrossAxisAlignment.start,
-                        //           children: [
-                        //             Text(
-                        //               "SETTINGS",
-                        //               style: TextStyle(
-                        //                 fontSize: 19.h,
-                        //                 fontWeight: FontWeight.bold,
-                        //                 color: Colors.black,
-                        //               ),
-                        //             ),
-                        //             Text(
-                        //               'Manage robot preferences',
-                        //               style: TextStyle(
-                        //                 fontSize: 17.h,
-                        //                 color: Colors.black54,
-                        //               ),
-                        //             ),
-                        //           ],
-                        //         ),
-                        //       ],
-                        //     ),
-                        //   ],
-                        // ),
-                        // ),
-                        child: buildInfoCard(
-                          size,
-                          "SETTINGS",
-                          color: Colors.black,
+                        child: Ink(
+                          width: 330.h,
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Row(
+                                children: [
+                                  Image.asset("assets/management.png",
+                                      width: 35),
+                                  SizedBox(width: 20),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "SETTINGS",
+                                        style: TextStyle(
+                                          fontSize: 19.h,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Manage robot preferences',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
+                        // child: buildInfoCard(
+                        //   size,
+                        //   "SETTINGS",
+                        //   color: Colors.black,
+                        // ),
                       ),
                     ),
                   ),
@@ -707,12 +702,12 @@ class RobotCommunicationStatus extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Center(
-          child: Lottie.asset(
-            "assets/Animation - 1739525563341.json",
-            fit: BoxFit.fitHeight,
-          ),
-        ),
+        // Center(
+        //   child: Lottie.asset(
+        //     "assets/Animation - 1739525563341.json",
+        //     fit: BoxFit.fitHeight,
+        //   ),
+        // ),
         SizedBox(
           height: 100.h,
           width: 280.w,
