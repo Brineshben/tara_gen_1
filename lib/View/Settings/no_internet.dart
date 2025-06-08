@@ -85,6 +85,12 @@ class _NoInternetPageState extends State<NoInternetPage> {
                     style: TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text("Back"),
+                ),
                 if (_statusText.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   Text(

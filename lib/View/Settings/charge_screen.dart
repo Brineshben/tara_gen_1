@@ -172,39 +172,61 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                                       borderRadius: BorderRadius.circular(12),
                                       onTap: () {
                                         final batteryValue = double.tryParse(
-                                          _batteryController.text,
-                                        );
+                                            _batteryController.text);
                                         final homeValue = double.tryParse(
-                                          _homeController.text,
-                                        );
+                                            _homeController.text);
 
                                         if (batteryValue == null ||
                                             homeValue == null) {
                                           Get.snackbar(
-                                            margin: EdgeInsets.all(20),
                                             'Invalid Input',
                                             'Please enter valid numbers',
                                             snackPosition: SnackPosition.TOP,
+                                            margin: EdgeInsets.all(20),
                                             backgroundColor: Colors.red,
                                             colorText: Colors.white,
                                           );
                                           return;
                                         }
+
                                         if (batteryValue < 0 ||
                                             batteryValue > 100 ||
                                             homeValue < 0 ||
                                             homeValue > 100) {
                                           Get.snackbar(
-                                            margin: EdgeInsets.all(20),
                                             'Invalid Value',
                                             'Values must be between 0 and 100',
                                             snackPosition: SnackPosition.TOP,
+                                            margin: EdgeInsets.all(20),
                                             backgroundColor: Colors.red,
                                             colorText: Colors.white,
                                           );
                                           return;
                                         }
 
+                                        if (batteryValue == homeValue) {
+                                          Get.snackbar(
+                                            'Invalid Entry',
+                                            'Battery and Home values must not be the same',
+                                            snackPosition: SnackPosition.TOP,
+                                            margin: EdgeInsets.all(20),
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
+
+                                        if (batteryValue > homeValue) {
+                                          Get.snackbar(
+                                            'Invalid Relationship',
+                                            'Battery value must be less than Home value',
+                                            snackPosition: SnackPosition.TOP,
+                                            margin: EdgeInsets.all(20),
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
                                         settingsController.updateChargeValues(
                                           batteryEntry: _batteryController.text,
                                           homeEntry: _homeController.text,

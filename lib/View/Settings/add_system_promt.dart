@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/Utils/header.dart';
 
@@ -74,18 +75,21 @@ class _PromptInputScreenState extends State<PromptInputScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 120),
-                  TextFormField(
-                    maxLength: 300,
-                    controller: promtTextController,
-                    maxLines: 6,
-                    style: const TextStyle(color: Colors.black),
-                    decoration: InputDecoration(
-                      labelText: "Enter prompt",
-                      labelStyle: const TextStyle(color: Colors.blue),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                    ),
-                  ),
+                  GetX<BatteryController>(builder: (batteryController) {
+                    return TextFormField(
+                      maxLength: 300,
+                      controller: promtTextController,
+                      maxLines: 6,
+                      style: TextStyle(
+                          color: batteryController.foregroundColor.value),
+                      decoration: InputDecoration(
+                        labelText: "Enter prompt",
+                        labelStyle: const TextStyle(color: Colors.blue),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10)),
+                      ),
+                    );
+                  }),
                   const SizedBox(height: 30),
                   SizedBox(
                     width: 200,

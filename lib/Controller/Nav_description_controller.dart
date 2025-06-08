@@ -12,6 +12,8 @@ class NavigateDescriptionController extends GetxController {
   List<TextEditingController> descriptionControllers = [];
   List<TextEditingController> textControllers = [];
 
+  List<bool> isExpandedList = [];
+
   RxList<NavigationData?> dataList = RxList();
 
   Future<void> getNavigation() async {
@@ -36,6 +38,8 @@ class NavigateDescriptionController extends GetxController {
               (index) => TextEditingController(
                     text: dataList[index]?.name1 ?? "",
                   ));
+
+          isExpandedList = List.generate(dataList.length, (_) => false);
 
           isLoaded.value = true;
           update();

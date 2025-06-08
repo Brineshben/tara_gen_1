@@ -101,8 +101,15 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                             BorderRadius.circular(15)),
                                     elevation: 2,
                                     child: ExpansionTile(
+                                      initiallyExpanded:
+                                          controller.isExpandedList[index],
                                       onExpansionChanged: (value) {
                                         FocusScope.of(context).unfocus();
+
+                                        setState(() {
+                                          controller.isExpandedList[index] =
+                                              value;
+                                        });
                                       },
                                       shape: RoundedRectangleBorder(
                                           borderRadius:
@@ -346,6 +353,18 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                       ),
                                                     ),
                                                     onTap: () async {
+                                                      setState(() {
+                                                        for (int i = 0;
+                                                            i <
+                                                                controller
+                                                                    .isExpandedList
+                                                                    .length;
+                                                            i++) {
+                                                          controller
+                                                                  .isExpandedList[
+                                                              i] = false;
+                                                        }
+                                                      });
                                                       Map<String, dynamic>
                                                           resp =
                                                           await ApiServices.navigateDescriptionSubmit(

@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/EnquiryListController.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/communication_status.dart';
@@ -15,12 +13,8 @@ import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
-import 'package:ihub/View/Robot_Response/subcategory.dart';
-import 'package:ihub/View/Settings/settings.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
-import 'package:lottie/lottie.dart';
-import 'package:shimmer/shimmer.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Login_api_controller.dart';
@@ -369,142 +363,50 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 40, bottom: 20),
-                    child: Column(
-                      children: [
-                        Obx(() {
-                          final controller =
-                              Get.find<RobotresponseapiController>();
-                          return controller.link.value != ''
-                              ? Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: BorderRadius.circular(40),
-                                    onTap: () async {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) =>
-                                              InAppWebViewScreen(
-                                            url: controller.link.value,
-                                          ),
-                                        ),
-                                      );
-                                    },
-                                    // child: Ink(
-                                    //   padding: const EdgeInsets.all(10),
-                                    //   decoration: BoxDecoration(
-                                    //     color: Colors.white,
-                                    //     borderRadius: BorderRadius.circular(10),
-                                    //     border: Border.all(
-                                    //         color: Colors.blueGrey.shade200,
-                                    //         width: 1),
-                                    //   ),
-                                    //   child: Column(
-                                    //     crossAxisAlignment:
-                                    //         CrossAxisAlignment.start,
-                                    //     mainAxisAlignment:
-                                    //         MainAxisAlignment.spaceAround,
-                                    //     children: [
-                                    //       Row(
-                                    //         children: [
-                                    //           Icon(
-                                    //             Icons.language,
-                                    //             color: Colors.black,
-                                    //             size: 30,
-                                    //           ),
-                                    //           SizedBox(width: 10),
-                                    //           Text(
-                                    //             controller.name.value,
-                                    //             style: TextStyle(
-                                    //               fontSize: 18,
-                                    //               fontWeight: FontWeight.bold,
-                                    //               color: Colors.black,
-                                    //             ),
-                                    //           ),
-                                    //         ],
-                                    //       ),
-                                    //     ],
-                                    //   ),
-                                    // ),
-
-                                    child: buildInfoCard(
-                                      size,
-                                      controller.name.value,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                )
-                              : SizedBox();
-                        }),
-                        SizedBox(height: 20),
-                        Material(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 40, vertical: 10),
+                    child: Obx(() {
+                      final controller = Get.find<RobotresponseapiController>();
+                      if (controller.link.value != '') {
+                        return Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(15),
-                            onTap: () {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return Navigation(
-                                    robotid: Get.find<BatteryController>()
-                                            .background
-                                            .value
-                                            ?.data
-                                            ?.first
-                                            .robot
-                                            ?.roboId ??
-                                        "",
-                                  );
-                                },
-                              ));
+                            borderRadius: BorderRadius.circular(40),
+                            onTap: () async {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => InAppWebViewScreen(
+                                    url: controller.link.value,
+                                  ),
+                                ),
+                              );
                             },
                             child: Ink(
-                              width: 330.h,
-                              padding: EdgeInsets.all(16),
+                              padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
                                 color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
+                                borderRadius: BorderRadius.circular(10),
                                 border: Border.all(
-                                  color: Colors.grey.shade200,
-                                ),
+                                    color: Colors.blueGrey.shade100, width: 1),
                               ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
+                              child: Row(
                                 children: [
-                                  Row(
-                                    children: [
-                                      Image.asset("assets/arrow.png",
-                                          width: 35),
-                                      SizedBox(width: 20),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "NAVIGATIONS",
-                                            style: TextStyle(
-                                              fontSize: 19.h,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black,
-                                            ),
-                                          ),
-                                          Text(
-                                            'Control robot movement',
-                                            style: TextStyle(
-                                              fontSize: 13,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black54,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                  Icon(
+                                    Icons.language,
+                                    color: Colors.black,
+                                    size: 30,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(
+                                    controller.name.value,
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
                                   ),
                                 ],
                               ),
@@ -512,12 +414,89 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
                             // child: buildInfoCard(
                             //   size,
-                            //   'NAVIGATIONS',
+                            //   controller.name.value,
                             //   color: Colors.black,
                             // ),
                           ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
+                    }),
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(left: 40, bottom: 20),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return Navigation(
+                                robotid: Get.find<BatteryController>()
+                                        .background
+                                        .value
+                                        ?.data
+                                        ?.first
+                                        .robot
+                                        ?.roboId ??
+                                    "",
+                              );
+                            },
+                          ));
+                        },
+                        child: Ink(
+                          width: 330.h,
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset("assets/arrow.png", width: 35),
+                              SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "NAVIGATIONS",
+                                    style: TextStyle(
+                                      fontSize: 19.h,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Control robot movement',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+
+                        // child: buildInfoCard(
+                        //   size,
+                        //   'NAVIGATIONS',
+                        //   color: Colors.black,
+                        // ),
+                      ),
                     ),
                   ),
                   Padding(
