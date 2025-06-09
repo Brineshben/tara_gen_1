@@ -42,7 +42,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    messageTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
       fetchAndUpdateBaseUrl();
 
@@ -59,6 +59,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
+      // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
         messageTimer?.cancel();
