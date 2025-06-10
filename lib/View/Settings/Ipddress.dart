@@ -199,25 +199,15 @@ class _IpaddressState extends State<Ipaddress> {
                           SizedBox(
                             height: 50,
                           ),
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              splashColor: Colors.white,
-                              highlightColor: Colors.white.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(20.r),
-                              onTap: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  await ipController
-                                      .updateIp(NewIp.text); // Update IP
-                                  print(
-                                      "Updated Base URL: ${ApiConstants.baseUrl1}"); // Debugging check
-                                  Get.back(); // Navigate back
-                                }
-                              },
-                              child: buildInfoCard(
-                                  MediaQuery.of(context).size, 'SUBMIT'),
-                            ),
-                          ),
+                          buildInfoCard(onTap: () async {
+                            if (_formKey.currentState!.validate()) {
+                              await ipController
+                                  .updateIp(NewIp.text); // Update IP
+                              print(
+                                  "Updated Base URL: ${ApiConstants.baseUrl1}"); // Debugging check
+                              Get.back(); // Navigate back
+                            }
+                          }, MediaQuery.of(context).size, 'SUBMIT'),
                         ],
                       ),
                     ),

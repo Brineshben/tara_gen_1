@@ -92,31 +92,24 @@ class _BatterySplashState extends State<BatterySplash> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(40),
-                  onTap: () async {
-                    Navigator.push(
-                      context,
-                      PageRouteBuilder(
-                        transitionDuration: Duration(milliseconds: 300),
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            PasswordPage(),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          return FadeTransition(
-                              opacity: animation, child: child);
-                        },
-                      ),
-                    );
-                  },
-                  child: buildInfoCard(
-                    size,
-                    "SETTINGS",
-                    color: Colors.black,
-                  ),
-                ),
+              buildInfoCard(
+                size,
+                "SETTINGS",
+                color: Colors.black,
+                onTap: () async {
+                  Navigator.push(
+                    context,
+                    PageRouteBuilder(
+                      transitionDuration: Duration(milliseconds: 300),
+                      pageBuilder: (context, animation, secondaryAnimation) =>
+                          PasswordPage(),
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                    ),
+                  );
+                },
               ),
               Material(
                 color: Colors.transparent,

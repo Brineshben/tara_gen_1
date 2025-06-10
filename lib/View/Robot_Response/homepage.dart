@@ -374,7 +374,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         return Material(
                           color: Colors.transparent,
                           child: InkWell(
-                            borderRadius: BorderRadius.circular(40),
+                            borderRadius: BorderRadius.circular(10),
                             onTap: () async {
                               Navigator.push(
                                 context,
@@ -585,7 +585,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
   Widget buildInfoCard2(String title, String image) {
     final Size size = MediaQuery.of(context).size;
-
     return Column(
       children: [
         Container(

@@ -175,24 +175,10 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                             return Padding(
                                               padding:
                                                   const EdgeInsets.all(8.0),
-                                              child: Material(
-                                                borderRadius:
-                                                    BorderRadius.circular(20),
-                                                color: Colors.transparent,
-                                                child: InkWell(
-                                                  splashColor: Colors.blue
-                                                      .withOpacity(0.3),
-                                                  highlightColor: Colors.green
-                                                      .withOpacity(0.3),
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
+                                              child: buildInfoCard(size,
                                                   onTap: () {
-                                                    controller.addData(item);
-                                                  },
-                                                  child: buildInfoCard(size,
-                                                      item.name ?? "No Name"),
-                                                ),
-                                              ),
+                                                controller.addData(item);
+                                              }, item.name ?? "No Name"),
                                             );
                                           },
                                         )
@@ -273,51 +259,53 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                     highlightColor:
                                         Colors.green.withOpacity(0.3),
                                     borderRadius: BorderRadius.circular(20.r),
-                                    onTap: () async {
-                                      try {
-                                        print("bennn");
-                                        List<NavigationData> selectedData =
-                                            Get.find<FullTourControllerNew>()
-                                                .newDataNavigation;
-                                        List<int> dataz = [];
-                                        print("bennn$dataz");
-                                        for (var element in selectedData) {
-                                          // int parsedId = int.tryParse(element. ?? "0");
-                                          int parsedId = element.id ?? 0;
-                                          dataz.add(parsedId);
-                                        }
-                                        Map<String, dynamic> resp =
-                                            await ApiServices.navigationSubmit(
-                                                navigationData: dataz);
-
-                                        if (resp['status'] == "ok") {
-                                          FocusManager.instance.primaryFocus
-                                              ?.unfocus();
-                                          ProductAppPopUps.submit2back(
-                                            title: "SUCCESS",
-                                            message: resp['message'].toString(),
-                                            actionName: "Close",
-                                            iconData: Icons.done,
-                                            iconColor: Colors.green,
-                                          );
-                                        } else {
-                                          ProductAppPopUps.submit(
-                                            title: "FAILED",
-                                            message: "Something went wrong.",
-                                            actionName: "Close",
-                                            iconData: Icons.info_outline,
-                                            iconColor: Colors.red,
-                                          );
-                                        }
-                                      } catch (e) {
-                                        print(
-                                            "-----------------errrrr------------------${e.toString()}");
-                                      }
-                                    },
                                     child: buildInfoCard(
                                       size,
                                       "Submit",
                                       color: Colors.green,
+                                      onTap: () async {
+                                        try {
+                                          print("bennn");
+                                          List<NavigationData> selectedData =
+                                              Get.find<FullTourControllerNew>()
+                                                  .newDataNavigation;
+                                          List<int> dataz = [];
+                                          print("bennn$dataz");
+                                          for (var element in selectedData) {
+                                            // int parsedId = int.tryParse(element. ?? "0");
+                                            int parsedId = element.id ?? 0;
+                                            dataz.add(parsedId);
+                                          }
+                                          Map<String, dynamic> resp =
+                                              await ApiServices
+                                                  .navigationSubmit(
+                                                      navigationData: dataz);
+
+                                          if (resp['status'] == "ok") {
+                                            FocusManager.instance.primaryFocus
+                                                ?.unfocus();
+                                            ProductAppPopUps.submit2back(
+                                              title: "SUCCESS",
+                                              message:
+                                                  resp['message'].toString(),
+                                              actionName: "Close",
+                                              iconData: Icons.done,
+                                              iconColor: Colors.green,
+                                            );
+                                          } else {
+                                            ProductAppPopUps.submit(
+                                              title: "FAILED",
+                                              message: "Something went wrong.",
+                                              actionName: "Close",
+                                              iconData: Icons.info_outline,
+                                              iconColor: Colors.red,
+                                            );
+                                          }
+                                        } catch (e) {
+                                          print(
+                                              "-----------------errrrr------------------${e.toString()}");
+                                        }
+                                      },
                                     )),
                               )
                             ],

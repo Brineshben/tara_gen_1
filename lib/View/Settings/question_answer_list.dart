@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
@@ -64,22 +65,34 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
       ),
       body: Stack(
         children: [
-          // Background
+          SizedBox(
+            width: ScreenUtil().screenWidth,
+            height: ScreenUtil().screenHeight,
+          ),
           GetX<BackgroudController>(
-            builder: (bg) {
-              final image =
-                  bg.backgroundModel.value?.backgroundImage ?? bg.defaultIMage;
+            builder: (BackgroudController controller) {
               return Positioned.fill(
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
                     CachedNetworkImage(
-                      imageUrl: image,
+                      imageUrl:
+                          controller.backgroundModel.value?.backgroundImage ??
+                              "",
                       fit: BoxFit.cover,
+                      placeholder: (context, url) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
+                      errorWidget: (context, url, error) => Image.asset(
+                          controller.defaultIMage,
+                          fit: BoxFit.cover),
                     ),
                     BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      filter: ImageFilter.blur(
+                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
                       child: Container(
-                        color: Colors.black.withOpacity(0.25),
+                        color: Colors.black.withOpacity(
+                            0), // Required for BackdropFilter to work
                       ),
                     ),
                   ],
@@ -87,8 +100,6 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
               );
             },
           ),
-
-          // Content
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 110, 16, 20),
             child: Obx(() {
@@ -223,7 +234,6 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
               );
             }),
           ),
-
           Column(
             children: [
               const Header(

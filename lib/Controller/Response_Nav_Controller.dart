@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Utils/popups.dart';
 import 'package:lottie/lottie.dart';
 
 import '../Model/Model.dart';
@@ -55,7 +56,7 @@ class ResponseNavController extends GetxController {
                 ),
                 Text(
                   "DESTINATION REACHED",
-                  style: GoogleFonts.orbitron(
+                  style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 20.h,
                     fontWeight: FontWeight.bold,
@@ -66,7 +67,7 @@ class ResponseNavController extends GetxController {
             content: Text(
               "Can I return home?",
               textAlign: TextAlign.center,
-              style: GoogleFonts.oxygen(
+              style: GoogleFonts.poppins(
                 color: Colors.black,
                 fontSize: 15.h,
               ),
@@ -78,28 +79,29 @@ class ResponseNavController extends GetxController {
                 children: [
                   FilledButton(
                     onPressed: () {
-                      ApiServices.navigatePopup(
-                          userId: Get.find<BatteryController>()
-                                  .background
-                                  .value
-                                  ?.data
-                                  ?.first
-                                  .robot
-                                  ?.roboId ??
-                              "",
-                          message: "no message");
-                      ApiServices.sendResponseData(
-                          status: true,
-                          RobotID: Get.find<BatteryController>()
-                                  .background
-                                  .value
-                                  ?.data
-                                  ?.first
-                                  .robot
-                                  ?.roboId ??
-                              "");
+                      // ApiServices.navigatePopup(
+                      //     userId: Get.find<BatteryController>()
+                      //             .background
+                      //             .value
+                      //             ?.data
+                      //             ?.first
+                      //             .robot
+                      //             ?.roboId ??
+                      //         "",
+                      //     message: "no message");
+                      // ApiServices.sendResponseData(
+                      //     status: true,
+                      //     RobotID: Get.find<BatteryController>()
+                      //             .background
+                      //             .value
+                      //             ?.data
+                      //             ?.first
+                      //             .robot
+                      //             ?.roboId ??
+                      //         "");
+                      // Get.back();
                       Get.back();
-                      Get.back();
+                      navigateToLocationByName();
                     },
                     style: ButtonStyle(
                       backgroundColor:
@@ -162,6 +164,57 @@ class ResponseNavController extends GetxController {
       print("Error fetching battery data: $e");
     } finally {
       resetStatus();
+    }
+  }
+
+  void navigateToLocationByName() async {
+    try {
+      final resp = await ApiServices.setHOme();
+
+      if (resp['status'] == true) {
+        Get.dialog(
+          AlertDialog(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            title: Column(
+              children: [
+                Center(
+                  child: SizedBox(
+                    width: 180.w,
+                    height: 180.h,
+                    child: Lottie.asset("assets/navigate.json"),
+                  ),
+                ),
+                Text(
+                  "COMMAND RECEIVED",
+                  style: GoogleFonts.orbitron(
+                    color: Colors.black,
+                    fontSize: 20.h,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+            content: Text(
+              "Heading to the home location",
+              textAlign: TextAlign.center,
+              style: GoogleFonts.oxygen(
+                color: Colors.black,
+                fontSize: 15.h,
+              ),
+            ),
+          ),
+        );
+      }
+    } catch (e) {
+      ProductAppPopUps.submit(
+        title: "FAILED",
+        message: "Something went wrong.",
+        actionName: "Close",
+        iconData: Icons.info_outline,
+        iconColor: Colors.red,
+      );
+      print("Error: ${e.toString()}");
     }
   }
 }

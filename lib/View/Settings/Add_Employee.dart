@@ -262,39 +262,42 @@ class _AddEmployeeState extends State<AddEmployee> {
                       ),
                     ),
                     GestureDetector(
-                      child: buildInfoCard(size, 'SUBMIT'),
-                      onTap: () async {
-                        String user = employeeidcontoller.text.trim();
-                        if (_formKey.currentState!.validate()) {
-                          if (user.isNotEmpty) {
-                            await Get.find<AddEmployeeController>()
-                                .updateaddemployee(
-                                    data:
-                                        "${Get.find<UserAuthController>().loginData.value?.user?.id ?? 0}",
-                                    employeeID: employeeidcontoller.text);
+                      child: buildInfoCard(
+                        size,
+                        'SUBMIT',
+                        onTap: () async {
+                          String user = employeeidcontoller.text.trim();
+                          if (_formKey.currentState!.validate()) {
+                            if (user.isNotEmpty) {
+                              await Get.find<AddEmployeeController>()
+                                  .updateaddemployee(
+                                      data:
+                                          "${Get.find<UserAuthController>().loginData.value?.user?.id ?? 0}",
+                                      employeeID: employeeidcontoller.text);
 
-                            if (Get.find<AddEmployeeController>()
-                                .isLoaded
-                                .value) {
-                              Navigator.push(context, MaterialPageRoute(
-                                builder: (context) {
-                                  return AddEmployeedetails(
-                                    employeeId: employeeidcontoller.text,
-                                  );
-                                },
-                              ));
+                              if (Get.find<AddEmployeeController>()
+                                  .isLoaded
+                                  .value) {
+                                Navigator.push(context, MaterialPageRoute(
+                                  builder: (context) {
+                                    return AddEmployeedetails(
+                                      employeeId: employeeidcontoller.text,
+                                    );
+                                  },
+                                ));
 
-                              ProductAppPopUps.submit(
-                                title: "Success",
-                                message: "Employee Detail Added Successfully",
-                                actionName: "Close",
-                                iconData: Icons.done,
-                                iconColor: Colors.green,
-                              );
+                                ProductAppPopUps.submit(
+                                  title: "Success",
+                                  message: "Employee Detail Added Successfully",
+                                  actionName: "Close",
+                                  iconData: Icons.done,
+                                  iconColor: Colors.green,
+                                );
+                              }
                             }
                           }
-                        }
-                      },
+                        },
+                      ),
                     ),
                     SizedBox(
                       height: 20,

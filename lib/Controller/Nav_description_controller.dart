@@ -12,7 +12,7 @@ class NavigateDescriptionController extends GetxController {
   List<TextEditingController> descriptionControllers = [];
   List<TextEditingController> textControllers = [];
 
-  List<bool> isExpandedList = [];
+  RxList<bool> isExpandedList = <bool>[].obs;
 
   RxList<NavigationData?> dataList = RxList();
 
@@ -39,7 +39,7 @@ class NavigateDescriptionController extends GetxController {
                     text: dataList[index]?.name1 ?? "",
                   ));
 
-          isExpandedList = List.generate(dataList.length, (_) => false);
+          isExpandedList.value = List.filled(dataList.length, false);
 
           isLoaded.value = true;
           update();

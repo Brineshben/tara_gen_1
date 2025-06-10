@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'dart:ui';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,7 +11,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
-import 'package:ihub/Controller/FulltourController.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
@@ -23,14 +22,12 @@ import 'package:ihub/View/Settings/description_option.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
-import 'package:palette_generator/palette_generator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/battery_Controller.dart';
 import '../../Service/Api_Service.dart';
 import '../../Service/sharedPreference.dart';
-import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
 import '../Login_Page/login.dart' as login_page;
 import '../Robot_Response/Fulltour_dart.dart';
@@ -46,24 +43,6 @@ class Maintanance extends StatefulWidget {
 }
 
 class _MaintananceState extends State<Maintanance> {
-  // static const _platform = MethodChannel('com.example.ihub/channel');
-
-  // static Future<void> openExternalApp() async {
-  //   try {
-  //     await _platform.invokeMethod('openAnotherApp');
-  //   } on PlatformException catch (e) {
-  //     print("Failed to open external app: ${e.message}");
-  //   }
-  // }
-  // static const platform = MethodChannel('com.example.ihub/channel');
-  // void openAnotherAppKisko() async {
-  //   try {
-  //     await platform.invokeMethod('openAnotherApp');
-  //   } catch (e) {
-  //     print("Error launching app: $e");
-  //   }
-  // }
-
   bool isTraining = false;
 
   Future<void> startTraining() async {
@@ -87,6 +66,12 @@ class _MaintananceState extends State<Maintanance> {
       // Handle errors
       print("Error: $e");
     }
+  }
+
+  @override
+  void initState() {
+    _hideSystemUI();
+    super.initState();
   }
 
   void _hideSystemUI() {
@@ -125,23 +110,6 @@ class _MaintananceState extends State<Maintanance> {
     }
     isLoading = false;
   }
-
-// process image
-  // Future<void> _processImageForColor(File originalFile) async {
-  //   final paletteGenerator = await PaletteGenerator.fromImageProvider(
-  //     FileImage(originalFile),
-  //     size: const Size(500, 500),
-  //     maximumColorCount: 20,
-  //   );
-
-  //   final dominantColor = paletteGenerator.dominantColor?.color ?? Colors.white;
-  //   final brightness = ThemeData.estimateBrightnessForColor(dominantColor);
-
-  //   Get.find<BatteryController>().foregroundColor.value =
-  //       brightness == Brightness.dark ? Colors.white : Colors.black;
-
-  //   print("Updated color: $dominantColor, brightness: $brightness");
-  // }
 
   Future<void> _processImageForColor(File originalFile) async {
     final avgColor = await getAverageColor(originalFile);
@@ -1010,30 +978,38 @@ class _MaintananceState extends State<Maintanance> {
   }
 }
 
-Widget buildInfoCard(Size size, String title, {Color color = Colors.black}) {
-  return Ink(
-    width: size.width * 0.20,
-    padding: EdgeInsets.symmetric(horizontal: 20),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(15),
-      color: Colors.white,
-      border: Border.all(color: Colors.blue),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.grey.shade400,
-          spreadRadius: 1,
-          blurRadius: 5,
+Widget buildInfoCard(
+  Size size,
+  String title, {
+  Color color = Colors.black,
+  required VoidCallback onTap,
+}) {
+  return Material(
+    color: Colors.white,
+    borderRadius: BorderRadius.circular(20),
+    elevation: 2,
+    child: InkWell(
+      borderRadius: BorderRadius.circular(20),
+      highlightColor: Colors.green.withOpacity(0.3),
+      splashColor: Colors.blue.withOpacity(0.3),
+      onTap: onTap,
+      child: Container(
+        width: size.width * 0.20,
+        height: 55,
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: Colors.blue),
         ),
-      ],
-    ),
-    height: 55,
-    child: Center(
-      child: Text(
-        title,
-        style: GoogleFonts.poppins(
-          color: color,
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
+        child: Center(
+          child: Text(
+            title,
+            style: GoogleFonts.poppins(
+              color: color,
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
       ),
     ),

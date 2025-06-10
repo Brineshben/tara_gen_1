@@ -73,213 +73,291 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
               Expanded(
                 child: GetX<NavigateDescriptionController>(
                   builder: (NavigateDescriptionController controller) {
-                    return controller.dataList.isEmpty
+                    return controller.isLoading.value
                         ? Center(
-                            child: Text(
-                            "No description found",
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ))
-                        : Padding(
-                            padding: const EdgeInsets.only(top: 90),
-                            child: ListView.builder(
-                              padding: EdgeInsets.only(
-                                top: 10,
-                                left: 150,
-                                right: 150,
-                                bottom: 10,
-                              ),
-                              itemCount: controller.dataList.length,
-                              itemBuilder: (context, index) {
-                                return Card(
-                                    color: Colors.white,
-                                    margin: EdgeInsets.symmetric(vertical: 10),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    elevation: 2,
-                                    child: ExpansionTile(
-                                      initiallyExpanded:
-                                          controller.isExpandedList[index],
-                                      onExpansionChanged: (value) {
-                                        FocusScope.of(context).unfocus();
-
-                                        setState(() {
-                                          controller.isExpandedList[index] =
-                                              value;
-                                        });
-                                      },
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: BorderSide.none),
-                                      collapsedShape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          side: BorderSide.none),
-                                      title: Center(
-                                        child: Text(
-                                            "${controller.dataList[index]?.name?.toUpperCase()}",
-                                            style: TextStyle(
-                                                fontSize: 20.h,
-                                                fontWeight: FontWeight.w800,
-                                                color: Colors.black)),
-                                      ),
-                                      children: [
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 20),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text("DESCRIPTION",
+                            child: CircularProgressIndicator(),
+                          )
+                        : controller.dataList.isEmpty
+                            ? Center(
+                                child: Text(
+                                "No description found",
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ))
+                            : Padding(
+                                padding: const EdgeInsets.only(top: 90),
+                                child: ListView.builder(
+                                  padding: EdgeInsets.only(
+                                    top: 10,
+                                    left: 150,
+                                    right: 150,
+                                    bottom: 10,
+                                  ),
+                                  itemCount: controller.isExpandedList.length,
+                                  itemBuilder: (context, index) {
+                                    return Obx(
+                                      () => Card(
+                                          color: Colors.white,
+                                          margin: EdgeInsets.symmetric(
+                                              vertical: 10),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(15)),
+                                          elevation: 2,
+                                          child: ExpansionTile(
+                                            key: Key(
+                                                '${controller.isExpandedList[index]}_$index'),
+                                            initiallyExpanded: controller
+                                                .isExpandedList[index],
+                                            onExpansionChanged: (value) {
+                                              FocusScope.of(context).unfocus();
+                                              controller.isExpandedList[index] =
+                                                  value;
+                                            },
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                side: BorderSide.none),
+                                            collapsedShape:
+                                                RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    side: BorderSide.none),
+                                            title: Center(
+                                              child: Text(
+                                                  "${controller.dataList[index]?.name?.toUpperCase()}",
                                                   style: TextStyle(
-                                                      fontSize: 12,
+                                                      fontSize: 20.h,
                                                       fontWeight:
-                                                          FontWeight.w500)),
-                                              SizedBox(height: 10),
-                                              Container(
-                                                height: size.height * 0.25,
-                                                child: TextFormField(
-                                                  controller: controller
-                                                          .descriptionControllers[
-                                                      index],
-                                                  style: const TextStyle(
-                                                      color: Colors.white),
-                                                  minLines: null,
-                                                  validator: (val) => val!
-                                                          .trim()
-                                                          .isEmpty
-                                                      ? 'Please Enter Description.'
-                                                      : null,
-                                                  decoration: InputDecoration(
-                                                      hintStyle: const TextStyle(
-                                                          color:
-                                                              Colors.white38),
-                                                      contentPadding:
-                                                          EdgeInsets.symmetric(
-                                                              vertical: 10.h,
-                                                              horizontal: 10.w),
-                                                      hintText:
-                                                          "Enter Description  ",
-                                                      border:
-                                                          OutlineInputBorder(
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                .all(
-                                                          Radius.circular(10.0),
-                                                        ).r,
-                                                      ),
-                                                      enabledBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color:
-                                                                    Colors.blue,
-                                                                width: 1.0),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                    .all(Radius
-                                                                        .circular(
-                                                                            10))
-                                                                .r,
-                                                      ),
-                                                      focusedBorder:
-                                                          OutlineInputBorder(
-                                                        borderSide:
-                                                            const BorderSide(
-                                                                color:
-                                                                    Colors.blue,
-                                                                width: 1.0),
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                    .all(
+                                                          FontWeight.w800,
+                                                      color: Colors.black)),
+                                            ),
+                                            children: [
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 20,
+                                                        vertical: 20),
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text("DESCRIPTION",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w500)),
+                                                    SizedBox(height: 10),
+                                                    Container(
+                                                      height:
+                                                          size.height * 0.25,
+                                                      child: TextFormField(
+                                                        controller: controller
+                                                                .descriptionControllers[
+                                                            index],
+                                                        style: const TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                        minLines: null,
+                                                        validator: (val) => val!
+                                                                .trim()
+                                                                .isEmpty
+                                                            ? 'Please Enter Description.'
+                                                            : null,
+                                                        decoration:
+                                                            InputDecoration(
+                                                                hintStyle: const TextStyle(
+                                                                    color: Colors
+                                                                        .white38),
+                                                                contentPadding:
+                                                                    EdgeInsets.symmetric(
+                                                                        vertical: 10
+                                                                            .h,
+                                                                        horizontal:
+                                                                            10
+                                                                                .w),
+                                                                hintText:
+                                                                    "Enter Description  ",
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      const BorderRadius
+                                                                          .all(
                                                                     Radius.circular(
-                                                                        10.0))
-                                                                .r,
+                                                                        10.0),
+                                                                  ).r,
+                                                                ),
+                                                                enabledBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      width:
+                                                                          1.0),
+                                                                  borderRadius:
+                                                                      const BorderRadius
+                                                                              .all(
+                                                                              Radius.circular(10))
+                                                                          .r,
+                                                                ),
+                                                                focusedBorder:
+                                                                    OutlineInputBorder(
+                                                                  borderSide: const BorderSide(
+                                                                      color: Colors
+                                                                          .blue,
+                                                                      width:
+                                                                          1.0),
+                                                                  borderRadius:
+                                                                      const BorderRadius
+                                                                              .all(
+                                                                              Radius.circular(10.0))
+                                                                          .r,
+                                                                ),
+                                                                fillColor: Colors
+                                                                        .blueGrey[
+                                                                    900],
+                                                                filled: true),
+                                                        maxLines: 7,
                                                       ),
-                                                      fillColor:
-                                                          Colors.blueGrey[900],
-                                                      filled: true),
-                                                  maxLines: 7,
-                                                ),
-                                              ),
-                                              SizedBox(height: 20),
-                                              // Text("NAME",
-                                              //     style: TextStyle(
-                                              //         fontSize: 12,
-                                              //         fontWeight:
-                                              //             FontWeight.w500)),
-                                              // SizedBox(height: 10),
-                                              // TextFormField(
-                                              //   controller: controller
-                                              //       .textControllers[index],
-                                              //   style: const TextStyle(
-                                              //       color: Colors.white),
-                                              //   minLines: null,
-                                              //   validator: (val) =>
-                                              //       val!.trim().isEmpty
-                                              //           ? 'Please Enter Name.'
-                                              //           : null,
-                                              //   decoration: InputDecoration(
-                                              //       hintStyle: const TextStyle(
-                                              //           color: Colors.white38),
-                                              //       contentPadding:
-                                              //           EdgeInsets.symmetric(
-                                              //               vertical: 10.h,
-                                              //               horizontal: 10.w),
-                                              //       hintText: "Enter Name",
-                                              //       border: OutlineInputBorder(
-                                              //         borderRadius:
-                                              //             const BorderRadius
-                                              //                 .all(
-                                              //           Radius.circular(10.0),
-                                              //         ).r,
-                                              //       ),
-                                              //       enabledBorder:
-                                              //           OutlineInputBorder(
-                                              //         borderSide:
-                                              //             const BorderSide(
-                                              //                 color:
-                                              //                     Colors.blue,
-                                              //                 width: 1.0),
-                                              //         borderRadius:
-                                              //             const BorderRadius
-                                              //                     .all(Radius
-                                              //                         .circular(
-                                              //                             10))
-                                              //                 .r,
-                                              //       ),
-                                              //       focusedBorder:
-                                              //           OutlineInputBorder(
-                                              //         borderSide:
-                                              //             const BorderSide(
-                                              //                 color:
-                                              //                     Colors.blue,
-                                              //                 width: 1.0),
-                                              //         borderRadius:
-                                              //             const BorderRadius
-                                              //                     .all(Radius
-                                              //                         .circular(
-                                              //                             10.0))
-                                              //                 .r,
-                                              //       ),
-                                              //       fillColor:
-                                              //           Colors.blueGrey[900],
-                                              //       filled: true),
-                                              // ),
-                                              // SizedBox(height: 10),
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.end,
-                                                children: [
-                                                  controller.dataList[index]
-                                                              ?.video !=
-                                                          null
-                                                      ? GestureDetector(
+                                                    ),
+                                                    // SizedBox(height: 20),
+                                                    // Text(
+                                                    //   "NAME",
+                                                    //   style: TextStyle(
+                                                    //       fontSize: 12,
+                                                    //       fontWeight:
+                                                    //           FontWeight.w500),
+                                                    // ),
+                                                    // SizedBox(height: 10),
+                                                    // TextFormField(
+                                                    //   controller: controller
+                                                    //           .textControllers[
+                                                    //       index],
+                                                    //   style: const TextStyle(
+                                                    //       color: Colors.white),
+                                                    //   minLines: null,
+                                                    //   validator: (val) => val!
+                                                    //           .trim()
+                                                    //           .isEmpty
+                                                    //       ? 'Please Enter Name.'
+                                                    //       : null,
+                                                    //   decoration:
+                                                    //       InputDecoration(
+                                                    //           hintStyle: const TextStyle(
+                                                    //               color: Colors
+                                                    //                   .white38),
+                                                    //           contentPadding:
+                                                    //               EdgeInsets.symmetric(
+                                                    //                   vertical:
+                                                    //                       10.h,
+                                                    //                   horizontal:
+                                                    //                       10.w),
+                                                    //           hintText:
+                                                    //               "Enter Name",
+                                                    //           border:
+                                                    //               OutlineInputBorder(
+                                                    //             borderRadius:
+                                                    //                 const BorderRadius
+                                                    //                     .all(
+                                                    //               Radius
+                                                    //                   .circular(
+                                                    //                       10.0),
+                                                    //             ).r,
+                                                    //           ),
+                                                    //           enabledBorder:
+                                                    //               OutlineInputBorder(
+                                                    //             borderSide:
+                                                    //                 const BorderSide(
+                                                    //                     color: Colors
+                                                    //                         .blue,
+                                                    //                     width:
+                                                    //                         1.0),
+                                                    //             borderRadius:
+                                                    //                 const BorderRadius
+                                                    //                         .all(
+                                                    //                         Radius.circular(10))
+                                                    //                     .r,
+                                                    //           ),
+                                                    //           focusedBorder:
+                                                    //               OutlineInputBorder(
+                                                    //             borderSide:
+                                                    //                 const BorderSide(
+                                                    //                     color: Colors
+                                                    //                         .blue,
+                                                    //                     width:
+                                                    //                         1.0),
+                                                    //             borderRadius:
+                                                    //                 const BorderRadius
+                                                    //                         .all(
+                                                    //                         Radius.circular(10.0))
+                                                    //                     .r,
+                                                    //           ),
+                                                    //           fillColor: Colors
+                                                    //                   .blueGrey[
+                                                    //               900],
+                                                    //           filled: true),
+                                                    // ),
+                                                    SizedBox(height: 20),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment.end,
+                                                      children: [
+                                                        controller
+                                                                    .dataList[
+                                                                        index]
+                                                                    ?.video !=
+                                                                null
+                                                            ? GestureDetector(
+                                                                child: Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .only(
+                                                                          top:
+                                                                              4),
+                                                                  child:
+                                                                      Container(
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              20.r),
+                                                                      color: Colors
+                                                                          .deepPurple,
+                                                                    ),
+                                                                    width: 40.w,
+                                                                    height:
+                                                                        40.h,
+                                                                    child:
+                                                                        Center(
+                                                                      child:
+                                                                          Text(
+                                                                        'PLAY VIDEO',
+                                                                        style: GoogleFonts.poppins(
+                                                                            color: Colors
+                                                                                .white,
+                                                                            fontSize:
+                                                                                12,
+                                                                            fontWeight:
+                                                                                FontWeight.bold),
+                                                                      ),
+                                                                    ),
+                                                                  ),
+                                                                ),
+                                                                onTap: () {
+                                                                  _showVideoDialog(
+                                                                      context,
+                                                                      "${controller.dataList[index]?.video}");
+                                                                },
+                                                              )
+                                                            : SizedBox(),
+                                                        SizedBox(
+                                                          width: 10,
+                                                        ),
+                                                        GestureDetector(
                                                           child: Padding(
                                                             padding:
                                                                 const EdgeInsets
@@ -288,23 +366,23 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                             child: Container(
                                                               decoration:
                                                                   BoxDecoration(
+                                                                color: Colors
+                                                                    .green,
                                                                 borderRadius:
                                                                     BorderRadius
                                                                         .circular(
                                                                             20.r),
-                                                                color: Colors
-                                                                    .deepPurple,
                                                               ),
                                                               width: 40.w,
                                                               height: 40.h,
                                                               child: Center(
                                                                 child: Text(
-                                                                  'PLAY VIDEO',
-                                                                  style: GoogleFonts.poppins(
+                                                                  'SUBMIT',
+                                                                  style: GoogleFonts.inter(
                                                                       color: Colors
                                                                           .white,
                                                                       fontSize:
-                                                                          12,
+                                                                          14,
                                                                       fontWeight:
                                                                           FontWeight
                                                                               .bold),
@@ -312,129 +390,93 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                               ),
                                                             ),
                                                           ),
-                                                          onTap: () {
-                                                            _showVideoDialog(
-                                                                context,
-                                                                "${controller.dataList[index]?.video}");
+                                                          onTap: () async {
+                                                            // Get.back();
+
+                                                            controller
+                                                                    .isExpandedList[
+                                                                index] = false;
+
+                                                            Map<String, dynamic> resp = await ApiServices.navigateDescriptionSubmit(
+                                                                description:
+                                                                    controller
+                                                                        .descriptionControllers[
+                                                                            index]
+                                                                        .text,
+                                                                name: controller
+                                                                    .textControllers[
+                                                                        index]
+                                                                    .text,
+                                                                userId: controller
+                                                                        .dataList[
+                                                                            index]
+                                                                        ?.id ??
+                                                                    0);
+
+                                                            FocusScope.of(
+                                                                    context)
+                                                                .unfocus();
+
+                                                            if (resp[
+                                                                    'status'] ==
+                                                                'ok') {
+                                                              Get.snackbar(
+                                                                "Updated",
+                                                                "Description submitted successfully.",
+                                                                backgroundColor:
+                                                                    Colors
+                                                                        .green,
+                                                                colorText:
+                                                                    Colors
+                                                                        .white,
+                                                                snackPosition:
+                                                                    SnackPosition
+                                                                        .BOTTOM,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            16),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              );
+                                                            } else {
+                                                              Get.snackbar(
+                                                                "Failed",
+                                                                resp['message'] ??
+                                                                    "Something went wrong.",
+                                                                backgroundColor:
+                                                                    Colors.red,
+                                                                colorText:
+                                                                    Colors
+                                                                        .white,
+                                                                snackPosition:
+                                                                    SnackPosition
+                                                                        .BOTTOM,
+                                                                margin:
+                                                                    EdgeInsets
+                                                                        .all(
+                                                                            16),
+                                                                duration:
+                                                                    Duration(
+                                                                        seconds:
+                                                                            2),
+                                                              );
+                                                            }
                                                           },
-                                                        )
-                                                      : SizedBox(),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  GestureDetector(
-                                                    child: Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 4),
-                                                      child: Container(
-                                                        decoration:
-                                                            BoxDecoration(
-                                                          color: Colors.green,
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                      20.r),
                                                         ),
-                                                        width: 40.w,
-                                                        height: 40.h,
-                                                        child: Center(
-                                                          child: Text(
-                                                            'SUBMIT',
-                                                            style: GoogleFonts.inter(
-                                                                color: Colors
-                                                                    .white,
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    onTap: () async {
-                                                      setState(() {
-                                                        for (int i = 0;
-                                                            i <
-                                                                controller
-                                                                    .isExpandedList
-                                                                    .length;
-                                                            i++) {
-                                                          controller
-                                                                  .isExpandedList[
-                                                              i] = false;
-                                                        }
-                                                      });
-                                                      Map<String, dynamic>
-                                                          resp =
-                                                          await ApiServices.navigateDescriptionSubmit(
-                                                              description:
-                                                                  controller
-                                                                      .descriptionControllers[
-                                                                          index]
-                                                                      .text,
-                                                              name: controller
-                                                                  .textControllers[
-                                                                      index]
-                                                                  .text,
-                                                              userId: controller
-                                                                      .dataList[
-                                                                          index]
-                                                                      ?.id ??
-                                                                  0);
-
-                                                      FocusScope.of(context)
-                                                          .unfocus();
-
-                                                      if (resp['status'] ==
-                                                          'ok') {
-                                                        Get.snackbar(
-                                                          "Updated",
-                                                          "Description submitted successfully.",
-                                                          backgroundColor:
-                                                              Colors.green,
-                                                          colorText:
-                                                              Colors.white,
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM,
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  16),
-                                                          duration: Duration(
-                                                              seconds: 2),
-                                                        );
-                                                      } else {
-                                                        Get.snackbar(
-                                                          "Failed",
-                                                          resp['message'] ??
-                                                              "Something went wrong.",
-                                                          backgroundColor:
-                                                              Colors.red,
-                                                          colorText:
-                                                              Colors.white,
-                                                          snackPosition:
-                                                              SnackPosition
-                                                                  .BOTTOM,
-                                                          margin:
-                                                              EdgeInsets.all(
-                                                                  16),
-                                                          duration: Duration(
-                                                              seconds: 2),
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                ],
-                                              )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ],
-                                          ),
-                                        ),
-                                      ],
-                                    ));
-                              },
-                            ),
-                          );
+                                          )),
+                                    );
+                                  },
+                                ),
+                              );
                   },
                 ),
               ),

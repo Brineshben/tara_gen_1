@@ -6,6 +6,7 @@ import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
 import 'package:ihub/Utils/header.dart';
+import 'package:ihub/View/Settings/settings.dart';
 
 class QuestionAnswerScreen extends StatefulWidget {
   final String qid;
@@ -63,11 +64,9 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                           fit: BoxFit.cover),
                     ),
                     BackdropFilter(
-                      filter: ImageFilter.blur(
-                          sigmaX: 10.0, sigmaY: 10.0), // Adjust blur strength
+                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
                       child: Container(
-                        color: Colors.black.withOpacity(
-                            0), // Required for BackdropFilter to work
+                        color: Colors.black.withOpacity(0),
                       ),
                     ),
                   ],
@@ -76,7 +75,6 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
             },
           ),
 
-          // Content
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 130),
             child: Column(
@@ -97,8 +95,8 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    ElevatedButton.icon(
-                      onPressed: () async {
+                    buildInfoCard(
+                      onTap: () async {
                         final question = questionController.text.trim();
                         final answer = answerController.text.trim();
 
@@ -119,17 +117,9 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
 
                         Navigator.pop(context);
                       },
-                      icon: const Icon(Icons.save),
-                      label: const Text("Submit"),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 24, vertical: 14),
-                      ),
+                      MediaQuery.of(context).size,
+                      widget.isEdit ? "UPDATE QA" : "CREATE QA",
+                      color: Colors.green,
                     ),
                   ],
                 )

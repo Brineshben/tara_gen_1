@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/header.dart';
 
@@ -162,12 +161,11 @@ class _ApiKeyState extends State<ApiKey> {
                           SizedBox(
                             height: 50,
                           ),
-                          Material(
-                            color: Colors.transparent,
-                            child: InkWell(
-                              splashColor: Colors.white,
-                              highlightColor: Colors.white.withOpacity(0.3),
-                              borderRadius: BorderRadius.circular(20.r),
+                          InkWell(
+                            splashColor: Colors.white,
+                            highlightColor: Colors.white.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(20.r),
+                            child: buildInfoCard(
                               onTap: () async {
                                 if (_formKey.currentState!.validate()) {
                                   if (NewIp.text.isNotEmpty) {
@@ -197,8 +195,8 @@ class _ApiKeyState extends State<ApiKey> {
                                   }
                                 }
                               },
-                              child: buildInfoCard(
-                                  MediaQuery.of(context).size, 'SUBMIT'),
+                              MediaQuery.of(context).size,
+                              'SUBMIT',
                             ),
                           ),
                         ],
