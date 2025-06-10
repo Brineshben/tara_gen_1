@@ -249,7 +249,7 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
                                                 onTap: () {
                                                   controller.removeData(item);
                                                 },
-                                                child: buildInfoCard(size,
+                                                child: buildInfoCardDelete(size,
                                                     item.name ?? "No Name"),
                                               ),
                                             );
@@ -336,49 +336,88 @@ class _ListAnimationdDataState extends State<ListAnimationdData> {
   }
 }
 
-// Widget buildInfoCard2(Size size, String title) {
-//   return Container(
-//     decoration: BoxDecoration(
-//       gradient: LinearGradient(
-//         colors: [ColorUtils.userdetailcolor, ColorUtils.userdetailcolor],
-//         begin: Alignment.topLeft,
-//         end: Alignment.bottomRight,
-//       ),
-//       borderRadius: BorderRadius.circular(20.r),
-//       boxShadow: [
-//         BoxShadow(
-//           color: Colors.white,
-//           spreadRadius: 0,
-//           blurRadius: 0,
-//           offset: Offset(0, 0),
-//         ),
-//       ],
-//     ),
-//     width: size.width * 0.40,
-//     height: size.height * 0.075,
-//     child: Padding(
-//       padding: const EdgeInsets.only(left: 20, right: 20),
-//       child: Row(
-//         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//         children: [
-//           Text(
-//             title,
-//             style: GoogleFonts.orbitron(
-//               color: Colors.white,
-//               fontSize: 18.h,
-//               fontWeight: FontWeight.bold,
-//             ),
-//           ),
-//           Icon(
-//             Icons.delete,
-//             color: Colors.red,
-//             size: 20,
-//           )
-//         ],
-//       ),
-//     ),
-//   );
-// }
+Widget buildInfoCardDelete(Size size, String title,
+    {Color color = Colors.black}) {
+  return Ink(
+    width: size.width * 0.20,
+    padding: EdgeInsets.symmetric(horizontal: 20),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(15),
+      color: Colors.white,
+      border: Border.all(color: Colors.blue),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.grey.shade400,
+          spreadRadius: 1,
+          blurRadius: 5,
+        ),
+      ],
+    ),
+    height: 55,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.poppins(
+            color: color,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Icon(
+          Icons.delete,
+          color: Colors.black,
+          size: 20,
+        ),
+      ],
+    ),
+  );
+}
+
+Widget buildInfoCard2(Size size, String title) {
+  return Container(
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [ColorUtils.userdetailcolor, ColorUtils.userdetailcolor],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      ),
+      borderRadius: BorderRadius.circular(20.r),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.white,
+          spreadRadius: 0,
+          blurRadius: 0,
+          offset: Offset(0, 0),
+        ),
+      ],
+    ),
+    width: size.width * 0.40,
+    height: size.height * 0.075,
+    child: Padding(
+      padding: const EdgeInsets.only(left: 20, right: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: GoogleFonts.orbitron(
+              color: Colors.white,
+              fontSize: 18.h,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Icon(
+            Icons.delete,
+            color: Colors.red,
+            size: 20,
+          )
+        ],
+      ),
+    ),
+  );
+}
 
 // Widget buildInfoCardDelete(Size size, String title) {
 //   return Padding(

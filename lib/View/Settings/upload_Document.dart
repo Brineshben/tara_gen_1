@@ -38,8 +38,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     super.initState();
   }
 
-  bool isUploading = false;
-
   Future<void> _pickFile() async {
     String? initialDirectory = "/storage/emulated/0/Download";
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -383,157 +381,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                     spacing: 20,
                     children: [
                       SettingsCard(
-                        iconPath: 'assets/reload.png',
-                        subtitle: "Restart the map service",
-                        title: 'REFRESH MAP',
-                        backgroundColor: Colors.white,
-                        onTap: () async {
-                          Get.dialog(Dialog(
-                            backgroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Container(
-                              padding: const EdgeInsets.all(20),
-                              width: 300,
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Image.asset(
-                                    "assets/reload.png",
-                                    width: 60,
-                                    color: Colors.green,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "REFRESH MAP?",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "Refreshing the map may take 2 to 3 minutes. Are you sure you want to continue?",
-                                    style: TextStyle(fontSize: 14),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Text(
-                                    "Make sure the robot is at the charging dock before proceeding.",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () => Get.back(),
-                                        style: ElevatedButton.styleFrom(
-                                          foregroundColor: Colors.red,
-                                          backgroundColor: Colors.white,
-                                        ),
-                                        child: const Text("No"),
-                                      ),
-                                      ElevatedButton(
-                                        onPressed: () async {
-                                          Get.back();
-                                          try {
-                                            Map<String, dynamic> response =
-                                                await ApiServices.mapRestart();
-
-                                            if (response['updated_data']
-                                                    ['status'] ==
-                                                true) {
-                                              isUploading = true;
-                                              setState(() {});
-
-                                              await Future.delayed(
-                                                  Duration(seconds: 10));
-
-                                              isUploading = false;
-                                              setState(() {});
-
-                                              ScaffoldMessenger.of(context)
-                                                  .showSnackBar(
-                                                SnackBar(
-                                                  content: Row(
-                                                    children: [
-                                                      Icon(Icons.check_circle,
-                                                          color: Colors.white),
-                                                      SizedBox(width: 8),
-                                                      Text(
-                                                        'Restarting the map...',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-
-                                                  backgroundColor:
-                                                      Colors.green.shade600,
-                                                  duration:
-                                                      Duration(seconds: 5),
-                                                  elevation: 4,
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.zero,
-                                                  ),
-                                                  // Remove behavior and margin for full-width default look
-                                                ),
-                                              );
-                                            } else {
-                                              Get.snackbar(
-                                                'Failed',
-                                                'Map not restarted',
-                                                snackPosition:
-                                                    SnackPosition.BOTTOM,
-                                                backgroundColor: Colors.red,
-                                                colorText: Colors.white,
-                                                duration: Duration(seconds: 2),
-                                                margin: EdgeInsets.all(20),
-                                              );
-                                            }
-                                          } catch (e) {
-                                            Get.snackbar(
-                                              'Failed',
-                                              '$e',
-                                              snackPosition:
-                                                  SnackPosition.BOTTOM,
-                                              backgroundColor: Colors.red,
-                                              colorText: Colors.white,
-                                              duration: Duration(seconds: 2),
-                                              margin: EdgeInsets.all(20),
-                                            );
-                                          }
-                                        },
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: Colors.green,
-                                        ),
-                                        child: const Text(
-                                          "Yes",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ));
-                        },
-                      ),
-                      SettingsCard(
                         iconPath: 'assets/delete.png',
                         subtitle: "Delete the map from the robot",
                         title: 'DELETE MAP',
@@ -622,32 +469,6 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
               ),
             ],
           ),
-          if (isUploading)
-            Center(
-              child: Container(
-                  width: 200,
-                  height: 70,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: Colors.blueGrey)),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: Colors.black,
-                      ),
-                      SizedBox(width: 10),
-                      Text(
-                        "Please wait...",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
         ],
       ),
     );
