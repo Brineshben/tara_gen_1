@@ -449,7 +449,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                                           10.h),
                                                               // width: 120.w,
                                                               // height: 45.h,
-                                                              decoration:
+                                                              decoration:git 
                                                                   BoxDecoration(
                                                                 gradient:
                                                                     LinearGradient(
