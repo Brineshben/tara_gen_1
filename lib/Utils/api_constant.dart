@@ -90,7 +90,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.1.3:8000";
+  static String _defaultBaseUrl1 = "http://192.168.1.52:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences
@@ -198,7 +198,7 @@ class ApiConstants {
 
   // static String volume = "/enquiry/volume/set/";
   // static String volumeinitial = "/enquiry/volume/get/";
-  static String robotresponsepopup = "/enquiry/robot/message/get/";
+  static String robotresponsepopup = "/robot/message/get/";
   static String navigationSubmit = "/full_tour/create/";
   static String robotresponsefornavpopupupdate = "/enquiry/robot/message/post/";
   static String robotresponsefornav = "/robot/button/clicked/";

@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     messageTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
@@ -318,20 +318,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      SizedBox(height: 200),
-                      if (listening == true)
-                        RobotCommunicationStatus(
-                          text: "LISTENING...",
-                        )
-                      else if (speaking == true)
-                        RobotCommunicationStatus(
-                          text: "SPEAKING...",
-                        )
-                      else
-                        RobotCommunicationStatus(
-                          text: "THINKING...",
-                        ),
-                      SizedBox(height: 90),
                       controller.robotResponseModel.value?.text != null &&
                               controller.robotResponseModel.value?.text != ''
                           ? Padding(
@@ -354,6 +340,18 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                               ),
                             )
                           : SizedBox(),
+                      if (listening == true)
+                        RobotCommunicationStatus(
+                          text: "LISTENING...",
+                        )
+                      else if (speaking == true)
+                        RobotCommunicationStatus(
+                          text: "SPEAKING...",
+                        )
+                      else
+                        RobotCommunicationStatus(
+                          text: "THINKING...",
+                        ),
                     ],
                   );
                 },

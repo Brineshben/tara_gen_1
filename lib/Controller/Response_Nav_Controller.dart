@@ -31,11 +31,11 @@ class ResponseNavController extends GetxController {
       Map<String, dynamic> resp =
           await ApiServices.resposefornav(userId: roboid);
 
-      ResponseNavModel pass = ResponseNavModel.fromJson(resp);
-      passwordApi.value = pass;
+      passwordApi.value = ResponseNavModel.fromJson(resp);
+
       isLoaded.value = true;
-      print("anuuuuuuuuu${pass.message}");
-      if (pass.message == "no message" || pass.message == null) {
+      if (passwordApi.value?.message == "no message" ||
+          passwordApi.value?.message == null) {
       } else {
         Get.dialog(
           AlertDialog(

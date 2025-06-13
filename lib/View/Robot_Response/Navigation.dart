@@ -145,7 +145,7 @@ class _NavigationState extends State<Navigation> {
                           ? Center(
                               child: Column(
                                 children: [
-                                  SizedBox(height: 200),
+                                  SizedBox(height: 100),
                                   CircularProgressIndicator(
                                     color: Colors.blue,
                                   ),
@@ -368,20 +368,17 @@ class _NavigationState extends State<Navigation> {
                                   ),
                                 )
                               : Center(
-                                  child: SizedBox(
-                                    height: 200,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        Text(
-                                          "Oops..No Data Found",
-                                          style: GoogleFonts.poppins(
-                                              color: Colors.red,
-                                              fontSize: 20.h,
-                                              fontWeight: FontWeight.w700),
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    children: [
+                                      SizedBox(height: 100),
+                                      Text(
+                                        "Oops..No Data Found",
+                                        style: GoogleFonts.poppins(
+                                            color: Colors.red,
+                                            fontSize: 20.h,
+                                            fontWeight: FontWeight.w700),
+                                      ),
+                                    ],
                                   ),
                                 ),
                     ],

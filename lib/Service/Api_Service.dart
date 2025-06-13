@@ -604,7 +604,7 @@ class ApiServices {
     required String userId,
   }) async {
     String url =
-        "${ApiConstants.baseUrl}${ApiConstants.robotresponsepopup}$userId/";
+        "${ApiConstants.baseUrl1}${ApiConstants.robotresponsepopup}$userId/";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();

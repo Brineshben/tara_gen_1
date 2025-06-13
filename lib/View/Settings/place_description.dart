@@ -306,112 +306,82 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                       mainAxisAlignment:
                                                           MainAxisAlignment.end,
                                                       children: [
-                                                        controller
-                                                                    .dataList[
-                                                                        index]
-                                                                    ?.video !=
-                                                                null
-                                                            ? GestureDetector(
-                                                                child: Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .only(
-                                                                          top:
-                                                                              4),
-                                                                  child:
-                                                                      Container(
-                                                                    decoration:
-                                                                        BoxDecoration(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              20.r),
-                                                                      color: Colors
-                                                                          .deepPurple,
-                                                                    ),
-                                                                    width: 40.w,
-                                                                    height:
-                                                                        40.h,
-                                                                    child:
-                                                                        Center(
-                                                                      child:
-                                                                          Text(
-                                                                        'PLAY VIDEO',
-                                                                        style: GoogleFonts.poppins(
-                                                                            color: Colors
-                                                                                .white,
-                                                                            fontSize:
-                                                                                12,
-                                                                            fontWeight:
-                                                                                FontWeight.bold),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                onTap: () {
-                                                                  _showVideoDialog(
-                                                                      context,
-                                                                      "${controller.dataList[index]?.video}");
-                                                                },
-                                                              )
-                                                            : SizedBox(),
+                                                        // controller
+                                                        //             .dataList[
+                                                        //                 index]
+                                                        //             ?.video !=
+                                                        //         null
+                                                        //     ? GestureDetector(
+                                                        //         child: Padding(
+                                                        //           padding:
+                                                        //               const EdgeInsets
+                                                        //                   .only(
+                                                        //                   top:
+                                                        //                       4),
+                                                        //           child:
+                                                        //               Container(
+                                                        //             decoration:
+                                                        //                 BoxDecoration(
+                                                        //               borderRadius:
+                                                        //                   BorderRadius.circular(
+                                                        //                       20.r),
+                                                        //               color: Colors
+                                                        //                   .deepPurple,
+                                                        //             ),
+                                                        //             width: 40.w,
+                                                        //             height:
+                                                        //                 40.h,
+                                                        //             child:
+                                                        //                 Center(
+                                                        //               child:
+                                                        //                   Text(
+                                                        //                 'PLAY VIDEO',
+                                                        //                 style: GoogleFonts.poppins(
+                                                        //                     color: Colors
+                                                        //                         .white,
+                                                        //                     fontSize:
+                                                        //                         12,
+                                                        //                     fontWeight:
+                                                        //                         FontWeight.bold),
+                                                        //               ),
+                                                        //             ),
+                                                        //           ),
+                                                        //         ),
+                                                        //         onTap: () {
+                                                        //           _showVideoDialog(
+                                                        //               context,
+                                                        //               "${controller.dataList[index]?.video}");
+                                                        //         },
+                                                        //       )
+                                                        //     : SizedBox(),
                                                         SizedBox(
                                                           width: 10,
                                                         ),
                                                         GestureDetector(
-                                                          child: Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .only(
-                                                                    top: 4),
-                                                            child: Container(
-                                                              decoration:
-                                                                  BoxDecoration(
-                                                                color: Colors
-                                                                    .green,
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20.r),
-                                                              ),
-                                                              width: 40.w,
-                                                              height: 40.h,
-                                                              child: Center(
-                                                                child: Text(
-                                                                  'SUBMIT',
-                                                                  style: GoogleFonts.inter(
-                                                                      color: Colors
-                                                                          .white,
-                                                                      fontSize:
-                                                                          14,
-                                                                      fontWeight:
-                                                                          FontWeight
-                                                                              .bold),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
                                                           onTap: () async {
-                                                            // Get.back();
-
                                                             controller
                                                                     .isExpandedList[
                                                                 index] = false;
 
-                                                            Map<String, dynamic> resp = await ApiServices.navigateDescriptionSubmit(
-                                                                description:
-                                                                    controller
-                                                                        .descriptionControllers[
-                                                                            index]
-                                                                        .text,
-                                                                name: controller
-                                                                    .textControllers[
-                                                                        index]
-                                                                    .text,
-                                                                userId: controller
-                                                                        .dataList[
-                                                                            index]
-                                                                        ?.id ??
-                                                                    0);
+                                                            Map<String, dynamic>
+                                                                resp =
+                                                                await ApiServices
+                                                                    .navigateDescriptionSubmit(
+                                                              description:
+                                                                  controller
+                                                                      .descriptionControllers[
+                                                                          index]
+                                                                      .text,
+                                                              name: controller
+                                                                  .textControllers[
+                                                                      index]
+                                                                  .text,
+                                                              userId: controller
+                                                                      .dataList[
+                                                                          index]
+                                                                      ?.id ??
+                                                                  0,
+                                                            );
 
                                                             FocusScope.of(
                                                                     context)
@@ -465,6 +435,74 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                               );
                                                             }
                                                           },
+                                                          child: Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .only(
+                                                                    top: 8),
+                                                            child: Container(
+                                                              padding: EdgeInsets
+                                                                  .symmetric(
+                                                                      horizontal:
+                                                                          20.w,
+                                                                      vertical:
+                                                                          10.h),
+                                                              // width: 120.w,
+                                                              // height: 45.h,
+                                                              decoration:
+                                                                  BoxDecoration(
+                                                                gradient:
+                                                                    LinearGradient(
+                                                                  colors: [
+                                                                    Colors.green
+                                                                        .shade600,
+                                                                    Colors.green
+                                                                        .shade400
+                                                                  ],
+                                                                  begin: Alignment
+                                                                      .topLeft,
+                                                                  end: Alignment
+                                                                      .bottomRight,
+                                                                ),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            30.r),
+                                                                boxShadow: [
+                                                                  BoxShadow(
+                                                                    color: Colors
+                                                                        .green
+                                                                        .withOpacity(
+                                                                            0.4),
+                                                                    blurRadius:
+                                                                        10,
+                                                                    offset:
+                                                                        Offset(
+                                                                            0,
+                                                                            4),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  'SUBMIT',
+                                                                  style:
+                                                                      GoogleFonts
+                                                                          .inter(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontSize:
+                                                                        15,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    letterSpacing:
+                                                                        1.2,
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ],
                                                     )

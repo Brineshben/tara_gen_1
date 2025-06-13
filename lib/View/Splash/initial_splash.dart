@@ -129,14 +129,14 @@ import 'package:ihub/View/Login_Page/login.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:lottie/lottie.dart';
 
-class SplashVideoScreen extends StatefulWidget {
-  const SplashVideoScreen({super.key});
+class InitialSplashScreen extends StatefulWidget {
+  const InitialSplashScreen({super.key});
 
   @override
-  State<SplashVideoScreen> createState() => _SplashVideoScreenState();
+  State<InitialSplashScreen> createState() => _InitialSplashScreenState();
 }
 
-class _SplashVideoScreenState extends State<SplashVideoScreen> {
+class _InitialSplashScreenState extends State<InitialSplashScreen> {
   @override
   void initState() {
     super.initState();
@@ -170,7 +170,6 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // const SizedBox(height: 50),
             SizedBox(
               width: size.width * 0.3,
               height: size.width * 0.3,
@@ -190,13 +189,8 @@ class _SplashVideoScreenState extends State<SplashVideoScreen> {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 10),
             Lottie.asset("assets/loading.json", width: 100),
-            // Spacer(),
-            // Image.asset(
-            //   "assets/logo1.png",
-            //   width: 100,
-            // )
           ],
         ),
       ),

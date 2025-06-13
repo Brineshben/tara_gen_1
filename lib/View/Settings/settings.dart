@@ -994,7 +994,7 @@ Widget buildInfoCard(
       splashColor: Colors.blue.withOpacity(0.3),
       onTap: onTap,
       child: Container(
-        width: size.width * 0.20,
+        width: size.width * 0.22,
         height: 55,
         padding: EdgeInsets.symmetric(horizontal: 20),
         decoration: BoxDecoration(
