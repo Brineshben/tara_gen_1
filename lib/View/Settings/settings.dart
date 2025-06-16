@@ -16,6 +16,7 @@ import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/Utils/web_view.dart';
+import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/description_option.dart';
@@ -330,6 +331,29 @@ class _MaintananceState extends State<Maintanance> {
                       //     }
                       //   },
                       // ),
+
+                      SettingsCard(
+                        iconPath: "assets/arrow.png",
+                        subtitle: 'Control robot movement',
+                        title: "NAVIGATIONS",
+                        backgroundColor: Colors.white,
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return Navigation(
+                                robotid: Get.find<BatteryController>()
+                                        .background
+                                        .value
+                                        ?.data
+                                        ?.first
+                                        .robot
+                                        ?.roboId ??
+                                    "",
+                              );
+                            },
+                          ));
+                        },
+                      ),
 
                       SettingsCard(
                         iconPath: 'assets/cryptography.png',

@@ -449,7 +449,7 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
                                                                           10.h),
                                                               // width: 120.w,
                                                               // height: 45.h,
-                                                              decoration:git 
+                                                              decoration:
                                                                   BoxDecoration(
                                                                 gradient:
                                                                     LinearGradient(
@@ -575,9 +575,9 @@ class _PlaceDescriptionState extends State<PlaceDescription> {
   }
 }
 
-void _showVideoDialog(BuildContext context, String video) {
-  showDialog(
-    context: context,
-    builder: (context) => VideoDialog(video),
-  );
-}
+// void _showVideoDialog(BuildContext context, String video) {
+//   showDialog(
+//     context: context,
+//     builder: (context) => VideoDialog(video),
+//   );
+// }
