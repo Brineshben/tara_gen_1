@@ -167,9 +167,18 @@ class Header extends StatelessWidget {
 
                     print("batettegdshgfcdshuf$batteryLevel");
 
-                    return BatteryIcon(
-                      batteryLevel: batteryLevel,
-                      color: controller.foregroundColor.value,
+                    // return BatteryIcon(
+                    //   batteryLevel: batteryLevel,
+                    //   color: controller.foregroundColor.value,
+                    // );
+
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 35, right: 20),
+                      child: Text(
+                        "$batteryLevel%",
+                        style: TextStyle(
+                            fontSize: 30, fontWeight: FontWeight.bold),
+                      ),
                     );
                   },
                 ),

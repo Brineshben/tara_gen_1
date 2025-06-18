@@ -36,23 +36,20 @@ class _NavigationState extends State<Navigation> {
   Timer? messageTimer;
 
   void startMessageTimer() {
-    messageTimer?.cancel();
-    messageTimer = Timer.periodic(Duration(seconds: 1), (timer) {
-      if (!(Get.isDialogOpen ?? false) &&
-          !Get.find<ResponseNavController>().isLoading.value) {
-        Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
-      }
+    stopMessageTimer(); // safety: prevent multiple timers
+    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
     });
   }
 
   void stopMessageTimer() {
     messageTimer?.cancel();
+    messageTimer = null;
   }
 
   @override
   void initState() {
     super.initState();
-
     _hideSystemUI();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Get.find<NavigateController>().navigateData();
@@ -60,9 +57,14 @@ class _NavigationState extends State<Navigation> {
     });
   }
 
+  @override
+  void dispose() {
+    stopMessageTimer(); // Clean up when widget is removed
+    super.dispose();
+  }
+
   void _hideSystemUI() {
-    SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.immersive); // Hide status bar again
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
   @override

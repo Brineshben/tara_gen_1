@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     messageTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      // fetchAndUpdateBaseUrl();
+      fetchAndUpdateBaseUrl();
 
       // Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
@@ -426,78 +426,78 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                 ],
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  // Padding(
-                  //   padding: EdgeInsets.only(left: 40, bottom: 20),
-                  //   child: Material(
-                  //     color: Colors.transparent,
-                  //     child: InkWell(
-                  //       borderRadius: BorderRadius.circular(15),
-                  //       onTap: () {
-                  //         Navigator.push(context, MaterialPageRoute(
-                  //           builder: (context) {
-                  //             return Navigation(
-                  //               robotid: Get.find<BatteryController>()
-                  //                       .background
-                  //                       .value
-                  //                       ?.data
-                  //                       ?.first
-                  //                       .robot
-                  //                       ?.roboId ??
-                  //                   "",
-                  //             );
-                  //           },
-                  //         ));
-                  //       },
-                  //       child: Ink(
-                  //         width: 330.h,
-                  //         padding: EdgeInsets.all(16),
-                  //         decoration: BoxDecoration(
-                  //           color: Colors.white,
-                  //           borderRadius: BorderRadius.circular(15),
-                  //           border: Border.all(
-                  //             color: Colors.grey.shade200,
-                  //           ),
-                  //         ),
-                  //         child: Row(
-                  //           children: [
-                  //             Image.asset("assets/arrow.png", width: 35),
-                  //             SizedBox(width: 20),
-                  //             Column(
-                  //               crossAxisAlignment: CrossAxisAlignment.start,
-                  //               children: [
-                  //                 Text(
-                  //                   "NAVIGATIONS",
-                  //                   style: TextStyle(
-                  //                     fontSize: 19.h,
-                  //                     fontWeight: FontWeight.bold,
-                  //                     color: Colors.black,
-                  //                   ),
-                  //                 ),
-                  //                 Text(
-                  //                   'Control robot movement',
-                  //                   style: TextStyle(
-                  //                     fontSize: 13,
-                  //                     fontWeight: FontWeight.bold,
-                  //                     color: Colors.black54,
-                  //                   ),
-                  //                 ),
-                  //               ],
-                  //             ),
-                  //           ],
-                  //         ),
-                  //       ),
+                  Padding(
+                    padding: EdgeInsets.only(left: 40, bottom: 20),
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(15),
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return Navigation(
+                                robotid: Get.find<BatteryController>()
+                                        .background
+                                        .value
+                                        ?.data
+                                        ?.first
+                                        .robot
+                                        ?.roboId ??
+                                    "",
+                              );
+                            },
+                          ));
+                        },
+                        child: Ink(
+                          width: 330.h,
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: Colors.grey.shade200,
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Image.asset("assets/arrow.png", width: 35),
+                              SizedBox(width: 20),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "NAVIGATIONS",
+                                    style: TextStyle(
+                                      fontSize: 19.h,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Control robot movement',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.black54,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
 
-                  //       // child: buildInfoCard(
-                  //       //   size,
-                  //       //   'NAVIGATIONS',
-                  //       //   color: Colors.black,
-                  //       // ),
-                  //     ),
-                  //   ),
-                  // ),
+                        // child: buildInfoCard(
+                        //   size,
+                        //   'NAVIGATIONS',
+                        //   color: Colors.black,
+                        // ),
+                      ),
+                    ),
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(right: 20, bottom: 20),
                     child: Material(

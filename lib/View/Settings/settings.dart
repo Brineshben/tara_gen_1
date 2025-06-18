@@ -332,28 +332,28 @@ class _MaintananceState extends State<Maintanance> {
                       //   },
                       // ),
 
-                      SettingsCard(
-                        iconPath: "assets/arrow.png",
-                        subtitle: 'Control robot movement',
-                        title: "NAVIGATIONS",
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return Navigation(
-                                robotid: Get.find<BatteryController>()
-                                        .background
-                                        .value
-                                        ?.data
-                                        ?.first
-                                        .robot
-                                        ?.roboId ??
-                                    "",
-                              );
-                            },
-                          ));
-                        },
-                      ),
+                      // SettingsCard(
+                      //   iconPath: "assets/arrow.png",
+                      //   subtitle: 'Control robot movement',
+                      //   title: "NAVIGATIONS",
+                      //   backgroundColor: Colors.white,
+                      //   onTap: () {
+                      //     Navigator.push(context, MaterialPageRoute(
+                      //       builder: (context) {
+                      //         return Navigation(
+                      //           robotid: Get.find<BatteryController>()
+                      //                   .background
+                      //                   .value
+                      //                   ?.data
+                      //                   ?.first
+                      //                   .robot
+                      //                   ?.roboId ??
+                      //               "",
+                      //         );
+                      //       },
+                      //     ));
+                      //   },
+                      // ),
 
                       SettingsCard(
                         iconPath: 'assets/cryptography.png',

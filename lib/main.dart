@@ -15,7 +15,7 @@ late List<CameraDescription> cameras;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await ApiConstants.loadBaseUrl1();
+  await ApiConstants.loadBaseUrl1();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
