@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 
 class Header extends StatelessWidget {
   final bool isBack;
@@ -169,12 +170,9 @@ class Header extends StatelessWidget {
                       batteryLevel = int.tryParse(offlineBatteryStatus) ?? 0;
                     }
                     print("Battery Level: $batteryLevel");
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "$batteryLevel",
-                        style: TextStyle(fontSize: 30),
-                      ),
+                    return BatteryIcon(
+                      batteryLevel: batteryLevel,
+                      color: controller.foregroundColor.value,
                     );
                   },
                 ),
