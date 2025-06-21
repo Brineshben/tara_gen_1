@@ -47,11 +47,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // get robot wifi ip
       // fetchAndUpdateBaseUrl();
 
-      Get.find<BatteryOfflineController>().fetchOfflineBattery();
-
-      // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
-      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
       // fetch robot battery data
       bool? isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
@@ -441,7 +436,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             builder: (context) {
                               return Navigation(
                                 robotid: Get.find<BatteryController>()
-                                        .background
+                                        .batteryModel
                                         .value
                                         ?.data
                                         ?.first

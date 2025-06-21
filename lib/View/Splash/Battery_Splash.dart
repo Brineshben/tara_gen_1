@@ -55,9 +55,9 @@ class _BatterySplashState extends State<BatterySplash> {
               builder: (BatteryController controller) {
                 String? data;
 
-                if (controller.background.value?.data!.isNotEmpty ?? false) {
-                  data = controller
-                          .background.value?.data?.first.robot?.batteryStatus ??
+                if (controller.batteryModel.value?.data!.isNotEmpty ?? false) {
+                  data = controller.batteryModel.value?.data?.first.robot
+                          ?.batteryStatus ??
                       "0";
                 }
                 return Row(

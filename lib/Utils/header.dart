@@ -5,19 +5,14 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_getx_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
-import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 
 class Header extends StatelessWidget {
   final bool isBack;
-  final bool isEnableRouter;
-  final bool isLanguage;
   final String screenName;
   const Header({
     super.key,
     required this.isBack,
     required this.screenName,
-    this.isEnableRouter = true,
-    this.isLanguage = true,
   });
 
   @override
@@ -28,21 +23,21 @@ class Header extends StatelessWidget {
         String? quality;
         bool? brake;
         bool? EmergencyStop;
-        if (controller.background.value?.data!.isNotEmpty ?? false) {
-          roboColor = controller.background.value?.data?.first.robot?.map !=
+        if (controller.batteryModel.value?.data!.isNotEmpty ?? false) {
+          roboColor = controller.batteryModel.value?.data?.first.robot?.map !=
                   null
-              ? (controller.background.value?.data?.first.robot?.map ?? false)
+              ? (controller.batteryModel.value?.data?.first.robot?.map ?? false)
                   ? Colors.green
                   : Colors.red
               : null;
 
           quality =
-              controller.background.value?.data?.first.robot?.quality ?? "";
+              controller.batteryModel.value?.data?.first.robot?.quality ?? "";
           brake = controller
-              .background.value?.data?.first.robot?.motorBrakeReleased;
+              .batteryModel.value?.data?.first.robot?.motorBrakeReleased;
 
           EmergencyStop =
-              controller.background.value?.data?.first.robot?.emergencyStop;
+              controller.batteryModel.value?.data?.first.robot?.emergencyStop;
         }
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -156,23 +151,33 @@ class Header extends StatelessWidget {
                     ),
                   ),
                 ),
-                // GetX<BatteryController>(
-                //   builder: (BatteryController controller) {
-                //     int? batteryLevel;
+                GetX<BatteryController>(
+                  builder: (BatteryController controller) {
+                    int batteryLevel = 0;
+                    // Check if online battery status is null or empty
+                    String? onlineBatteryStatus = controller
+                        .batteryModel.value?.data?.first.robot?.batteryStatus;
 
-                //     batteryLevel = int.tryParse(controller.background.value
-                //                 ?.data?.first.robot?.batteryStatus ??
-                //             "0") ??
-                //         0;
-
-                //     print("batettegdshgfcdshuf$batteryLevel");
-
-                //     return BatteryIcon(
-                //       batteryLevel: batteryLevel,
-                //       color: controller.foregroundColor.value,
-                //     );
-                //   },
-                // ),
+                    if (onlineBatteryStatus != null &&
+                        onlineBatteryStatus.isNotEmpty) {
+                      batteryLevel = int.tryParse(onlineBatteryStatus) ?? 0;
+                    } else {
+                      // Fallback to offline battery data
+                      String offlineBatteryStatus = controller
+                              .offlineBatteryModel.value?.data?.batteryStatus ??
+                          '0';
+                      batteryLevel = int.tryParse(offlineBatteryStatus) ?? 0;
+                    }
+                    print("Battery Level: $batteryLevel");
+                    return Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "$batteryLevel",
+                        style: TextStyle(fontSize: 30),
+                      ),
+                    );
+                  },
+                ),
               ],
             ),
           ],

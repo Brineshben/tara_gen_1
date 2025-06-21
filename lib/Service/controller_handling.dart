@@ -23,7 +23,6 @@ import '../Controller/RobotresponseApi_controller.dart';
 import '../Controller/SessionId_controller.dart';
 import '../Controller/Session_Controller.dart';
 import '../Controller/Volume_Controller.dart';
-import '../Controller/batteryOfflineController.dart';
 import '../Controller/battery_Controller.dart';
 import '../Controller/update_status_controller.dart';
 
@@ -48,7 +47,7 @@ class HandleControllers {
     Get.put(IpController());
     Get.put(FullTourControllerNew());
     Get.put(NavigateDescriptionController());
-    Get.put(BatteryOfflineController());
+    // Get.put(BatteryOfflineController());
     Get.put(ChargeScreenController());
     Get.put(DescriptionController());
     Get.put(PromptController());
@@ -76,7 +75,7 @@ class HandleControllers {
     await Get.delete<IpController>();
     await Get.delete<FullTourControllerNew>();
     await Get.delete<NavigateDescriptionController>();
-    await Get.delete<BatteryOfflineController>();
+    // await Get.delete<BatteryOfflineController>();
     await Get.delete<ChargeScreenController>();
     await Get.delete<DescriptionController>();
     await Get.delete<PromptController>();

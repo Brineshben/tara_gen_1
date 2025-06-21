@@ -1,16 +1,15 @@
-import 'package:camera/camera.dart';
+// import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Utils/api_constant.dart';
-import 'package:ihub/View/Login_Page/login.dart';
 import 'package:ihub/View/Splash/initial_splash.dart';
 
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
 
-late List<CameraDescription> cameras;
+// late List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +22,7 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  cameras = await availableCameras();
+  // cameras = await availableCameras();
   final sharedPrefs = SharedPrefs();
   await sharedPrefs.initialize();
 

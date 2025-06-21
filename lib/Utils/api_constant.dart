@@ -135,7 +135,7 @@ class ApiConstants {
 Future<void> fetchAndUpdateBaseUrl() async {
   try {
     String data = Get.find<BatteryController>()
-            .background
+            .batteryModel
             .value
             ?.data
             ?.first
@@ -145,13 +145,13 @@ Future<void> fetchAndUpdateBaseUrl() async {
     print("objectresponse$data");
 
     String url =
-        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/";
+        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/";
 
     print("url${url}");
     final response = await http.get(Uri.parse(
-        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId ?? ""}/"));
+        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/"));
     print(
-        'robo id ${Get.find<BatteryController>().background.value?.data?.first.robot?.roboId}');
+        'robo id ${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId}');
     // print("objectresfgdfghponse$url");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);

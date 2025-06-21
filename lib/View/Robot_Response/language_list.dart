@@ -126,7 +126,6 @@ class _LanguageListState extends State<LanguageList> {
               Header(
                 isBack: true,
                 screenName: "SELECT LANGUAGE",
-                isLanguage: false,
               ),
             ],
           ),

@@ -694,7 +694,7 @@ class _MaintananceState extends State<Maintanance> {
                               builder: (context) {
                                 return VolumeControl(
                                   robotid: Get.find<BatteryController>()
-                                          .background
+                                          .batteryModel
                                           .value
                                           ?.data
                                           ?.first

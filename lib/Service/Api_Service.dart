@@ -314,12 +314,10 @@ class ApiServices {
   static Future<Map<String, dynamic>> batteryOffline() async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.batteryOffline}";
     print("urlllllsddlll$url");
-
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
-    print("urlllllsddlll$respString");
-
+    print("offlinebatteryresponse$respString");
     return json.decode(respString);
   }
 

@@ -39,7 +39,7 @@ dependencies:
   connectivity_plus: ^6.1.4
   animated_text_kit: ^4.2.2
   cached_network_image: ^3.4.1
-  camera: ^0.11.0
+  # camera: ^0.11.0 # --------------- not supported desktop
   # get_storage: ^2.1.1
   shared_preferences: ^2.2.3
   get_it: ^7.7.0
@@ -60,7 +60,7 @@ dependencies:
   pinput: ^5.0.1
   palette_generator: ^0.3.3+7
   # flutter_image_compress: ^2.4.0
-  webview_flutter: ^4.11.0
+  # webview_flutter: ^4.11.0 # ---------------- not supported desktop
   # path_provider: ^2.1.5
   # flutter_offline: ^5.0.0
   internet_connection_checker: ^3.0.1
