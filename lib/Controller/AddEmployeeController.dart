@@ -11,7 +11,7 @@ class AddEmployeeController extends GetxController {
   RxBool isError = false.obs;
   Rx<EmployeeaddListModel?> updatedatass = Rx(null);
 
-  // void resetStatus() {
+  // void resetStatus() {SS
   //   isLoading.value = false;
   //   isError.value = false;
   // }

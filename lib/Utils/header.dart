@@ -156,32 +156,23 @@ class Header extends StatelessWidget {
                     ),
                   ),
                 ),
-                GetX<BatteryController>(
-                  builder: (BatteryController controller) {
-                    int? batteryLevel;
+                // GetX<BatteryController>(
+                //   builder: (BatteryController controller) {
+                //     int? batteryLevel;
 
-                    batteryLevel = int.tryParse(controller.background.value
-                                ?.data?.first.robot?.batteryStatus ??
-                            "0") ??
-                        0;
+                //     batteryLevel = int.tryParse(controller.background.value
+                //                 ?.data?.first.robot?.batteryStatus ??
+                //             "0") ??
+                //         0;
 
-                    print("batettegdshgfcdshuf$batteryLevel");
+                //     print("batettegdshgfcdshuf$batteryLevel");
 
-                    // return BatteryIcon(
-                    //   batteryLevel: batteryLevel,
-                    //   color: controller.foregroundColor.value,
-                    // );
-
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 35, right: 20),
-                      child: Text(
-                        "$batteryLevel%",
-                        style: TextStyle(
-                            fontSize: 30, fontWeight: FontWeight.bold),
-                      ),
-                    );
-                  },
-                ),
+                //     return BatteryIcon(
+                //       batteryLevel: batteryLevel,
+                //       color: controller.foregroundColor.value,
+                //     );
+                //   },
+                // ),
               ],
             ),
           ],

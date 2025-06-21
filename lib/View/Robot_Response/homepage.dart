@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/batteryOfflineController.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/communication_status.dart';
@@ -44,9 +45,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     messageTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
-      // Get.find<BatteryOfflineController>().fetchOfflineBattery();
+      Get.find<BatteryOfflineController>().fetchOfflineBattery();
 
       // bool? isBatteryscreen = await Get.find<BatteryController>().fetchCharging(
       //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);

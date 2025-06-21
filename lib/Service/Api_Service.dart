@@ -324,7 +324,6 @@ class ApiServices {
   }
 
   ///check loading
-
   static Future<Map<String, dynamic>> loading() async {
     try {
       String url = "${ApiConstants.baseUrl1}${ApiConstants.loading}";
