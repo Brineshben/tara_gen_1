@@ -23,7 +23,7 @@ class Header extends StatelessWidget {
         Color? roboColor;
         String? quality;
         bool? brake;
-        bool? EmergencyStop;
+        bool? emergencyStop;
         if (controller.batteryModel.value?.data!.isNotEmpty ?? false) {
           roboColor = controller.batteryModel.value?.data?.first.robot?.map !=
                   null
@@ -37,7 +37,7 @@ class Header extends StatelessWidget {
           brake = controller
               .batteryModel.value?.data?.first.robot?.motorBrakeReleased;
 
-          EmergencyStop =
+          emergencyStop =
               controller.batteryModel.value?.data?.first.robot?.emergencyStop;
         }
         return Row(
@@ -88,7 +88,7 @@ class Header extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (EmergencyStop ?? false)
+                if (emergencyStop ?? false)
                   Container(
                     margin: EdgeInsets.only(left: 1.w, top: 40.h, right: 1.w),
                     child: Center(
