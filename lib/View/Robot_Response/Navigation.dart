@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:ui';
 
-import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +10,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Utils/communication_status.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:ihub/View/Robot_Response/homepage.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -35,13 +33,6 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation> {
   Timer? messageTimer;
 
-  void startMessageTimer() {
-    stopMessageTimer(); // safety: prevent multiple timers
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
-    });
-  }
-
   void stopMessageTimer() {
     messageTimer?.cancel();
     messageTimer = null;
@@ -51,9 +42,9 @@ class _NavigationState extends State<Navigation> {
   void initState() {
     super.initState();
     _hideSystemUI();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Get.find<NavigateController>().navigateData();
-      startMessageTimer();
+    Get.find<NavigateController>().navigateData();
+    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
     });
   }
 
@@ -186,12 +177,9 @@ class _NavigationState extends State<Navigation> {
                                                                       ?.id ??
                                                                   0);
 
-                                                          print(
-                                                              'ididididididi ${controller.dataList[index]?.id}');
-
                                                           await Future.delayed(
                                                               Duration(
-                                                                  seconds: 2));
+                                                                  seconds: 1));
 
                                                           Map<String, dynamic>
                                                               resp =
@@ -270,7 +258,6 @@ class _NavigationState extends State<Navigation> {
                                                               if (Get.isDialogOpen ??
                                                                   false) {
                                                                 Get.back();
-                                                                Get.back();
                                                               }
                                                             });
                                                           } else {
@@ -337,7 +324,6 @@ class _NavigationState extends State<Navigation> {
                                                                 () {
                                                               if (Get.isDialogOpen ??
                                                                   false) {
-                                                                Get.back();
                                                                 Get.back();
                                                               }
                                                             });

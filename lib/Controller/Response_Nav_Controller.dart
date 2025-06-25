@@ -22,6 +22,8 @@ class ResponseNavController extends GetxController {
 
   bool isNavigationDialogOpen = false;
   String? lastShownMessage;
+  DateTime? lastShownTime;
+  final Duration messageCooldown = Duration(seconds: 10); // customize
 
   Future<void> fetchresponsenav(String roboid) async {
     if (isNavigationDialogOpen) return; // Prevent overlapping dialogs
@@ -31,19 +33,23 @@ class ResponseNavController extends GetxController {
 
     try {
       final resp = await ApiServices.resposefornav(userId: roboid);
+      print("Reached-Response: $resp");
       final responseModel = ResponseNavModel.fromJson(resp);
       passwordApi.value = responseModel;
       isLoaded.value = true;
 
       final message = responseModel.message;
 
-      if (message != null &&
-          message.trim().isNotEmpty &&
-          message != "no message" &&
-          message != lastShownMessage) {
+      if (message == "no message") return;
+
+      final now = DateTime.now();
+      final canShowDialog = (message != lastShownMessage) ||
+          (lastShownTime == null ||
+              now.difference(lastShownTime!) > messageCooldown);
+
+      if (canShowDialog) {
         isNavigationDialogOpen = true;
         lastShownMessage = message;
-
         await Get.dialog(
           AlertDialog(
             shape: const RoundedRectangleBorder(
@@ -62,7 +68,7 @@ class ResponseNavController extends GetxController {
                   ),
                 ),
                 Text(
-                  "DESTINATION REACHED",
+                  "${resp['message'] ?? "NAVIGATION REACHED"}",
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: 20.h,
@@ -126,7 +132,7 @@ void navigateToLocationByName() async {
     final resp = await ApiServices.setHOme();
 
     if (resp['status'] == true) {
-      await Get.dialog(
+      Get.dialog(
         AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -160,6 +166,11 @@ void navigateToLocationByName() async {
           ),
         ),
       );
+      Future.delayed(const Duration(seconds: 3), () {
+        if (Get.isDialogOpen ?? false) {
+          Get.back();
+        }
+      });
     }
   } catch (e) {
     ProductAppPopUps.submit(

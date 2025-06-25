@@ -152,30 +152,30 @@ class Header extends StatelessWidget {
                     ),
                   ),
                 ),
-                GetX<BatteryController>(
-                  builder: (BatteryController controller) {
-                    int batteryLevel = 0;
-                    // Check if online battery status is null or empty
-                    String? onlineBatteryStatus = controller
-                        .batteryModel.value?.data?.first.robot?.batteryStatus;
+                // GetX<BatteryController>(
+                //   builder: (BatteryController controller) {
+                //     int batteryLevel = 0;
+                //     // Check if online battery status is null or empty
+                //     String? onlineBatteryStatus = controller
+                //         .batteryModel.value?.data?.first.robot?.batteryStatus;
 
-                    if (onlineBatteryStatus != null &&
-                        onlineBatteryStatus.isNotEmpty) {
-                      batteryLevel = int.tryParse(onlineBatteryStatus) ?? 0;
-                    } else {
-                      // Fallback to offline battery data
-                      String offlineBatteryStatus = controller
-                              .offlineBatteryModel.value?.data?.batteryStatus ??
-                          '0';
-                      batteryLevel = int.tryParse(offlineBatteryStatus) ?? 0;
-                    }
-                    print("Battery Level: $batteryLevel");
-                    return BatteryIcon(
-                      batteryLevel: batteryLevel,
-                      color: controller.foregroundColor.value,
-                    );
-                  },
-                ),
+                //     if (onlineBatteryStatus != null &&
+                //         onlineBatteryStatus.isNotEmpty) {
+                //       batteryLevel = int.tryParse(onlineBatteryStatus) ?? 0;
+                //     } else {
+                //       // Fallback to offline battery data
+                //       String offlineBatteryStatus = controller
+                //               .offlineBatteryModel.value?.data?.batteryStatus ??
+                //           '0';
+                //       batteryLevel = int.tryParse(offlineBatteryStatus) ?? 0;
+                //     }
+                //     print("Battery Level: $batteryLevel");
+                //     return BatteryIcon(
+                //       batteryLevel: batteryLevel,
+                //       color: controller.foregroundColor.value,
+                //     );
+                //   },
+                // ),
               ],
             ),
           ],

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Response_Nav_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/communication_status.dart';
@@ -29,9 +30,7 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
-  Timer? messageTimer;
   bool canExit = false;
-  bool isForegroundTaskRunning = false;
   Timer? _timer;
 
   @override
@@ -42,7 +41,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
-    messageTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
       fetchAndUpdateBaseUrl();
 
@@ -57,20 +56,22 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
-        messageTimer?.cancel();
+        _timer?.cancel();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoadingSplash()),
           (route) => false,
         );
       }
 
-      if (isBatteryscreen ?? false) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => BatterySplash()),
-        );
-        timer.cancel();
-      }
+      // Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
+
+      // if (isBatteryscreen ?? false) {
+      //   Navigator.pushReplacement(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => BatterySplash()),
+      //   );
+      //   timer.cancel();
+      // }
     });
   }
 
@@ -434,15 +435,14 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
                               return Navigation(
-                                robotid: Get.find<BatteryController>()
-                                        .batteryModel
-                                        .value
-                                        ?.data
-                                        ?.first
-                                        .robot
-                                        ?.roboId ??
-                                    "",
-                              );
+                                  robotid: Get.find<BatteryController>()
+                                          .batteryModel
+                                          .value
+                                          ?.data
+                                          ?.first
+                                          .robot
+                                          ?.roboId ??
+                                      "");
                             },
                           ));
                         },
