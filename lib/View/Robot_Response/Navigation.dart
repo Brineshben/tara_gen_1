@@ -193,63 +193,65 @@ class _NavigationState extends State<Navigation> {
                                                                 .primaryFocus
                                                                 ?.unfocus();
 
-                                                            Get.dialog(
-                                                              AlertDialog(
-                                                                shape:
-                                                                    const RoundedRectangleBorder(
-                                                                  borderRadius:
-                                                                      BorderRadius.all(
-                                                                          Radius.circular(
-                                                                              20.0)),
-                                                                ),
-                                                                title: Column(
-                                                                  children: [
-                                                                    Center(
-                                                                      child:
-                                                                          SizedBox(
-                                                                        width:
-                                                                            180.w,
-                                                                        height:
-                                                                            180.h,
-                                                                        child: Lottie
-                                                                            .asset(
-                                                                          "assets/navigate.json",
-                                                                          fit: BoxFit
-                                                                              .fitHeight,
+                                                            if (!(Get
+                                                                    .isDialogOpen ??
+                                                                false)) {
+                                                              Get.dialog(
+                                                                AlertDialog(
+                                                                  shape:
+                                                                      const RoundedRectangleBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.all(
+                                                                            Radius.circular(20.0)),
+                                                                  ),
+                                                                  title: Column(
+                                                                    children: [
+                                                                      Center(
+                                                                        child:
+                                                                            SizedBox(
+                                                                          width:
+                                                                              180.w,
+                                                                          height:
+                                                                              180.h,
+                                                                          child:
+                                                                              Lottie.asset(
+                                                                            "assets/navigate.json",
+                                                                            fit:
+                                                                                BoxFit.fitHeight,
+                                                                          ),
                                                                         ),
                                                                       ),
-                                                                    ),
-                                                                    Text(
-                                                                      "COMMAND RECEIVED",
-                                                                      style: GoogleFonts
-                                                                          .orbitron(
-                                                                        color: Colors
-                                                                            .black,
-                                                                        fontSize:
-                                                                            20.h,
-                                                                        fontWeight:
-                                                                            FontWeight.bold,
+                                                                      Text(
+                                                                        "COMMAND RECEIVED",
+                                                                        style: GoogleFonts
+                                                                            .orbitron(
+                                                                          color:
+                                                                              Colors.black,
+                                                                          fontSize:
+                                                                              20.h,
+                                                                          fontWeight:
+                                                                              FontWeight.bold,
+                                                                        ),
                                                                       ),
+                                                                    ],
+                                                                  ),
+                                                                  content: Text(
+                                                                    "Heading to the ${controller.dataList[index]?.name}"
+                                                                        .toUpperCase(),
+                                                                    textAlign:
+                                                                        TextAlign
+                                                                            .center,
+                                                                    style: GoogleFonts
+                                                                        .oxygen(
+                                                                      color: Colors
+                                                                          .black,
+                                                                      fontSize:
+                                                                          15.h,
                                                                     ),
-                                                                  ],
-                                                                ),
-                                                                content: Text(
-                                                                  "Heading to the ${controller.dataList[index]?.name}"
-                                                                      .toUpperCase(),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .center,
-                                                                  style:
-                                                                      GoogleFonts
-                                                                          .oxygen(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        15.h,
                                                                   ),
                                                                 ),
-                                                              ),
-                                                            );
+                                                              );
+                                                            }
 
                                                             Future.delayed(
                                                                 const Duration(

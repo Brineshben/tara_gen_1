@@ -336,6 +336,15 @@ class ApiServices {
     }
   }
 
+  static Future<Map<String, dynamic>> getBatteryStatus() async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.getBatteryStatus}";
+    var request = http.Request('GET', Uri.parse(url));
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    print('offline battery response ${respString}');
+    return json.decode(respString);
+  }
+
 // map restart
   static Future<Map<String, dynamic>> mapRestart() async {
     String url = "${ApiConstants.baseUrl1}${ApiConstants.fetch_refresh_status}";

@@ -22,8 +22,6 @@ class ResponseNavController extends GetxController {
 
   bool isNavigationDialogOpen = false;
   String? lastShownMessage;
-  DateTime? lastShownTime;
-  final Duration messageCooldown = Duration(seconds: 10); // customize
 
   Future<void> fetchresponsenav(String roboid) async {
     if (isNavigationDialogOpen) return; // Prevent overlapping dialogs
@@ -38,16 +36,9 @@ class ResponseNavController extends GetxController {
       passwordApi.value = responseModel;
       isLoaded.value = true;
 
-      final message = responseModel.message;
+      final message = responseModel.message ?? "no message";
 
-      if (message == "no message") return;
-
-      final now = DateTime.now();
-      final canShowDialog = (message != lastShownMessage) ||
-          (lastShownTime == null ||
-              now.difference(lastShownTime!) > messageCooldown);
-
-      if (canShowDialog) {
+      if (message != "no message") {
         isNavigationDialogOpen = true;
         lastShownMessage = message;
         await Get.dialog(

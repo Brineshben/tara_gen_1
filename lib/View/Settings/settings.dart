@@ -952,7 +952,7 @@ class _MaintananceState extends State<Maintanance> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                   child: Text(
-                    "Version: 2.1.3",
+                    "Version: 2.5.10",
                     style: GoogleFonts.poppins(
                         color: controller.foregroundColor.value,
                         fontSize: 10.h),

@@ -31,7 +31,8 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   bool canExit = false;
-  Timer? _timer;
+  Timer? fiveSecTimer;
+  Timer? oneSecTimer;
 
   @override
   void initState() {
@@ -41,42 +42,44 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
-    _timer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
       fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      bool? isBatteryscreen = await Get.find<BatteryController>().fetchBattery(
+      Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
       );
-
-      // get communication status
-      Get.find<RobotresponseapiController>().fetchObsResultList();
 
       // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
-        _timer?.cancel();
+        fiveSecTimer?.cancel();
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => LoadingSplash()),
           (route) => false,
         );
       }
+    });
 
-      // Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
+    oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      // get communication status
+      Get.find<RobotresponseapiController>().fetchObsResultList();
 
-      // if (isBatteryscreen ?? false) {
-      //   Navigator.pushReplacement(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => BatterySplash()),
-      //   );
-      //   timer.cancel();
-      // }
+      Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
+      if (resp['status'] == true) {
+        oneSecTimer?.cancel();
+
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => BatterySplash()),
+          (route) => false,
+        );
+      }
     });
   }
 
   Timer? _debounceTimer;
-
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -98,8 +101,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    _timer?.cancel();
+    fiveSecTimer?.cancel();
     _debounceTimer?.cancel();
+    oneSecTimer?.cancel();
     super.dispose();
   }
 

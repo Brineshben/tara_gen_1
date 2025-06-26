@@ -107,6 +107,7 @@ class ApiConstants {
   static String loading = "/status/";
   static String enquiryList = "/enquiry/list/enquiries/?user_id=";
   static String navigate = "/enquiry/navigation/list/";
+  static String getBatteryStatus = "/charging/get/";
   static String destination = "/enquiry/navigation/";
   static String addEmployee = "/robot/add/employee/";
   static String addEmployeeDetails = "/robot/edit/employee/";

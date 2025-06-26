@@ -27,7 +27,7 @@ class BatteryController extends GetxController {
 
   RxBool isRotale = false.obs;
 
-  Future<bool?> fetchBattery(int userID) async {
+  fetchBattery(int userID) async {
     isLoading.value = true;
     isLoaded.value = false;
 
@@ -126,10 +126,10 @@ class BatteryController extends GetxController {
       }
 
       // Check charging status from online data only
-      bool? isCharging = batteryModel.value?.data?.first.robot?.charging;
-      print("BATTERY IS CHARGING: $isCharging");
+      // bool? isCharging = batteryModel.value?.data?.first.robot?.charging;
+      // print("BATTERY IS CHARGING: $isCharging");
 
-      return isCharging == true;
+      // return isCharging == true;
     } catch (e) {
       isLoaded.value = false;
       print("Error fetching battery data: $e");

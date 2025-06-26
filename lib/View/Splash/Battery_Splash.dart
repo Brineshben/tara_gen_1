@@ -11,7 +11,6 @@ import 'package:ihub/View/Robot_Response/password_page.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:lottie/lottie.dart';
 
-import '../../Controller/Login_api_controller.dart';
 import '../../Controller/battery_Controller.dart';
 
 class BatterySplash extends StatefulWidget {
@@ -22,21 +21,18 @@ class BatterySplash extends StatefulWidget {
 }
 
 class _BatterySplashState extends State<BatterySplash> {
-  Timer? messageTimer;
+  Timer? oneSecTimer;
 
   @override
   void initState() {
-    messageTimer = Timer.periodic(const Duration(seconds: 5), (timer) async {
-      print("Timer in battery screen");
-      bool? chargeStatus = await Get.find<BatteryController>().fetchBattery(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
-
-      if (!(chargeStatus ?? true)) {
-        Navigator.push(context, MaterialPageRoute(
-          builder: (context) {
-            return const Homepage();
-          },
-        ));
+    oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
+      if (resp['status'] != true) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => Homepage()),
+          (route) => false,
+        );
         timer.cancel();
       }
     });
