@@ -25,7 +25,7 @@ class BatteryIcon extends StatelessWidget {
             ),
           ),
           if (batteryLevel > 60)
-            Lottie.asset('assets/greeen.json',
+            Lottie.asset('assets/green.json',
                 height: MediaQuery.of(context).size.height * 0.2)
           else if (batteryLevel >= 30 && batteryLevel <= 60)
             Lottie.asset('assets/yellow.json',
