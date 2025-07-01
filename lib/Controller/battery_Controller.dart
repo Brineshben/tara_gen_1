@@ -33,22 +33,37 @@ class BatteryController extends GetxController {
 
     try {
       // Fetch online and offline battery data
-      Map<String, dynamic> resp = await ApiServices.battery(userId: userID);
-      Map<String, dynamic> offlineBatteryResponse =
-          await ApiServices.batteryOffline();
-      offlineBatteryModel.value =
-          OfflineBatteryModel.fromJson(offlineBatteryResponse);
+      Map<String, dynamic> onlineBatteryResponse = await ApiServices.battery(
+        userId: userID,
+      );
 
       // Save online data if valid
-      if (resp['status'] == 'ok') {
-        batteryModel.value = BatteryModel.fromJson(resp);
+      if (onlineBatteryResponse['status'] == 'ok') {
+        batteryModel.value = BatteryModel.fromJson(onlineBatteryResponse);
         roboId = batteryModel.value?.data?.first.robot?.roboId;
+        print("Robo ID: $roboId");
       }
+
+      Map<String, dynamic> offlineBatteryResponse =
+          await ApiServices.batteryOffline();
+
+      // Check if offline response is valid
+      if (offlineBatteryResponse['status'] == 'ok') {
+        offlineBatteryModel.value = OfflineBatteryModel.fromJson(
+          offlineBatteryResponse,
+        );
+      }
+
+      print("API Online Battery Response: $onlineBatteryResponse");
+      print("API Offline Battery Response: $offlineBatteryResponse");
 
       // Get battery level from either online or offline
       String? onlineBattery =
           batteryModel.value?.data?.first.robot?.batteryStatus;
       String? offlineBattery = offlineBatteryModel.value?.data?.batteryStatus;
+
+      print("Online Battery: $onlineBattery");
+      print("Offline Battery: $offlineBattery");
 
       int batteryStatus = 0;
 
@@ -110,7 +125,8 @@ class BatteryController extends GetxController {
                       },
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            ColorUtils.userdetailcolor),
+                          ColorUtils.userdetailcolor,
+                        ),
                       ),
                       child: Text(
                         "OK PROCEED",
@@ -118,24 +134,17 @@ class BatteryController extends GetxController {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             ),
           );
         }
       }
-
-      // Check charging status from online data only
-      // bool? isCharging = batteryModel.value?.data?.first.robot?.charging;
-      // print("BATTERY IS CHARGING: $isCharging");
-
-      // return isCharging == true;
     } catch (e) {
       isLoaded.value = false;
       print("Error fetching battery data: $e");
     } finally {
       resetStatus();
     }
-    return null;
   }
 }
