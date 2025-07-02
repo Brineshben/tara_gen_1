@@ -10,7 +10,6 @@ import 'package:ihub/Utils/header.dart';
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Nav_description_controller.dart';
 import '../../Service/Api_Service.dart';
-import 'VideoPlayer.dart';
 
 class PlaceDescription extends StatefulWidget {
   PlaceDescription({super.key});

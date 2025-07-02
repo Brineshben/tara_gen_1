@@ -71,10 +71,7 @@ class ResponseNavController extends GetxController {
             content: Text(
               "Can I return home?",
               textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(
-                color: Colors.black,
-                fontSize: 15.h,
-              ),
+              style: GoogleFonts.poppins(color: Colors.black, fontSize: 15.h),
             ),
             actionsAlignment: MainAxisAlignment.center,
             actions: [
@@ -93,10 +90,7 @@ class ResponseNavController extends GetxController {
                     ),
                     child: Text(
                       "YES",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16.h,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 16.h),
                     ),
                   ),
                 ],
@@ -150,10 +144,7 @@ void navigateToLocationByName() async {
           content: Text(
             "Heading to the home location",
             textAlign: TextAlign.center,
-            style: GoogleFonts.oxygen(
-              color: Colors.black,
-              fontSize: 15.h,
-            ),
+            style: GoogleFonts.oxygen(color: Colors.black, fontSize: 15.h),
           ),
         ),
       );
