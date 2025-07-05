@@ -13,6 +13,7 @@ import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
+import 'package:ihub/View/Robot_Response/robotinfo.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
 
@@ -175,14 +176,24 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
-                                CircleAvatar(
-                                  radius: 30.r,
-                                  backgroundColor: Colors.black,
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      "assets/taraLogo.png",
-                                      width: 100.w,
-                                      height: 100.h,
+                                GestureDetector(
+                                  onLongPress: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => RobotInfo(),
+                                      ),
+                                    );
+                                  },
+                                  child: CircleAvatar(
+                                    radius: 30.r,
+                                    backgroundColor: Colors.black,
+                                    child: ClipOval(
+                                      child: Image.asset(
+                                        "assets/taraLogo.png",
+                                        width: 100.w,
+                                        height: 100.h,
+                                      ),
                                     ),
                                   ),
                                 ),

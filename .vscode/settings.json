@@ -1,5 +1,9 @@
 {
     "editor.guides.indentation": false,
     "dart.previewFlutterUiGuides": true,
-    "dart.previewFlutterUiGuidesCustomTracking": true
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "editor.fontSize": 12,
+    "editor.fontFamily": "JetBrains Mono, Consolas, 'Courier New', monospace",
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": false,
+    "editor.guides.bracketPairs": "active"
 }

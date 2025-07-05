@@ -6,13 +6,14 @@ class LoginModel {
   String? expiresIn;
   User? user;
 
-  LoginModel(
-      {this.status,
-        this.message,
-        this.refreshToken,
-        this.accessToken,
-        this.expiresIn,
-        this.user});
+  LoginModel({
+    this.status,
+    this.message,
+    this.refreshToken,
+    this.accessToken,
+    this.expiresIn,
+    this.user,
+  });
 
   LoginModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
@@ -43,17 +44,20 @@ class User {
   String? email;
   String? profilePic;
   String? role;
-  int? phoneNo;
+  dynamic phoneNo;
   int? secretKey;
+  String? roletype;
 
-  User(
-      {this.id,
-        this.username,
-        this.email,
-        this.profilePic,
-        this.role,
-        this.phoneNo,
-        this.secretKey});
+  User({
+    this.id,
+    this.username,
+    this.email,
+    this.profilePic,
+    this.role,
+    this.phoneNo,
+    this.secretKey,
+    this.roletype,
+  });
 
   User.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -63,6 +67,7 @@ class User {
     role = json['role'];
     phoneNo = json['phone_no'];
     secretKey = json['secret_key'];
+    roletype = json['roletype'];
   }
 
   Map<String, dynamic> toJson() {
@@ -74,6 +79,7 @@ class User {
     data['role'] = this.role;
     data['phone_no'] = this.phoneNo;
     data['secret_key'] = this.secretKey;
+    data['roletype'] = this.roletype;
     return data;
   }
 }

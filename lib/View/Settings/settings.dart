@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/FulltourController.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
@@ -550,6 +551,12 @@ class _MaintananceState extends State<Maintanance> {
                                         onPressed: () async {
                                           Get.back();
                                           try {
+                                            FullTourControllerNew
+                                                fullTourController = Get.find();
+                                            fullTourController.clearData();
+                                            fullTourController.newDataNavigation
+                                                .refresh();
+
                                             Map<String, dynamic> response =
                                                 await ApiServices.mapRestart();
 
@@ -593,6 +600,11 @@ class _MaintananceState extends State<Maintanance> {
                                                   ),
                                                 ),
                                               );
+
+                                              FullTourControllerNew
+                                                  fullTourController =
+                                                  Get.find();
+                                              fullTourController.clearData();
                                             } else {
                                               Get.snackbar(
                                                 'Failed',

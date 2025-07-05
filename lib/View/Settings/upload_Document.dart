@@ -8,15 +8,12 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
-import 'package:ihub/View/Home_Screen/battery_Widget.dart';
 import 'package:ihub/View/Settings/settings.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
@@ -283,7 +280,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
         print('mapdelete ${resp['detail']}');
         ProductAppPopUps.submit(
           title: "Failed",
-          message: resp['detail'] ?? "Something went wrong!",
+          message: resp['detail'] ?? "Map already deleted",
           actionName: "Close",
           iconData: Icons.error_outline,
           iconColor: Colors.red,

@@ -7,7 +7,6 @@ import 'package:lottie/lottie.dart';
 
 import '../Model/Model.dart';
 import '../Service/Api_Service.dart';
-import '../Utils/colors.dart';
 
 class ResponseNavController extends GetxController {
   RxBool isLoading = false.obs;
@@ -42,63 +41,122 @@ class ResponseNavController extends GetxController {
         isNavigationDialogOpen = true;
         lastShownMessage = message;
         await Get.dialog(
+          barrierDismissible: false,
           AlertDialog(
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            backgroundColor: const Color(0xFFEFF7FF), // Light blue background
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-            title: Column(
+            contentPadding:
+                EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
               children: [
-                Center(
-                  child: SizedBox(
-                    width: 180.w,
-                    height: 180.h,
-                    child: Lottie.asset(
-                      "assets/navigate.json",
-                      fit: BoxFit.fitHeight,
-                    ),
+                // Full-width Lottie without circle
+                SizedBox(
+                  width: double.infinity,
+                  height: 160.h,
+                  child: Lottie.asset(
+                    "assets/navigate.json",
+                    fit: BoxFit.contain,
                   ),
                 ),
+                SizedBox(height: 20.h),
+
+                // Title
                 Text(
                   "${resp['message'] ?? "NAVIGATION REACHED"}",
+                  textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
-                    color: Colors.black,
-                    fontSize: 20.h,
+                    fontSize: 22.h,
                     fontWeight: FontWeight.bold,
+                    color: Color(0xFF0050AC), // Dark blue
                   ),
+                ),
+                SizedBox(height: 12.h),
+
+                // Main message
+                Text(
+                  "Would you like to return home now or stay at your current location?",
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.poppins(
+                    fontSize: 16.h,
+                    color: Colors.black87,
+                  ),
+                ),
+                SizedBox(height: 24.h),
+
+                // Action buttons
+                Row(
+                  children: [
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: () {
+                          Get.back();
+                          navigateToLocationByName();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Color(0xFF00C897), // Green-teal
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          child: Text(
+                            "✅ YES, Go Home",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(width: 16.w),
+                    Expanded(
+                      child: FilledButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: WidgetStateProperty.all(
+                            Color(0xFFFF6B6B), // Coral red
+                          ),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                            ),
+                          ),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          child: Text(
+                            "❌ NO, Stay Here",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.h,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ],
             ),
-            content: Text(
-              "Can I return home?",
-              textAlign: TextAlign.center,
-              style: GoogleFonts.poppins(color: Colors.black, fontSize: 15.h),
-            ),
-            actionsAlignment: MainAxisAlignment.center,
-            actions: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  FilledButton(
-                    onPressed: () {
-                      Get.back(); // Close dialog
-                      navigateToLocationByName();
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all(
-                        ColorUtils.userdetailcolor,
-                      ),
-                    ),
-                    child: Text(
-                      "YES",
-                      style: TextStyle(color: Colors.white, fontSize: 16.h),
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ),
-          barrierDismissible: false,
         );
+
+        Future.delayed(const Duration(seconds: 5), () {
+          if (Get.isDialogOpen ?? false) {
+            Get.back();
+          }
+        });
 
         // Mark dialog as closed after `Get.dialog()` completes
         isNavigationDialogOpen = false;
