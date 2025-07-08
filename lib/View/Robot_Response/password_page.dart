@@ -166,7 +166,7 @@ class _PasswordPageState extends State<PasswordPage> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => const Maintanance()),
+                                builder: (context) => SettingsPage(key: SettingsPage.globalKey,)),
                           );
                         } else {
                           setState(() => isError = true);

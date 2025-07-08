@@ -44,39 +44,39 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      Get.find<BatteryController>().fetchBattery(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
-      );
+      // Get.find<BatteryController>().fetchBattery(
+      //   Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+      // );
 
       // check robot on or off
-      Map<String, dynamic> resp = await ApiServices.loading();
-      if (resp['status'] != "ON") {
-        fiveSecTimer?.cancel();
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoadingSplash()),
-          (route) => false,
-        );
-      }
+      // Map<String, dynamic> resp = await ApiServices.loading();
+      // if (resp['status'] != "ON") {
+      //   fiveSecTimer?.cancel();
+      //   Navigator.of(context).pushAndRemoveUntil(
+      //     MaterialPageRoute(builder: (context) => LoadingSplash()),
+      //     (route) => false,
+      //   );
+      // }
     });
 
-    oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      // get communication status
-      Get.find<RobotresponseapiController>().fetchObsResultList();
+    // oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+    //   // get communication status
+    //   Get.find<RobotresponseapiController>().fetchObsResultList();
 
-      Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
-      if (resp['status'] == true) {
-        oneSecTimer?.cancel();
+    //   Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
+    //   if (resp['status'] == true) {
+    //     oneSecTimer?.cancel();
 
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => BatterySplash()),
-          (route) => false,
-        );
-      }
-    });
+    //     Navigator.pushAndRemoveUntil(
+    //       context,
+    //       MaterialPageRoute(builder: (context) => BatterySplash()),
+    //       (route) => false,
+    //     );
+    //   }
+    // });
   }
 
   Timer? _debounceTimer;

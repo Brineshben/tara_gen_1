@@ -216,7 +216,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
       onPressed: () {
         Get.back();
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => const Maintanance()));
+            context, MaterialPageRoute(builder: (_) => const SettingsPage()));
       },
     );
   }
