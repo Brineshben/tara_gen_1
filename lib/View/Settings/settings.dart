@@ -17,7 +17,6 @@ import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/Utils/web_view.dart';
-import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/crop_image.dart';
@@ -41,37 +40,14 @@ import 'Volume_page.dart';
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
-   static final GlobalKey<_SettingsPageState> globalKey = GlobalKey<_SettingsPageState>();
-
+  static final GlobalKey<_SettingsPageState> globalKey =
+      GlobalKey<_SettingsPageState>();
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
 }
 
 class _SettingsPageState extends State<SettingsPage> {
-  
-  bool isTraining = false;
-  Future<void> startTraining() async {
-    try {
-      Map<String, dynamic> resp = await ApiServices.train(status: true);
-      if (resp['status'] == true) {
-        setState(() {
-          isTraining = true;
-        });
-        ProductAppPopUps.submit(
-          title: "On Progress",
-          message: "Robot on Training",
-          actionName: "Close",
-          iconData: Icons.done,
-          iconColor: Colors.green,
-        );
-      }
-    } catch (e) {
-      // Handle errors
-      print("Error: $e");
-    }
-  }
-
   @override
   void initState() {
     _hideSystemUI();
@@ -85,7 +61,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   bool isLoading = false;
 
-  File? imageFile;
   Future<void> pickImageFromDownloads() async {
     isLoading = true;
     String? initialDirectory = "/storage/emulated/0/Download";
@@ -95,28 +70,9 @@ class _SettingsPageState extends State<SettingsPage> {
       initialDirectory: initialDirectory,
     );
 
-    // if (result != null && result.files.single.path != null) {
-    //   File originalImage = File(result.files.single.path!);
-
-    //   setState(() {
-    //     imageFile = originalImage;
-    //   });
-
-    //   await _processImageForColor(originalImage);
-    //   await _uploadImage(originalImage);
-    // } else {
-    //   Get.snackbar(
-    //     'CANCELLED',
-    //     'No image selected.',
-    //     snackPosition: SnackPosition.BOTTOM,
-    //     colorText: Colors.white,
-    //   );
-    // }
-
     if (result != null && result.files.single.path != null) {
       File originalImage = File(result.files.single.path!);
 
-      // Navigate to crop screen and wait for cropped image
       final croppedImage = await Navigator.push<File?>(
         context,
         MaterialPageRoute(
@@ -126,32 +82,28 @@ class _SettingsPageState extends State<SettingsPage> {
       );
 
       if (croppedImage != null) {
-        setState(() {
-          imageFile = croppedImage;
-        });
-
         await processImageForColor(croppedImage);
         await uploadImage(croppedImage);
       } else {
         Get.snackbar(
+          margin: EdgeInsets.all(10),
           'CANCELLED',
           'Cropping cancelled.',
           snackPosition: SnackPosition.BOTTOM,
           colorText: Colors.white,
         );
+
+        await LockTaskService.startLockTask();
       }
     }
-
     isLoading = false;
   }
 
   Future<void> processImageForColor(File originalFile) async {
     final avgColor = await getAverageColor(originalFile);
     final brightness = ThemeData.estimateBrightnessForColor(avgColor);
-
     Get.find<BatteryController>().foregroundColor.value =
         brightness == Brightness.dark ? Colors.white : Colors.black;
-
     print("Average color: $avgColor, brightness: $brightness");
   }
 
@@ -206,63 +158,62 @@ class _SettingsPageState extends State<SettingsPage> {
         Get.find<BackgroudController>().fetchBackground(
             Get.find<UserAuthController>().loginData.value?.user?.id ?? 0);
 
-        // ProductAppPopUps.submit(
-        //     message: jsonResponse['message'],
-        //     actionName: "close",
-        //     iconData: Icons.check,
-        //     iconColor: Colors.green);
-
-         showDialog(
-            context: context,
-            builder: (_) => Dialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-              backgroundColor: Colors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      Icons.check_circle,
+        showDialog(
+          context: context,
+          builder: (_) => Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            backgroundColor: Colors.white,
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.check_circle,
+                    color: Colors.green,
+                    size: 60,
+                  ),
+                  SizedBox(height: 15),
+                  Text(
+                    "Success!",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                       color: Colors.green,
-                      size: 60,
                     ),
-                    SizedBox(height: 15),
-                    Text(
-                      "Success!",
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
-                    ),
-                    SizedBox(height: 10),
-                    Text(
-                      jsonResponse['message'],
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    jsonResponse['message'],
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
-                        fontWeight: FontWeight.bold
+                        fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pop(context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    SizedBox(height: 20),
-                    ElevatedButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Text("Close", style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "Close",
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),);
+            ),
+          ),
+        );
       }
     } catch (e) {
       print('Errorbgupload $e');
@@ -274,6 +225,28 @@ class _SettingsPageState extends State<SettingsPage> {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    }
+  }
+
+  bool isTraining = false;
+  Future<void> startTraining() async {
+    try {
+      Map<String, dynamic> resp = await ApiServices.train(status: true);
+      if (resp['status'] == true) {
+        setState(() {
+          isTraining = true;
+        });
+        ProductAppPopUps.submit(
+          title: "On Progress",
+          message: "Robot on Training",
+          actionName: "Close",
+          iconData: Icons.done,
+          iconColor: Colors.green,
+        );
+      }
+    } catch (e) {
+      // Handle errors
+      print("Error: $e");
     }
   }
 
@@ -514,7 +487,6 @@ class _SettingsPageState extends State<SettingsPage> {
                               await LockTaskService.stopLockTask();
                               await Future.delayed(Duration(milliseconds: 300));
                               await pickImageFromDownloads();
-                              await LockTaskService.startLockTask();
                             } catch (e) {
                               print("Error: $e");
                             } finally {
@@ -522,29 +494,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 isLoading = false;
                               });
                             }
-
-                            // final confirmed = await showDialog<bool>(
-                            //   context: context,
-                            //   builder: (context) => AlertDialog(
-                            //     title: Text('Note About Wallpaper'),
-                            //     content: Text(
-                            //       'The app will try to adjust the icon and text colors based on your image. '
-                            //       'But if the image has mixed colors or low contrast, it may still affect readability. '
-                            //       'Please pick a clear and clean wallpaper for the best result.',
-                            //     ),
-                            //     actions: [
-                            //       TextButton(
-                            //         onPressed: () =>
-                            //             Navigator.pop(context, false),
-                            //         child: Text('Cancel'),
-                            //       ),
-                            //       TextButton(
-                            //         onPressed: () => Navigator.pop(context, true),
-                            //         child: Text('Continue'),
-                            //       ),
-                            //     ],
-                            //   ),
-                            // );
                           },
                         ),
                         SettingsCard(
@@ -974,7 +923,7 @@ class _SettingsPageState extends State<SettingsPage> {
                           title: 'LOGOUT',
                           backgroundColor: Colors.white,
                           onTap: () async {
-                            final shouldExit = await showDialog<bool>(
+                            showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
                                 shape: RoundedRectangleBorder(
@@ -1040,10 +989,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               ),
                             );
 
-                            if (shouldExit == true) {
-                              await SharedPrefs().removeLoginData();
-                              exit(0);
-                            }
+                            
                           },
                         ),
                       ],

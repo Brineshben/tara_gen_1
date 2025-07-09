@@ -44,14 +44,12 @@ class SharedPrefs {
     return null;
   }
 
-  Future<bool> removeLoginData() async {
+  removeLoginData() async {
     final sharedPrefs = GetIt.instance<SharedPrefs>();
     final prefs = sharedPrefs.prefs;
     FullTourControllerNew fullTourController = Get.find();
     fullTourController.clearData();
-
-    bool done = await prefs.remove("loginData");
-    return done;
+    prefs.clear();
   }
 
   Future<bool> setIPData(ipAddressModel ipAddressApi) async {

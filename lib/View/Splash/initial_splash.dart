@@ -22,17 +22,43 @@ class _InitialSplashScreenState extends State<InitialSplashScreen> {
     fetchData();
   }
 
-  fetchData() async {
-    LoginModel? loginApi = await SharedPrefs().getLoginData();
-    await Future.delayed(Duration(seconds: 3));
+  // fetchData() async {
+  //   LoginModel? loginApi = await SharedPrefs().getLoginData();
+  //   await Future.delayed(Duration(seconds: 3));
 
-    if (loginApi != null) {
-      await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-      Navigator.of(context).pushAndRemoveUntil(
-        MaterialPageRoute(builder: (context) => Homepage()),
-        (route) => false,
-      );
-    } else {
+  //   if (loginApi != null) {
+  //     await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (context) => Homepage()),
+  //       (route) => false,
+  //     );
+  //   } else {
+  //     Navigator.of(context).pushAndRemoveUntil(
+  //       MaterialPageRoute(builder: (context) => const LoginPage()),
+  //       (route) => false,
+  //     );
+  //   }
+  // }
+
+  fetchData() async {
+    try {
+      LoginModel? loginApi = await SharedPrefs().getLoginData();
+      await Future.delayed(Duration(seconds: 3));
+
+      if (loginApi != null && loginApi.user?.id != null) {
+        await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => Homepage()),
+          (route) => false,
+        );
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+          (route) => false,
+        );
+      }
+    } catch (e) {
+      print("Splash error: $e");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => const LoginPage()),
         (route) => false,

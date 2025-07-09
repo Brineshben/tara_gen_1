@@ -11,6 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/header.dart';
+import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/View/Settings/settings.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:lottie/lottie.dart';
@@ -62,7 +63,9 @@ class _CropAndPreviewScreenState extends State<CropAndPreviewScreen> {
     }
   }
 
-  void _submit() {
+  void _submit() async {
+    await LockTaskService.startLockTask();
+
     Navigator.pop(context, croppedImage ?? widget.originalImage);
   }
 
@@ -115,7 +118,7 @@ class _CropAndPreviewScreenState extends State<CropAndPreviewScreen> {
                     height: MediaQuery.sizeOf(context).height * 0.7,
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: Colors.deepPurple,
+                        color: Colors.white,
                         width: 3,
                       ),
                       borderRadius: BorderRadius.circular(16),
@@ -404,45 +407,42 @@ class _CropAndPreviewScreenState extends State<CropAndPreviewScreen> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Positioned(
-                                left: 0,
-                                right: 0,
-                                child: Column(
-                                  children: [
-                                    Center(
-                                      child: Lottie.asset(
-                                          "assets/Animation - 1739525563341.json",
-                                          width: 70),
+                              Column(
+                                children: [
+                                  Center(
+                                    child: Lottie.asset(
+                                      "assets/Animation - 1739525563341.json",
+                                      width: 60,
                                     ),
-                                    DefaultTextStyle(
-                                      style: GoogleFonts.poppins(
-                                          color: Colors.white,
-                                          fontSize: 25.h,
-                                          fontWeight: FontWeight.bold,
-                                          shadows: [
-                                            Shadow(
-                                              blurRadius: 5.0,
-                                              color:
-                                                  Colors.black.withOpacity(0.7),
-                                              offset: Offset(2, 2),
-                                            ),
-                                          ]),
-                                      child: Center(
-                                        child: AnimatedTextKit(
-                                          animatedTexts: [
-                                            TypewriterAnimatedText(
-                                              "THINKING",
-                                              speed: Duration(milliseconds: 50),
-                                              cursor: '|',
-                                            ),
-                                          ],
-                                          repeatForever: true,
-                                          isRepeatingAnimation: true,
-                                        ),
+                                  ),
+                                  DefaultTextStyle(
+                                    style: GoogleFonts.poppins(
+                                        color: Colors.white,
+                                        fontSize: 22.h,
+                                        fontWeight: FontWeight.bold,
+                                        shadows: [
+                                          Shadow(
+                                            blurRadius: 5.0,
+                                            color:
+                                                Colors.black.withOpacity(0.7),
+                                            offset: Offset(2, 2),
+                                          ),
+                                        ]),
+                                    child: Center(
+                                      child: AnimatedTextKit(
+                                        animatedTexts: [
+                                          TypewriterAnimatedText(
+                                            "THINKING",
+                                            speed: Duration(milliseconds: 50),
+                                            cursor: '|',
+                                          ),
+                                        ],
+                                        repeatForever: true,
+                                        isRepeatingAnimation: true,
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -462,23 +462,22 @@ class _CropAndPreviewScreenState extends State<CropAndPreviewScreen> {
                         onTap: _submit,
                         text: 'Set Wallpaper',
                         icon: Icons.check_circle,
-                        color: Colors.green,
                       ),
                       SizedBox(height: 20),
                       _buildCustomButton(
                         onTap: () => _cropImage(widget.originalImage),
                         text: 'Crop Again',
                         icon: Icons.crop,
-                        color: Colors.deepPurple,
                       ),
                       SizedBox(height: 20),
                       _buildCustomButton(
-                        onTap:() {
-                           SettingsPage.globalKey.currentState?.pickImageFromDownloads();
+                        onTap: () {
+                          Get.back();
+                          SettingsPage.globalKey.currentState
+                              ?.pickImageFromDownloads();
                         },
                         text: 'Select image',
                         icon: Icons.select_all,
-                        color: Colors.deepOrange,
                       ),
                     ],
                   ),
@@ -503,48 +502,58 @@ class _CropAndPreviewScreenState extends State<CropAndPreviewScreen> {
     required VoidCallback onTap,
     required String text,
     required IconData icon,
-    required Color color,
   }) {
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Ink(
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(16),
-            border:
-                Border.all(color: Colors.white.withOpacity(0.6), width: 1.5),
-            boxShadow: [
-              BoxShadow(
-                color: color.withOpacity(0.3),
-                blurRadius: 10,
-                offset: Offset(0, 5),
+    return GetX<BatteryController>(builder: (controller) {
+      return Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(16),
+          child: Ink(
+            child: Container(
+              width: double.infinity,
+              padding: EdgeInsets.symmetric(vertical: 16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                    color: controller.foregroundColor.value.withOpacity(0.3),
+                    width: 1.2),
+                boxShadow: [
+                  BoxShadow(
+                    color: controller.foregroundColor.value.withOpacity(0.2),
+                    blurRadius: 12,
+                    offset: Offset(0, 6),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.symmetric(vertical: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.white),
-                SizedBox(width: 10),
-                Text(
-                  text,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        icon,
+                        color: controller.foregroundColor.value,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        text,
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          color: controller.foregroundColor.value,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
