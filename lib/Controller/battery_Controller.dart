@@ -26,13 +26,13 @@ class BatteryController extends GetxController {
   }
 
   RxBool isRotale = false.obs;
+  RxInt batteryStatus = 0.obs;
 
   fetchBattery(int userID) async {
     isLoading.value = true;
     isLoaded.value = false;
 
     try {
-      // Fetch online and offline battery data
       Map<String, dynamic> onlineBatteryResponse = await ApiServices.battery(
         userId: userID,
       );
@@ -65,12 +65,10 @@ class BatteryController extends GetxController {
       print("Online Battery: $onlineBattery");
       print("Offline Battery: $offlineBattery");
 
-      int batteryStatus = 0;
-
       if (onlineBattery != null && onlineBattery.trim().isNotEmpty) {
-        batteryStatus = int.tryParse(onlineBattery.trim()) ?? 0;
+        batteryStatus.value = int.tryParse(onlineBattery.trim()) ?? 0;
       } else if (offlineBattery != null && offlineBattery.trim().isNotEmpty) {
-        batteryStatus = int.tryParse(offlineBattery.trim()) ?? 0;
+        batteryStatus.value = int.tryParse(offlineBattery.trim()) ?? 0;
       }
 
       print("Final Battery Level: $batteryStatus");

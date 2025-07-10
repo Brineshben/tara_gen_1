@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/popups.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
@@ -49,18 +50,11 @@ class _BatterySplashState extends State<BatterySplash> {
           children: [
             GetX<BatteryController>(
               builder: (BatteryController controller) {
-                String? data;
-
-                if (controller.batteryModel.value?.data!.isNotEmpty ?? false) {
-                  data = controller.batteryModel.value?.data?.first.robot
-                          ?.batteryStatus ??
-                      "0";
-                }
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "${data ?? "0"}%",
+                      "${controller.batteryStatus.value}%",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 40,

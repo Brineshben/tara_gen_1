@@ -42,6 +42,10 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
+    Get.find<BatteryController>().fetchBattery(
+      Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+    );
+
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
       fetchAndUpdateBaseUrl();
@@ -98,14 +102,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
     });
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    fiveSecTimer?.cancel();
-    _debounceTimer?.cancel();
-    oneSecTimer?.cancel();
-    super.dispose();
-  }
+
 
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
