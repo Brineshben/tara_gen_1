@@ -22,7 +22,7 @@ class ResponseNavController extends GetxController {
   bool isNavigationDialogOpen = false;
   String? lastShownMessage;
 
-  Future<void> fetchresponsenav(String roboid) async {
+  Future<void> fetchresponsenav({required String roboid}) async {
     if (isNavigationDialogOpen) return; // Prevent overlapping dialogs
 
     isLoading.value = true;
@@ -52,7 +52,16 @@ class ResponseNavController extends GetxController {
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                // Full-width Lottie without circle
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        icon: Icon(Icons.close))
+                  ],
+                ),
                 SizedBox(
                   width: double.infinity,
                   height: 160.h,
@@ -65,7 +74,7 @@ class ResponseNavController extends GetxController {
 
                 // Title
                 Text(
-                  "${resp['message'] ?? "NAVIGATION REACHED"}",
+                  "NAVIGATION REACHED ${resp['message'].toString().toUpperCase()}",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 22.h,
@@ -77,7 +86,7 @@ class ResponseNavController extends GetxController {
 
                 // Main message
                 Text(
-                  "Would you like to return home now or stay at your current location?",
+                  "Would you like to return home  now?",
                   textAlign: TextAlign.center,
                   style: GoogleFonts.poppins(
                     fontSize: 16.h,
@@ -109,34 +118,6 @@ class ResponseNavController extends GetxController {
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           child: Text(
                             "✅ YES, Go Home",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.h,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: 16.w),
-                    Expanded(
-                      child: FilledButton(
-                        onPressed: () {
-                          Get.back();
-                        },
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStateProperty.all(
-                            Color(0xFFFF6B6B), // Coral red
-                          ),
-                          shape: WidgetStateProperty.all(
-                            RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 12.h),
-                          child: Text(
-                            "❌ NO, Stay Here",
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 16.h,

@@ -14,16 +14,13 @@ import 'package:lottie/lottie.dart';
 
 import '../../Controller/Backgroud_controller.dart';
 import '../../Controller/Navigate_Controller.dart';
-import '../../Controller/Response_Nav_Controller.dart';
 import '../../Service/Api_Service.dart';
 import '../../Utils/popups.dart';
 
 class Navigation extends StatefulWidget {
-  final String robotid;
 
   const Navigation({
     super.key,
-    required this.robotid,
   });
 
   @override
@@ -43,16 +40,16 @@ class _NavigationState extends State<Navigation> {
     super.initState();
     _hideSystemUI();
     Get.find<NavigateController>().navigateData();
-    messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
-    });
+    // messageTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    //   Get.find<ResponseNavController>().fetchresponsenav(widget.robotid);
+    // });
   }
 
-  @override
-  void dispose() {
-    stopMessageTimer(); // Clean up when widget is removed
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   stopMessageTimer(); // Clean up when widget is removed
+  //   super.dispose();
+  // }
 
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Response_Nav_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/communication_status.dart';
@@ -48,7 +49,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(
@@ -70,10 +71,11 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
+      Get.find<ResponseNavController>().fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
+
       Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
       if (resp['status'] == true) {
         oneSecTimer?.cancel();
-
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => BatterySplash()),
@@ -101,8 +103,6 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       }
     });
   }
-
-
 
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -445,15 +445,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return Navigation(
-                                  robotid: Get.find<BatteryController>()
-                                          .batteryModel
-                                          .value
-                                          ?.data
-                                          ?.first
-                                          .robot
-                                          ?.roboId ??
-                                      "");
+                              return Navigation();
                             },
                           ));
                         },
