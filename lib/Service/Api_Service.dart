@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -63,6 +64,86 @@ class ApiServices {
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     return json.decode(respString);
+  }
+
+
+    static Future<Map<String, dynamic>> checkTeachingMode() async {
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.getModeStatus}";
+
+      final response = await http.get(Uri.parse(url));
+
+      print('checkTeachingMode response: ${response.body}');
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('checkTeachingMode error: $e');
+      throw Exception("Failed to check teaching mode");
+    }
+  }
+
+
+    // change Teaching Mode
+  static Future<Map<String, dynamic>> changeTeachingMode(
+      {required bool status}) async {
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.changeTeachingmode}";
+
+      final body = jsonEncode({"status": status});
+
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: body,
+      );
+
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('changeTeachingMode error: $e');
+      throw Exception("Failed to update teaching mode");
+    }
+  }
+
+
+
+  
+  static Future<Map<String, dynamic>> uploadPDF(File file) async {
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.uploadTeachingPdf}";
+
+      final request = http.MultipartRequest('POST', Uri.parse(url));
+      request.files.add(
+        await http.MultipartFile.fromPath('file', file.path),
+      );
+
+      final response = await request.send();
+
+      final res = await response.stream.bytesToString();
+      print('pdf $res');
+      return jsonDecode(res);
+    } catch (e) {
+      print('uploadPDF error: $e');
+      throw Exception("PDF upload failed");
+    }
+  }
+
+  static Future<Map<String, dynamic>> getLatestPDF() async {
+    try {
+      String url = "${ApiConstants.baseUrl1}${ApiConstants.getTeachingPdf}";
+
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      );
+      print('getLatestPDF response: ${response.body}');
+      return jsonDecode(response.body);
+    } catch (e) {
+      print('getLatestPDF error: $e');
+      throw Exception("Failed to get latest PDF");
+    }
   }
 
   ///logoutoffline

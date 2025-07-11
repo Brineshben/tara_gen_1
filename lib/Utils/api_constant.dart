@@ -92,6 +92,11 @@ class ApiConstants {
   static String getLanguage = "/robot/languages/list/";
   static String setLanguage = "/robot/update-robots/";
 
+  static String changeTeachingmode = "/teaching/status/update/";
+  static String getModeStatus = "/get/teaching/status/";
+  static String uploadTeachingPdf = "/upload-pdf/";
+  static String getTeachingPdf = "/get-latest-pdf/";
+
   ///online
   static String login = "/accounts/login/";
   static String poweroff = "/off/";

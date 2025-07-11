@@ -21,6 +21,7 @@ import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/crop_image.dart';
 import 'package:ihub/View/Settings/description_option.dart';
+import 'package:ihub/View/Settings/list_of_mode.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
@@ -724,6 +725,20 @@ class _SettingsPageState extends State<SettingsPage> {
                           },
                         ),
                         SettingsCard(
+                          iconPath: 'assets/teaching.png',
+                          subtitle: 'Switch modes',
+                          title: 'MODES',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ListofMode(),
+                              ),
+                            );
+                          },
+                        ),
+                        SettingsCard(
                           iconPath: 'assets/destination11.png',
                           subtitle: "Create a new full tour itinerary",
                           title: 'ADD FULL TOUR',
@@ -988,8 +1003,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ],
                               ),
                             );
-
-                            
                           },
                         ),
                       ],
