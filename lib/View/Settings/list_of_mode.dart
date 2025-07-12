@@ -2,7 +2,11 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/Navigate_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/mode_container.dart';
 import 'package:ihub/Utils/toast.dart';
@@ -124,11 +128,12 @@ class _ListofModeState extends State<ListofMode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Colors.white,
+      backgroundColor: Colors.white,
       appBar: AppBar(
         surfaceTintColor: Colors.white,
         backgroundColor: Colors.white,
-        title: Text("Modes", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+        title: Text("Modes",
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
         toolbarHeight: 90,
       ),
       body: Padding(
@@ -146,8 +151,8 @@ class _ListofModeState extends State<ListofMode> {
               pdfFile: _pdfFile,
               onSelect: () => showModeDialog(context),
               onView: () {
-               if(_pdfFile != null) {
-                 Navigator.push(
+                if (_pdfFile != null) {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (_) => PdfViewScreen(pdfFile: _pdfFile!),
@@ -233,62 +238,279 @@ class _ListofModeState extends State<ListofMode> {
   void showModeDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        backgroundColor: Colors.white,
-        title: Text(
-          "Switch Mode",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
-          ),
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Current Mode:",
-                style: TextStyle(
-                    fontWeight: FontWeight.w600, color: Colors.black87)),
-            SizedBox(height: 4),
-            Text(
-              isTeachingMode ? "Teaching" : "Reception",
-              style: TextStyle(
-                fontSize: 16,
-                color: isTeachingMode ? Colors.green : Colors.red,
-                fontWeight: FontWeight.bold,
+      builder: (context) {
+        final width = MediaQuery.of(context).size.width;
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: Container(
+            width: width * 0.8,
+            padding: EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.8,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.sync_alt,
+                    color: Colors.deepPurple,
+                    size: 40,
+                  ),
+                  SizedBox(height: 12),
+                  Text(
+                    "Switch Robot Mode",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.deepPurple,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 20),
+
+                  /// Combined row: current + switch to
+                  Row(
+                    children: [
+                      Text(
+                        "🟢 Current Mode: ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        isTeachingMode ? "Teaching Mode" : "Reception Mode",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isTeachingMode ? Colors.green : Colors.red,
+                        ),
+                      ),
+                      Spacer(),
+                      Text(
+                        "🔁 Switching To: ",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      Text(
+                        isTeachingMode ? "Reception Mode" : "Teaching Mode",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isTeachingMode ? Colors.red : Colors.green,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Text(
+                        "Are you sure you want to switch modes?\n\n"
+                        "This will change how the robot behaves. Please confirm your choice.",
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey[800],
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 30),
+
+                  /// Buttons
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.pop(context),
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: Colors.redAccent),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: Text(
+                            "Cancel",
+                            style: TextStyle(
+                              color: Colors.redAccent,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+
+                            Get.find<NavigateController>().navigateData();
+
+                            // show list of navigation
+                            showNavigationListDialog(context);
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.deepPurple,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            padding: EdgeInsets.symmetric(vertical: 14),
+                          ),
+                          child: Text(
+                            "Switch",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              "Do you want to switch this mode?\n\nIt will change to ${isTeachingMode ? 'Reception' : 'Teaching'} mode.",
-              style: TextStyle(fontSize: 14, color: Colors.grey[800]),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text("Cancel",
-                style: TextStyle(
-                    color: Colors.redAccent, fontWeight: FontWeight.w600)),
           ),
-          ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              toggleTeachingMode(!isTeachingMode);
-            },
-            child: Text("Switch"),
+        );
+      },
+    );
+  }
+
+  Widget buildInfoCard2(String title) {
+    final Size size = MediaQuery.of(context).size;
+    return Ink(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20.r),
+        border: Border.all(color: Colors.blueGrey.shade300, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.white,
+            spreadRadius: 0.01,
+            offset: Offset(0, 0),
           ),
         ],
       ),
+      width: size.width * 0.25,
+      height: size.height * 0.080,
+      child: Center(
+        child: Text(
+          title.toUpperCase(),
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: 18.h,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
+  }
+
+  void showNavigationListDialog(BuildContext context) {
+    final controller = Get.find<NavigateController>();
+    controller.navigateData(); // fetch data when dialog opens
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.white,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.7,
+              minWidth: MediaQuery.of(context).size.width * 0.8,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  "Select Class",
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                Expanded(
+                  child: GetX<NavigateController>(
+                    builder: (controller) {
+                      if (controller.isLoading.value) {
+                        return const Center(
+                          child: CircularProgressIndicator(color: Colors.blue),
+                        );
+                      }
+
+                      final classList = controller.dataList
+                          .where((item) =>
+                              item?.name?.toLowerCase().contains("class") ??
+                              false)
+                          .toList();
+
+                      if (classList.isEmpty) {
+                        return const Center(child: Text("No classes found"));
+                      }
+
+                      return SingleChildScrollView(
+                        child: Wrap(
+                          children: List.generate(
+                            classList.length,
+                            (index) {
+                              final item = classList[index];
+                              return Padding(
+                                padding: const EdgeInsets.all(6),
+                                child: Material(
+                                  color: Colors.transparent,
+                                  child: InkWell(
+                                    onTap: () {
+                                      Navigator.pop(context);
+                                      navigateToLocationByName(item?.id ?? 0);
+                                    },
+                                    borderRadius: BorderRadius.circular(20),
+                                    splashColor: Colors.blue,
+                                    highlightColor:
+                                        Colors.green.withOpacity(0.3),
+                                    child: buildInfoCard2(item?.name ?? ''),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  void navigateToLocationByName(int classId) async {
+    Map<String, dynamic> response = await ApiServices.destination(id: classId);
+    if (response['status'] == 'ok') {
+      toggleTeachingMode(!isTeachingMode);
+    }
   }
 }

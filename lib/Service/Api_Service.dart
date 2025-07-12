@@ -171,22 +171,11 @@ class ApiServices {
   static Future<Map<String, dynamic>> destination({required int id}) async {
     String url =
         "${ApiConstants.baseUrl1}${ApiConstants.navigationdestinationoffline}$id/";
-    print('Api destination--------${url}--------------');
 
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
     print('Api destination---url $url-----${respString}--------------');
-
-    // var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
-
-    // scaffoldMessenger.showSnackBar(
-    //   SnackBar(
-    //     content: Text('Response received: $respString'),
-    //     duration: Duration(seconds: 3),
-    //   ),
-    // );
-
     return json.decode(respString);
   }
 

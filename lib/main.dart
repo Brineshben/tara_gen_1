@@ -9,12 +9,11 @@ import 'package:ihub/View/Splash/initial_splash.dart';
 import 'Service/controller_handling.dart';
 import 'Service/sharedPreference.dart';
 
-// late List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // await ApiConstants.loadBaseUrl1();
+  await ApiConstants.loadBaseUrl1();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -22,7 +21,6 @@ Future<void> main() async {
     DeviceOrientation.landscapeLeft,
     DeviceOrientation.landscapeRight,
   ]);
-  // cameras = await availableCameras();
   final sharedPrefs = SharedPrefs();
   await sharedPrefs.initialize();
 

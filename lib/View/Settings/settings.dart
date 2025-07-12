@@ -738,19 +738,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             );
                           },
                         ),
-                        SettingsCard(
-                          iconPath: 'assets/destination11.png',
-                          subtitle: "Create a new full tour itinerary",
-                          title: 'ADD FULL TOUR',
-                          backgroundColor: Colors.white,
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ListAnimationdData()));
-                          },
-                        ),
+
                         SettingsCard(
                           iconPath: 'assets/high-volume.png',
                           subtitle: 'Adjust the controller volume',
@@ -1067,6 +1055,46 @@ class _SettingsPageState extends State<SettingsPage> {
                   )),
             ),
         ],
+      ),
+      floatingActionButton: Container(
+        padding: EdgeInsets.symmetric(horizontal: 20),
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(30),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.deepPurple.withOpacity(0.3),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
+          border: Border.all(color: Colors.deepPurple, width: 2),
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ListofMode()),
+            );
+          },
+          borderRadius: BorderRadius.circular(30),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.swap_horiz, color: Colors.deepPurple),
+              SizedBox(width: 8),
+              Text(
+                "Switch Mode",
+                style: TextStyle(
+                  color: Colors.deepPurple,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
