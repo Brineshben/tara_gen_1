@@ -175,6 +175,9 @@ class _ListofModeState extends State<ListofMode> {
               comingSoon: true,
               onSelect: () {
                 showComingSoonDialog(context);
+
+
+             
               },
             ),
             ModeCard(
@@ -314,22 +317,26 @@ class _ListofModeState extends State<ListofMode> {
                   ),
 
                   SizedBox(height: 20),
-                  Row(
+                Row(
                     children: [
-                      Text(
-                        "Are you sure you want to switch modes?\n\n"
-                        "This will change how the robot behaves. Please confirm your choice.",
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey[800],
-                          height: 1.4,
+                      Expanded(
+                        child: Text(
+                          isTeachingMode
+                              ? "Are you sure you want to switch to Reception Mode?\n\n"
+                                  "In Reception Mode, the robot will greet and assist visitors automatically."
+                              : "Are you sure you want to switch to Teaching Mode?\n\n"
+                                  "You will be asked to select a class. The robot will then guide students as per the class location.",
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.grey[800],
+                            height: 1.4,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 30),
 
-                  /// Buttons
+                  SizedBox(height: 30),
                   Row(
                     children: [
                       Expanded(
@@ -358,11 +365,15 @@ class _ListofModeState extends State<ListofMode> {
                           onPressed: () {
                             Navigator.pop(context);
 
-                            Get.find<NavigateController>().navigateData();
-
-                            // show list of navigation
-                            showNavigationListDialog(context);
+                            if (!isTeachingMode) {
+                              // Switching TO Teaching Mode ➜ Show class list first
+                              showNavigationListDialog(context);
+                            } else {
+                              // Switching TO Reception Mode ➜ Direct switch
+                              toggleTeachingMode(false);
+                            }
                           },
+
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.deepPurple,
                             shape: RoundedRectangleBorder(
@@ -511,6 +522,7 @@ class _ListofModeState extends State<ListofMode> {
     Map<String, dynamic> response = await ApiServices.destination(id: classId);
     if (response['status'] == 'ok') {
       toggleTeachingMode(!isTeachingMode);
+      
     }
   }
 }

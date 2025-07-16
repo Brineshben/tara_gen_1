@@ -102,24 +102,68 @@ class _VolumeControlState extends State<VolumeControl> {
                             );
                           },
                         ),
-                        SizedBox(
-                          width: 300.w, // Adjust width as needed
-                          child: Slider(
-                            value: controller.roboVolume.value.toDouble(),
-                            activeColor: Colors.green,
-                            min: 0,
-                            max: 100,
-                            divisions: 10,
-                            label: "${controller.roboVolume.value}%",
-                            onChanged: (value) {
-                              controller.roboVolume.value = value.toInt();
-                            },
-                            onChangeEnd: (value) {
-                              Get.find<VolumeController>()
-                                  .fetchvolume(widget.robotid, value.toInt());
-                            },
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 300.w, // Adjust width as needed
+                        //   child: Slider(
+                        //     value: controller.roboVolume.value.toDouble(),
+                        //     activeColor: Colors.green,
+                        //     min: 0,
+                        //     max: 100,
+                        //     divisions: 100,
+                        //     label: "${controller.roboVolume.value}%",
+                        //     onChanged: (value) {
+                        //       controller.roboVolume.value = value.toInt();
+                        //     },
+                        //     onChangeEnd: (value) {
+                        //       Get.find<VolumeController>()
+                        //           .fetchvolume(widget.robotid, value.toInt());
+                        //     },
+                        //   ),
+                        // ),
+
+
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Center(
+                              child: RotatedBox(
+                                quarterTurns: -100, 
+                                child: SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    trackHeight: 40.0,
+                                    activeTrackColor: Colors.blueAccent,
+                                    inactiveTrackColor:
+                                        Colors.blueAccent.withOpacity(0.3),
+                                    thumbColor: Colors.white,
+                                    thumbShape: RoundSliderThumbShape(
+                                        enabledThumbRadius: 14.0),
+                                    overlayColor:
+                                        Colors.blueAccent.withOpacity(0.2),
+                                    overlayShape: RoundSliderOverlayShape(
+                                        overlayRadius: 28.0),
+                                    valueIndicatorColor:
+                                        Colors.transparent, // hide indicator
+                                  ),
+                                  child: Slider(
+                                    value: controller.roboVolume.value
+                                        .toDouble(),
+                                    min: 0,
+                                    max: 100,
+                                    divisions: 100,
+                                    onChanged: (v) => controller
+                                        .roboVolume.value = v.toInt(),
+                                    onChangeEnd: (v) =>
+                                        Get.find<VolumeController>()
+                                            .fetchvolume(
+                                                widget.robotid, v.toInt()),
+                                  ),
+                                ),
+                              ),
+                            ),
+                           
+                          ],
+                        )
+
                       ],
                     );
                   },

@@ -16,7 +16,7 @@ class BackgroudController extends GetxController {
   RxBool isError = false.obs;
   Rx<BackgroundModel?> backgroundModel = Rx(null);
 
-  String defaultIMage = "assets/bg.jpeg";
+  String defaultIMage = "assets/bg.png";
 
   void resetStatus() {
     isLoading.value = false;

@@ -43,6 +43,9 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<RobotresponseapiController>().getUrl();
 
+    Get.find<BackgroudController>().backgroundModel.value = null;
+
+
     Get.find<BatteryController>().fetchBattery(
       Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
     );

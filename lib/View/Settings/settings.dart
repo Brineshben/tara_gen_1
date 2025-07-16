@@ -724,20 +724,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     builder: (context) => AddUrlPage()));
                           },
                         ),
-                        SettingsCard(
-                          iconPath: 'assets/teaching.png',
-                          subtitle: 'Switch modes',
-                          title: 'MODES',
-                          backgroundColor: Colors.white,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ListofMode(),
-                              ),
-                            );
-                          },
-                        ),
+                       
 
                         SettingsCard(
                           iconPath: 'assets/high-volume.png',

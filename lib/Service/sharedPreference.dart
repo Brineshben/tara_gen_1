@@ -50,6 +50,7 @@ class SharedPrefs {
     FullTourControllerNew fullTourController = Get.find();
     fullTourController.clearData();
     prefs.clear();
+    prefs.clear();
   }
 
   Future<bool> setIPData(ipAddressModel ipAddressApi) async {
