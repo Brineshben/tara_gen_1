@@ -26,8 +26,8 @@ class Data {
   int? id;
   String? heading;
   String? description;
-  Null? image;
-  Null? otherHeadings;
+  Null image;
+  Null otherHeadings;
   Subheading? subheading;
 
   Data(

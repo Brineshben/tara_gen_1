@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:get/get_utils/get_utils.dart';
 import 'package:http/http.dart' as http;
 import 'package:ihub/Model/qa_model.dart';
 import 'package:ihub/Utils/api_constant.dart';

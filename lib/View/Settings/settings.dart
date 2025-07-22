@@ -33,7 +33,6 @@ import '../../Service/Api_Service.dart';
 import '../../Service/sharedPreference.dart';
 import '../../Utils/popups.dart';
 import '../Login_Page/login.dart' as login_page;
-import '../Robot_Response/Fulltour_dart.dart';
 import '../Robot_Response/language_list.dart';
 import 'ApiKey.dart';
 import 'Volume_page.dart';

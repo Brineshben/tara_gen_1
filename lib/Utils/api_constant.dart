@@ -15,7 +15,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.11.26:8000";
+  static String _defaultBaseUrl1 = "http://192.168.1.31:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
 
   /// Load stored IP from SharedPreferences

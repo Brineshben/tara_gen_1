@@ -63,6 +63,7 @@ dependencies:
   image_cropper: ^9.1.0
   flutter_pdfview: ^1.4.1+1
   another_flushbar: ^1.12.30
+  fluttertoast: ^8.2.12
 dev_dependencies:
   flutter_test:
     sdk: flutter

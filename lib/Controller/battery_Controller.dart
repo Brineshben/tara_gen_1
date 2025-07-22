@@ -122,7 +122,7 @@ class BatteryController extends GetxController {
                         Get.back();
                       },
                       style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
+                        backgroundColor: WidgetStateProperty.all(
                           ColorUtils.userdetailcolor,
                         ),
                       ),

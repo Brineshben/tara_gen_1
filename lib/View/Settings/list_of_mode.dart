@@ -1,17 +1,11 @@
-import 'dart:io';
+import 'dart:ui';
 
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'package:ihub/Controller/Navigate_Controller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/mode_container.dart';
 import 'package:ihub/Utils/toast.dart';
-import 'package:ihub/View/Settings/pdf_view_screen.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ListofMode extends StatefulWidget {
   const ListofMode({super.key});
@@ -21,14 +15,13 @@ class ListofMode extends StatefulWidget {
 }
 
 class _ListofModeState extends State<ListofMode> {
-  File? _pdfFile;
+  // File? _pdfFile;
   bool isTeachingMode = false;
 
   @override
   void initState() {
     super.initState();
     loadTeachingMode();
-    loadLatestPDF();
   }
 
   void loadTeachingMode() async {
@@ -38,70 +31,102 @@ class _ListofModeState extends State<ListofMode> {
     });
   }
 
-  void loadLatestPDF() async {
-    final response = await ApiServices.getLatestPDF();
-    final url = response['data']?['file'];
+  // void loadLatestPDF() async {
+  //   final response = await ApiServices.getLatestPDF();
+  //   final url = response['data']?['file'];
 
-    if (url != null && url.toString().startsWith("http")) {
-      try {
-        final dir = await getApplicationDocumentsDirectory();
-        final filePath = '${dir.path}/latest.pdf';
+  //   if (url != null && url.toString().startsWith("http")) {
+  //     try {
+  //       final dir = await getApplicationDocumentsDirectory();
+  //       final filePath = '${dir.path}/latest.pdf';
 
-        final downloadRes = await http.get(Uri.parse(url));
-        final file = File(filePath);
-        await file.writeAsBytes(downloadRes.bodyBytes);
+  //       final downloadRes = await http.get(Uri.parse(url));
+  //       final file = File(filePath);
+  //       await file.writeAsBytes(downloadRes.bodyBytes);
 
-        setState(() {
-          _pdfFile = file;
-        });
+  //       setState(() {
+  //         _pdfFile = file;
+  //       });
 
-        showTopRightToast(
-          context: context,
-          message: "PDF downloaded and ready",
-          color: Colors.green,
-        );
-      } catch (e) {
-        showTopRightToast(
-          context: context,
-          message: "Download failed: $e",
-          color: Colors.red,
-        );
+  //       showTopRightToast(
+  //         context: context,
+  //         message: "PDF downloaded and ready",
+  //         color: Colors.green,
+  //       );
+  //     } catch (e) {
+  //       showTopRightToast(
+  //         context: context,
+  //         message: "Download failed: $e",
+  //         color: Colors.red,
+  //       );
+  //     }
+  //   } else {
+  //     showTopRightToast(
+  //       context: context,
+  //       message: "No valid PDF URL from server",
+  //       color: Colors.blue,
+  //     );
+  //   }
+  // }
+
+  // Future<void> pickPDF() async {
+  //   final result = await FilePicker.platform.pickFiles(
+  //     type: FileType.custom,
+  //     allowedExtensions: ['pdf'],
+  //   );
+
+  //   if (result != null && result.files.single.path != null) {
+  //     final file = File(result.files.single.path!);
+  //     setState(() {
+  //       _pdfFile = file;
+  //     });
+
+  //     final res = await ApiServices.uploadPDF(file);
+  //     if (res['status'] == 'ok') {
+  //       showTopRightToast(
+  //         context: context,
+  //         message: res['message'] ?? "PDF uploaded successfully",
+  //         color: Colors.green,
+  //       );
+  //     } else {
+  //       showTopRightToast(
+  //         context: context,
+  //         message: res['message'] ?? "Failed to upload PDF",
+  //         color: Colors.red,
+  //       );
+  //     }
+  //   }
+  // }
+
+  void openEduTara() async {
+    const packageName = "com.ihub.edu_tara";
+    final Uri androidUri =
+        Uri.parse("intent://#Intent;package=$packageName;end;");
+    final Uri fallbackUri = Uri.parse("android-app://$packageName");
+
+    try {
+      if (await canLaunchUrl(fallbackUri)) {
+        await launchUrl(fallbackUri);
+        return;
       }
-    } else {
-      showTopRightToast(
-        context: context,
-        message: "No valid PDF URL from server",
-        color: Colors.blue,
+
+      if (await canLaunchUrl(androidUri)) {
+        await launchUrl(androidUri);
+        return;
+      }
+
+      Fluttertoast.showToast(
+        msg: "Please install the app first",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
       );
-    }
-  }
-
-  Future<void> pickPDF() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-    );
-
-    if (result != null && result.files.single.path != null) {
-      final file = File(result.files.single.path!);
-      setState(() {
-        _pdfFile = file;
-      });
-
-      final res = await ApiServices.uploadPDF(file);
-      if (res['status'] == 'ok') {
-        showTopRightToast(
-          context: context,
-          message: res['message'] ?? "PDF uploaded successfully",
-          color: Colors.green,
-        );
-      } else {
-        showTopRightToast(
-          context: context,
-          message: res['message'] ?? "Failed to upload PDF",
-          color: Colors.red,
-        );
-      }
+    } catch (e) {
+      print("Error launching app: $e");
+      Fluttertoast.showToast(
+        msg: "Please install the app first",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+      );
     }
   }
 
@@ -145,28 +170,13 @@ class _ListofModeState extends State<ListofMode> {
           childAspectRatio: 0.82,
           children: [
             ModeCard(
-              title: isTeachingMode ? "Teaching Mode" : "Reception Mode",
+              title: "Teaching Mode ",
               imageUrl:
                   "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
-              pdfFile: _pdfFile,
-              onSelect: () => showModeDialog(context),
-              onView: () {
-                if (_pdfFile != null) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => PdfViewScreen(pdfFile: _pdfFile!),
-                    ),
-                  );
-                } else {
-                  showTopRightToast(
-                    context: context,
-                    message: "No PDF available",
-                    color: Colors.red,
-                  );
-                }
+              onSelect: () {
+                showModeDialog(context, isTeachingMode);
               },
-              onUpload: pickPDF,
+              teachingModeStatus: isTeachingMode,
             ),
             ModeCard(
               title: "Expo Mode",
@@ -175,9 +185,6 @@ class _ListofModeState extends State<ListofMode> {
               comingSoon: true,
               onSelect: () {
                 showComingSoonDialog(context);
-
-
-             
               },
             ),
             ModeCard(
@@ -238,162 +245,235 @@ class _ListofModeState extends State<ListofMode> {
     );
   }
 
-  void showModeDialog(BuildContext context) {
+  void showModeDialog(BuildContext context, bool isTeachingMode) {
     showDialog(
       context: context,
-      builder: (context) {
+      builder: (ctx) {
         final width = MediaQuery.of(context).size.width;
+        final height = MediaQuery.of(context).size.height;
+
         return Dialog(
+          backgroundColor: Colors.transparent, // Needed for glass effect
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          child: Container(
-            width: width * 0.8,
-            padding: EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Container(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.8,
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(
-                    Icons.sync_alt,
-                    color: Colors.deepPurple,
-                    size: 40,
-                  ),
-                  SizedBox(height: 12),
-                  Text(
-                    "Switch Robot Mode",
-                    style: TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+              child: Container(
+                width: width * 0.85,
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(color: Colors.white.withOpacity(0.2)),
+                ),
+                constraints: BoxConstraints(
+                  maxHeight: height * 0.85,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.sync_alt, color: Colors.deepPurple, size: 40),
+                    const SizedBox(height: 12),
+                    Text(
+                      "Switch Robot Mode",
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        shadows: [
+                          Shadow(
+                            blurRadius: 4,
+                            color: Colors.black26,
+                            offset: Offset(1, 1),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 20),
-
-                  /// Combined row: current + switch to
-                  Row(
-                    children: [
-                      Text(
-                        "🟢 Current Mode: ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Text(
-                        isTeachingMode ? "Teaching Mode" : "Reception Mode",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: isTeachingMode ? Colors.green : Colors.red,
-                        ),
-                      ),
-                      Spacer(),
-                      Text(
-                        "🔁 Switching To: ",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          fontSize: 16,
-                          color: Colors.black87,
-                        ),
-                      ),
-                      Text(
-                        isTeachingMode ? "Reception Mode" : "Teaching Mode",
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: isTeachingMode ? Colors.red : Colors.green,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 20),
-                Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          isTeachingMode
-                              ? "Are you sure you want to switch to Reception Mode?\n\n"
-                                  "In Reception Mode, the robot will greet and assist visitors automatically."
-                              : "Are you sure you want to switch to Teaching Mode?\n\n"
-                                  "You will be asked to select a class. The robot will then guide students as per the class location.",
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Text(
+                          "🟢 Current Mode: ",
                           style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.grey[800],
-                            height: 1.4,
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.white,
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: 30),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.pop(context),
-                          style: OutlinedButton.styleFrom(
-                            side: BorderSide(color: Colors.redAccent),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            padding: EdgeInsets.symmetric(vertical: 14),
+                        Text(
+                          isTeachingMode ? "Teaching Mode" : "Reception Mode",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isTeachingMode ? Colors.green : Colors.red,
                           ),
+                        ),
+                        Spacer(),
+                        Text(
+                          "🔁 Switching To: ",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Text(
+                          isTeachingMode ? "Reception Mode" : "Teaching Mode",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isTeachingMode ? Colors.red : Colors.green,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
                           child: Text(
-                            "Cancel",
+                            isTeachingMode
+                                ? "Do you want to switch to Reception Mode?\n\n"
+                                    "The app will close, and open the Reception Controller app to start greeting visitors."
+                                : "Do you want to switch to Teaching Mode?\n\n"
+                                    "The app will close, and open the Teaching Controller app for classroom navigation.",
                             style: TextStyle(
-                              color: Colors.redAccent,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
+                              fontSize: 15,
+                              color: Colors.white.withOpacity(0.9),
+                              height: 1.4,
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: 12),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-
-                            if (!isTeachingMode) {
-                              // Switching TO Teaching Mode ➜ Show class list first
-                              showNavigationListDialog(context);
-                            } else {
-                              // Switching TO Reception Mode ➜ Direct switch
-                              toggleTeachingMode(false);
-                            }
-                          },
-
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.deepPurple,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: OutlinedButton(
+                            onPressed: () => Navigator.pop(context),
+                            style: OutlinedButton.styleFrom(
+                              side: BorderSide(color: Colors.redAccent),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
                             ),
-                            padding: EdgeInsets.symmetric(vertical: 14),
-                          ),
-                          child: Text(
-                            "Switch",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                              color: Colors.white,
+                            child: const Text(
+                              "Cancel",
+                              style: TextStyle(
+                                color: Colors.redAccent,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              Navigator.pop(context);
+
+                              await Future.delayed(
+                                  const Duration(milliseconds: 300));
+
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return Dialog(
+                                    backgroundColor: Colors.transparent,
+                                    elevation: 0,
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(20),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 12, sigmaY: 12),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(24),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.white.withOpacity(0.15),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: Column(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              const Icon(Icons.sync,
+                                                  color: Colors.white,
+                                                  size: 48),
+                                              const SizedBox(height: 16),
+                                              const Text(
+                                                "Switching Mode...",
+                                                style: TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  shadows: [
+                                                    Shadow(
+                                                      blurRadius: 4,
+                                                      color: Colors.black26,
+                                                      offset: Offset(1, 1),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
+                                              const SizedBox(height: 16),
+                                              const CircularProgressIndicator(
+                                                color: Colors.white,
+                                                strokeWidth: 3,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+
+                              // Simulate logic
+                              await Future.delayed(const Duration(seconds: 3));
+                              Navigator.pop(context);
+
+                              // Switch mode
+                              if (isTeachingMode) {
+                                toggleTeachingMode(false);
+                              } else {
+                                toggleTeachingMode(true);
+
+                                openEduTara();
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepPurple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            child: const Text(
+                              "Switch",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -402,127 +482,124 @@ class _ListofModeState extends State<ListofMode> {
     );
   }
 
-  Widget buildInfoCard2(String title) {
-    final Size size = MediaQuery.of(context).size;
-    return Ink(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: Colors.blueGrey.shade300, width: 1),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.white,
-            spreadRadius: 0.01,
-            offset: Offset(0, 0),
-          ),
-        ],
-      ),
-      width: size.width * 0.25,
-      height: size.height * 0.080,
-      child: Center(
-        child: Text(
-          title.toUpperCase(),
-          style: GoogleFonts.poppins(
-            color: Colors.black,
-            fontSize: 18.h,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
-    );
-  }
+  // Widget buildInfoCard2(String title) {
+  //   final Size size = MediaQuery.of(context).size;
+  //   return Ink(
+  //     decoration: BoxDecoration(
+  //       color: Colors.white,
+  //       borderRadius: BorderRadius.circular(20.r),
+  //       border: Border.all(color: Colors.blueGrey.shade300, width: 1),
+  //       boxShadow: [
+  //         BoxShadow(
+  //           color: Colors.white,
+  //           spreadRadius: 0.01,
+  //           offset: Offset(0, 0),
+  //         ),
+  //       ],
+  //     ),
+  //     width: size.width * 0.25,
+  //     height: size.height * 0.080,
+  //     child: Center(
+  //       child: Text(
+  //         title.toUpperCase(),
+  //         style: GoogleFonts.poppins(
+  //           color: Colors.black,
+  //           fontSize: 18.h,
+  //           fontWeight: FontWeight.bold,
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-  void showNavigationListDialog(BuildContext context) {
-    final controller = Get.find<NavigateController>();
-    controller.navigateData(); // fetch data when dialog opens
+  // void showNavigationListDialog(BuildContext context) {
+  //   final controller = Get.find<NavigateController>();
+  //   controller.navigateData(); // fetch data when dialog opens
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return Dialog(
+  //         backgroundColor: Colors.white,
+  //         shape:
+  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+  //         child: Container(
+  //           padding: const EdgeInsets.all(16),
+  //           constraints: BoxConstraints(
+  //             maxHeight: MediaQuery.of(context).size.height * 0.7,
+  //             minWidth: MediaQuery.of(context).size.width * 0.8,
+  //           ),
+  //           child: Column(
+  //             mainAxisSize: MainAxisSize.min,
+  //             children: [
+  //               Text(
+  //                 "Select Class",
+  //                 style: GoogleFonts.poppins(
+  //                   fontSize: 20,
+  //                   fontWeight: FontWeight.bold,
+  //                 ),
+  //               ),
+  //               const SizedBox(height: 16),
+  //               Expanded(
+  //                 child: GetX<NavigateController>(
+  //                   builder: (controller) {
+  //                     if (controller.isLoading.value) {
+  //                       return const Center(
+  //                         child: CircularProgressIndicator(color: Colors.blue),
+  //                       );
+  //                     }
 
-    showDialog(
-      context: context,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.white,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.7,
-              minWidth: MediaQuery.of(context).size.width * 0.8,
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  "Select Class",
-                  style: GoogleFonts.poppins(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(height: 16),
+  //                     final classList = controller.dataList
+  //                         .where((item) =>
+  //                             item?.name?.toLowerCase().contains("class") ??
+  //                             false)
+  //                         .toList();
 
-                Expanded(
-                  child: GetX<NavigateController>(
-                    builder: (controller) {
-                      if (controller.isLoading.value) {
-                        return const Center(
-                          child: CircularProgressIndicator(color: Colors.blue),
-                        );
-                      }
+  //                     if (classList.isEmpty) {
+  //                       return const Center(child: Text("No classes found"));
+  //                     }
 
-                      final classList = controller.dataList
-                          .where((item) =>
-                              item?.name?.toLowerCase().contains("class") ??
-                              false)
-                          .toList();
+  //                     return SingleChildScrollView(
+  //                       child: Wrap(
+  //                         children: List.generate(
+  //                           classList.length,
+  //                           (index) {
+  //                             final item = classList[index];
+  //                             return Padding(
+  //                               padding: const EdgeInsets.all(6),
+  //                               child: Material(
+  //                                 color: Colors.transparent,
+  //                                 child: InkWell(
+  //                                   onTap: () {
+  //                                     Navigator.pop(context);
+  //                                     navigateToLocationByName(item?.id ?? 0);
+  //                                   },
+  //                                   borderRadius: BorderRadius.circular(20),
+  //                                   splashColor: Colors.blue,
+  //                                   highlightColor:
+  //                                       Colors.green.withOpacity(0.3),
+  //                                   child: buildInfoCard2(item?.name ?? ''),
+  //                                 ),
+  //                               ),
+  //                             );
+  //                           },
+  //                         ),
+  //                       ),
+  //                     );
+  //                   },
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
-                      if (classList.isEmpty) {
-                        return const Center(child: Text("No classes found"));
-                      }
-
-                      return SingleChildScrollView(
-                        child: Wrap(
-                          children: List.generate(
-                            classList.length,
-                            (index) {
-                              final item = classList[index];
-                              return Padding(
-                                padding: const EdgeInsets.all(6),
-                                child: Material(
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    onTap: () {
-                                      Navigator.pop(context);
-                                      navigateToLocationByName(item?.id ?? 0);
-                                    },
-                                    borderRadius: BorderRadius.circular(20),
-                                    splashColor: Colors.blue,
-                                    highlightColor:
-                                        Colors.green.withOpacity(0.3),
-                                    child: buildInfoCard2(item?.name ?? ''),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void navigateToLocationByName(int classId) async {
-    Map<String, dynamic> response = await ApiServices.destination(id: classId);
-    if (response['status'] == 'ok') {
-      toggleTeachingMode(!isTeachingMode);
-      
-    }
-  }
+  // void navigateToLocationByName(int classId) async {
+  //   Map<String, dynamic> response = await ApiServices.destination(id: classId);
+  //   if (response['status'] == 'ok') {
+  //     toggleTeachingMode(!isTeachingMode);
+  //   }
+  // }
 }

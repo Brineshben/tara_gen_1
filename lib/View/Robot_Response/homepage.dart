@@ -52,7 +52,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      fetchAndUpdateBaseUrl();
+      // fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(

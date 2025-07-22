@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../Controller/description_controller.dart';
 import '../../Utils/colors.dart';

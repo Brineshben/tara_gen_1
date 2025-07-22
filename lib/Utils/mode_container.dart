@@ -1,28 +1,19 @@
-import 'dart:io';
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 class ModeCard extends StatelessWidget {
   final String title;
-  final String? subtitle;
   final String imageUrl;
   final bool comingSoon;
-  final File? pdfFile;
   final VoidCallback onSelect;
-  final VoidCallback? onView;
-  final VoidCallback? onUpload;
+  final bool teachingModeStatus;
 
   const ModeCard({
     super.key,
     required this.title,
     required this.imageUrl,
-    this.subtitle,
     this.comingSoon = false,
-    this.pdfFile,
     required this.onSelect,
-    this.onView,
-    this.onUpload,
+    this.teachingModeStatus = false,
   });
 
   @override
@@ -71,41 +62,22 @@ class ModeCard extends StatelessWidget {
                               ],
                             ),
                           ),
-                          SizedBox(height: 4),
-                          Text(
-                            pdfFile != null
-                                ? pdfFile!.path.split('/').last
-                                : "No PDF Selected",
-                            style: TextStyle(
-                              color: pdfFile != null
-                                  ? Colors.greenAccent
-                                  : Colors.white70,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          Spacer(),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: buildGlassButton(
-                                  label: 'View',
-                                  icon: Icons.picture_as_pdf,
-                                  onTap: onView,
-                                ),
+                          if (teachingModeStatus)
+                            Text(
+                              "Activated",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.black.withOpacity(0.9),
+                                    offset: Offset(1, 1),
+                                    blurRadius: 3,
+                                  ),
+                                ],
                               ),
-                              SizedBox(width: 8),
-                              Expanded(
-                                child: buildGlassButton(
-                                  label: 'Upload',
-                                  icon: Icons.upload_file,
-                                  onTap: onUpload,
-                                ),
-                              ),
-                            ],
-                          ),
+                            )
                         ],
                       ),
               ),
@@ -134,45 +106,6 @@ class ModeCard extends StatelessWidget {
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget buildGlassButton({
-    required String label,
-    required IconData icon,
-    VoidCallback? onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(8),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            padding: EdgeInsets.symmetric(vertical: 10),
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.white30),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(icon, color: Colors.white, size: 18),
-                SizedBox(width: 6),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
       ),
     );
   }
