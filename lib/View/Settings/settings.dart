@@ -475,8 +475,8 @@ class _SettingsPageState extends State<SettingsPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        ListAnimationdData(),));
+                                  builder: (context) => ListAnimationdData(),
+                                ));
                           },
                         ),
                         SettingsCard(
