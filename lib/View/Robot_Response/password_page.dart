@@ -158,7 +158,7 @@ class _PasswordPageState extends State<PasswordPage> {
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       keyboardType: TextInputType.number,
-                      textInputAction: TextInputAction.none,
+                      textInputAction: TextInputAction.done,
                       closeKeyboardWhenCompleted: false,
                       onCompleted: (pin) {
                         if (pin == '5678') {

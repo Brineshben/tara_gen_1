@@ -47,7 +47,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
 
     Get.find<BatteryController>().fetchBattery(
-      Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+      Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
     );
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
@@ -56,7 +56,7 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
       );
 
       // check robot on or off

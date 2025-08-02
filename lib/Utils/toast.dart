@@ -16,9 +16,9 @@ showTopRightToast({
     flushbarStyle: FlushbarStyle.FLOATING,
     isDismissible: true,
     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-    maxWidth: 300,
+    maxWidth: 350,
     forwardAnimationCurve: Curves.easeOutBack,
     reverseAnimationCurve: Curves.easeInBack,
-    animationDuration: const Duration(milliseconds: 500),
+    animationDuration: const Duration(seconds: 2),
   ).show(context);
 }

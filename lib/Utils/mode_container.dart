@@ -25,6 +25,7 @@ class ModeCard extends StatelessWidget {
       child: Stack(
         children: [
           Container(
+            // width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
               image: DecorationImage(
@@ -41,6 +42,7 @@ class ModeCard extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(16),
               child: Container(
+                width: double.infinity,
                 padding: const EdgeInsets.all(14),
                 child: comingSoon
                     ? null

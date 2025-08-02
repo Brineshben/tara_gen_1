@@ -17,6 +17,7 @@ import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/header.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
 import 'package:ihub/Utils/web_view.dart';
+import 'package:ihub/View/Robot_Response/Fulltour_dart.dart';
 import 'package:ihub/View/Settings/add_url.dart';
 import 'package:ihub/View/Settings/charge_screen.dart';
 import 'package:ihub/View/Settings/crop_image.dart';
@@ -25,6 +26,7 @@ import 'package:ihub/View/Settings/list_of_mode.dart';
 import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../Controller/Backgroud_controller.dart';
@@ -464,7 +466,19 @@ class _SettingsPageState extends State<SettingsPage> {
                                 ),
                               );
                             }),
-
+                        SettingsCard(
+                          iconPath: 'assets/destination11.png',
+                          subtitle: "Create a new full tour itinerary",
+                          title: 'ADD FULL TOUR',
+                          backgroundColor: Colors.white,
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        ListAnimationdData(),));
+                          },
+                        ),
                         SettingsCard(
                           iconPath: 'assets/robo.png',
                           subtitle: 'Preparing for mapping',
@@ -723,7 +737,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                     builder: (context) => AddUrlPage()));
                           },
                         ),
-                       
 
                         SettingsCard(
                           iconPath: 'assets/high-volume.png',
@@ -1139,6 +1152,8 @@ void openAnotherApp() async {
       await launchUrl(androidUri);
       return;
     }
+
+    Share.share("Hello from App A!");
 
     // Open Play Store if the app is not installed
     await launchUrl(

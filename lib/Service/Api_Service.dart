@@ -830,6 +830,6 @@ class ApiServices {
       print('updatelan $e');
     }
 
-    throw Exception("Failed to set language");
+    throw Exception("Failed to set language");  
   }
 }

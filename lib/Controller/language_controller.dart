@@ -30,7 +30,7 @@ class LanguageController extends GetxController {
     print('currently selected language ${selectedLanguage.value} ');
   }
 
-  void setSelectedLanguage(String lang) async {
+  void setSelectedLanguage(String lang, BuildContext context) async {
     final batteryController = Get.find<BatteryController>();
 
     selectedLanguage.value = lang;
@@ -52,7 +52,7 @@ class LanguageController extends GetxController {
         );
         
         Get.find<BatteryController>().fetchBattery(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
         );
       } else {
         Get.snackbar(

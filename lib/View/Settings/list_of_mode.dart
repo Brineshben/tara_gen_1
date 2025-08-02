@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/mode_container.dart';
 import 'package:ihub/Utils/toast.dart';
@@ -15,7 +17,6 @@ class ListofMode extends StatefulWidget {
 }
 
 class _ListofModeState extends State<ListofMode> {
-  // File? _pdfFile;
   bool isTeachingMode = false;
 
   @override
@@ -31,102 +32,26 @@ class _ListofModeState extends State<ListofMode> {
     });
   }
 
-  // void loadLatestPDF() async {
-  //   final response = await ApiServices.getLatestPDF();
-  //   final url = response['data']?['file'];
-
-  //   if (url != null && url.toString().startsWith("http")) {
-  //     try {
-  //       final dir = await getApplicationDocumentsDirectory();
-  //       final filePath = '${dir.path}/latest.pdf';
-
-  //       final downloadRes = await http.get(Uri.parse(url));
-  //       final file = File(filePath);
-  //       await file.writeAsBytes(downloadRes.bodyBytes);
-
-  //       setState(() {
-  //         _pdfFile = file;
-  //       });
-
-  //       showTopRightToast(
-  //         context: context,
-  //         message: "PDF downloaded and ready",
-  //         color: Colors.green,
-  //       );
-  //     } catch (e) {
-  //       showTopRightToast(
-  //         context: context,
-  //         message: "Download failed: $e",
-  //         color: Colors.red,
-  //       );
-  //     }
-  //   } else {
-  //     showTopRightToast(
-  //       context: context,
-  //       message: "No valid PDF URL from server",
-  //       color: Colors.blue,
-  //     );
-  //   }
-  // }
-
-  // Future<void> pickPDF() async {
-  //   final result = await FilePicker.platform.pickFiles(
-  //     type: FileType.custom,
-  //     allowedExtensions: ['pdf'],
-  //   );
-
-  //   if (result != null && result.files.single.path != null) {
-  //     final file = File(result.files.single.path!);
-  //     setState(() {
-  //       _pdfFile = file;
-  //     });
-
-  //     final res = await ApiServices.uploadPDF(file);
-  //     if (res['status'] == 'ok') {
-  //       showTopRightToast(
-  //         context: context,
-  //         message: res['message'] ?? "PDF uploaded successfully",
-  //         color: Colors.green,
-  //       );
-  //     } else {
-  //       showTopRightToast(
-  //         context: context,
-  //         message: res['message'] ?? "Failed to upload PDF",
-  //         color: Colors.red,
-  //       );
-  //     }
-  //   }
-  // }
-
-  void openEduTara() async {
+  void openEduTara(int userId) async {
     const packageName = "com.ihub.edu_tara";
-    final Uri androidUri =
-        Uri.parse("intent://#Intent;package=$packageName;end;");
-    final Uri fallbackUri = Uri.parse("android-app://$packageName");
+
+    // final Uri androidUri = Uri.parse("myapp://edu_tara?user_id=$userId");
+    final fallbackUri = Uri.parse("android-app://$packageName");
+
+    // final Uri androidUri = Uri.parse(
+    //     "intent://edu_tara?user_id=$userId#Intent;scheme=myapp;package=$packageName;end;");
 
     try {
       if (await canLaunchUrl(fallbackUri)) {
         await launchUrl(fallbackUri);
-        return;
+      } else {
+        Fluttertoast.showToast(msg: "App not installed");
+        Fluttertoast.showToast(msg: "Redirecting to Play Store...");
+        await launchUrl(fallbackUri, mode: LaunchMode.externalApplication);
       }
-
-      if (await canLaunchUrl(androidUri)) {
-        await launchUrl(androidUri);
-        return;
-      }
-
-      Fluttertoast.showToast(
-        msg: "Please install the app first",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
     } catch (e) {
       print("Error launching app: $e");
-      Fluttertoast.showToast(
-        msg: "Please install the app first",
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-      );
+      Fluttertoast.showToast(msg: "Please install the app first");
     }
   }
 
@@ -162,43 +87,45 @@ class _ListofModeState extends State<ListofMode> {
         toolbarHeight: 90,
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: GridView.count(
-          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
-          childAspectRatio: 0.82,
-          children: [
-            ModeCard(
-              title: "Teaching Mode ",
-              imageUrl:
-                  "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
-              onSelect: () {
-                showModeDialog(context, isTeachingMode);
-              },
-              teachingModeStatus: isTeachingMode,
-            ),
-            ModeCard(
-              title: "Expo Mode",
-              imageUrl:
-                  "https://www.therobotreport.com/wp-content/uploads/2025/04/BostonDeviceRobotics-featured-1.jpg",
-              comingSoon: true,
-              onSelect: () {
-                showComingSoonDialog(context);
-              },
-            ),
-            ModeCard(
-              title: "Control Mode",
-              imageUrl:
-                  "https://media.istockphoto.com/id/1022892534/photo/engineer-manager-check-and-control-automation-robot-arms-machine-in-intelligent-industrial.jpg?s=612x612&w=0&k=20&c=1lfHMx6lgDgjIpt2YfJHLZ692aYXAJnQE4IJj8UXcVU=",
-              comingSoon: true,
-              onSelect: () {
-                showComingSoonDialog(context);
-              },
-            ),
-          ],
-        ),
-      ),
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Row(
+            spacing: 20,
+            children: [
+              Expanded(
+                child: ModeCard(
+                  title: "Teaching Mode ",
+                  imageUrl:
+                      "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
+                  onSelect: () {
+                    showModeDialog(context, isTeachingMode);
+                  },
+                  teachingModeStatus: isTeachingMode,
+                ),
+              ),
+              Expanded(
+                child: ModeCard(
+                  title: "Expo Mode",
+                  imageUrl:
+                      "https://www.therobotreport.com/wp-content/uploads/2025/04/BostonDeviceRobotics-featured-1.jpg",
+                  comingSoon: true,
+                  onSelect: () {
+                    showComingSoonDialog(context);
+                  },
+                ),
+              ),
+              Expanded(
+                child: ModeCard(
+                  title: "Control Mode",
+                  imageUrl:
+                      "https://media.istockphoto.com/id/1022892534/photo/engineer-manager-check-and-control-automation-robot-arms-machine-in-intelligent-industrial.jpg?s=612x612&w=0&k=20&c=1lfHMx6lgDgjIpt2YfJHLZ692aYXAJnQE4IJj8UXcVU=",
+                  comingSoon: true,
+                  onSelect: () {
+                    showComingSoonDialog(context);
+                  },
+                ),
+              ),
+            ],
+          )),
     );
   }
 
@@ -337,7 +264,7 @@ class _ListofModeState extends State<ListofMode> {
                           child: Text(
                             isTeachingMode
                                 ? "Do you want to switch to Reception Mode?\n\n"
-                                    "The app will close, and open the Reception Controller app to start greeting visitors."
+                                    "This mode is used for greeting and managing visitors at the entrance."
                                 : "Do you want to switch to Teaching Mode?\n\n"
                                     "The app will close, and open the Teaching Controller app for classroom navigation.",
                             style: TextStyle(
@@ -373,9 +300,9 @@ class _ListofModeState extends State<ListofMode> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () async {
+                      Expanded(
+                          child: InkWell(
+                            onTap: () async {
                               Navigator.pop(context);
 
                               await Future.delayed(
@@ -406,12 +333,12 @@ class _ListofModeState extends State<ListofMode> {
                                           ),
                                           child: Column(
                                             mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              const Icon(Icons.sync,
+                                            children: const [
+                                              Icon(Icons.sync,
                                                   color: Colors.white,
                                                   size: 48),
-                                              const SizedBox(height: 16),
-                                              const Text(
+                                              SizedBox(height: 16),
+                                              Text(
                                                 "Switching Mode...",
                                                 style: TextStyle(
                                                   fontSize: 18,
@@ -426,8 +353,8 @@ class _ListofModeState extends State<ListofMode> {
                                                   ],
                                                 ),
                                               ),
-                                              const SizedBox(height: 16),
-                                              const CircularProgressIndicator(
+                                              SizedBox(height: 16),
+                                              CircularProgressIndicator(
                                                 color: Colors.white,
                                                 strokeWidth: 3,
                                               ),
@@ -440,36 +367,60 @@ class _ListofModeState extends State<ListofMode> {
                                 },
                               );
 
-                              // Simulate logic
                               await Future.delayed(const Duration(seconds: 3));
                               Navigator.pop(context);
 
-                              // Switch mode
                               if (isTeachingMode) {
                                 toggleTeachingMode(false);
                               } else {
-                                toggleTeachingMode(true);
+                                final batteryController =
+                                    Get.find<BatteryController>();
+                                final user = batteryController
+                                    .batteryModel.value?.data?.first.user;
+                                final userId = user?.id ?? 0;
+                                final robotId = batteryController.roboId;
 
-                                openEduTara();
+                                if (userId == 7 || robotId == "RB6") {
+                                  toggleTeachingMode(true);
+                                  openEduTara(userId);
+                                } else {
+                                  Fluttertoast.showToast(
+                                    msg:
+                                        "Access denied! Only user akhil allowed.",
+                                    backgroundColor: Colors.red,
+                                    textColor: Colors.white,
+                                  );
+                                }
                               }
                             },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.deepPurple,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 14),
-                            ),
-                            child: const Text(
-                              "Switch",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
+                            borderRadius: BorderRadius.circular(12),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
                                 color: Colors.white,
+                                borderRadius: BorderRadius.circular(12),
+                                border: Border.all(color: Colors.black12),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.1),
+                                    blurRadius: 6,
+                                    offset: Offset(0, 3),
+                                  ),
+                                ],
+                              ),
+                              child: const Text(
+                                "Switch",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
                               ),
                             ),
                           ),
                         ),
+
                       ],
                     ),
                   ],
@@ -481,125 +432,4 @@ class _ListofModeState extends State<ListofMode> {
       },
     );
   }
-
-  // Widget buildInfoCard2(String title) {
-  //   final Size size = MediaQuery.of(context).size;
-  //   return Ink(
-  //     decoration: BoxDecoration(
-  //       color: Colors.white,
-  //       borderRadius: BorderRadius.circular(20.r),
-  //       border: Border.all(color: Colors.blueGrey.shade300, width: 1),
-  //       boxShadow: [
-  //         BoxShadow(
-  //           color: Colors.white,
-  //           spreadRadius: 0.01,
-  //           offset: Offset(0, 0),
-  //         ),
-  //       ],
-  //     ),
-  //     width: size.width * 0.25,
-  //     height: size.height * 0.080,
-  //     child: Center(
-  //       child: Text(
-  //         title.toUpperCase(),
-  //         style: GoogleFonts.poppins(
-  //           color: Colors.black,
-  //           fontSize: 18.h,
-  //           fontWeight: FontWeight.bold,
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // void showNavigationListDialog(BuildContext context) {
-  //   final controller = Get.find<NavigateController>();
-  //   controller.navigateData(); // fetch data when dialog opens
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return Dialog(
-  //         backgroundColor: Colors.white,
-  //         shape:
-  //             RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-  //         child: Container(
-  //           padding: const EdgeInsets.all(16),
-  //           constraints: BoxConstraints(
-  //             maxHeight: MediaQuery.of(context).size.height * 0.7,
-  //             minWidth: MediaQuery.of(context).size.width * 0.8,
-  //           ),
-  //           child: Column(
-  //             mainAxisSize: MainAxisSize.min,
-  //             children: [
-  //               Text(
-  //                 "Select Class",
-  //                 style: GoogleFonts.poppins(
-  //                   fontSize: 20,
-  //                   fontWeight: FontWeight.bold,
-  //                 ),
-  //               ),
-  //               const SizedBox(height: 16),
-  //               Expanded(
-  //                 child: GetX<NavigateController>(
-  //                   builder: (controller) {
-  //                     if (controller.isLoading.value) {
-  //                       return const Center(
-  //                         child: CircularProgressIndicator(color: Colors.blue),
-  //                       );
-  //                     }
-
-  //                     final classList = controller.dataList
-  //                         .where((item) =>
-  //                             item?.name?.toLowerCase().contains("class") ??
-  //                             false)
-  //                         .toList();
-
-  //                     if (classList.isEmpty) {
-  //                       return const Center(child: Text("No classes found"));
-  //                     }
-
-  //                     return SingleChildScrollView(
-  //                       child: Wrap(
-  //                         children: List.generate(
-  //                           classList.length,
-  //                           (index) {
-  //                             final item = classList[index];
-  //                             return Padding(
-  //                               padding: const EdgeInsets.all(6),
-  //                               child: Material(
-  //                                 color: Colors.transparent,
-  //                                 child: InkWell(
-  //                                   onTap: () {
-  //                                     Navigator.pop(context);
-  //                                     navigateToLocationByName(item?.id ?? 0);
-  //                                   },
-  //                                   borderRadius: BorderRadius.circular(20),
-  //                                   splashColor: Colors.blue,
-  //                                   highlightColor:
-  //                                       Colors.green.withOpacity(0.3),
-  //                                   child: buildInfoCard2(item?.name ?? ''),
-  //                                 ),
-  //                               ),
-  //                             );
-  //                           },
-  //                         ),
-  //                       ),
-  //                     );
-  //                   },
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
-
-  // void navigateToLocationByName(int classId) async {
-  //   Map<String, dynamic> response = await ApiServices.destination(id: classId);
-  //   if (response['status'] == 'ok') {
-  //     toggleTeachingMode(!isTeachingMode);
-  //   }
-  // }
 }

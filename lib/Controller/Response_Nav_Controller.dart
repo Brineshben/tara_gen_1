@@ -37,7 +37,7 @@ class ResponseNavController extends GetxController {
 
       final message = responseModel.message ?? "no message";
 
-      if (message != "no message") {
+      if (message != "no message" && message != "home") {
         isNavigationDialogOpen = true;
         lastShownMessage = message;
         await Get.dialog(
