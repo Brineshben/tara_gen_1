@@ -133,6 +133,8 @@ class ApiConstants {
   static String navigationSubmit = "/full_tour/create/";
   static String robotresponsefornavpopupupdate = "/enquiry/robot/message/post/";
   static String robotresponsefornav = "/robot/button/clicked/";
+  static String createSpeak ="/speaking/create/";
+  static String createGift = "/gift/create/";
 }
 
 /// Function to fetch the IP address from API and update baseUrl1

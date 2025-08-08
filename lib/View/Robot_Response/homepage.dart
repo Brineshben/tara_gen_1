@@ -11,6 +11,7 @@ import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/communication_status.dart';
 import 'package:ihub/Utils/header.dart';
+import 'package:ihub/Utils/toast.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Robot_Response/Navigation.dart';
 import 'package:ihub/View/Robot_Response/password_page.dart';
@@ -45,10 +46,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
     Get.find<BackgroudController>().backgroundModel.value = null;
 
-
     Get.find<BatteryController>().fetchBattery(
-      Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
-    );
+        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
@@ -56,8 +55,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
-      );
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+          context);
 
       // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
@@ -74,7 +73,8 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
       // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
-      Get.find<ResponseNavController>().fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
+      Get.find<ResponseNavController>()
+          .fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
 
       Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
       if (resp['status'] == true) {
@@ -143,183 +143,175 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
                   );
                 },
               ),
-              GestureDetector(
-                onDoubleTap: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => AboutRobot()),
-                  // );
-                },
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 30, left: 20),
-                          child: Container(
-                            width: 200,
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(40),
-                              border: Border.all(color: Colors.blue),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.shade400,
-                                  spreadRadius: 1,
-                                  blurRadius: 5,
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onLongPress: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => RobotInfo(),
-                                      ),
-                                    );
-                                  },
-                                  child: CircleAvatar(
-                                    radius: 30.r,
-                                    backgroundColor: Colors.black,
-                                    child: ClipOval(
-                                      child: Image.asset(
-                                        "assets/taraLogo.png",
-                                        width: 100.w,
-                                        height: 100.h,
-                                      ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30, left: 20),
+                        child: Container(
+                          width: 200,
+                          padding: const EdgeInsets.all(3),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(40),
+                            border: Border.all(color: Colors.blue),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.shade400,
+                                spreadRadius: 1,
+                                blurRadius: 5,
+                              ),
+                            ],
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              GestureDetector(
+                                onLongPress: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => RobotInfo(),
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 30.r,
+                                  backgroundColor: Colors.black,
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      "assets/taraLogo.png",
+                                      width: 100.w,
+                                      height: 100.h,
                                     ),
                                   ),
                                 ),
-                                SizedBox(width: 5),
-                                Stack(
-                                  children: [
-                                    Image.asset(
-                                      "assets/logo1.png",
-                                      width: 130,
-                                    ),
-                                    Positioned(
-                                      top: 6,
-                                      left: 7,
-                                      child: Text(
-                                        "POWERED BY",
-                                        style: TextStyle(
-                                          fontSize: 5,
-                                          fontWeight: FontWeight.bold,
-                                        ),
+                              ),
+                              SizedBox(width: 5),
+                              Stack(
+                                children: [
+                                  Image.asset(
+                                    "assets/logo1.png",
+                                    width: 130,
+                                  ),
+                                  Positioned(
+                                    top: 6,
+                                    left: 7,
+                                    child: Text(
+                                      "POWERED BY",
+                                      style: TextStyle(
+                                        fontSize: 5,
+                                        fontWeight: FontWeight.bold,
                                       ),
                                     ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                                  ),
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                        Spacer(),
-                        Header(
-                          isBack: false,
-                          screenName: '',
-                        ),
-                      ],
-                    ),
+                      ),
+                      Spacer(),
+                      Header(
+                        isBack: false,
+                        screenName: '',
+                      ),
+                    ],
+                  ),
 
-                    // GetX<Enquirylistcontroller>(
-                    //   builder: (Enquirylistcontroller controller) {
-                    //     if (controller.isLoading.value) {
-                    //       return Container(
-                    //         margin: EdgeInsets.only(
-                    //             left: 20.w,
-                    //             top: 10.h,
-                    //             right: 20.w,
-                    //             bottom: 350.h),
-                    //         child: Wrap(
-                    //           spacing: 10.w,
-                    //           runSpacing: 10.h,
-                    //           children: List.generate(
-                    //             4,
-                    //             (index) => Shimmer.fromColors(
-                    //               baseColor: Colors.grey[400]!,
-                    //               highlightColor: Colors.grey[200]!,
-                    //               child: Column(
-                    //                 children: [
-                    //                   Container(
-                    //                     height:
-                    //                         MediaQuery.of(context).size.width *
-                    //                             0.06,
-                    //                     width:
-                    //                         MediaQuery.of(context).size.width *
-                    //                             0.06,
-                    //                     decoration: BoxDecoration(
-                    //                       color: Colors.white,
-                    //                       borderRadius:
-                    //                           BorderRadius.circular(25.r),
-                    //                     ),
-                    //                   ),
-                    //                   SizedBox(height: 10),
-                    //                   Container(
-                    //                     width:
-                    //                         MediaQuery.of(context).size.width *
-                    //                             0.15,
-                    //                     height:
-                    //                         MediaQuery.of(context).size.height *
-                    //                             0.060,
-                    //                     decoration: BoxDecoration(
-                    //                       color: Colors.white.withOpacity(0.2),
-                    //                       borderRadius:
-                    //                           BorderRadius.circular(30.r),
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               ),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       );
-                    //     } else {
-                    //       return Container(
-                    //         margin: EdgeInsets.only(
-                    //             left: 20.w,
-                    //             top: 10.h,
-                    //             right: 20.w,
-                    //             bottom: 350.h),
-                    //         child: Wrap(
-                    //           spacing: 10.w,
-                    //           runSpacing: 10.h,
-                    //           children: List.generate(
-                    //             controller.enquiryData.length,
-                    //             (index) => GestureDetector(
-                    //               onTap: () {
-                    //                 Navigator.push(context, MaterialPageRoute(
-                    //                   builder: (context) {
-                    //                     return Subcategory(
-                    //                       enquiry: controller
-                    //                               .enquiryData[index].id ??
-                    //                           0,
-                    //                       data: controller
-                    //                               .enquiryData[index].heading ??
-                    //                           "",
-                    //                     );
-                    //                   },
-                    //                 ));
-                    //               },
-                    //               child: buildInfoCard2(
-                    //                   "${controller.enquiryData[index].heading?.toUpperCase()}",
-                    //                   "${controller.enquiryData[index].logo}"),
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       );
-                    //     }
-                    //   },
-                    // )
-                  ],
-                ),
+                  // GetX<Enquirylistcontroller>(
+                  //   builder: (Enquirylistcontroller controller) {
+                  //     if (controller.isLoading.value) {
+                  //       return Container(
+                  //         margin: EdgeInsets.only(
+                  //             left: 20.w,
+                  //             top: 10.h,
+                  //             right: 20.w,
+                  //             bottom: 350.h),
+                  //         child: Wrap(
+                  //           spacing: 10.w,
+                  //           runSpacing: 10.h,
+                  //           children: List.generate(
+                  //             4,
+                  //             (index) => Shimmer.fromColors(
+                  //               baseColor: Colors.grey[400]!,
+                  //               highlightColor: Colors.grey[200]!,
+                  //               child: Column(
+                  //                 children: [
+                  //                   Container(
+                  //                     height:
+                  //                         MediaQuery.of(context).size.width *
+                  //                             0.06,
+                  //                     width:
+                  //                         MediaQuery.of(context).size.width *
+                  //                             0.06,
+                  //                     decoration: BoxDecoration(
+                  //                       color: Colors.white,
+                  //                       borderRadius:
+                  //                           BorderRadius.circular(25.r),
+                  //                     ),
+                  //                   ),
+                  //                   SizedBox(height: 10),
+                  //                   Container(
+                  //                     width:
+                  //                         MediaQuery.of(context).size.width *
+                  //                             0.15,
+                  //                     height:
+                  //                         MediaQuery.of(context).size.height *
+                  //                             0.060,
+                  //                     decoration: BoxDecoration(
+                  //                       color: Colors.white.withOpacity(0.2),
+                  //                       borderRadius:
+                  //                           BorderRadius.circular(30.r),
+                  //                     ),
+                  //                   ),
+                  //                 ],
+                  //               ),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     } else {
+                  //       return Container(
+                  //         margin: EdgeInsets.only(
+                  //             left: 20.w,
+                  //             top: 10.h,
+                  //             right: 20.w,
+                  //             bottom: 350.h),
+                  //         child: Wrap(
+                  //           spacing: 10.w,
+                  //           runSpacing: 10.h,
+                  //           children: List.generate(
+                  //             controller.enquiryData.length,
+                  //             (index) => GestureDetector(
+                  //               onTap: () {
+                  //                 Navigator.push(context, MaterialPageRoute(
+                  //                   builder: (context) {
+                  //                     return Subcategory(
+                  //                       enquiry: controller
+                  //                               .enquiryData[index].id ??
+                  //                           0,
+                  //                       data: controller
+                  //                               .enquiryData[index].heading ??
+                  //                           "",
+                  //                     );
+                  //                   },
+                  //                 ));
+                  //               },
+                  //               child: buildInfoCard2(
+                  //                   "${controller.enquiryData[index].heading?.toUpperCase()}",
+                  //                   "${controller.enquiryData[index].logo}"),
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     }
+                  //   },
+                  // )
+                ],
               ),
               GetX<RobotresponseapiController>(
                 builder: (controller) {
@@ -371,6 +363,491 @@ class _HomepageState extends State<Homepage> with WidgetsBindingObserver {
           floatingActionButton: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 40),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              var response =
+                                  await ApiServices.createGift(text: "gift");
+                              if (response['status'] == "ok") {
+                                showTopRightToast(
+                                  color: Colors.green,
+                                  context: context,
+                                  message: "Gift created and old data removed",
+                                );
+                              } else {
+                                showTopRightToast(
+                                  color: Colors.orange,
+                                  context: context,
+                                  message: "Something went wrong. Try again!",
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color.fromARGB(255, 255, 255, 255),
+                              foregroundColor: Colors.black,
+                              elevation: 4,
+                              shadowColor: Color(0xFF6C5CE7).withOpacity(0.3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.card_giftcard_rounded,
+                                  size: 24,
+                                ),
+                                SizedBox(width: 12),
+                                Text(
+                                  'Gift',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              var response =
+                                  await ApiServices.createGift(text: "random");
+                              if (response['status'] == "ok") {
+                                showTopRightToast(
+                                  color: Colors.green,
+                                  context: context,
+                                  message:
+                                      "Random created (replaced previous if any)",
+                                );
+                              } else {
+                                showTopRightToast(
+                                  color: Colors.orange,
+                                  context: context,
+                                  message: "Something went wrong. Try again!",
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color.fromARGB(255, 255, 255, 255),
+                              foregroundColor: Colors.black,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.shuffle,
+                                  size: 24,
+                                ),
+                                SizedBox(width: 12),
+                                Text(
+                                  'Random',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              var response =
+                                  await ApiServices.createGift(text: "home");
+                              if (response['status'] == "ok") {
+                                showTopRightToast(
+                                  color: Colors.green,
+                                  context: context,
+                                  message:
+                                      "Home created (replaced previous if any)",
+                                );
+                              } else {
+                                showTopRightToast(
+                                  color: Colors.orange,
+                                  context: context,
+                                  message: "Something went wrong. Try again!",
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor:
+                                  Color.fromARGB(255, 255, 255, 255),
+                              foregroundColor: Colors.black,
+                              elevation: 4,
+                              shadowColor: Color(0xFF00B894).withOpacity(0.3),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  Icons.home_rounded,
+                                  size: 24,
+                                ),
+                                SizedBox(width: 12),
+                                Text(
+                                  'Home',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            String robotSpeech = '';
+                            showDialog(
+                              context: context,
+                              barrierDismissible: true,
+                              builder: (context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28)),
+                                  backgroundColor: Colors.transparent,
+                                  elevation: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topLeft,
+                                        end: Alignment.bottomRight,
+                                        colors: [
+                                          Colors.white,
+                                          Colors.grey[50]!,
+                                        ],
+                                      ),
+                                      borderRadius: BorderRadius.circular(28),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 20,
+                                          offset: Offset(0, 10),
+                                        ),
+                                      ],
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(24),
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          // Animated robot icon container
+                                          Container(
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              gradient: LinearGradient(
+                                                begin: Alignment.topLeft,
+                                                end: Alignment.bottomRight,
+                                                colors: [
+                                                  Colors.blue[400]!,
+                                                  Colors.purple[400]!,
+                                                ],
+                                              ),
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.blue
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 15,
+                                                  offset: Offset(0, 5),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Icon(
+                                              Icons.smart_toy_rounded,
+                                              size: 40,
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                          SizedBox(height: 16),
+
+                                          // Title with modern typography
+                                          Text(
+                                            'Robot Voice Command',
+                                            style: TextStyle(
+                                              fontSize: 24,
+                                              fontWeight: FontWeight.w700,
+                                              color: Colors.grey[800],
+                                              letterSpacing: -0.5,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8),
+                                          Text(
+                                            'Enter a message for your robot to speak',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.grey[600],
+                                              fontWeight: FontWeight.w400,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          SizedBox(height: 24),
+
+                                          // Modern text field
+                                          Container(
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.05),
+                                                  blurRadius: 10,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: TextField(
+                                              onChanged: (value) {
+                                                robotSpeech = value;
+                                              },
+                                              minLines: 1,
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey[800],
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    "What should the robot say?",
+                                                hintStyle: TextStyle(
+                                                  color: Colors.grey[400],
+                                                  fontWeight: FontWeight.w400,
+                                                ),
+                                                filled: true,
+                                                fillColor: Colors.grey[50],
+                                                contentPadding:
+                                                    EdgeInsets.symmetric(
+                                                  horizontal: 20,
+                                                  vertical: 16,
+                                                ),
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  borderSide: BorderSide.none,
+                                                ),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.blue[400]!,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(16),
+                                                  borderSide: BorderSide(
+                                                    color: Colors.grey[200]!,
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          SizedBox(height: 24),
+
+                                          // Modern button row
+                                          Row(
+                                            children: [
+                                              // Cancel button
+                                              Expanded(
+                                                child: TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(context),
+                                                  style: TextButton.styleFrom(
+                                                    padding:
+                                                        EdgeInsets.symmetric(
+                                                            vertical: 16),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              14),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Cancel',
+                                                    style: TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.w600,
+                                                      color: Colors.grey[600],
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              SizedBox(width: 12),
+
+                                              // Speak button
+                                              Expanded(
+                                                flex: 2,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                      colors: [
+                                                        Colors.blue[400]!,
+                                                        Colors.blue[600]!,
+                                                      ],
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            14),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                        color: Colors.blue
+                                                            .withOpacity(0.3),
+                                                        blurRadius: 12,
+                                                        offset: Offset(0, 4),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  child: ElevatedButton.icon(
+                                                    onPressed: () async {
+                                                      if (robotSpeech != "") {
+                                                        print(
+                                                            "Robot will speak: $robotSpeech");
+                                                        var response =
+                                                            await ApiServices
+                                                                .createSpeak(
+                                                                    text:
+                                                                        robotSpeech);
+
+                                                        if (response[
+                                                                'status'] ==
+                                                            "ok") {
+                                                          Navigator.pop(
+                                                              context);
+                                                          showTopRightToast(
+                                                            color: Colors.green,
+                                                            context: context,
+                                                            message:
+                                                                "Text created and old data removed",
+                                                          );
+                                                        } else {
+                                                          showTopRightToast(
+                                                            color:
+                                                                Colors.orange,
+                                                            context: context,
+                                                            message:
+                                                                "Something went wrong. Try again!",
+                                                          );
+                                                        }
+                                                      } else {
+                                                        showTopRightToast(
+                                                          color: Colors.red,
+                                                          context: context,
+                                                          message:
+                                                              "Please enter text to speak!",
+                                                        );
+                                                      }
+                                                    },
+                                                    icon: Icon(
+                                                      Icons
+                                                          .record_voice_over_rounded,
+                                                      size: 20,
+                                                    ),
+                                                    label: Text(
+                                                      'Speak Now',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      foregroundColor:
+                                                          Colors.white,
+                                                      elevation: 0,
+                                                      shadowColor:
+                                                          Colors.transparent,
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(14),
+                                                      ),
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              vertical: 16),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                            foregroundColor: Colors.black,
+                            elevation: 4,
+                            shadowColor: Color(0xFF00B894).withOpacity(0.3),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.record_voice_over,
+                                  color: Colors.black, size: 20),
+                              SizedBox(width: 8),
+                              Text(
+                                "Speak",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
               Row(
                 children: [
                   Padding(

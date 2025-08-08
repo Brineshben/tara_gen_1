@@ -25,7 +25,6 @@ class BatteryController extends GetxController {
     isError.value = false;
   }
 
-  RxBool isRotale = false.obs;
   RxInt batteryStatus = 0.obs;
   Future<void> fetchBattery(int userID, BuildContext context) async {
     isLoading.value = true;

@@ -721,8 +721,35 @@ class ApiServices {
     return json.decode(respString);
   }
 
-  ///Send Apikey
+  static Future<Map<String, dynamic>> createSpeak({
+    required String text,
+  }) async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.createSpeak}";
+    Map apiBody = {"text": text};
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    return json.decode(respString);
+  }
 
+
+
+  static Future<Map<String, dynamic>> createGift({
+    required String text,
+  }) async {
+    String url = "${ApiConstants.baseUrl1}${ApiConstants.createGift}";
+    Map apiBody = {"text": text};
+    var request = http.Request('POST', Uri.parse(url));
+    request.body = (json.encode(apiBody));
+    request.headers.addAll({'Content-Type': 'application/json'});
+    http.StreamedResponse response = await request.send();
+    var respString = await response.stream.bytesToString();
+    return json.decode(respString);
+  }
+
+  ///Send Apikey
   static Future<Map<String, dynamic>> ApiKey({
     required String Data,
   }) async {
