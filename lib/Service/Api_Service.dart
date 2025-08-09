@@ -19,7 +19,7 @@ class ApiServices {
     required String userName,
     required String psw,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.login}";
+    String url = "${ApiConstants.globalip}${ApiConstants.login}";
     print(url);
     Map apiBody = {
       "username": userName,
@@ -44,7 +44,7 @@ class ApiServices {
 
   ///logout
   static Future<Map<String, dynamic>> logout() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.poweroff}";
+    String url = "${ApiConstants.localIp}${ApiConstants.poweroff}";
     var request = http.Request('POST', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -53,7 +53,7 @@ class ApiServices {
 
   ///Reboot
   static Future<Map<String, dynamic>> Reboot(bool data) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.reboot}";
+    String url = "${ApiConstants.localIp}${ApiConstants.reboot}";
     print("reboot$url");
     Map apiBody = {
       "status": data,
@@ -69,7 +69,7 @@ class ApiServices {
 
     static Future<Map<String, dynamic>> checkTeachingMode() async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.getModeStatus}";
+      String url = "${ApiConstants.localIp}${ApiConstants.getModeStatus}";
 
       final response = await http.get(Uri.parse(url));
 
@@ -86,7 +86,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> changeTeachingMode(
       {required bool status}) async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.changeTeachingmode}";
+      String url = "${ApiConstants.localIp}${ApiConstants.changeTeachingmode}";
 
       final body = jsonEncode({"status": status});
 
@@ -110,7 +110,7 @@ class ApiServices {
   
   static Future<Map<String, dynamic>> uploadPDF(File file) async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.uploadTeachingPdf}";
+      String url = "${ApiConstants.localIp}${ApiConstants.uploadTeachingPdf}";
 
       final request = http.MultipartRequest('POST', Uri.parse(url));
       request.files.add(
@@ -130,7 +130,7 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> getLatestPDF() async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.getTeachingPdf}";
+      String url = "${ApiConstants.localIp}${ApiConstants.getTeachingPdf}";
 
       final response = await http.get(
         Uri.parse(url),
@@ -148,7 +148,7 @@ class ApiServices {
 
   ///logoutoffline
   static Future<Map<String, dynamic>> logoutoffline(bool data) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.poweroffoffline}";
+    String url = "${ApiConstants.localIp}${ApiConstants.poweroffoffline}";
     print("logoutofflinelogoutoffline$url");
     Map apiBody = {
       "status": data,
@@ -170,7 +170,7 @@ class ApiServices {
   ///destination
   static Future<Map<String, dynamic>> destination({required int id}) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.navigationdestinationoffline}$id/";
+        "${ApiConstants.localIp}${ApiConstants.navigationdestinationoffline}$id/";
 
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
@@ -181,7 +181,7 @@ class ApiServices {
 
   ///robotbasestatus
   static Future<Map<String, dynamic>> robotbasestatus() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.basestatusoffline}";
+    String url = "${ApiConstants.localIp}${ApiConstants.basestatusoffline}";
     print('Api robotbasestatus--------${url}--------------');
 
     // var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
@@ -202,7 +202,7 @@ class ApiServices {
   ///robotResponsee offline
 
   static Future<Map<String, dynamic>> robotResponsee() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.robotResponse}";
+    String url = "${ApiConstants.localIp}${ApiConstants.robotResponse}";
     print("urlspeaking$url");
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
@@ -213,7 +213,7 @@ class ApiServices {
 
   ///check unknown user
   static Future<Map<String, dynamic>> checkUnknown() async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.checkunknown}";
+    String url = "${ApiConstants.globalip}${ApiConstants.checkunknown}";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -223,7 +223,7 @@ class ApiServices {
   ///check Session
 
   static Future<Map<String, dynamic>> session() async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.session}";
+    String url = "${ApiConstants.globalip}${ApiConstants.session}";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -232,7 +232,7 @@ class ApiServices {
 
   ///check sessionid
   static Future<Map<String, dynamic>> sessionid() async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.sessionid}";
+    String url = "${ApiConstants.globalip}${ApiConstants.sessionid}";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -272,7 +272,7 @@ class ApiServices {
 //     }
 
   static Future<Map<String, dynamic>> background({required int userId}) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.backGround}$userId/";
+    String url = "${ApiConstants.globalip}${ApiConstants.backGround}$userId/";
     print("backgrounddata $url");
     try {
       var request = http.Request('GET', Uri.parse(url));
@@ -293,7 +293,7 @@ class ApiServices {
     required String purPose,
   }) async {
     String url =
-        "${ApiConstants.baseUrl}${ApiConstants.customerDetails}$sessionId/";
+        "${ApiConstants.globalip}${ApiConstants.customerDetails}$sessionId/";
     Map apiBody = {"username": userName, "purpose": purPose};
     var request = http.Request('PATCH', Uri.parse(url));
     request.body = (json.encode(apiBody));
@@ -308,7 +308,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> updateStatus({
     required bool status,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.updateStatus}";
+    String url = "${ApiConstants.globalip}${ApiConstants.updateStatus}";
     Map apiBody = {"status": status};
     // try {
     var request = http.Request('POST', Uri.parse(url));
@@ -343,7 +343,7 @@ class ApiServices {
     required String robotId,
   }) async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.delteMap}$robotId/";
+      String url = "${ApiConstants.localIp}${ApiConstants.delteMap}$robotId/";
       print("DELETE URL: $url");
 
       final response = await http.delete(
@@ -369,7 +369,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> battery({
     required int userId,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.battery}$userId/";
+    String url = "${ApiConstants.globalip}${ApiConstants.battery}$userId/";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -382,7 +382,7 @@ class ApiServices {
 
   ///check battery offline
   static Future<Map<String, dynamic>> batteryOffline() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.batteryOffline}";
+    String url = "${ApiConstants.localIp}${ApiConstants.batteryOffline}";
     print("urlllllsddlll$url");
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
@@ -394,7 +394,7 @@ class ApiServices {
   ///check loading
   static Future<Map<String, dynamic>> loading() async {
     try {
-      String url = "${ApiConstants.baseUrl1}${ApiConstants.loading}";
+      String url = "${ApiConstants.localIp}${ApiConstants.loading}";
       print("urllllllll  $url");
       var request = http.Request('GET', Uri.parse(url));
       http.StreamedResponse response = await request.send();
@@ -407,7 +407,7 @@ class ApiServices {
   }
 
   static Future<Map<String, dynamic>> getBatteryStatus() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.getBatteryStatus}";
+    String url = "${ApiConstants.localIp}${ApiConstants.getBatteryStatus}";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -417,7 +417,7 @@ class ApiServices {
 
 // map restart
   static Future<Map<String, dynamic>> mapRestart() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.fetch_refresh_status}";
+    String url = "${ApiConstants.localIp}${ApiConstants.fetch_refresh_status}";
 
     Map apiBody = {"status": true};
     var request = http.Request('POST', Uri.parse(url));
@@ -434,7 +434,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> EnquiryList({
     required int userId,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.enquiryList}$userId";
+    String url = "${ApiConstants.globalip}${ApiConstants.enquiryList}$userId";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -448,7 +448,7 @@ class ApiServices {
     required int enquiry,
   }) async {
     String url =
-        "${ApiConstants.baseUrl}${ApiConstants.enquiryListSub}${userId}&enquiry_id=$enquiry";
+        "${ApiConstants.globalip}${ApiConstants.enquiryListSub}${userId}&enquiry_id=$enquiry";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -461,7 +461,7 @@ class ApiServices {
     required int volume,
   }) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.volumeoffline}${roboid}/${volume}/";
+        "${ApiConstants.localIp}${ApiConstants.volumeoffline}${roboid}/${volume}/";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -474,7 +474,7 @@ class ApiServices {
     required String roboid,
   }) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.volumeinitialoffline}${roboid}/";
+        "${ApiConstants.localIp}${ApiConstants.volumeinitialoffline}${roboid}/";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -488,7 +488,7 @@ class ApiServices {
     required String heading,
     required String description,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.enquiryListSubdetails}";
+    String url = "${ApiConstants.globalip}${ApiConstants.enquiryListSubdetails}";
     Map apiBody = {
       "subheading": subheading,
       "heading": heading,
@@ -507,7 +507,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> navigate({
     required int userId,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.navigate}$userId";
+    String url = "${ApiConstants.globalip}${ApiConstants.navigate}$userId";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -518,7 +518,7 @@ class ApiServices {
 
   static Future<Map<String, dynamic>> navigateoffline() async {
     // String url = "http://192.168.1.36:8000/${ApiConstants.navigationoffline}";
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationoffline}";
+    String url = "${ApiConstants.localIp}${ApiConstants.navigationoffline}";
     print("Navigationoffline$url");
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
@@ -530,7 +530,7 @@ class ApiServices {
   ///check Navigationoffline
 
   static Future<Map<String, dynamic>> setHOme() async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.setHome}";
+    String url = "${ApiConstants.localIp}${ApiConstants.setHome}";
     Map apiBody = {
       "status": true,
     };
@@ -552,7 +552,7 @@ class ApiServices {
     // String url =
     //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.navigationEditoffline}$userId/";
+        "${ApiConstants.localIp}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {
       "description": description,
       "name1": name,
@@ -575,7 +575,7 @@ class ApiServices {
     required String message,
   }) async {
     String url =
-        "${ApiConstants.baseUrl}${ApiConstants.robotresponsefornavpopupupdate}$userId/";
+        "${ApiConstants.globalip}${ApiConstants.robotresponsefornavpopupupdate}$userId/";
     Map apiBody = {
       "message": message,
     };
@@ -593,7 +593,7 @@ class ApiServices {
     required int userId,
     required String Password,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.password}$userId/";
+    String url = "${ApiConstants.globalip}${ApiConstants.password}$userId/";
     Map apiBody = {
       "password": Password,
     };
@@ -612,7 +612,7 @@ class ApiServices {
     required String userId,
     required String employeeID,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.addEmployee}$userId/";
+    String url = "${ApiConstants.globalip}${ApiConstants.addEmployee}$userId/";
     Map apiBody = {"employee_id": employeeID};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
@@ -631,7 +631,7 @@ class ApiServices {
     required String designatioon,
   }) async {
     String url =
-        "${ApiConstants.baseUrl}${ApiConstants.addEmployeeDetails}$employeeID/";
+        "${ApiConstants.globalip}${ApiConstants.addEmployeeDetails}$employeeID/";
     Map apiBody = {
       "employee_name": employeeName,
       "designation": designatioon,
@@ -649,7 +649,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> stopTalk({
     required bool status,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.stoptalk}";
+    String url = "${ApiConstants.globalip}${ApiConstants.stoptalk}";
     Map apiBody = {"status": status};
     // try {
     var request = http.Request('POST', Uri.parse(url));
@@ -664,7 +664,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> train({
     required bool status,
   }) async {
-    String url = "${ApiConstants.baseUrl}${ApiConstants.stoptalk}";
+    String url = "${ApiConstants.globalip}${ApiConstants.stoptalk}";
     Map apiBody = {"status": status};
     // try {
     var request = http.Request('POST', Uri.parse(url));
@@ -680,7 +680,7 @@ class ApiServices {
     required String userId,
   }) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.robotresponsepopup}$userId/";
+        "${ApiConstants.localIp}${ApiConstants.robotresponsepopup}$userId/";
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -694,7 +694,7 @@ class ApiServices {
     required bool status,
   }) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.robotresponsefornav}/$RobotID/";
+        "${ApiConstants.localIp}${ApiConstants.robotresponsefornav}/$RobotID/";
     Map apiBody = {"status": status};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
@@ -709,7 +709,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> navigationSubmit({
     required List<int> navigationData,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.navigationSubmit}";
+    String url = "${ApiConstants.localIp}${ApiConstants.navigationSubmit}";
 
     print("navigations...$url");
     Map apiBody = {"navigations": navigationData};
@@ -726,7 +726,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> ApiKey({
     required String Data,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.apikey}";
+    String url = "${ApiConstants.localIp}${ApiConstants.apikey}";
 
     Map apiBody = {"key": Data};
     var request = http.Request('POST', Uri.parse(url));
@@ -742,7 +742,7 @@ class ApiServices {
   static Future<Map<String, dynamic>> FulltourNavigation({
     required bool Data,
   }) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.fullTour}";
+    String url = "${ApiConstants.localIp}${ApiConstants.fullTour}";
 
     Map apiBody = {"status": Data};
     var request = http.Request('POST', Uri.parse(url));
@@ -755,7 +755,7 @@ class ApiServices {
 
 // GO CHARGING DOK
   static setChargingStatus(bool status) async {
-    String url = "${ApiConstants.baseUrl1}${ApiConstants.chargingDock}";
+    String url = "${ApiConstants.localIp}${ApiConstants.chargingDock}";
     final response = await http.post(
       headers: {
         'Content-Type': 'application/json',
@@ -770,7 +770,7 @@ class ApiServices {
 // DELETE DESCRIPTION
   static deleteDescription(int id) async {
     String url =
-        "${ApiConstants.baseUrl1}${ApiConstants.deactivate_description}";
+        "${ApiConstants.localIp}${ApiConstants.deactivate_description}";
     final response = await http.post(
       Uri.parse(url),
       body: {'pk': id.toString()},
@@ -794,7 +794,7 @@ class ApiServices {
   // get language
   static Future<Map<String, dynamic>> fetchLanguages() async {
     try {
-      String url = "${ApiConstants.baseUrl}${ApiConstants.getLanguage}";
+      String url = "${ApiConstants.globalip}${ApiConstants.getLanguage}";
       final response = await http.get(Uri.parse(url));
       print('getlanguagelist${response.body}');
       return jsonDecode(response.body);
@@ -808,7 +808,7 @@ class ApiServices {
     required String robotId,
   }) async {
     try {
-      String url = "${ApiConstants.baseUrl}${ApiConstants.setLanguage}";
+      String url = "${ApiConstants.globalip}${ApiConstants.setLanguage}";
       final body = jsonEncode({
         robotId: {
           "language": language,

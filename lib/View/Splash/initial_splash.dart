@@ -8,6 +8,7 @@ import 'package:ihub/Service/sharedPreference.dart';
 import 'package:ihub/Utils/toast.dart';
 import 'package:ihub/View/Login_Page/login.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
+import 'package:ihub/View/welcome/welcome_screen.dart';
 import 'package:lottie/lottie.dart';
 
 class InitialSplashScreen extends StatefulWidget {
@@ -33,7 +34,7 @@ class _InitialSplashScreenState extends State<InitialSplashScreen> {
         await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
 
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Homepage()),
+          MaterialPageRoute(builder: (context) => WelcomeScreen()),
           (route) => false,
         );
       } else {

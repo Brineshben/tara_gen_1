@@ -163,7 +163,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
     var request = await http.MultipartRequest(
       'POST',
-      Uri.parse('${ApiConstants.baseUrl1}/stcm_files/create/'),
+      Uri.parse('${ApiConstants.localIp}/stcm_files/create/'),
     );
 
     request.files.add(

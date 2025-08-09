@@ -6,7 +6,7 @@ import 'package:ihub/Utils/api_constant.dart';
 class DescriptionService {
   static Future<DescriptionModel> fetchDescription() async {
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.description}");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.description}");
 
     print('urrrrrrrrrl $url');
     try {
@@ -32,7 +32,7 @@ class DescriptionService {
     required String description,
   }) async {
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.description}");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.description}");
 
     try {
       final requestBody = jsonEncode({
@@ -71,7 +71,7 @@ class DescriptionService {
     required String id,
   }) async {
     final url = Uri.parse(
-        "${ApiConstants.baseUrl1}${ApiConstants.edit_description}$id/");
+        "${ApiConstants.localIp}${ApiConstants.edit_description}$id/");
 
     try {
       final requestBody = jsonEncode({

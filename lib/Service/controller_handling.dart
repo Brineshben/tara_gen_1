@@ -7,7 +7,8 @@ import 'package:ihub/Controller/description_controller.dart';
 import 'package:ihub/Controller/language_controller.dart';
 import 'package:ihub/Controller/no_internet_controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
-import 'package:ihub/speed/controller/speed_controller.dart';
+import 'package:ihub/Controller/speed_controller.dart';
+import 'package:ihub/View/battery/controller/battery_config_controller.dart';
 
 import '../Controller/Backgroud_controller.dart';
 import '../Controller/EnquiryListController.dart';
@@ -47,13 +48,13 @@ class HandleControllers {
     Get.put(IpController());
     Get.put(FullTourControllerNew());
     Get.put(NavigateDescriptionController());
-    // Get.put(BatteryOfflineController());
     Get.put(ChargeScreenController());
     Get.put(DescriptionController());
     Get.put(PromptController());
     Get.put(SpeedController());
     Get.put(ConnectivityController());
     Get.put(LanguageController());
+    Get.put(BatteryConfigController());
   }
 
   static deleteAllGetControllers() async {
@@ -75,12 +76,12 @@ class HandleControllers {
     await Get.delete<IpController>();
     await Get.delete<FullTourControllerNew>();
     await Get.delete<NavigateDescriptionController>();
-    // await Get.delete<BatteryOfflineController>();
     await Get.delete<ChargeScreenController>();
     await Get.delete<DescriptionController>();
     await Get.delete<PromptController>();
     await Get.delete<SpeedController>();
     await Get.delete<LanguageController>();
     await Get.delete<ConnectivityController>();
+    await Get.delete<BatteryConfigController>();
   }
 }

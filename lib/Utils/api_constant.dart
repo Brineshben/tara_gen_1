@@ -25,7 +25,7 @@ class ApiConstants {
   }
 
   /// Getter for baseUrl1 (always returns the latest value)
-  static String get baseUrl1 => _baseUrl1;
+  static String get localIp => _baseUrl1;
 
   /// Update baseUrl1 in SharedPreferences and memory
   static Future<void> updateBaseUrl1(String newIp) async {
@@ -41,7 +41,7 @@ class ApiConstants {
   // static String baseUrl = "http://54.163.176.141/";
   // static String baseUrl = "http://54.211.212.147";
   // static String baseUrl = "http://54.152.17.211";
-  static String baseUrl = "http://3.88.46.127";
+  static String globalip = "http://3.88.46.127";
 
   static String addUrl = "/url/add/";
   static String getUrl = "/url/list/";
@@ -151,11 +151,11 @@ Future<void> fetchAndUpdateBaseUrl() async {
     print("objectresponse$data");
 
     String url =
-        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/";
+        "${ApiConstants.globalip}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/";
 
     print("url${url}");
     final response = await http.get(Uri.parse(
-        "${ApiConstants.baseUrl}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/"));
+        "${ApiConstants.globalip}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/"));
     print(
         'robo id ${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId}');
     // print("objectresfgdfghponse$url");

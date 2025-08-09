@@ -7,7 +7,7 @@ import 'package:ihub/Utils/api_constant.dart';
 class PromptService {
   // FETCH PROMTP
   static Future<Map<String, dynamic>>? fetchPrompt() async {
-    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptget}");
+    final url = Uri.parse("${ApiConstants.localIp}${ApiConstants.promptget}");
     var request = http.Request('GET', url);
     request.headers.addAll({'Content-Type': 'application/json'});
 
@@ -22,7 +22,7 @@ class PromptService {
     required String prompt,
   }) async {
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptcreate}");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.promptcreate}");
     final response = await http.post(
       url,
       body: jsonEncode({'command_prompt': prompt}),
@@ -41,7 +41,7 @@ class PromptService {
   }) async {
     print('promtpID $id');
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.promptUpdate}$id/");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.promptUpdate}$id/");
 
     try {
       final response = await http.put(
@@ -64,7 +64,7 @@ class PromptService {
     try {
       print('promptId $promptId');
       final url = Uri.parse(
-          "${ApiConstants.baseUrl1}${ApiConstants.getqaLsit}$promptId/");
+          "${ApiConstants.localIp}${ApiConstants.getqaLsit}$promptId/");
       print('qalistl $url');
 
       var request = http.Request('GET', url);
@@ -88,7 +88,7 @@ class PromptService {
     required String question,
     required String answer,
   }) async {
-    final url = Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.createQA}");
+    final url = Uri.parse("${ApiConstants.localIp}${ApiConstants.createQA}");
 
     final response = await http.post(
       url,
@@ -108,7 +108,7 @@ class PromptService {
     required String answer,
   }) async {
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.updateQA}$id/");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.updateQA}$id/");
 
     final response = await http.put(
       url,
@@ -123,7 +123,7 @@ class PromptService {
   // DELETE QA
   static Future<Map<String, dynamic>?> deleteQA(String id) async {
     final url =
-        Uri.parse("${ApiConstants.baseUrl1}${ApiConstants.deleteQA}$id/");
+        Uri.parse("${ApiConstants.localIp}${ApiConstants.deleteQA}$id/");
     print('Delete URL: $url');
 
     var request = http.Request('DELETE', url);

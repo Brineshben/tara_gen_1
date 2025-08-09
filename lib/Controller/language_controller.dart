@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/toast.dart';
 
 class LanguageController extends GetxController {
   final RxList<String> languages = <String>[].obs; // List of languages
@@ -38,41 +39,29 @@ class LanguageController extends GetxController {
     try {
       final response = await ApiServices.setLanguage(
         language: lang,
-        robotId: batteryController.roboId??"RB10",
+        robotId: batteryController.roboId ?? "RB10",
       );
 
       if (response['status'] == 'ok') {
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Success",
-          response['message'] ?? "Language updated successfully",
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
-        
+        showTopRightToast(
+            message: response['message'] ?? "Language updated successfully",
+            color: Colors.green,
+            context: context);
+
         Get.find<BatteryController>().fetchBattery(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,context
-        );
+            Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+            context);
       } else {
-        Get.snackbar(
-          "Failed",
-          response['message'] ?? "Something went wrong",
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        showTopRightToast(
+            message: response['message'] ?? "Something went wrong",
+            color: Colors.green,
+            context: context);
       }
     } catch (e) {
       print('updatelan $e');
 
-      Get.snackbar(
-        "Error",
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      showTopRightToast(
+          message: "Something went wrong", color: Colors.red, context: context);
     }
   }
 }

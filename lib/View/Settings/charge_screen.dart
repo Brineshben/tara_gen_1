@@ -8,7 +8,6 @@ import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
 import 'package:ihub/Utils/header.dart';
-import 'package:ihub/speed/view/speed_page.dart';
 
 class ChargeEntryView extends StatefulWidget {
   ChargeEntryView({super.key});
@@ -290,12 +289,12 @@ class _ChargeEntryViewState extends State<ChargeEntryView> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.r),
                   onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => SpeedControllerPage(),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => SpeedControllerPage(),
+                    //   ),
+                    // );
                   },
                   child: Ink(
                     width: 100,

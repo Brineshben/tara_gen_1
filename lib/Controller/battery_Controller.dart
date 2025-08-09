@@ -17,11 +17,32 @@ class BatteryController extends GetxController {
   Rx<OfflineBatteryModel?> offlineBatteryModel = Rx(null);
   bool popupshow = false;
 
+
+  RxBool onDock = RxBool(false);
+
   var roboId;
   Rx<Color> foregroundColor = Colors.white.obs;
 
+
+
+
+  Future<void> checkCharging() async {
+    try {
+      Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
+      if (resp['status'] == true) {
+        onDock.value = true;
+      } else {
+        onDock.value = false;
+      }
+
+    } catch (e) {
+      print('Error checking charging status: $e');
+      onDock.value = false;
+    }
+  }
+
   void resetStatus() {
-    isLoading.value = false;
+    isLoading.value = false;  
     isError.value = false;
   }
 

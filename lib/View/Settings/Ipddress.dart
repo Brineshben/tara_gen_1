@@ -204,7 +204,7 @@ class _IpaddressState extends State<Ipaddress> {
                               await ipController
                                   .updateIp(NewIp.text); // Update IP
                               print(
-                                  "Updated Base URL: ${ApiConstants.baseUrl1}"); // Debugging check
+                                  "Updated Base URL: ${ApiConstants.localIp}"); // Debugging check
                               Get.back(); // Navigate back
                             }
                           }, MediaQuery.of(context).size, 'SUBMIT'),

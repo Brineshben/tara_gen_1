@@ -136,7 +136,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<void> uploadImage(File imageFile) async {
     try {
       final url =
-          '${ApiConstants.baseUrl}/accounts/upload/background/${Get.find<UserAuthController>().loginData.value?.user?.id}/';
+          '${ApiConstants.globalip}/accounts/upload/background/${Get.find<UserAuthController>().loginData.value?.user?.id}/';
       print('backgroundid $url');
 
       var request = http.MultipartRequest('POST', Uri.parse(url));
