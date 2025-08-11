@@ -1,24 +1,24 @@
 import 'dart:async';
+
+import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/Backgroud_controller.dart';
-import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Controller/Response_Nav_Controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
-import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
+import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/language/view/language_screen.dart';
+import 'package:ihub/View/welcome/navigation.dart';
 import 'package:lottie/lottie.dart';
-import 'package:action_slider/action_slider.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -38,21 +38,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     // WidgetsBinding.instance.addObserver();
     _hideSystemUI();
 
-    Get.find<RobotresponseapiController>().getUrl();
+    // Get.find<RobotresponseapiController>().getUrl();
 
-    Get.find<BackgroudController>().backgroundModel.value = null;
+    // Get.find<BackgroudController>().backgroundModel.value = null;
 
-    Get.find<BatteryController>().fetchBattery(
-        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
+    // Get.find<BatteryController>().fetchBattery(
+    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
-      ApiService.fetchAndUpdateBaseUrl();
+      // ApiService.fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      Get.find<BatteryController>().fetchBattery(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
-          context);
+      // Get.find<BatteryController>().fetchBattery(
+      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+      //     context);
 
       // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
@@ -84,24 +84,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-  Timer? _debounceTimer;
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _debounceTimer?.cancel();
+  // Timer? _debounceTimer;
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  //   _debounceTimer?.cancel();
 
-    final robotresponce = Get.find<RobotresponseapiController>();
-    robotresponce.robotResponseModel.value = null;
+  //   final robotresponce = Get.find<RobotresponseapiController>();
+  //   robotresponce.robotResponseModel.value = null;
 
-    // Start new timer to delay fetchBackground
-    _debounceTimer = Timer(Duration(seconds: 5), () {
-      if (mounted) {
-        Get.find<BackgroudController>().fetchBackground(
-          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
-        );
-      }
-    });
-  }
+  //   // Start new timer to delay fetchBackground
+  //   _debounceTimer = Timer(Duration(seconds: 5), () {
+  //     if (mounted) {
+  //       Get.find<BackgroudController>().fetchBackground(
+  //         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+  //       );
+  //     }
+  //   });
+  // }
 
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -257,16 +257,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             'Discover cutting-edge work from top robotics engineers and designers, ready to bring innovation to your next intelligent machine or automation project.',
             style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Lottie.asset(
-                "assets/speak(TARA)_01.json",
-                height: MediaQuery.sizeOf(context).height * 0.3,
-                fit: BoxFit.contain,
-              ),
-            ],
-          ),
+          GetX<RobotresponseapiController>(builder: (controller) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (controller.responseData.value.speaking == true)
+                  Lottie.asset(
+                    "assets/speak.json",
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                    fit: BoxFit.contain,
+                  ),
+                if (controller.responseData.value.listening == true)
+                  Lottie.asset(
+                    "assets/Listen.json",
+                    height: MediaQuery.sizeOf(context).height * 0.3,
+                    fit: BoxFit.contain,
+                  ),
+              ],
+            );
+          }),
         ],
       ),
     );
@@ -288,12 +297,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: _menuButton(
                       label: "Battery",
                       onPressed: () {
-                        // Navigator.push(
-                        //   context,
-                        //   MaterialPageRoute(
-                        //     builder: (context) => BatteryScreen(),
-                        //   ),
-                        // );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => BatteryScreen(),
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -482,9 +491,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         toggleColor: Colors.white,
         icon: const Icon(Icons.arrow_forward, color: Colors.black),
         child: Text(
-          'Navigations',
-          style: GoogleFonts.poppins(
-            fontSize: 20,
+          'Navigate',
+          style: GoogleFonts.poppins( 
+            fontSize: 24,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
@@ -496,7 +505,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           await Future.delayed(const Duration(milliseconds: 400));
           controller.reset();
 
-          //
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> NavigationScreen()));
         },
       ),
     );

@@ -35,9 +35,7 @@ class _BatteryConfigState extends State<BatteryConfig> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: GetX<BatteryController>(
-        builder: (controller) {
-          return Stack(
+      body: Stack(
             children: [
               Container(
                 decoration: const BoxDecoration(
@@ -140,7 +138,7 @@ class _BatteryConfigState extends State<BatteryConfig> {
                                                       ),
                                                     ),
                                                     Text(
-                                                      controller.onDock.value
+                                                      provider.onDock.value
                                                           ? "On Dock"
                                                           : "Not On Dock",
                                                       style: TextStyle(
@@ -339,8 +337,6 @@ class _BatteryConfigState extends State<BatteryConfig> {
                 ),
               ),
             ],
-          );
-        },
       ),
     );
   }

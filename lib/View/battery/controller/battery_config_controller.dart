@@ -24,7 +24,7 @@ class BatteryConfigController extends GetxController {
         backToHomeEntry.value =
             response['data']['back_to_home_entry'].toString();
       } else {
-        _showSnack(context, 'Failed to fetch charge data', Colors.blue);
+        _showSnack(context, 'Failed to fetch bettery data', Colors.red);
         lowBatteryEntry.value = "0";
         backToHomeEntry.value = '0';
       }

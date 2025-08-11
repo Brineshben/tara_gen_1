@@ -8,9 +8,12 @@ showTopRightToast({
 }) {
   Flushbar(
     message: message,
+
+    icon: Icon(Icons.info, color: color,),
     margin: const EdgeInsets.only(top: 40, right: 10),
     borderRadius: BorderRadius.circular(8),
-    backgroundColor: color,
+    backgroundColor: Colors.white,
+    messageColor: color,
     duration: const Duration(seconds: 2),
     flushbarPosition: FlushbarPosition.TOP,
     flushbarStyle: FlushbarStyle.FLOATING,

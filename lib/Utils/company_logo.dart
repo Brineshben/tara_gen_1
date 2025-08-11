@@ -31,7 +31,7 @@ class CompnayLogo extends StatelessWidget {
           SizedBox(width: 5),
           Stack(
             children: [
-              Image.asset("assets/text_logo_ihub.png", width: 130),
+              Image.asset("assets/compnay_logo.png", width: 130),
               Positioned(
                 top: 6,
                 left: 7,
