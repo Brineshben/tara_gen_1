@@ -1,31 +1,29 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/welcome/fulltour.dart';
 import 'package:ihub/View/welcome/header.dart';
-import 'package:ihub/View/welcome/navigate.dart';
-import 'package:overlapped_carousel/overlapped_carousel.dart';
+import 'package:ihub/View/welcome/place_description.dart';
+import 'package:ihub/View/welcome/time_description.dart';
 
-class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({super.key});
+class DescriptionScreen extends StatefulWidget {
+  const DescriptionScreen({super.key});
 
   @override
-  State<NavigationScreen> createState() => _NavigationScreenState();
+  State<DescriptionScreen> createState() => _DescriptionScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> {
+class _DescriptionScreenState extends State<DescriptionScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Navigate', 'Charging', 'Fulltour'];
+  final List<String> tabs = ['Place description', 'Time description'];
 
   Widget _getCurrentScreen() {
     Widget screen;
 
     if (selectedTabIndex == 0) {
-      screen = NavigationsSection();
+      screen = PlaceDescription();
     } else if (selectedTabIndex == 1) {
-      screen = BatteryScreen();
+      screen = TimeDescription();
     } else {
       screen = FullTourModeScreen();
     }

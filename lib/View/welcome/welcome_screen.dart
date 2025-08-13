@@ -6,17 +6,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/Response_Nav_Controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:ihub/View/Splash/Battery_Splash.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/language/view/language_screen.dart';
+import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation.dart';
 import 'package:lottie/lottie.dart';
 
@@ -69,18 +68,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
 
-      Get.find<ResponseNavController>()
-          .fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
+      // Get.find<ResponseNavController>()
+      //     .fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
 
-      Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
-      if (resp['status'] == true) {
-        oneSecTimer?.cancel();
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => BatterySplash()),
-          (route) => false,
-        );
-      }
+      // Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
+      // if (resp['status'] == true) {
+      //   oneSecTimer?.cancel();
+      //   Navigator.pushAndRemoveUntil(
+      //     context,
+      //     MaterialPageRoute(builder: (context) => BatterySplash()),
+      //     (route) => false,
+      //   );
+      // }
     });
   }
 
@@ -110,127 +109,130 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool showVolumeControl = false;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          showVolumeControl = false;
-        });
-      },
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Stack(
-          children: [
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/bg.png'),
-                  fit: BoxFit.cover,
-                ),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/bg.png'),
+                fit: BoxFit.cover,
               ),
             ),
-            SafeArea(
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 30,
-                  vertical: MediaQuery.of(context).size.width * 0.02,
-                ),
-                child: Row(
-                  children: [
-                    Expanded(flex: 2, child: _buildLeftContent()),
-                    const Spacer(flex: 1),
-                    Expanded(flex: 3, child: _buildGlassmorphicPanel(context)),
-                  ],
-                ),
+          ),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: 30,
+                vertical: MediaQuery.of(context).size.width * 0.02,
+              ),
+              child: Row(
+                children: [
+                  Expanded(flex: 2, child: _buildLeftContent()),
+                  const Spacer(flex: 1),
+                  Expanded(flex: 3, child: _buildGlassmorphicPanel(context)),
+                ],
               ),
             ),
-            if (showVolumeControl)
-              GetX<VolumeController>(
-                builder: (columeController) {
-                  return Positioned(
-                    top: MediaQuery.of(context).size.height * 0.2,
-                    right: 20,
-                    child: SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.7,
-                      width: 80,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(0.5),
-                          borderRadius: BorderRadius.circular(50),
-                          border: Border.all(color: Colors.white30),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              blurRadius: 8,
-                              offset: Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Expanded(
-                              child: RotatedBox(
-                                quarterTurns: -1,
-                                child: SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    trackHeight: 40,
-                                    activeTrackColor: Colors.white.withOpacity(
-                                      1,
-                                    ),
-                                    inactiveTrackColor: Colors.grey.withOpacity(
-                                      0.3,
-                                    ),
-                                    thumbColor: Colors.grey.shade700,
-                                    thumbShape: RoundSliderThumbShape(
-                                      enabledThumbRadius: 12,
-                                    ),
-                                    overlayColor: Colors.blueAccent.withOpacity(
-                                      0.2,
-                                    ),
-                                    overlayShape: RoundSliderOverlayShape(
-                                      overlayRadius: 28.0,
-                                    ),
-                                    valueIndicatorColor: Colors.transparent,
+          ),
+          if (showVolumeControl)
+            GetX<VolumeController>(
+              builder: (columeController) {
+                return Positioned(
+                  top: MediaQuery.of(context).size.height * 0.2,
+                  right: 20,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.7,
+                    width: 80,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(50),
+                        border: Border.all(color: Colors.white30),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            blurRadius: 8,
+                            offset: Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  showVolumeControl = false;
+                                });
+                              },
+                              icon: Icon(
+                                Icons.close,
+                                color: Colors.white,
+                              )),
+                          Expanded(
+                            child: RotatedBox(
+                              quarterTurns: -1,
+                              child: SliderTheme(
+                                data: SliderTheme.of(context).copyWith(
+                                  trackHeight: 40,
+                                  activeTrackColor: Colors.white.withOpacity(
+                                    1,
                                   ),
-                                  child: Slider(
-                                    value: columeController.roboVolume.value
-                                        .toDouble(),
-                                    min: 0,
-                                    max: 100,
-                                    divisions: 100,
-                                    onChanged: (v) => columeController
-                                        .roboVolume.value = v.toInt(),
-                                    onChangeEnd: (v) =>
-                                        Get.find<VolumeController>()
-                                            .fetchvolume('', v.toInt()),
+                                  inactiveTrackColor: Colors.grey.withOpacity(
+                                    0.3,
                                   ),
+                                  thumbColor: Colors.grey.shade700,
+                                  thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 12,
+                                  ),
+                                  overlayColor: Colors.blueAccent.withOpacity(
+                                    0.2,
+                                  ),
+                                  overlayShape: RoundSliderOverlayShape(
+                                    overlayRadius: 28.0,
+                                  ),
+                                  valueIndicatorColor: Colors.transparent,
+                                ),
+                                child: Slider(
+                                  value: columeController.roboVolume.value
+                                      .toDouble(),
+                                  min: 0,
+                                  max: 100,
+                                  divisions: 100,
+                                  onChanged: (v) => columeController
+                                      .roboVolume.value = v.toInt(),
+                                  onChangeEnd: (v) =>
+                                      Get.find<VolumeController>()
+                                          .fetchvolume('', v.toInt()),
                                 ),
                               ),
                             ),
-                            Icon(
-                              columeController.roboVolume.value == 0
-                                  ? Icons.volume_mute_rounded
-                                  : columeController.roboVolume.value > 60
-                                      ? Icons.volume_up
-                                      : Icons.volume_down,
+                          ),
+                          Icon(
+                            columeController.roboVolume.value == 0
+                                ? Icons.volume_mute_rounded
+                                : columeController.roboVolume.value > 60
+                                    ? Icons.volume_up
+                                    : Icons.volume_down,
+                            color: Colors.white,
+                          ),
+                          Text(
+                            "${columeController.roboVolume.value.round()}%",
+                            style: const TextStyle(
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
-                            Text(
-                              "${columeController.roboVolume.value.round()}%",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-          ],
-        ),
+                  ),
+                );
+              },
+            ),
+        ],
       ),
     );
   }
@@ -297,12 +299,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: _menuButton(
                       label: "Battery",
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => BatteryScreen(),
-                          ),
-                        );
+                        if (!showVolumeControl) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => BatteryScreen(),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
@@ -336,7 +340,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: _menuButton(
                       icon: "assets/Home.svg",
                       label: "Menu",
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MenuScreen()));
+                      },
                     ),
                   ),
                   SizedBox(width: 20),
@@ -346,12 +352,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/g_translate.svg",
                       label: "Language",
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LanguageList(),
-                          ),
-                        );
+                        if (!showVolumeControl) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LanguageList(),
+                            ),
+                          );
+                        }
                       },
                     ),
                   ),
@@ -484,6 +492,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildLetsGoButton(BuildContext context) {
     return ChildGlasmorphism(
       borderRadius: 60,
+      margin: EdgeInsets.all(20),
       child: ActionSlider.standard(
         width: double.infinity,
         height: 80,
@@ -492,7 +501,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         icon: const Icon(Icons.arrow_forward, color: Colors.black),
         child: Text(
           'Navigate',
-          style: GoogleFonts.poppins( 
+          style: GoogleFonts.poppins(
             fontSize: 24,
             fontWeight: FontWeight.w600,
             color: Colors.white,
@@ -505,7 +514,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           await Future.delayed(const Duration(milliseconds: 400));
           controller.reset();
 
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> NavigationScreen()));
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => NavigationScreen()));
         },
       ),
     );

@@ -1,31 +1,29 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:ihub/View/battery/view/battery_view.dart';
+import 'package:ihub/View/welcome/behaviour.dart';
 import 'package:ihub/View/welcome/fulltour.dart';
 import 'package:ihub/View/welcome/header.dart';
-import 'package:ihub/View/welcome/navigate.dart';
-import 'package:overlapped_carousel/overlapped_carousel.dart';
+import 'package:ihub/View/welcome/mapping.dart';
 
-class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({super.key});
+class MenuScreen extends StatefulWidget {
+  const MenuScreen({super.key});
 
   @override
-  State<NavigationScreen> createState() => _NavigationScreenState();
+  State<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> {
+class _MenuScreenState extends State<MenuScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Navigate', 'Charging', 'Fulltour'];
+  final List<String> tabs = ['Behaviour', 'Mapping', 'Fulltour'];
 
   Widget _getCurrentScreen() {
     Widget screen;
 
     if (selectedTabIndex == 0) {
-      screen = NavigationsSection();
+      screen = Behaviour();
     } else if (selectedTabIndex == 1) {
-      screen = BatteryScreen();
+      screen = Mapping();
     } else {
       screen = FullTourModeScreen();
     }

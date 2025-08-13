@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Service/charge_service.dart';
 import 'package:ihub/Utils/toast.dart';
 
@@ -50,6 +51,15 @@ class BatteryConfigController extends GetxController {
 
       if (response['status'] == 'ok') {
         _showSnack(context, 'Values updated successfully!', Colors.green);
+
+      await  Future.delayed(Duration(seconds: 3));
+
+        final responce = await ApiServices.setChargingStatus(
+          false,
+        );
+        if (responce['status'] == false) {
+          _showSnack(context, 'Navigating to charging dock', Colors.green);
+        }
       } else {
         _showSnack(context, 'Update failed!', Colors.orange);
       }

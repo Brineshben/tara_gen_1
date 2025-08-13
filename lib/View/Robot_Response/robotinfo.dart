@@ -12,7 +12,6 @@ class RobotInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Load login data from SharedPreferences if null
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (loginController.loginData.value == null) {
         final storedData = await SharedPrefs().getLoginData();
@@ -21,6 +20,9 @@ class RobotInfo extends StatelessWidget {
         }
       }
     });
+
+
+    
 
     return Scaffold(
       appBar: AppBar(

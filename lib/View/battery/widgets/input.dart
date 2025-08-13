@@ -224,6 +224,7 @@ class GlassmorphismModal extends StatelessWidget {
                                     provider.lowBatteryEntry.value = batteryText;
                                     provider.backToHomeEntry.value = homeText;
                                     provider.updateChargeValues(context);
+                                  
                                   },
                                   child: ChildGlasmorphism(
                                     borderRadius: 30,

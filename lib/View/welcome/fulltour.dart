@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/toast.dart';
 
 class FullTourModeScreen extends StatelessWidget {
   const FullTourModeScreen({super.key});
@@ -69,7 +71,19 @@ class FullTourModeScreen extends StatelessWidget {
                         ),
                         const SizedBox(width: 16),
                         ElevatedButton.icon(
-                          onPressed: () {},
+                          onPressed: () async {
+                            Map<String, dynamic> resp =
+                                await ApiServices.FulltourNavigation(
+                                    Data: true);
+
+                            if (resp['status'] == "ok") {
+                              showTopRightToast(
+                                color: Colors.green,
+                                context: context,
+                                message: "Full tour navigation started successfully",
+                              );
+                            }
+                          },
                           icon: const Icon(Icons.place_outlined,
                               color: Colors.white),
                           label: const Text(
