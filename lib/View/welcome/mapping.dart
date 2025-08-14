@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/View/Robot_Response/Fulltour_dart.dart';
+import 'package:ihub/View/Settings/upload_Document.dart';
 import 'package:ihub/View/welcome/manage_map.dart';
 
 class Mapping extends StatelessWidget {
@@ -18,24 +20,30 @@ class Mapping extends StatelessWidget {
             spacing: 20,
             children: [
               Expanded(
-                child: ChildGlasmorphism(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children:  [
-                     Image.asset('assets/square-pen.png', width: 90,),
-                      SizedBox(height: 8),
-                      Text(
-                        "Add full tour",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ListAnimationdData()));
+                  },
+                  child: ChildGlasmorphism(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children:  [
+                       Image.asset('assets/square-pen.png', width: 90,),
+                        SizedBox(height: 8),
+                        Text(
+                          "Add full tour",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>ManageMap()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=> FileUploadScreen()));
+                    // Navigator.push(context, MaterialPageRoute(builder: (context)=>ManageMap()));
                   },
                   child: ChildGlasmorphism(
                     child: Column(

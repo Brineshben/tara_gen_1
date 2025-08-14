@@ -141,20 +141,20 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                               onPressed: () {
                                                 Navigator.of(context).pop();
 
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        AddDescriptionPage(
-                                                      id: item.id ?? 0,
-                                                      isEdit: true,
-                                                      description:
-                                                          item.description ??
-                                                              '',
-                                                      time: item.timeOfDay,
-                                                    ),
-                                                  ),
-                                                );
+                                                // Navigator.push(
+                                                //   context,
+                                                //   MaterialPageRoute(
+                                                //     builder: (context) =>
+                                                //         AddDescriptionPage(
+                                                //       id: item.id ?? 0,
+                                                //       isEdit: true,
+                                                //       description:
+                                                //           item.description ??
+                                                //               '',
+                                                //       time: item.timeOfDay,
+                                                //     ),
+                                                //   ),
+                                                // );
                                               },
                                               child: Text(
                                                 "Edit",
@@ -262,17 +262,17 @@ class _TimeDescriptionState extends State<TimeDescription> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15.r),
                   onTap: () async {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => AddDescriptionPage(
-                          id: 0,
-                          isEdit: false,
-                          description: '',
-                          time: null,
-                        ),
-                      ),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => AddDescriptionPage(
+                    //       id: 0,
+                    //       isEdit: false,
+                    //       description: '',
+                    //       time: null,
+                    //     ),
+                    //   ),
+                    // );
                   },
                   child: Ink(
                     width: 100,

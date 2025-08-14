@@ -25,14 +25,14 @@ class ManageMap extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFF608878).withOpacity(0.2), // light green
-                  Color(0xFF18221E).withOpacity(0.2), // dark green
+                  Color(0xFF608878).withOpacity(0.2), 
+                  Color(0xFF18221E).withOpacity(0.2), 
                 ],
               ),
             ),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.transparent),
+              child: Container(color: Colors.transparent),  
             ),
           ),
           Padding(

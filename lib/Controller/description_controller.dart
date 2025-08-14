@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Model/description_model.dart';
 import 'package:ihub/Service/add_description_service.dart';
+import 'package:ihub/Utils/toast.dart';
 
 class DescriptionController extends GetxController {
   var descriptionModel = Rxn<DescriptionModel>();
 
   var isLoading = false.obs;
   var errorMessage = ''.obs;
+  var submiting = false.obs;
 
   fetchDescription() async {
     try {
       isLoading.value = true;
       errorMessage.value = '';
-
-      print('iiiiiiiiiiiiiiiincrontrooler');
 
       descriptionModel.value = await DescriptionService.fetchDescription();
     } catch (e) {
@@ -24,20 +24,24 @@ class DescriptionController extends GetxController {
     }
   }
 
+  fetchDescriptionAgain() async {
+    descriptionModel.value = await DescriptionService.fetchDescription();
+  }
+
   Future<void> submitDescription({
     required String description,
     required String time,
+    required BuildContext context,
   }) async {
     if (time.isEmpty || description.isEmpty) {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Error",
-        "Please fill all fields",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+      showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: "fields can not be empty");
       return;
     }
+
+    submiting.value = true;
 
     Map<String, dynamic>? response = await DescriptionService.submitDescription(
       timeOfDay: time,
@@ -46,26 +50,21 @@ class DescriptionController extends GetxController {
 
     if (response != null) {
       if (response['status'] == 'ok') {
-        await fetchDescription();
-        Get.back();
-        // Get.snackbar(
-        //   margin: EdgeInsets.all(20),
-        //   "Success",
-        //   response['message'] ?? "Description submitted successfully",
-        //   backgroundColor: Colors.green,
-        //   colorText: Colors.white,
-        //   snackPosition: SnackPosition.TOP,
-        // );
+        await fetchDescriptionAgain();
+
+        showTopRightToast(
+            color: Colors.green,
+            context: context,
+            message:
+                response['message'] ?? "Description submitted successfully");
       } else {
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Failed",
-          snackPosition: SnackPosition.TOP,
-          response['message'] ?? "Something went wrong",
-          backgroundColor: Colors.red.withOpacity(0.8),
-          colorText: Colors.white,
+        showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: response['message'] ?? "Something went wrong",
         );
       }
+      submiting.value = false;
     }
   }
 
@@ -74,17 +73,19 @@ class DescriptionController extends GetxController {
     required String description,
     required String time,
     required String id,
+    required BuildContext context,
   }) async {
     if (time.isEmpty || description.isEmpty) {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Error",
-        "Please fill all fields",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
+     
+      showTopRightToast(
+        color: Colors.red,
+        context: context,
+        message:   "Please fill all fields"
       );
       return;
     }
+
+    submiting.value = true;
 
     Map<String, dynamic>? response = await DescriptionService.editDescription(
       timeOfDay: time,
@@ -94,26 +95,20 @@ class DescriptionController extends GetxController {
 
     if (response != null) {
       if (response['status'] == 'ok') {
-        await fetchDescription();
-        Get.back();
-        // Get.snackbar(
-        //   margin: EdgeInsets.all(20),
-        //   "Success",
-        //   response['message'] ?? "Description edited successfully",
-        //   backgroundColor: Colors.green,
-        //   colorText: Colors.white,
-        //   snackPosition: SnackPosition.TOP,
-        // );
+        await fetchDescriptionAgain();
+        showTopRightToast(
+          color: Colors.green,
+          context: context,
+          message: response['message'] ?? "Description edited successfully",
+        );
       } else {
-        Get.snackbar(
-          margin: EdgeInsets.all(20),
-          "Failed",
-          snackPosition: SnackPosition.TOP,
-          response['message'] ?? "Something went wrong",
-          backgroundColor: Colors.red.withOpacity(0.8),
-          colorText: Colors.white,
+        showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: response['message'] ?? "Something went wrong",
         );
       }
+      submiting.value = false;
     }
   }
 }

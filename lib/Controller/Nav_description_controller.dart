@@ -1,43 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Service/Api_Service.dart';
-
+import 'package:ihub/Utils/toast.dart';
 import '../Model/Navigate_model.dart';
 
 class NavigateDescriptionController extends GetxController {
   RxBool isLoading = false.obs;
   RxBool isLoaded = false.obs;
   RxBool isError = false.obs;
-  Rx<NavigationListModel?> Navifateedata = Rx(null);
+
+  /// Loading flag for submit
+  RxBool isSubmitting = false.obs;
+
+  Rx<NavigationListModel?> navigationData = Rx(null);
   List<TextEditingController> descriptionControllers = [];
-  List<TextEditingController> textControllers = [];
 
   RxList<bool> isExpandedList = <bool>[].obs;
-
   RxList<NavigationData?> dataList = RxList();
 
-  Future<void> getNavigation() async {
+// get navigation
+  Future<void> getNavigation(BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
       Map<String, dynamic> resp = await ApiServices.navigateoffline();
 
       if (resp['status'] == 'ok') {
-        Navifateedata.value = NavigationListModel.fromJson(resp);
+        navigationData.value = NavigationListModel.fromJson(resp);
 
-        if (Navifateedata.value != null) {
-          dataList.assignAll(Navifateedata.value!.data ?? []);
+        if (navigationData.value != null) {
+          dataList.assignAll(navigationData.value!.data ?? []);
 
           descriptionControllers = List.generate(
-              dataList.length,
-              (index) => TextEditingController(
-                  text: dataList[index]?.description ?? ""));
-
-          textControllers = List.generate(
-              dataList.length,
-              (index) => TextEditingController(
-                    text: dataList[index]?.name1 ?? "",
-                  ));
+            dataList.length,
+            (index) => TextEditingController(
+              text: dataList[index]?.description ?? "",
+            ),
+          );
 
           isExpandedList.value = List.filled(dataList.length, false);
 
@@ -49,21 +48,83 @@ class NavigateDescriptionController extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-
-      Get.snackbar(
-        'Failed', // Title
-        'Error in Robot Response Navigation Control', // Message
-        snackPosition: SnackPosition.BOTTOM, // Position (TOP or BOTTOM)
-        backgroundColor: Colors.black.withOpacity(0.3),
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: EdgeInsets.all(10),
-
-        duration: Duration(seconds: 3), // Auto dismiss time
-        icon: Icon(Icons.check_circle, color: Colors.white),
-      );
+      showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: "something went wrong!");
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  Future<void> fetchAgain(BuildContext context) async {
+    try {
+      Map<String, dynamic> resp = await ApiServices.navigateoffline();
+
+      if (resp['status'] == 'ok') {
+        navigationData.value = NavigationListModel.fromJson(resp);
+
+        if (navigationData.value != null) {
+          dataList.assignAll(navigationData.value!.data ?? []);
+
+          descriptionControllers = List.generate(
+            dataList.length,
+            (index) => TextEditingController(
+              text: dataList[index]?.description ?? "",
+            ),
+          );
+
+          isExpandedList.value = List.filled(dataList.length, false);
+        }
+      }
+    } catch (e) {
+      showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: "something went wrong!");
+    }
+  }
+
+// submit
+  Future<void> submitNavigationUpdate(
+      {required int userId,
+      required String description,
+      required BuildContext context}) async {
+    if (description.isEmpty) {
+      showTopRightToast(
+          color: Colors.red,
+          context: context,
+          message: "Description cannot be empty");
+      return;
+    }
+
+    isSubmitting.value = true;
+
+    try {
+      Map<String, dynamic> resp = await ApiServices.navigateDescriptionSubmit(
+        userId: userId,
+        description: description,
+      );
+      if (resp['status'] == 'ok') {
+        showTopRightToast(
+            color: Colors.green,
+            context: context,
+            message: "Navigation updated successfully");
+        await fetchAgain(context);
+      } else {
+        showTopRightToast(
+            color: Colors.red,
+            context: context,
+            message: resp['message'] ?? 'Unknown error');
+      }
+    } catch (e) {
+      showTopRightToast(
+        color: Colors.red,
+        context: context,
+        message: e.toString(),
+      );
+    } finally {
+      isSubmitting.value = false;
     }
   }
 }

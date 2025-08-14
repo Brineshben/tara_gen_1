@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/View/Settings/prompt_list_page.dart';
 import 'package:ihub/View/welcome/description_option.dart';
 
 class Behaviour extends StatelessWidget {
@@ -19,13 +20,21 @@ class Behaviour extends StatelessWidget {
               Expanded(
                 child: InkWell(
                   onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>DescriptionScreen(),),);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DescriptionScreen(),
+                      ),
+                    );
                   },
                   child: ChildGlasmorphism(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children:  [
-                        Image.asset("assets/square-pen.png", width: 90,),
+                      children: [
+                        Image.asset(
+                          "assets/square-pen.png",
+                          width: 90,
+                        ),
                         SizedBox(height: 8),
                         Text(
                           "Description",
@@ -37,14 +46,25 @@ class Behaviour extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ChildGlasmorphism(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset("assets/rotate-cw.png", width: 90,),
-                      SizedBox(height: 8),
-                      Text("Protocol", style: TextStyle(color: Colors.white)),
-                    ],
+                child: InkWell(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PromptListPage()));
+                  },
+                  child: ChildGlasmorphism(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          "assets/rotate-cw.png",
+                          width: 90,
+                        ),
+                        SizedBox(height: 8),
+                        Text("Protocol", style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
                   ),
                 ),
               ),

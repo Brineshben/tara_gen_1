@@ -8,8 +8,10 @@ showTopRightToast({
 }) {
   Flushbar(
     message: message,
-
-    icon: Icon(Icons.info, color: color,),
+    icon: Icon(
+      color == Colors.green ? Icons.check_circle : Icons.info,
+      color: color,
+    ),
     margin: const EdgeInsets.only(top: 40, right: 10),
     borderRadius: BorderRadius.circular(8),
     backgroundColor: Colors.white,

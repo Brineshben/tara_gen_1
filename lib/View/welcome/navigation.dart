@@ -1,15 +1,14 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/welcome/fulltour.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/navigate.dart';
-import 'package:overlapped_carousel/overlapped_carousel.dart';
 
 class NavigationScreen extends StatefulWidget {
-  const NavigationScreen({super.key});
+  final int selectedTabIndex;
+  const NavigationScreen({super.key, required this.selectedTabIndex});
 
   @override
   State<NavigationScreen> createState() => _NavigationScreenState();
@@ -31,6 +30,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
     return screen;
   }
+
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTabIndex = widget.selectedTabIndex; // assign passed data here
+  }
+
 
   @override
   Widget build(BuildContext context) {

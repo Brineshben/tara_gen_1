@@ -303,7 +303,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => BatteryScreen(),
+                              builder: (context) => NavigationScreen(selectedTabIndex: 1,),
                             ),
                           );
                         }
@@ -515,7 +515,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           controller.reset();
 
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NavigationScreen()));
+              MaterialPageRoute(builder: (context) => NavigationScreen(selectedTabIndex: 0,)));
         },
       ),
     );

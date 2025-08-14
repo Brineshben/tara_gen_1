@@ -22,10 +22,8 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
 
     if (selectedTabIndex == 0) {
       screen = PlaceDescription();
-    } else if (selectedTabIndex == 1) {
+    }  else {
       screen = TimeDescription();
-    } else {
-      screen = FullTourModeScreen();
     }
     return screen;
   }

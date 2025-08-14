@@ -547,7 +547,6 @@ class ApiServices {
   static Future<Map<String, dynamic>> navigateDescriptionSubmit({
     required int userId,
     required String description,
-    required String name,
   }) async {
     // String url =
     //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
@@ -555,7 +554,6 @@ class ApiServices {
         "${ApiConstants.localIp}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {
       "description": description,
-      "name1": name,
     };
     print("Navigationoffline$url");
     var request = http.Request('PUT', Uri.parse(url));

@@ -55,10 +55,10 @@ class DescriptionOption extends StatelessWidget {
               spacing: 20,
               children: [
                 buildInfoCard(onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => PlaceDescription()),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(builder: (context) => PlaceDescription()),
+                  // );
                 }, MediaQuery.of(context).size, 'Place Description'),
                 buildInfoCard(onTap: () {
                   Navigator.push(
