@@ -1,23 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
 
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/FulltourController.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/api_constant.dart';
-import 'package:ihub/Utils/header.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/Utils/pinning_helper.dart';
-import 'package:ihub/View/Settings/settings.dart';
+import 'package:ihub/Utils/toast.dart';
 
-import '../../Controller/Backgroud_controller.dart';
 import '../../Service/Api_Service.dart';
-import '../../Utils/popups.dart';
 
 class FileUploadScreen extends StatefulWidget {
   @override
@@ -27,445 +23,492 @@ class FileUploadScreen extends StatefulWidget {
 class _FileUploadScreenState extends State<FileUploadScreen> {
   File? _selectedFile;
   String roboId = '';
+  bool isLoading = false;
+  String fileName = '';
+
   @override
   void initState() {
-    if (Get.find<BatteryController>().roboId != null) {
-      roboId = Get.find<BatteryController>().roboId;
-    }
+    _loadMap();
     super.initState();
+  }
+
+  Future<void> _loadMap() async {
+    try {
+      if (Get.find<BatteryController>().roboId == null) return;
+
+      isLoading = true;
+      setState(() {});
+
+      roboId = Get.find<BatteryController>().roboId;
+      var response = await ApiServices.fetchUploadedMap(robotId: 'RB8');
+
+      if (response['stcm_file_path'] != null) {
+        fileName = response['stcm_file_path'].toString().split('/').last;
+      }
+      setState(() {});
+    } catch (e) {
+      print('error $e');
+    } finally {
+      isLoading = false;
+      setState(() {});
+    }
   }
 
   Future<void> _pickFile() async {
     String? initialDirectory = "/storage/emulated/0/Download";
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.any,
-      initialDirectory: initialDirectory, // Specify the initial directory
+      initialDirectory: initialDirectory,
     );
 
     if (result != null) {
       _selectedFile = File(result.files.single.path!);
-      Get.snackbar(
-        'SELECTED',
-        'Map selected: ${result.files.single.name}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
+      showTopRightToast(
+          color: Colors.green,
+          context: context,
+          message: "Map selected: ${result.files.single.name}");
     } else {
-      Get.snackbar(
-        'CANCELLED',
-        'No file was selected.',
-        snackPosition: SnackPosition.BOTTOM,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
+      showTopRightToast(
+          color: Colors.black,
+          context: context,
+          message: 'No file was selected');
     }
   }
 
-// upload map to server
-  // Future<void> _uploadFileToServer() async {
-  //   if (_selectedFile == null) {
-  //     Get.snackbar(
-  //       'Warning',
-  //       'Please select a file before attempting to upload.',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.orange,
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 2),
-  //       margin: EdgeInsets.all(20),
-  //     );
-  //     return;
-  //   }
-
-  //   print("idididididididididid${roboId}");
-  //   var request = http.MultipartRequest(
-  //     'POST',
-  //     Uri.parse('http://54.211.212.147/stcm_files/create/'),
-  //   );
-
-  //   request.files.add(
-  //     await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
-  //   );
-  //   request.fields['robot_id'] = roboId;
-
-  //   var response = await request.send();
-  //   if (response.statusCode == 201) {
-  //     Get.snackbar(
-  //       'UPLOADED',
-  //       'Map uploaded successfully!',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.green,
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 5),
-  //       margin: EdgeInsets.all(20),
-  //     );
-  //   } else {
-  //     Get.snackbar(
-  //       'FAILED',
-  //       'File upload failed! Status: ${response.statusCode}',
-  //       snackPosition: SnackPosition.BOTTOM,
-  //       backgroundColor: Colors.red,
-  //       colorText: Colors.white,
-  //       duration: Duration(seconds: 2),
-  //       margin: EdgeInsets.all(20),
-  //     );
-  //   }
-  // }
-
-// delelete map from server
-  // _deleteMapServer() async {
-  //   Map<String, dynamic> resp = await ApiServices.deleteFileServer(
-  //     status: true,
-  //     robotId: roboId,
-  //   );
-
-  //   print('deletemapresponceserver ${resp}');
-
-  //   if (resp['status'] == true) {
-  //     FocusManager.instance.primaryFocus?.unfocus();
-  //     ProductAppPopUps.submit(
-  //       title: "SUCCESS",
-  //       message: resp['message'].toString(),
-  //       actionName: "Close",
-  //       iconData: Icons.done,
-  //       iconColor: Colors.green,
-  //     );
-  //   } else {
-  //     ProductAppPopUps.submit(
-  //       title: "Failed",
-  //       message: resp['message'].toString(),
-  //       actionName: "Close",
-  //       iconData: Icons.error_outline,
-  //       iconColor: Colors.red,
-  //     );
-  //   }
-  // }
-
-// upload map to local
   Future<void> _uploadFile() async {
     if (_selectedFile == null) {
-      Get.snackbar(
-        'Warning',
-        'Please select a file before attempting to upload.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.orange,
-        colorText: Colors.white,
-        duration: Duration(seconds: 2),
-        margin: EdgeInsets.all(20),
-      );
+      showTopRightToast(
+          color: Colors.orange,
+          context: context,
+          message: 'Please select a file before upload.');
+
       return;
     }
 
-    print("Selected Robot ID: $roboId");
-
-    var request = await http.MultipartRequest(
-      'POST',
-      Uri.parse('${ApiConstants.localIp}/stcm_files/create/'),
-    );
-
-    request.files.add(
-      await http.MultipartFile.fromPath('stcm_file_path', _selectedFile!.path),
-    );
-
-    request.fields['robot_id'] = roboId;
-
-    var response = await request.send();
-
-    final responseBody = await response.stream.bytesToString();
-    print('Response status upload map: ${response.statusCode}');
-    print('Response body: $responseBody');
-
-    final decodedBody = json.decode(responseBody);
-
     try {
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse('${ApiConstants.localIp}/stcm_files/create/'),
+      );
+
+      request.files.add(await http.MultipartFile.fromPath(
+          'stcm_file_path', _selectedFile!.path));
+      request.fields['robot_id'] = roboId;
+
+      var response = await request.send();
+      final responseBody = await response.stream.bytesToString();
+
       if (response.statusCode == 201) {
-        Get.snackbar(
-          'UPLOADED',
-          'Map uploaded successfully!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-          duration: Duration(seconds: 5),
-          margin: EdgeInsets.all(20),
-        );
-      } else if (response.statusCode >= 400 && response.statusCode < 500) {
-        // Client error
-        final error =
-            decodedBody['robot_id']?.join(', ') ?? 'Client error occurred';
-        Get.snackbar(
-          'FAILED',
-          'Client Error: $error',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.orange,
-          colorText: Colors.white,
-          duration: Duration(seconds: 5),
-          margin: EdgeInsets.all(20),
-        );
-      } else if (response.statusCode >= 500) {
-        // Server error
-        Get.snackbar(
-          'FAILED',
-          'Server Error! Please try again later.',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: Duration(seconds: 5),
-          margin: EdgeInsets.all(20),
-        );
+        showTopRightToast(
+            color: Colors.green,
+            context: context,
+            message: 'Map uploaded successfully!');
       } else {
-        Get.snackbar(
-          'FAILED',
-          'Unexpected error!',
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.red,
-          colorText: Colors.white,
-          duration: Duration(seconds: 5),
-          margin: EdgeInsets.all(20),
-        );
+        showTopRightToast(
+            color: Colors.red,
+            context: context,
+            message: 'Upload failed: $responseBody');
       }
-    } on SocketException {
-      Get.snackbar(
-        'NO INTERNET',
-        'Please check your connection.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
-    } on TimeoutException {
-      Get.snackbar(
-        'TIMEOUT',
-        'Connection timed out.',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
     } catch (e) {
-      Get.snackbar(
-        'ERROR',
-        'Something went wrong: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        duration: Duration(seconds: 5),
-        margin: EdgeInsets.all(20),
-      );
+      showTopRightToast(
+          color: Colors.red, context: context, message: 'Something went wrong');
     }
   }
 
-  // DELETE MAP FROM LOCAL
   _deleteMap() async {
     try {
-      Map<String, dynamic> resp = await ApiServices.deleteFileLocal(
-        robotId: roboId,
-      );
+      Map<String, dynamic> resp =
+          await ApiServices.deleteFileLocal(robotId: roboId);
 
       if (resp['status'] == "ok") {
-        FocusManager.instance.primaryFocus?.unfocus();
-        ProductAppPopUps.submit(
-          title: "SUCCESS",
-          message: resp['detail'] ?? "Map deleted successfully",
-          actionName: "Close",
-          iconData: Icons.done,
-          iconColor: Colors.green,
-        );
+        showTopRightToast(
+            color: Colors.green,
+            context: context,
+            message: resp['detail'] ?? "Map deleted successfully");
         _selectedFile = null;
       } else {
-        print('mapdelete ${resp['detail']}');
-        ProductAppPopUps.submit(
-          title: "Failed",
-          message: resp['detail'] ?? "Map already deleted",
-          actionName: "Close",
-          iconData: Icons.error_outline,
-          iconColor: Colors.red,
-        );
+        showTopRightToast(
+            color: Colors.red,
+            context: context,
+            message: resp['detail'] ?? "Map already deleted");
         _selectedFile = null;
       }
     } catch (e) {
-      print('Error in _deleteMap: $e');
-      ProductAppPopUps.submit(
-        title: "Error",
-        message: "Something went wrong: $e",
-        actionName: "Close",
-        iconData: Icons.error_outline,
-        iconColor: Colors.red,
-      );
+      showTopRightToast(
+          color: Colors.red, context: context, message: "Something went wrong");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-    return Scaffold(
-      body: Stack(
-        children: [
-          SizedBox(
-            width: ScreenUtil().screenWidth,
-            height: ScreenUtil().screenHeight,
-          ),
-          GetX<BackgroudController>(
-            builder: (BackgroudController controller) {
-              return Positioned.fill(
-                child: Stack(
-                  fit: StackFit.expand,
+    final actions = [
+      {
+        "icon": "assets/select.png",
+        "title": "SELECT MAP",
+        "subtitle": "Select a map file from your device",
+        "onTap": () async {
+          await LockTaskService.stopLockTask();
+          await _pickFile();
+          await LockTaskService.startLockTask();
+        }
+      },
+      {
+        "icon": "assets/upload.png",
+        "title": "UPLOAD MAP",
+        "subtitle": "Upload the selected map to the robot",
+        "onTap": _uploadFile,
+      },
+      {
+        "icon": "assets/delete.png",
+        "title": "DELETE MAP",
+        "subtitle": "Delete the map from the robot",
+        "onTap": () {
+          Get.dialog(
+            Dialog(
+              backgroundColor: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                width: 400,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          controller.backgroundModel.value?.backgroundImage ??
-                              "",
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
-                      errorWidget: (context, url, error) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
+                    Image.asset(
+                      "assets/delete.png",
+                      width: 60,
+                      color: Colors.red,
                     ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                      child: Container(
-                        color: Colors.black.withOpacity(0),
+                    const SizedBox(height: 10),
+                    Text(
+                      "DELETE MAP?",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blueGrey,
                       ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      "Are you sure you want to delete the map from the robot? This action cannot be undone",
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => Get.back(),
+                          style: ElevatedButton.styleFrom(
+                            foregroundColor: Colors.red,
+                            backgroundColor: Colors.white,
+                          ),
+                          child: const Text("No"),
+                        ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            Get.back();
+                            _deleteMap();
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                          child: const Text(
+                            "Yes",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),
-              );
-            },
-          ),
-          Center(
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Wrap(
-                spacing: 20,
+              ),
+            ),
+          );
+        }
+      },
+      {
+        "icon": "assets/reload.png",
+        "title": "REFRESH",
+        "subtitle": "Refresh the map services",
+        "onTap": () async {
+          Get.dialog(Dialog(
+            backgroundColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              width: 400,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: 100),
-                  Row(
-                    spacing: 20,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SettingsCard(
-                        iconPath: 'assets/select.png',
-                        subtitle: "Select a map file from your device",
-                        title: 'SELECT MAP',
-                        backgroundColor: Colors.white,
-                        onTap: () async {
-                          await LockTaskService.stopLockTask();
-                          await Future.delayed(Duration(milliseconds: 300));
-                          await _pickFile();
-                          await LockTaskService.startLockTask();
-                        },
-                      ),
-                      SettingsCard(
-                        iconPath: 'assets/upload.png',
-                        subtitle: "Upload the selected map to the robot",
-                        title: 'UPLOAD MAP',
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          _uploadFile();
-                        },
-                      ),
-                    ],
+                  Image.asset(
+                    "assets/reload.png",
+                    width: 60,
+                    color: Colors.green,
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 10),
+                  Text(
+                    "REFRESH MAP",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blueGrey,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Refreshing the map may take 2 to 3 minutes. Are you sure you want to continue?",
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "Make sure the robot is at the charging dock before proceeding.",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    spacing: 20,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      SettingsCard(
-                        iconPath: 'assets/delete.png',
-                        subtitle: "Delete the map from the robot",
-                        title: 'DELETE MAP',
-                        backgroundColor: Colors.white,
-                        onTap: () {
-                          Get.dialog(
-                            Dialog(
-                              backgroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Container(
-                                padding: const EdgeInsets.all(20),
-                                width: 300,
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Image.asset(
-                                      "assets/delete.png",
-                                      width: 60,
-                                      color: Colors.red,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      "DELETE MAP?",
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.blueGrey,
-                                      ),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Text(
-                                      "Are you sure you want to delete the map from the robot? This action cannot be undone",
-                                      style: TextStyle(fontSize: 14),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        ElevatedButton(
-                                          onPressed: () => Get.back(),
-                                          style: ElevatedButton.styleFrom(
-                                            foregroundColor: Colors.red,
-                                            backgroundColor: Colors.white,
-                                          ),
-                                          child: const Text("No"),
-                                        ),
-                                        ElevatedButton(
-                                          onPressed: () async {
-                                            Get.back();
-                                            _deleteMap();
-                                          },
-                                          style: ElevatedButton.styleFrom(
-                                            backgroundColor: Colors.red,
-                                          ),
-                                          child: const Text(
-                                            "Yes",
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          );
+                      ElevatedButton(
+                        onPressed: () => Get.back(),
+                        style: ElevatedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          backgroundColor: Colors.white,
+                        ),
+                        child: const Text("No"),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          Get.back();
+                          try {
+                            FullTourControllerNew fullTourController =
+                                Get.find();
+                            fullTourController.clearData();
+                            fullTourController.newDataNavigation.refresh();
+
+                            Map<String, dynamic> response =
+                                await ApiServices.mapRestart();
+
+                            if (response['updated_data']['status'] == true) {
+                              isLoading = true;
+                              setState(() {});
+
+                              await Future.delayed(Duration(seconds: 20));
+
+                              isLoading = false;
+                              setState(() {});
+
+                              FullTourControllerNew fullTourController =
+                                  Get.find();
+                              fullTourController.clearData();
+                            } else {
+                              showTopRightToast(
+                                  color: Colors.red,
+                                  context: context,
+                                  message: 'Map not restarted');
+                            }
+                          } catch (e) {
+                            showTopRightToast(
+                                color: Colors.red,
+                                context: context,
+                                message: 'Something went wrog!');
+                          }
                         },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                        ),
+                        child: const Text(
+                          "Yes",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
                 ],
               ),
             ),
+          ));
+        }
+      }
+    ];
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                  image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
+            ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF608878).withOpacity(0.2),
+                  Color(0xFF18221E).withOpacity(0.2),
+                ],
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
           ),
           Column(
             children: [
-              Header(
-                isBack: true,
-                screenName: "MANAGE MAP",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(15),
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      margin: const EdgeInsets.only(left: 20),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[600]?.withOpacity(0.8),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 20),
+                    child: ChildGlasmorphism(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 8),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.map_outlined,
+                              color: fileName.isNotEmpty
+                                  ? Colors.green
+                                  : Colors.white,
+                            ),
+                            Text(
+                              fileName.isNotEmpty
+                                  ? fileName
+                                  : "No file uploaded",
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.green,
+                              ),
+                              overflow:
+                                  TextOverflow.ellipsis, // avoids overflow
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 150, vertical: 20),
+                  child: GridView.builder(
+                    itemCount: actions.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 20,
+                      crossAxisSpacing: 20,
+                      childAspectRatio: 2,
+                    ),
+                    itemBuilder: (context, index) {
+                      final action = actions[index];
+                      return GestureDetector(
+                        onTap:
+                            !isLoading ? action["onTap"] as VoidCallback : null,
+                        child: ChildGlasmorphism(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            spacing: 10,
+                            children: [
+                              Image.asset(action["icon"] as String,
+                                  width: 50, color: Colors.white),
+                              Text(
+                                action["title"] as String,
+                                style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                              Text(
+                                action["subtitle"] as String,
+                                style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500,
+                                    color: Colors.white70),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
               ),
             ],
           ),
+          if (isLoading)
+            Center(
+              child: Container(
+                  width: 200,
+                  height: 70,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10),
+                    border: Border.all(color: Colors.blueGrey),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: 25,
+                        height: 25,
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 3,
+                        ),
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        "Loading...",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  )),
+            ),
         ],
       ),
     );

@@ -8,9 +8,10 @@ class FullTourModeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: MediaQuery.sizeOf(context).width * 0.7,
-      height: MediaQuery.sizeOf(context).height * 0.6,
+    return Container(
+      width: MediaQuery.sizeOf(context).width * 0.6,
+      height: MediaQuery.sizeOf(context).height * 0.4,
+      margin: EdgeInsets.only(top: 100),
       child: ChildGlasmorphism(
         child: Padding(
           padding: const EdgeInsets.all(15),

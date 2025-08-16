@@ -44,7 +44,8 @@ class _NavigationsSectionState extends State<NavigationsSection> {
             }
 
             return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              
               children: [
                 Expanded(child: Image.asset("assets/Rectangle 65.png")),
 
@@ -74,7 +75,7 @@ class _NavigationsSectionState extends State<NavigationsSection> {
                       crossAxisCount: 3,
                       crossAxisSpacing: 15,
                       mainAxisSpacing: 15,
-                      childAspectRatio: 0.9,
+                      childAspectRatio: 1,
                     ),
                     itemBuilder: (context, index) {
                       final item = controller.dataList[index];

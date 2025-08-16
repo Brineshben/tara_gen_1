@@ -800,6 +800,17 @@ class ApiServices {
       throw Exception('Error: $e');
     }
   }
+  static Future<Map<String, dynamic>> fetchUploadedMap({required String robotId}) async {
+    try {
+      String url = "${ApiConstants.localIp}${ApiConstants.uploadedMap}$robotId/";
+      final response = await http.get(Uri.parse(url));
+
+      print('map_response ${response.body}');
+      return jsonDecode(response.body);
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
 
   static Future<Map<String, dynamic>> setLanguage({
     required String language,

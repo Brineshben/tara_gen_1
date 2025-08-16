@@ -71,7 +71,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.only(top: 50, bottom: 20),
                 child: Row(
                   children: [
                     Container(
@@ -95,7 +95,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
                     ),
                     Spacer(),
                     Expanded(
-                      flex: 2,
                       child: TabHeaderWidget(
                         onTabSelected: (index) {
                           setState(() {

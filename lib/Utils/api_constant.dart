@@ -101,6 +101,7 @@ class ApiConstants {
   static String login = "/accounts/login/";
   static String poweroff = "/off/";
   static String robotResponse = "/list_status/";
+  static String uploadedMap = "/stcm_files/";
   static String checkunknown = "/accounts/status/get/";
   static String backGround = "/accounts/list/background/images/";
   static String session = "/accounts/session_id/generate/";

@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
@@ -13,11 +14,13 @@ import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
-import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/language/view/language_screen.dart';
+import 'package:ihub/View/welcome/account_horizontal.dart';
+import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation.dart';
 import 'package:lottie/lottie.dart';
+import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -41,8 +44,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     // Get.find<BackgroudController>().backgroundModel.value = null;
 
-    // Get.find<BatteryController>().fetchBattery(
-    //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
+    Get.find<BatteryController>().fetchBattery(
+        Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       // get robot wifi ip
@@ -53,7 +56,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
       //     context);
 
-      // check robot on or off
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
         fiveSecTimer?.cancel();
@@ -65,42 +67,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
 
     oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      // get communication status
       Get.find<RobotresponseapiController>().fetchObsResultList();
-
-      // Get.find<ResponseNavController>()
-      //     .fetchresponsenav(roboid: Get.find<BatteryController>().roboId);
-
-      // Map<String, dynamic> resp = await ApiServices.getBatteryStatus();
-      // if (resp['status'] == true) {
-      //   oneSecTimer?.cancel();
-      //   Navigator.pushAndRemoveUntil(
-      //     context,
-      //     MaterialPageRoute(builder: (context) => BatterySplash()),
-      //     (route) => false,
-      //   );
-      // }
     });
   }
-
-  // Timer? _debounceTimer;
-  // @override
-  // void didChangeDependencies() {
-  //   super.didChangeDependencies();
-  //   _debounceTimer?.cancel();
-
-  //   final robotresponce = Get.find<RobotresponseapiController>();
-  //   robotresponce.robotResponseModel.value = null;
-
-  //   // Start new timer to delay fetchBackground
-  //   _debounceTimer = Timer(Duration(seconds: 5), () {
-  //     if (mounted) {
-  //       Get.find<BackgroudController>().fetchBackground(
-  //         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
-  //       );
-  //     }
-  //   });
-  // }
 
   void _hideSystemUI() {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
@@ -131,7 +100,66 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 children: [
                   Expanded(flex: 2, child: _buildLeftContent()),
                   const Spacer(flex: 1),
-                  Expanded(flex: 3, child: _buildGlassmorphicPanel(context)),
+                  Expanded(
+                    flex: 3,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            spacing: 20,
+                            children: [
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                              ChildGlasmorphism(
+                                borderRadius:40,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10),
+                                  child: Image.asset("assets/brake.png", width: 30,),
+                                ),
+                              ),
+                             
+                            ],
+                          ),
+                        ),
+                        Expanded(child: _buildGlassmorphicPanel(context)),
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -142,6 +170,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 return Positioned(
                   top: MediaQuery.of(context).size.height * 0.2,
                   right: 20,
+                
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.7,
                     width: 80,
@@ -232,60 +261,100 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 );
               },
             ),
+          Positioned(
+            top: 20,
+            left: 20,
+            child: const CompnayLogo(),
+          ),
         ],
       ),
     );
   }
 
   Widget _buildLeftContent() {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const CompnayLogo(),
-          SizedBox(height: MediaQuery.sizeOf(context).height * 0.09),
-          Text(
-            'TARA GEN 1',
-            style: GoogleFonts.poppins(
-              fontSize: MediaQuery.sizeOf(context).height * 0.09,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-              height: 1.2,
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 20),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Text(
+              'TARA GEN 1',
+              style: GoogleFonts.poppins(
+                fontSize: MediaQuery.sizeOf(context).height * 0.07,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
-          Text(
-            'Discover cutting-edge work from top robotics engineers and designers, ready to bring innovation to your next intelligent machine or automation project.',
-            style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
-          ),
-          GetX<RobotresponseapiController>(builder: (controller) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (controller.responseData.value.speaking == true)
-                  Lottie.asset(
-                    "assets/speak.json",
-                    height: MediaQuery.sizeOf(context).height * 0.3,
-                    fit: BoxFit.contain,
-                  ),
-                if (controller.responseData.value.listening == true)
-                  Lottie.asset(
-                    "assets/Listen.json",
-                    height: MediaQuery.sizeOf(context).height * 0.3,
-                    fit: BoxFit.contain,
-                  ),
-              ],
-            );
-          }),
-        ],
+            const SizedBox(height: 20),
+            Text(
+              'Discover cutting-edge work from top robotics engineers and designers, ready to bring innovation to your next intelligent machine or automation project.',
+              style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
+            ),
+            GetX<RobotresponseapiController>(builder: (controller) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  if (controller.responseData.value.speaking == true)
+                    Lottie.asset(
+                      "assets/speak.json",
+                      height: MediaQuery.sizeOf(context).height * 0.3,
+                      fit: BoxFit.contain,
+                    ),
+                  if (controller.responseData.value.listening == true)
+                    Lottie.asset(
+                      "assets/Listen.json",
+                      height: MediaQuery.sizeOf(context).height * 0.3,
+                      fit: BoxFit.contain,
+                    ),
+                ],
+              );
+            }),
+            // InkWell(
+            //   onTap: () {
+
+            //   },
+            //   child: Container(
+            //     padding:
+            //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            //     decoration: BoxDecoration(
+            //       color: Colors.blueAccent,
+            //       borderRadius: BorderRadius.circular(12),
+            //       boxShadow: [
+            //         BoxShadow(
+            //           color: Colors.black.withOpacity(0.2),
+            //           blurRadius: 6,
+            //           offset: const Offset(2, 4),
+            //         ),
+            //       ],
+            //     ),
+            //     child: Row(
+            //       mainAxisSize: MainAxisSize.min,
+            //       children: const [
+            //         Icon(Icons.camera_alt, color: Colors.white, size: 22),
+            //         SizedBox(width: 8),
+            //         Text(
+            //           "Capture Image",
+            //           style: TextStyle(
+            //             color: Colors.white,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.w600,
+            //           ),
+            //         ),
+            //       ],
+            //     ),
+            //   ),
+            // )
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildGlassmorphicPanel(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0),
+      padding: const EdgeInsets.only(top: 30),
       child: BaseGlassmorphism(
         borderRadius: 30,
         padding: const EdgeInsets.all(20),
@@ -303,7 +372,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => NavigationScreen(selectedTabIndex: 1,),
+                              builder: (context) => NavigationScreen(
+                                selectedTabIndex: 1,
+                              ),
                             ),
                           );
                         }
@@ -341,7 +412,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/Home.svg",
                       label: "Menu",
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context)=>MenuScreen()));
+                        if (!showVolumeControl)
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MenuScreen()));
                       },
                     ),
                   ),
@@ -349,16 +424,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Expanded(
                     flex: 5,
                     child: _menuButton(
-                      icon: "assets/g_translate.svg",
-                      label: "Language",
+                      icon: "assets/selfie.png",
+                      label: "Take a Selfie",
                       onPressed: () {
                         if (!showVolumeControl) {
                           Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LanguageList(),
-                            ),
-                          );
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => CaptureAndQrPage()));
                         }
                       },
                     ),
@@ -382,14 +455,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return GetX<BatteryController>(
       builder: (controller) {
         return ChildGlasmorphism(
-          borderRadius: 10,
+          borderRadius: 20,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color.fromARGB(69, 48, 48, 48),
               foregroundColor: Colors.white,
               elevation: 0,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(20),
               ),
               padding: const EdgeInsets.symmetric(vertical: 10),
             ),
@@ -411,11 +484,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     icon != null
                         ? SvgPicture.asset(
                             icon,
-                            width: MediaQuery.of(context).size.width * 0.05,
+                            width: MediaQuery.of(context).size.width * 0.06,
                           )
                         : _buildBatteryWidget(controller.batteryStatus.value),
                     const SizedBox(height: 8),
-                    Text(label, style: GoogleFonts.poppins(fontSize: 14)),
+                    Text(label, style: GoogleFonts.poppins(fontSize: 18)),
                   ],
                 ),
               ],
@@ -492,17 +565,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildLetsGoButton(BuildContext context) {
     return ChildGlasmorphism(
       borderRadius: 60,
-      margin: EdgeInsets.all(20),
+      // margin: EdgeInsets.all(20),
       child: ActionSlider.standard(
         width: double.infinity,
-        height: 80,
+        height: 90,
         backgroundColor: Colors.white.withOpacity(0.15),
-        toggleColor: Colors.white,
-        icon: const Icon(Icons.arrow_forward, color: Colors.black),
+        toggleColor: Color.fromARGB(113, 255, 255, 255),
+        icon: Icon(Icons.arrow_forward, color: Colors.black),
         child: Text(
           'Navigate',
           style: GoogleFonts.poppins(
-            fontSize: 24,
+            fontSize: 28,
             fontWeight: FontWeight.w600,
             color: Colors.white,
           ),
@@ -513,9 +586,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           controller.success();
           await Future.delayed(const Duration(milliseconds: 400));
           controller.reset();
-
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => NavigationScreen(selectedTabIndex: 0,)));
+          if (!showVolumeControl)
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => NavigationScreen(
+                          selectedTabIndex: 0,
+                        )));
         },
       ),
     );

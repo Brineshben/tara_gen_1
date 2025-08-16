@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ihub/View/welcome/behaviour.dart';
-import 'package:ihub/View/welcome/fulltour.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/mapping.dart';
 
@@ -15,17 +14,18 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Behaviour', 'Mapping', 'Fulltour'];
+  final List<String> tabs = ['Behaviour', 'Mapping', "Shutdown Menu"];
 
   Widget _getCurrentScreen() {
     Widget screen;
 
     if (selectedTabIndex == 0) {
       screen = Behaviour();
-    } else if (selectedTabIndex == 1) {
+    } else if(selectedTabIndex==1){
       screen = Mapping();
-    } else {
-      screen = FullTourModeScreen();
+    }else{
+      screen = Mapping();
+      
     }
     return screen;
   }
@@ -62,7 +62,7 @@ class _MenuScreenState extends State<MenuScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 20),
+                padding: const EdgeInsets.only(top: 50, bottom: 20),
                 child: Row(
                   children: [
                     Container(
@@ -86,7 +86,6 @@ class _MenuScreenState extends State<MenuScreen> {
                     ),
                     Spacer(),
                     Expanded(
-                      flex: 2,
                       child: TabHeaderWidget(
                         onTabSelected: (index) {
                           setState(() {

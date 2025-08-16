@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/View/Robot_Response/homepage.dart';
+import 'package:ihub/View/welcome/welcome_screen.dart';
 
 import '../Model/login_model.dart';
 import '../Service/Api_Service.dart';
@@ -41,7 +42,7 @@ class UserAuthController extends GetxController {
           context,
           PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 300),
-            pageBuilder: (context, animation, secondaryAnimation) => Homepage(),
+            pageBuilder: (context, animation, secondaryAnimation) => WelcomeScreen(),
             transitionsBuilder:
                 (context, animation, secondaryAnimation, child) {
               return FadeTransition(opacity: animation, child: child);

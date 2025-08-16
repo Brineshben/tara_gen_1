@@ -50,7 +50,7 @@ class ChildGlasmorphism extends StatelessWidget {
     required this.child,
     this.borderRadius = 20.0,
     this.margin,
-    this.borderColor = const Color.fromRGBO(255, 255, 255, 0.15),
+    this.borderColor = const Color.from(alpha: 0.149, red: 1, green: 1, blue: 1),
   });
 
   @override
