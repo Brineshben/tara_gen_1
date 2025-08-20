@@ -1,7 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:ihub/View/welcome/fulltour.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/place_description.dart';
 import 'package:ihub/View/welcome/time_description.dart';
@@ -76,7 +75,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                           Navigator.pop(context);
                         },
                         icon: const Icon(
-                          Icons.arrow_back_ios,
+                          Icons.arrow_back,
                           color: Colors.white,
                           size: 20,
                         ),

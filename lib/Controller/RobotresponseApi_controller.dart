@@ -34,7 +34,7 @@ class RobotresponseapiController extends GetxController {
     print('name ${name.value}');
   }
 
-  Future<void> fetchObsResultList() async {
+  Future<void> communicationStatus() async {
     isLoading.value = true;
     isLoaded.value = false;
     try {

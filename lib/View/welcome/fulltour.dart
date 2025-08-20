@@ -74,8 +74,8 @@ class FullTourModeScreen extends StatelessWidget {
                         ElevatedButton.icon(
                           onPressed: () async {
                             Map<String, dynamic> resp =
-                                await ApiServices.FulltourNavigation(
-                                    Data: true);
+                                await ApiServices.fulltourNavigation(
+                                    status: true);
 
                             if (resp['status'] == "ok") {
                               showTopRightToast(

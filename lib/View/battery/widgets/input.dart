@@ -33,14 +33,14 @@ class GlassmorphismModal extends StatelessWidget {
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                 child: Padding(
-                  padding: EdgeInsets.all(20),
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 40),
                   child: SingleChildScrollView(
                     child: Center(
                       child: provider.isLoadingForFetch.value
                           ? Column(
-                              children: List.generate(3, (_) {
+                              children: List.generate(5, (_) {
                                 return Padding(
-                                  padding: const EdgeInsets.only(bottom: 16),
+                                  padding: const EdgeInsets.only(bottom: 20),
                                   child: Shimmer.fromColors(
                                     baseColor: Colors.grey.shade800,
                                     highlightColor: Colors.grey.shade600,
@@ -79,7 +79,7 @@ class GlassmorphismModal extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 20),
+                                SizedBox(height: 30),
                                 Text(
                                   'Low Battery entry',
                                   style: TextStyle(
@@ -88,7 +88,7 @@ class GlassmorphismModal extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 5),
+                                SizedBox(height: 10),
 
                                 Container(
                                   height: 40,
@@ -121,7 +121,7 @@ class GlassmorphismModal extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 15),
+                                SizedBox(height: 20),
 
                                 Text(
                                   'Back to home entry',
@@ -131,7 +131,7 @@ class GlassmorphismModal extends StatelessWidget {
                                   ),
                                 ),
 
-                                SizedBox(height: 5),
+                                SizedBox(height: 10),
 
                                 Container(
                                   height: 40,
@@ -258,7 +258,7 @@ class GlassmorphismModal extends StatelessWidget {
                                                       ),
                                                 )
                                               : Text(
-                                                  'Save Changess',
+                                                  'Save Changes',
                                                   style: TextStyle(
                                                     color: Colors
                                                         .white,

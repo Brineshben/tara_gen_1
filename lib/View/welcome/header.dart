@@ -36,61 +36,66 @@ class TabHeaderWidget extends StatelessWidget {
         ),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Row(
-            children: tabs.asMap().entries.map((entry) {
-              int index = entry.key;
-              String tab = entry.value;
-              bool isSelected = index == selectedIndex;
-
-              return Expanded(
-                child: InkWell(
-                  onTap: () {
-                    onTabSelected(index);
-                  },
-                  child: Container(
-                    height: double.infinity,
-                    margin: const EdgeInsets.symmetric(
-                      horizontal: 6,
-                      vertical: 6,
-                    ),
-                    decoration: isSelected
-                        ? BoxDecoration(
-                            borderRadius: BorderRadius.circular(40),
-                            gradient: const LinearGradient(
-                              colors: [
-                                Color.fromARGB(255, 114, 113, 113),
-                                Color(0xFF222222),
-                              ],
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                            ),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(0.3),
-                              width: 1.4,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.4),
-                                blurRadius: 6,
-                                offset: const Offset(0, 2),
+          child: Padding(
+            padding: const EdgeInsets.only(right:30),
+            child: Row(
+              children: tabs.asMap().entries.map((entry) {
+                int index = entry.key;
+                String tab = entry.value;
+                bool isSelected = index == selectedIndex;
+            
+                return Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      onTabSelected(index);
+                    },
+                    child: Container(
+                      height: double.infinity,
+                      margin: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 6,
+                      ),
+                      decoration: isSelected
+                          ? BoxDecoration(
+                              borderRadius: BorderRadius.circular(40),
+                              gradient: const LinearGradient(
+                                colors: [
+                                  Color.fromARGB(255, 114, 113, 113),
+                                  Color(0xFF222222),
+                                ],
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
                               ),
-                            ],
-                          )
-                        : null,
-                    child: Center(
-                      child: Text(
-                        tab,
-                        style: GoogleFonts.poppins(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.3),
+                                width: 1.4,
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.4),
+                                  blurRadius: 6,
+                                  offset: const Offset(0, 2),
+                                ),
+                              ],
+                            )
+                          : null,
+                      child: Center(
+                        child: Text(
+                          tab,
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
                   ),
-                ),
-              );
-            }).toList(),
+                );
+                
+              }).toList(),
+              
+            ),
           ),
         ),
       ),

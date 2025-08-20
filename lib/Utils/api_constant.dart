@@ -48,7 +48,7 @@ class ApiConstants {
   static String setHome = "/home/set/";
 
   ///offline
-  static String poweroffoffline = "/update-reboot-status/";
+  static String restart = "/update-reboot-status/";
   static String navigationoffline = "/navigation/list/";
   static String navigationEditoffline = "/navigation/edit/";
   static String navigationdestinationoffline = "/navigation/";

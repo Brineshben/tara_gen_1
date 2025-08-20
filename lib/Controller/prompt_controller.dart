@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Model/qa_model.dart';
 import 'package:ihub/Service/add_prompt_service.dart';
+import 'package:ihub/Utils/toast.dart';
 
 class PromptController extends GetxController {
   var isLoading = false.obs;
@@ -19,17 +20,11 @@ class PromptController extends GetxController {
     }
   }
 
-  Future<void> addPrompt({
-    required String prompt,
-  }) async {
+  Future<void> addPrompt(
+      {required String prompt, required BuildContext context}) async {
     if (prompt.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Please enter Prompt",
-        margin: EdgeInsets.all(20),
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+      showTopRightToast(
+          context: context, message: "Please enter Prompt", color: Colors.red);
       return;
     }
     isLoading.value = true;
@@ -41,40 +36,27 @@ class PromptController extends GetxController {
 
     if (response?['status'] == 'ok') {
       await fetchPrompt();
-      Get.back();
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Success",
-        response?['message'] ?? "Prompt submitted successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+
+      showTopRightToast(
+          context: context,
+          message: response?['message'] ?? "Prompt submitted successfully",
+          color: Colors.green);
     } else {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Failed",
-        snackPosition: SnackPosition.TOP,
-        response?['message'] ?? "Something went wrong",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+      showTopRightToast(
+          context: context,
+          message: response?['message'] ?? "Something went wrong",
+          color: Colors.red);
     }
   }
 
   // edit prompt
-  Future<void> editPrompt({
-    required String prompt,
-    required String id,
-  }) async {
+  Future<void> editPrompt(
+      {required String prompt,
+      required String id,
+      required BuildContext context}) async {
     if (prompt.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "Please enter Prompt",
-        margin: EdgeInsets.all(20),
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+      showTopRightToast(
+          context: context, message: "Please enter Prompt", color: Colors.red);
       return;
     }
     isLoading.value = true;
@@ -86,25 +68,15 @@ class PromptController extends GetxController {
     print('Controller Response: $response');
 
     if (response?['status'] == 'ok') {
-      await fetchPrompt();
-      Get.back();
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Success",
-        response?['message'] ?? "Prompt submitted successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.TOP,
-      );
+      showTopRightToast(
+          context: context,
+          message: response?['message'] ?? "Prompt submitted successfully",
+          color: Colors.green);
     } else {
-      Get.snackbar(
-        margin: EdgeInsets.all(20),
-        "Failed",
-        snackPosition: SnackPosition.TOP,
-        response?['message'] ?? "Something went wrong",
-        backgroundColor: Colors.red.withOpacity(0.8),
-        colorText: Colors.white,
-      );
+      showTopRightToast(
+          context: context,
+          message: response?['message'] ?? "Something went wrong",
+          color: Colors.red);
     }
   }
 

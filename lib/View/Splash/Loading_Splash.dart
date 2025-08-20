@@ -3,7 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/View/Robot_Response/homepage.dart';
+import 'package:ihub/View/welcome/welcome_screen.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../Service/Api_Service.dart';
@@ -33,7 +33,7 @@ class _LoadingSplashState extends State<LoadingSplash> {
       if (resp['status'] == "ON") {
         messageTimer?.cancel(); // Stop further checks
         Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Homepage()),
+          MaterialPageRoute(builder: (context) => WelcomeScreen()),
           (route) => false,
         );
       }

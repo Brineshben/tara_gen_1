@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ihub/Utils/toast.dart';
 
 import '../Model/volume_Model.dart';
 import '../Service/Api_Service.dart';
@@ -16,15 +17,17 @@ class VolumeController extends GetxController {
     isError.value = false;
   }
 
-  Future<void> fetchvolume(String RobotId, int volume) async {
+  Future<void> fetchvolume(
+      String roboId, int volume, BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
       Map<String, dynamic> resp = await ApiServices.volume(
-        roboid: RobotId,
+        roboid: roboId,
         volume: volume,
       );
-      print("------respvolumecontrol------$resp");
+
+      print('volume_response ${resp}');
       if (resp['current_volume'] != null) {
         roboVolume.value =
             resp['current_volume'] > 100 ? 100 : resp['current_volume'];
@@ -32,39 +35,23 @@ class VolumeController extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-      Get.snackbar(
-        'Failed', // Title
-        'Error in Robot Response Volume Control', // Message
-        snackPosition: SnackPosition.BOTTOM, // Position (TOP or BOTTOM)
-        backgroundColor: Colors.blueGrey,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 3), // Auto dismiss time
-        icon: Icon(Icons.check_circle, color: Colors.white),
-      );
-      // ProductAppPopUps.submit(
-      //   title: "Failed",
-      //   message: "Issue in Volume Control1",
-      //   actionName: "Close",
-      //   iconData: Icons.error_outline,
-      //   iconColor: Colors.grey,
-      // );
-      print("--------session id not generated---------");
-    } finally {
-      print("--------session id not generated---------");
-      // resetStatus();
+
+      showTopRightToast(
+          context: context,
+          message: "Error in Robot Response Volume Control",
+          color: Colors.red);
     }
   }
 
-  Future<void> fetchinitialvolume(String RobotId) async {
+  Future<void> fetchinitialvolume(String roboId, BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
 
     try {
       Map<String, dynamic> resp =
-          await ApiServices.volumeinitial(roboid: RobotId);
-      print("------resp------$resp");
+          await ApiServices.volumeinitial(roboid: roboId);
+           print('volume_response ${resp}');
+
       if (resp['current_volume'] != null) {
         roboVolume.value =
             resp['current_volume'] > 100 ? 100 : resp['current_volume'];
@@ -72,22 +59,11 @@ class VolumeController extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-      Get.snackbar(
-        'Failed', // Title
-        'Error in Robot Response Volume Control',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.blueGrey,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: EdgeInsets.all(10),
-        duration: Duration(seconds: 3), // Auto dismiss time
-        icon: Icon(Icons.check_circle, color: Colors.white),
-      );
 
-      print("--------session id not generated---------");
-    } finally {
-      print("--------session id not generated---------");
-      // resetStatus();
+      showTopRightToast(
+          context: context,
+          message: "Error in Robot Response Volume Control",
+          color: Colors.red);
     }
   }
 }

@@ -63,7 +63,7 @@ class _BatteryConfigState extends State<BatteryConfig> {
               ),
 
               Padding(
-                padding: const EdgeInsets.only(top: 20, left: 20),
+                padding: const EdgeInsets.only(top: 40, left: 40),
                 child: Column(
                   children: [
                     Row(
@@ -110,213 +110,216 @@ class _BatteryConfigState extends State<BatteryConfig> {
                             ),
                             const SizedBox(width: 20),
                             Expanded(
-                              child: Column(
-                                spacing: 15,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Expanded(
-                                    child: Row(
-                                      children: [
-                                        Expanded(
-                                          child: GetX<BatteryController>(
-                                            builder: (provider) {
-                                              return BaseGlassmorphism(
-                                                borderRadius: 10,
-                                                padding: EdgeInsetsGeometry.all(
-                                                  10,
-                                                ),
-                                                child: Column(
-                                                  spacing: 10,
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  children: [
-                                                    Text(
-                                                      "Status",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 12,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      provider.onDock.value
-                                                          ? "On Dock"
-                                                          : "Not On Dock",
-                                                      style: TextStyle(
-                                                        color: Color(
-                                                          0xff96FFBB,
-                                                        ),
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      spacing: 15,
-                                      children: [
-                                        Expanded(
-                                          child: GetX<BatteryConfigController>(
-                                            builder: (provider) {
-                                              return BaseGlassmorphism(
-                                                borderRadius: 10,
-                                                padding: EdgeInsetsGeometry.all(
-                                                  15,
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                    
-                                                  children: [
-                                                    Text(
-                                                      "Low battery entry",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "${provider.lowBatteryEntry}%",
-                                                      style: TextStyle(
-                                                        color: Color(
-                                                          0xff96FFBB,
-                                                        ),
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: GetX<BatteryConfigController>(
-                                            builder: (provider) {
-                                              return BaseGlassmorphism(
-                                                borderRadius: 10,
-                                                padding: EdgeInsetsGeometry.all(
-                                                  15,
-                                                ),
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                    
-                                                  children: [
-                                                    Text(
-                                                      "Home entry",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 10,
-                                                      ),
-                                                    ),
-                                                    Text(
-                                                      "${provider.backToHomeEntry}%",
-                                                      style: TextStyle(
-                                                        color: Color(
-                                                          0xff96FFBB,
-                                                        ),
-                                                        fontSize: 30,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              );
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Row(
-                                      spacing: 15,
-                                      children: [
-                                        Expanded(
-                                          child: BaseGlassmorphism(
-                                            borderRadius: 10,
-                                            padding: EdgeInsetsGeometry.all(15),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-
-                                              children: [
-                                                Text(
-                                                  "Energy",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(vertical: 90),
+                                child: Column(
+                                  spacing: 15,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                            child: GetX<BatteryController>(
+                                              builder: (provider) {
+                                                return BaseGlassmorphism(
+                                                  borderRadius: 10,
+                                                  padding: EdgeInsetsGeometry.all(
+                                                    10,
                                                   ),
-                                                ),
-                                                Text(
-                                                  "65 wh",
-                                                  style: TextStyle(
-                                                    color: Color(0xff96FFBB),
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.bold,
+                                                  child: Column(
+                                                    spacing: 10,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    children: [
+                                                      Text(
+                                                        "Status",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 12,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        provider.onDock.value
+                                                            ? "On Dock"
+                                                            : "Not On Dock",
+                                                        style: TextStyle(
+                                                          color: Color(
+                                                            0xff96FFBB,
+                                                          ),
+                                                          fontSize: 30,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
+                                                );
+                                              },
                                             ),
                                           ),
-                                        ),
-                                        Expanded(
-                                          child: BaseGlassmorphism(
-                                            borderRadius: 10,
-                                            padding: EdgeInsetsGeometry.all(15),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-
-                                              children: [
-                                                Text(
-                                                  "Time to drop",
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 10,
+                                        ],
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Row(
+                                        spacing: 15,
+                                        children: [
+                                          Expanded(
+                                            child: GetX<BatteryConfigController>(
+                                              builder: (provider) {
+                                                return BaseGlassmorphism(
+                                                  borderRadius: 10,
+                                                  padding: EdgeInsetsGeometry.all(
+                                                    15,
                                                   ),
-                                                ),
-                                                Text(
-                                                  "05 hr",
-                                                  style: TextStyle(
-                                                    color: Color(0xff96FFBB),
-                                                    fontSize: 30,
-                                                    fontWeight: FontWeight.bold,
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                      
+                                                    children: [
+                                                      Text(
+                                                        "Low battery entry",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${provider.lowBatteryEntry}%",
+                                                        style: TextStyle(
+                                                          color: Color(
+                                                            0xff96FFBB,
+                                                          ),
+                                                          fontSize: 30,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
-                                                ),
-                                              ],
+                                                );
+                                              },
                                             ),
                                           ),
-                                        ),
-                                      ],
+                                          Expanded(
+                                            child: GetX<BatteryConfigController>(
+                                              builder: (provider) {
+                                                return BaseGlassmorphism(
+                                                  borderRadius: 10,
+                                                  padding: EdgeInsetsGeometry.all(
+                                                    15,
+                                                  ),
+                                                  child: Column(
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment.start,
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                      
+                                                    children: [
+                                                      Text(
+                                                        "Home entry",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${provider.backToHomeEntry}%",
+                                                        style: TextStyle(
+                                                          color: Color(
+                                                            0xff96FFBB,
+                                                          ),
+                                                          fontSize: 30,
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                    Expanded(
+                                      child: Row(
+                                        spacing: 15,
+                                        children: [
+                                          Expanded(
+                                            child: BaseGlassmorphism(
+                                              borderRadius: 10,
+                                              padding: EdgeInsetsGeometry.all(15),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                            
+                                                children: [
+                                                  Text(
+                                                    "Energy",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "65 wh",
+                                                    style: TextStyle(
+                                                      color: Color(0xff96FFBB),
+                                                      fontSize: 30,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: BaseGlassmorphism(
+                                              borderRadius: 10,
+                                              padding: EdgeInsetsGeometry.all(15),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                            
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                            
+                                                children: [
+                                                  Text(
+                                                    "Time to drop",
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "05 hr",
+                                                    style: TextStyle(
+                                                      color: Color(0xff96FFBB),
+                                                      fontSize: 30,
+                                                      fontWeight: FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
 

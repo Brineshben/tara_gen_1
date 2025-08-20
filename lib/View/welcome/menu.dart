@@ -1,9 +1,9 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:ihub/View/welcome/behaviour.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/mapping.dart';
+import 'package:ihub/View/welcome/shutdoen_menu.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({super.key});
@@ -14,20 +14,30 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Behaviour', 'Mapping', "Shutdown Menu"];
+  final List<String> tabs = ['Behaviour', 'Map', "Shutdown"];
+  late PageController _pageController;
 
-  Widget _getCurrentScreen() {
-    Widget screen;
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: selectedTabIndex);
+  }
 
-    if (selectedTabIndex == 0) {
-      screen = Behaviour();
-    } else if(selectedTabIndex==1){
-      screen = Mapping();
-    }else{
-      screen = Mapping();
-      
-    }
-    return screen;
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onTabChanged(int index) {
+    setState(() {
+      selectedTabIndex = index;
+    });
+    _pageController.animateToPage(
+      index,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
   }
 
   @override
@@ -35,6 +45,7 @@ class _MenuScreenState extends State<MenuScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          /// Background image
           Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
@@ -43,14 +54,16 @@ class _MenuScreenState extends State<MenuScreen> {
               ),
             ),
           ),
+
+          /// Blur overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFF608878).withOpacity(0.2), // light green
-                  Color(0xFF18221E).withOpacity(0.2), // dark green
+                  const Color(0xFF608878).withOpacity(0.2),
+                  const Color(0xFF18221E).withOpacity(0.2),
                 ],
               ),
             ),
@@ -59,12 +72,16 @@ class _MenuScreenState extends State<MenuScreen> {
               child: Container(color: Colors.transparent),
             ),
           ),
+
+          /// Content
           Column(
             children: [
+              /// Top header with back + tabs
               Padding(
                 padding: const EdgeInsets.only(top: 50, bottom: 20),
                 child: Row(
                   children: [
+                    /// Back button
                     Container(
                       width: 50,
                       height: 50,
@@ -78,20 +95,19 @@ class _MenuScreenState extends State<MenuScreen> {
                           Navigator.pop(context);
                         },
                         icon: const Icon(
-                          Icons.arrow_back_ios,
+                          Icons.arrow_back,
                           color: Colors.white,
                           size: 20,
                         ),
                       ),
                     ),
-                    Spacer(),
+
+                    const Spacer(),
+
+                    /// Tab header
                     Expanded(
                       child: TabHeaderWidget(
-                        onTabSelected: (index) {
-                          setState(() {
-                            selectedTabIndex = index;
-                          });
-                        },
+                        onTabSelected: _onTabChanged,
                         selectedIndex: selectedTabIndex,
                         tabs: tabs,
                       ),
@@ -99,9 +115,28 @@ class _MenuScreenState extends State<MenuScreen> {
                   ],
                 ),
               ),
-              _getCurrentScreen(),
+
+              /// PageView for horizontal swipe
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 100),
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        selectedTabIndex = index;
+                      });
+                    },
+                    children: const [
+                      Behaviour(),
+                      Mapping(),
+                      ShutdoenMenu(),
+                    ],
+                  ),
+                ),
+              ),
             ],
-          )
+          ),
         ],
       ),
     );

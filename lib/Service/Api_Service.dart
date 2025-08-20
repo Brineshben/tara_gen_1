@@ -43,7 +43,7 @@ class ApiServices {
   }
 
   ///logout
-  static Future<Map<String, dynamic>> logout() async {
+  static Future<Map<String, dynamic>> poweroff() async {
     String url = "${ApiConstants.localIp}${ApiConstants.poweroff}";
     var request = http.Request('POST', Uri.parse(url));
     http.StreamedResponse response = await request.send();
@@ -147,23 +147,19 @@ class ApiServices {
   }
 
   ///logoutoffline
-  static Future<Map<String, dynamic>> logoutoffline(bool data) async {
-    String url = "${ApiConstants.localIp}${ApiConstants.poweroffoffline}";
+  static Future<Map<String, dynamic>> restart(bool data) async {
+    String url = "${ApiConstants.localIp}${ApiConstants.restart}";
     print("logoutofflinelogoutoffline$url");
     Map apiBody = {
       "status": data,
     };
-    print("logoutofflinelogoutoffline$apiBody");
 
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});
     http.StreamedResponse response = await request.send();
-    print("logoutofflinelogoutben$response");
 
     var respString = await response.stream.bytesToString();
-    print("logoutofflinelogoutoffline$respString");
-
     return json.decode(respString);
   }
 
@@ -182,25 +178,14 @@ class ApiServices {
   ///robotbasestatus
   static Future<Map<String, dynamic>> robotbasestatus() async {
     String url = "${ApiConstants.localIp}${ApiConstants.basestatusoffline}";
-    print('Api robotbasestatus--------${url}--------------');
-
-    // var scaffoldMessenger = ScaffoldMessenger.of(Get.context!);
-
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
-    print('Api destination-----url $url---${respString}--------------');
-    // scaffoldMessenger.showSnackBar(
-    //   SnackBar(
-    //     content: Text('Response received: $respString'),
-    //     duration: Duration(seconds: 3),
-    //   ),
-    // );
+    print('Api destination-----url $url---${respString}');
     return json.decode(respString);
   }
 
   ///robotResponsee offline
-
   static Future<Map<String, dynamic>> robotResponsee() async {
     String url = "${ApiConstants.localIp}${ApiConstants.robotResponse}";
     print("urlspeaking$url");
@@ -517,7 +502,6 @@ class ApiServices {
   ///check Navigationoffline
 
   static Future<Map<String, dynamic>> navigateoffline() async {
-    // String url = "http://192.168.1.36:8000/${ApiConstants.navigationoffline}";
     String url = "${ApiConstants.localIp}${ApiConstants.navigationoffline}";
     print("Navigationoffline$url");
     var request = http.Request('GET', Uri.parse(url));
@@ -737,12 +721,12 @@ class ApiServices {
 
   ///Send Fulltour
 
-  static Future<Map<String, dynamic>> FulltourNavigation({
-    required bool Data,
+  static Future<Map<String, dynamic>> fulltourNavigation({
+    required bool status,
   }) async {
     String url = "${ApiConstants.localIp}${ApiConstants.fullTour}";
 
-    Map apiBody = {"status": Data};
+    Map apiBody = {"status": status};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));
     request.headers.addAll({'Content-Type': 'application/json'});

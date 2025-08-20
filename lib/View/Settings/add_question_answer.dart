@@ -1,12 +1,9 @@
 import 'dart:ui';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:ihub/Controller/Backgroud_controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Controller/prompt_controller.dart';
-import 'package:ihub/Utils/header.dart';
-import 'package:ihub/View/Settings/settings.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 
 class QuestionAnswerScreen extends StatefulWidget {
   final String qid;
@@ -45,36 +42,30 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          GetX<BackgroudController>(
-            builder: (BackgroudController controller) {
-              return Positioned.fill(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CachedNetworkImage(
-                      imageUrl:
-                          controller.backgroundModel.value?.backgroundImage ??
-                              "",
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
-                      errorWidget: (context, url, error) => Image.asset(
-                          controller.defaultIMage,
-                          fit: BoxFit.cover),
-                    ),
-                    BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 10.0, sigmaY: 10.0),
-                      child: Container(
-                        color: Colors.black.withOpacity(0),
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/bg.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
           ),
-
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Color(0xFF608878).withOpacity(0.2), // light green
+                  Color(0xFF18221E).withOpacity(0.2), // dark green
+                ],
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
           SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 120, vertical: 130),
             child: Column(
@@ -95,32 +86,37 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    buildInfoCard(
-                      onTap: () async {
-                        final question = questionController.text.trim();
-                        final answer = answerController.text.trim();
+                    InkWell(
+                        onTap: () async {
+                          final question = questionController.text.trim();
+                          final answer = answerController.text.trim();
 
-                        if (widget.isEdit) {
-                          await promptController.updateQA(
-                            qaId: widget.qid,
-                            question: question,
-                            answer: answer,
-                            promptId: widget.promptid,
-                          );
-                        } else {
-                          await promptController.createQA(
-                            promptId: widget.promptid,
-                            question: question,
-                            answer: answer,
-                          );
-                        }
+                          if (widget.isEdit) {
+                            await promptController.updateQA(
+                              qaId: widget.qid,
+                              question: question,
+                              answer: answer,
+                              promptId: widget.promptid,
+                            );
+                          } else {
+                            await promptController.createQA(
+                              promptId: widget.promptid,
+                              question: question,
+                              answer: answer,
+                            );
+                          }
 
-                        Navigator.pop(context);
-                      },
-                      MediaQuery.of(context).size,
-                      widget.isEdit ? "UPDATE QA" : "CREATE QA",
-                      color: Colors.green,
-                    ),
+                          Navigator.pop(context);
+                        },
+                        child: ChildGlasmorphism(
+                            child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Text(
+                            widget.isEdit ? "UPDATE QA" : "CREATE QA",
+                            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                          ),
+                        )))
                   ],
                 )
               ],
@@ -128,13 +124,35 @@ class _QuestionAnswerScreenState extends State<QuestionAnswerScreen> {
           ),
 
           // Header
-          Column(
-            children: [
-              Header(
-                isBack: true,
-                screenName: widget.isEdit ? "EDIT Q&A" : "ADD Q&A",
-              ),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 30),
+            child: Row(
+              children: [
+                ChildGlasmorphism(
+                    borderRadius: 40,
+                    child: InkWell(
+                        onTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(15),
+                          child: Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ))),
+                const SizedBox(width: 10),
+                Text(
+                  widget.isEdit ? "EDIT Q&A" : "ADD Q&A",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       ),

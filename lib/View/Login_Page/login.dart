@@ -1,19 +1,14 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:ihub/Controller/RobotresponseApi_controller.dart';
-import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/toast.dart';
 
 import '../../Controller/Login_api_controller.dart';
-import '../../Model/login_model.dart';
-import '../../Service/check_connectivity.dart';
-import '../../Service/sharedPreference.dart';
 import '../../Utils/colors.dart';
 import '../../Utils/popups.dart';
-import '../Robot_Response/homepage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -30,7 +25,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     _hideSystemUI();
-    initialize();
     super.initState();
   }
 
@@ -38,279 +32,292 @@ class _LoginPageState extends State<LoginPage> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
-  Future<void> initialize() async {
-    LoginModel? loginApi = await SharedPrefs().getLoginData();
-
-    Get.find<RobotresponseapiController>().getUrl();
-
-    print("loginsgaredpreferencedata ${loginApi?.user?.id}");
-    if (loginApi != null) {
-      await Get.find<UserAuthController>().getUserLoginSaved(loginApi);
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => Homepage()),
-          (route) => false);
-    }
+  @override
+  void dispose() {
+    _usernameController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-    return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.black,
-          resizeToAvoidBottomInset: false,
-          body: Stack(
-            children: [
-              Positioned.fill(child: Image.asset("assets/bg.png")),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  child:
-                      GetX<BatteryController>(builder: (batteryController) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30.w, vertical: 5.h),
-                          child: Text(
-                            'Hello !',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 30.h,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30.w, vertical: 2.h),
-                          child: Text(
-                            'Sign in to your account',
-                            style: GoogleFonts.poppins(
-                              color: Colors.white,
-                              fontSize: 13.h,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 5.h),
-                
-                        /// Username Field
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30.w, vertical: 2.h),
-                          child: TextFormField(
-                            cursorColor: ColorUtils.userdetailcolor,
-                            controller: _usernameController,
-                            textInputAction: TextInputAction.done,
-                            style: TextStyle(color: Colors.white),
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ColorUtils.userdetailcolor,
-                                    width: 2),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ColorUtils.userdetailcolor),
-                              ),
-                              labelText: 'USERNAME',
-                              labelStyle: TextStyle(
-                                  color: ColorUtils.userdetailcolor,
-                                  fontSize: 16.h),
-                            ),
-                          ),
-                        ),
-                
-                        /// Password Field
-                        Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 30.w, vertical: 5.h),
-                          child: TextFormField(
-                                style: TextStyle(color: Colors.white),
-                            cursorColor: ColorUtils.userdetailcolor,
-                            textInputAction: TextInputAction.done,
-                            obscureText: _obscureText,
-                            controller: _passwordController,
-                            decoration: InputDecoration(
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ColorUtils.userdetailcolor,
-                                    width: 2),
-                              ),
-                              enabledBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: ColorUtils.userdetailcolor),
-                              ),
-                              labelText: 'PASSWORD',
-                              labelStyle: TextStyle(
-                                  color: ColorUtils.userdetailcolor,
-                                  fontSize: 16.h),
-                              suffixIcon: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _obscureText = !_obscureText;
-                                  });
-                                },
-                                child: Icon(
-                                  _obscureText
-                                      ? Icons.visibility_off
-                                      : Icons.visibility,
-                                  color:
-                                      batteryController.foregroundColor.value,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                
-                        SizedBox(height: 50.h),
-                
-                        GetX<UserAuthController>(builder: (authcontroller) {
-                          return Center(
-                            child: Material(
-                              color: Colors.transparent,
-                              child: InkWell(
-                                splashColor: Colors.white,
-                                highlightColor: Colors.white.withOpacity(0.3),
-                                borderRadius: BorderRadius.circular(20.r),
-                                onTap: () async {
-                                  checkInternet2(
-                                    context: context,
-                                    function: () async {
-                                      final user =
-                                          _usernameController.text.trim();
-                                      final psw =
-                                          _passwordController.text.trim();
-                
-                                      if (user.isEmpty) {
-                                        ProductAppPopUps.submit(
-                                          title: "FAILED",
-                                          message:
-                                              "Please enter your username.",
-                                          actionName: "Close",
-                                          iconData: Icons.error_outline,
-                                          iconColor: Colors.red,
-                                        );
-                                        return;
-                                      }
-                
-                                      if (psw.isEmpty) {
-                                        ProductAppPopUps.submit(
-                                          title: "FAILED",
-                                          message:
-                                              "Please enter your password.",
-                                          actionName: "Close",
-                                          iconData: Icons.error_outline,
-                                          iconColor: Colors.red,
-                                        );
-                                        return;
-                                      }
-                
-                                      authcontroller.login(
-                                        username: user,
-                                        password: psw,
-                                        context: context,
-                                      );
-                                    },
-                                  );
-                                },
-                                // child: buildInfoCard(size, 'LOGIN'),
-                                child: Container(
-                                  width: size.width * 0.20,
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 20),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(15),
-                                    color: Colors.white,
-                                    border: Border.all(color: Colors.blue),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.shade400,
-                                        spreadRadius: 1,
-                                        blurRadius: 5,
-                                      ),
-                                    ],
-                                  ),
-                                  height: 55,
-                                  child: Center(
-                                    child: authcontroller.isLoading.value
-                                        ? CircularProgressIndicator(
-                                            color: Colors.black,
-                                          )
-                                        : Text(
-                                            "LOGIN",
-                                            style: GoogleFonts.poppins(
-                                              color: Colors.black,
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          );
-                        }),
-                      ],
-                    );
-                  }),
-                ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Stack(children: [
+        // Background with gradient overlay
+        Container(
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/bg.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.3),
+                  Colors.black.withOpacity(0.6),
+                ],
               ),
-            ],
+            ),
+          ),
+        ),
+
+        // Animated floating particles
+        ...List.generate(
+          6,
+          (index) => Positioned(
+            left: (index * 100.0 + 50) % size.width,
+            top: (index * 150.0 + 100) % size.height,
+            child: Container(
+              width: 4,
+              height: 4,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+        ),
+
+        // Main login content
+        Center(
+          child: Container(
+            width: size.width * 0.9,
+            padding: EdgeInsets.symmetric(horizontal: 100),
+            child: BaseGlassmorphism(
+              margin: EdgeInsets.all(20),
+              padding: EdgeInsetsGeometry.symmetric(horizontal: 30),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(height: 30.h),
+
+                  // Welcome Text
+                  Text(
+                    'Welcome Back',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white,
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+
+                  Text(
+                    'Sign in to continue',
+                    style: GoogleFonts.poppins(
+                      color: Colors.white.withOpacity(0.7),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+
+                  SizedBox(height: 40.h),
+
+                  // Username Field
+                  _buildInputField(
+                    controller: _usernameController,
+                    label: 'Username',
+                    icon: Icons.person_outline,
+                    textInputAction: TextInputAction.done,
+                  ),
+
+                  SizedBox(height: 20.h),
+
+                  // Password Field
+                  _buildInputField(
+                    controller: _passwordController,
+                    label: 'Password',
+                    icon: Icons.lock_outline,
+                    isPassword: true,
+                    textInputAction: TextInputAction.done,
+                  ),
+
+                  SizedBox(height: 15.h),
+
+                  SizedBox(height: 30.h),
+
+                  // Login Button
+                  GetX<UserAuthController>(
+                    builder: (authcontroller) {
+                      return _buildLoginButton(authcontroller, size);
+                    },
+                  ),
+
+                  SizedBox(height: 70.h),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String label,
+    required IconData icon,
+    bool isPassword = false,
+    TextInputAction? textInputAction,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        color: Colors.white.withOpacity(0.1),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.2),
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: isPassword ? _obscureText : false,
+        textInputAction: textInputAction,
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 14,
+        ),
+        cursorColor: ColorUtils.userdetailcolor,
+        decoration: InputDecoration(
+          prefixIcon: Icon(
+            icon,
+            color: ColorUtils.userdetailcolor,
+            size: 20,
+          ),
+          suffixIcon: isPassword
+              ? GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _obscureText = !_obscureText;
+                    });
+                  },
+                  child: Icon(
+                    _obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.white.withOpacity(0.6),
+                    size: 20,
+                  ),
+                )
+              : null,
+          labelText: label,
+          labelStyle: GoogleFonts.poppins(
+            color: Colors.white.withOpacity(0.7),
+            fontSize: 14,
+          ),
+          floatingLabelStyle: GoogleFonts.poppins(
+            color: ColorUtils.userdetailcolor,
+            fontSize: 12,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(15),
+            borderSide: BorderSide(
+              color: ColorUtils.userdetailcolor,
+              width: 2,
+            ),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
           ),
         ),
       ),
     );
   }
-}
 
-Future<void> checkInternet2(
-    {required BuildContext context, required Function() function}) async {
-  bool connected = await CheckConnectivity().check();
-  print("internect connection is $connected");
-  if (connected) {
-    function();
-  } else {
-    ProductAppPopUps.submit(
-      title: "Warning",
-      message:
-          "No internet connection. Please check your network and try again.",
-      actionName: "Close",
-      iconData: Icons.info_outline,
-      iconColor: Colors.red,
-    );
-  }
-}
+  Widget _buildLoginButton(UserAuthController authcontroller, Size size) {
+    return Container(
+      width: 200,
+      height: 55,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(15),
+        gradient: LinearGradient(
+          colors: [
+            ColorUtils.userdetailcolor,
+            ColorUtils.userdetailcolor.withOpacity(0.8),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: ColorUtils.userdetailcolor.withOpacity(0.4),
+            blurRadius: 15,
+            offset: Offset(0, 8),
+          ),
+        ],
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(15),
+          onTap: authcontroller.isLoading.value
+              ? null
+              : () async {
+                  final user = _usernameController.text.trim();
+                  final psw = _passwordController.text.trim();
 
-Future<void> checkInternet1({
-  required BuildContext context,
-  required Function() function,
-  required Function() function2,
-}) async {
-  bool connected = await CheckConnectivity().check();
-  print("internect connection is $connected");
-  if (connected) {
-    function();
-  } else {
-    function2();
-    Get.snackbar(
-      'Alert', // Title
-      'Network Error, Proceed it on offline Mode', // Message
-      snackPosition: SnackPosition.BOTTOM,
-      // Position (TOP or BOTTOM)
-      backgroundColor: Colors.blueGrey,
-      colorText: Colors.white,
-      borderRadius: 10,
-      margin: EdgeInsets.all(10),
-      duration: Duration(seconds: 3),
-      // Auto dismiss time
-      icon: Icon(Icons.check_circle, color: Colors.white),
+                  if (user.isEmpty) {
+                    showTopRightToast(
+                        color: Colors.red,
+                        message: "Please enter your username.",
+                        context: context);
+                    return;
+                  }
+
+                  if (psw.isEmpty) {
+                    showTopRightToast(
+                        color: Colors.red,
+                        message: "Please enter your password.",
+                        context: context);
+
+                    return;
+                  }
+
+                  authcontroller.login(
+                    username: user,
+                    password: psw,
+                    context: context,
+                  );
+                },
+          child: Center(
+            child: authcontroller.isLoading.value
+                ? SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "LOGIN",
+                        style: GoogleFonts.poppins(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 1,
+                        ),
+                      ),
+                      SizedBox(width: 8),
+                      Icon(
+                        Icons.arrow_forward,
+                        color: Colors.white,
+                        size: 18,
+                      ),
+                    ],
+                  ),
+          ),
+        ),
+      ),
     );
   }
 }

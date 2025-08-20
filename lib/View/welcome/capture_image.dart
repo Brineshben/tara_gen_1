@@ -45,17 +45,17 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
     if (_cameraController == null || !_cameraController!.value.isInitialized)
       return;
 
-    final image = await _cameraController!.takePicture();
-    // setState(() {
-    //   _capturedImage = image;
-    // });
+    setState(() => isLoading = true);
 
-    // Upload to backend
-    // await _uploadImage(File(image.path));
-    // Create composite image with frame
+    final image = await _cameraController!.takePicture();
     final compositeFile = await _createCompositeImage(File(image.path));
     await _uploadImage(compositeFile);
     _capturedImage = XFile(compositeFile.path);
+
+    setState(() {
+      _capturedImage = XFile(compositeFile.path);
+      isLoading = false;
+    });
   }
 
   Future<File> _createCompositeImage(File cameraImage) async {
@@ -127,7 +127,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
     try {
       var request = http.MultipartRequest(
         'POST',
-        Uri.parse("${ApiConstants.globalip}/image/"),
+        Uri.parse("http://50.19.192.156/image/"),
       );
       request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
@@ -162,6 +162,25 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
     super.dispose();
   }
 
+  int _countdown = 0;
+
+  bool isLoading = false;
+
+  void _startCountdown() async {
+    setState(() {
+      _countdown = 5;
+    });
+
+    for (int i = 5; i > 0; i--) {
+      await Future.delayed(const Duration(seconds: 1));
+      if (!mounted) return;
+      setState(() {
+        _countdown = i - 1;
+      });
+    }
+    await _captureImage();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -189,7 +208,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
         Positioned.fill(
           child: Image.asset(
-            'assets/frame.png',
+            "assets/frame.png",
             fit: BoxFit.cover,
           ),
         ),
@@ -213,11 +232,11 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
         // Capture button
         Positioned(
-          right: 80,
+          left: 80,
           top: 80,
           child: Center(
             child: GestureDetector(
-              onTap: _captureImage,
+              onTap: _startCountdown,
               child: Container(
                 width: 80,
                 height: 80,
@@ -238,6 +257,28 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
             ),
           ),
         ),
+
+        if (_countdown > 0)
+          Center(
+            child: Text(
+              '$_countdown',
+              style: const TextStyle(
+                fontSize: 80,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+          ),
+
+        if (isLoading)
+          Positioned.fill(
+            child: Container(
+              color: Colors.black54,
+              child: const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+            ),
+          ),
       ],
     );
   }

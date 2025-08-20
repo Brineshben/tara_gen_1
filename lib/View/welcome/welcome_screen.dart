@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui';
 
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
@@ -11,16 +12,14 @@ import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
-import 'package:ihub/View/language/view/language_screen.dart';
-import 'package:ihub/View/welcome/account_horizontal.dart';
 import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter/material.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -37,24 +36,24 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addObserver();
     _hideSystemUI();
-
-    // Get.find<RobotresponseapiController>().getUrl();
-
-    // Get.find<BackgroudController>().backgroundModel.value = null;
 
     Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
-    fiveSecTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
+    Get.find<VolumeController>().fetchinitialvolume(
+        Get.find<UserAuthController>().loginData.value?.user?.id.toString() ??
+            "0",
+        context);
+
+    fiveSecTimer = Timer.periodic(Duration(seconds: 3), (timer) async {
       // get robot wifi ip
-      // ApiService.fetchAndUpdateBaseUrl();
+      ApiService.fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
-      // Get.find<BatteryController>().fetchBattery(
-      //     Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
-      //     context);
+      Get.find<BatteryController>().fetchBattery(
+          Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
+          context);
 
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
@@ -67,7 +66,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     });
 
     oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      Get.find<RobotresponseapiController>().fetchObsResultList();
+      Get.find<RobotresponseapiController>().communicationStatus();
+      Get.find<BatteryController>().checkCharging();
     });
   }
 
@@ -104,57 +104,130 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     flex: 3,
                     child: Column(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            spacing: 20,
-                            children: [
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
+                        GetX<BatteryController>(
+                          builder: (batteryController) {
+                            final robot = batteryController
+                                .batteryModel.value?.data?.first.robot;
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                spacing: 20,
+                                children: [
+                                  // Brake Button (show only when motorBrakeReleased == true)
+                                  if (robot?.motorBrakeReleased ?? false)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 10, sigmaY: 10),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: const Row(
+                                            children: [
+                                              Icon(Icons.stop,
+                                                  color: Colors.white),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                "Brake",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  // Emergency Button (show only when emergencyStop == true)
+                                  if (robot?.emergencyStop ?? false)
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 10, sigmaY: 10),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: const Row(
+                                            children: [
+                                              Icon(Icons.warning,
+                                                  color: Colors.white),
+                                              SizedBox(width: 8),
+                                              Text(
+                                                "Emergency",
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+
+                                  // Q Value Display
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(16),
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 10, sigmaY: 10),
+                                      child: Container(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.black.withOpacity(0.3),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                              color: Colors.white
+                                                  .withOpacity(0.2)),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.query_stats,
+                                                color: Colors.white),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              "Q: ${(robot?.quality ?? 0)}",
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
-                              ),
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
-                              ),
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
-                              ),
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
-                              ),
-                              ChildGlasmorphism(
-                                borderRadius:40,
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.asset("assets/brake.png", width: 30,),
-                                ),
-                              ),
-                             
-                            ],
-                          ),
+                            );
+                          },
                         ),
                         Expanded(child: _buildGlassmorphicPanel(context)),
                       ],
@@ -170,7 +243,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 return Positioned(
                   top: MediaQuery.of(context).size.height * 0.2,
                   right: 20,
-                
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.7,
                     width: 80,
@@ -233,8 +305,16 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   onChanged: (v) => columeController
                                       .roboVolume.value = v.toInt(),
                                   onChangeEnd: (v) =>
-                                      Get.find<VolumeController>()
-                                          .fetchvolume('', v.toInt()),
+                                      Get.find<VolumeController>().fetchvolume(
+                                          Get.find<UserAuthController>()
+                                                  .loginData
+                                                  .value
+                                                  ?.user
+                                                  ?.id
+                                                  .toString() ??
+                                              "0",
+                                          v.toInt(),
+                                          context),
                                 ),
                               ),
                             ),
@@ -277,7 +357,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
               'TARA GEN 1',
@@ -293,59 +373,45 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
             ),
             GetX<RobotresponseapiController>(builder: (controller) {
-              return Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              return Column(
                 children: [
-                  if (controller.responseData.value.speaking == true)
-                    Lottie.asset(
-                      "assets/speak.json",
-                      height: MediaQuery.sizeOf(context).height * 0.3,
-                      fit: BoxFit.contain,
-                    ),
-                  if (controller.responseData.value.listening == true)
-                    Lottie.asset(
-                      "assets/Listen.json",
-                      height: MediaQuery.sizeOf(context).height * 0.3,
-                      fit: BoxFit.contain,
-                    ),
+                  SizedBox(height: 50),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (controller.responseData.value.speaking == true)
+                        Lottie.asset(
+                          "assets/speak.json",
+                          height: MediaQuery.sizeOf(context).height * 0.3,
+                          fit: BoxFit.contain,
+                        ),
+                      if (controller.responseData.value.listening == true)
+                        Lottie.asset(
+                          "assets/Listen.json",
+                          height: MediaQuery.sizeOf(context).height * 0.3,
+                          fit: BoxFit.contain,
+                        ),
+                    ],
+                  ),
+                  if (controller.robotResponseModel.value?.text != null &&
+                      controller.robotResponseModel.value?.text != '')
+                    Container(
+                      width: MediaQuery.of(context).size.width * 0.5,
+                      padding: EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black45,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: Text(
+                          controller.robotResponseModel.value?.text ?? '',
+                          style: TextStyle(fontSize: 12, color: Colors.white),
+                        ),
+                      ),
+                    )
                 ],
               );
             }),
-            // InkWell(
-            //   onTap: () {
-
-            //   },
-            //   child: Container(
-            //     padding:
-            //         const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            //     decoration: BoxDecoration(
-            //       color: Colors.blueAccent,
-            //       borderRadius: BorderRadius.circular(12),
-            //       boxShadow: [
-            //         BoxShadow(
-            //           color: Colors.black.withOpacity(0.2),
-            //           blurRadius: 6,
-            //           offset: const Offset(2, 4),
-            //         ),
-            //       ],
-            //     ),
-            //     child: Row(
-            //       mainAxisSize: MainAxisSize.min,
-            //       children: const [
-            //         Icon(Icons.camera_alt, color: Colors.white, size: 22),
-            //         SizedBox(width: 8),
-            //         Text(
-            //           "Capture Image",
-            //           style: TextStyle(
-            //             color: Colors.white,
-            //             fontSize: 16,
-            //             fontWeight: FontWeight.w600,
-            //           ),
-            //         ),
-            //       ],
-            //     ),
-            //   ),
-            // )
           ],
         ),
       ),
@@ -424,7 +490,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   Expanded(
                     flex: 5,
                     child: _menuButton(
-                      icon: "assets/selfie.png",
+                      icon: "assets/selfie.svg",
                       label: "Take a Selfie",
                       onPressed: () {
                         if (!showVolumeControl) {
@@ -484,6 +550,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     icon != null
                         ? SvgPicture.asset(
                             icon,
+                            color: Colors.white,
                             width: MediaQuery.of(context).size.width * 0.06,
                           )
                         : _buildBatteryWidget(controller.batteryStatus.value),

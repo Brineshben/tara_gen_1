@@ -27,7 +27,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
       child: GetX<BatteryController>(
         builder: (controller) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 100, horizontal: 50),
+            padding: const EdgeInsets.symmetric(vertical:80, horizontal: 50),
             child: Row(
               children: [
                 Expanded(

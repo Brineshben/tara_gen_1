@@ -58,6 +58,6 @@ class UrlService {
     await prefs.setString('url', urlpage);
     await prefs.setString('name', name);
 
-    await Get.find<RobotresponseapiController>().getUrl();
+    // await Get.find<RobotresponseapiController>().getUrl();
   }
 }
