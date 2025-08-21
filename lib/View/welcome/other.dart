@@ -1,47 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:ihub/View/welcome/upload_Document.dart';
-import 'package:ihub/View/welcome/fulltour_create.dart';
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:ihub/Utils/web_view.dart';
+import 'package:ihub/View/welcome/ApiKey.dart';
+import 'package:ihub/View/welcome/add_url.dart';
+import 'package:ihub/View/welcome/speed.dart';
 
-class Mapping extends StatelessWidget {
-  const Mapping({super.key});
-
-  void openAnotherApp() async {
-    const packageName = "com.slamtec.robostudio";
-    final Uri androidUri = Uri.parse(
-      "intent://#Intent;package=$packageName;end;",
-    );
-    try {
-      if (await canLaunchUrl(Uri.parse("android-app://$packageName"))) {
-        await launchUrl(Uri.parse("android-app://$packageName"));
-        return;
-      }
-
-      if (await canLaunchUrl(androidUri)) {
-        await launchUrl(androidUri);
-        return;
-      }
-
-      Share.share("Hello from App A!");
-
-      // Open Play Store if the app is not installed
-      await launchUrl(
-        Uri.parse(
-          "https://play.google.com/store/apps/details?id=$packageName",
-        ),
-        mode: LaunchMode.externalApplication,
-      );
-    } catch (e) {
-      print("Error launching app: $e");
-    }
-  }
+class OtherSettings extends StatelessWidget {
+  const OtherSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 50, bottom: 50, left: 50, right: 50),
+      // height: MediaQuery.of(context).size.height * 0.3,
+      width: MediaQuery.of(context).size.width * 0.7,
+      padding: EdgeInsets.only(top: 50, bottom: 50),
       child: Column(
         spacing: 20,
         children: [
@@ -52,24 +24,21 @@ class Mapping extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FullTourCreateScreen()));
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => ApiKey()));
                     },
                     child: ChildGlasmorphism(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            'assets/square-pen.png',
+                            "assets/cryptography.png",
                             width: 90,
+                            color: Colors.white,
                           ),
                           SizedBox(height: 8),
-                          Text(
-                            "Add full tour",
-                            style: TextStyle(color: Colors.white),
-                          ),
+                          Text("API KEY",
+                              style: TextStyle(color: Colors.white)),
                         ],
                       ),
                     ),
@@ -81,18 +50,51 @@ class Mapping extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => FileUploadScreen()));
+                              builder: (context) => SpeedControllerPage()));
                     },
                     child: ChildGlasmorphism(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "assets/map.png",
+                            'assets/speed.png',
+                            color: Colors.white,
                             width: 90,
                           ),
                           SizedBox(height: 8),
-                          Text("Manage map",
+                          Text(
+                            "Speed",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => InAppWebViewScreen(
+                            url:
+                                'http://192.168.11.2/admin/index.html#/functions/wifi/client?freq=5GHz',
+                          ),
+                        ),
+                      );
+                    },
+                    child: ChildGlasmorphism(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/3d-wifi.png",
+                            width: 90,
+                            color: Colors.white,
+                          ),
+                          SizedBox(height: 8),
+                          Text("ROUTER SETTINGS",
                               style: TextStyle(color: Colors.white)),
                         ],
                       ),
@@ -109,28 +111,28 @@ class Mapping extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     onTap: () {
-                      openAnotherApp();
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => WebLink()));
                     },
                     child: ChildGlasmorphism(
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset(
-                            "assets/robo.png",
+                            "assets/webLink.png",
                             width: 90,
                             color: Colors.white,
                           ),
                           SizedBox(height: 8),
-                          Text("Mapping",
+                          Text("WEB LINK",
                               style: TextStyle(color: Colors.white)),
                         ],
                       ),
                     ),
                   ),
                 ),
-
-                // Cancel Button
-                Expanded(child: SizedBox())
+                Expanded(child: SizedBox()),
+                Expanded(child: SizedBox()),
               ],
             ),
           ),

@@ -25,11 +25,12 @@ class ModeCard extends StatelessWidget {
       child: Stack(
         children: [
           Container(
-            // width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
               image: DecorationImage(
                 image: NetworkImage(imageUrl),
+                
                 fit: BoxFit.cover,
                 colorFilter: ColorFilter.mode(
                   comingSoon

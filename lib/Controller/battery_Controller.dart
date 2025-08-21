@@ -17,14 +17,10 @@ class BatteryController extends GetxController {
   Rx<OfflineBatteryModel?> offlineBatteryModel = Rx(null);
   bool popupshow = false;
 
-
   RxBool onDock = RxBool(false);
 
   var roboId;
   Rx<Color> foregroundColor = Colors.white.obs;
-
-
-
 
   Future<void> checkCharging() async {
     try {
@@ -34,7 +30,6 @@ class BatteryController extends GetxController {
       } else {
         onDock.value = false;
       }
-
     } catch (e) {
       print('Error checking charging status: $e');
       onDock.value = false;
@@ -42,12 +37,13 @@ class BatteryController extends GetxController {
   }
 
   void resetStatus() {
-    isLoading.value = false;  
+    isLoading.value = false;
     isError.value = false;
   }
 
   RxBool isRotale = false.obs;
   RxInt batteryStatus = 0.obs;
+
   Future<void> fetchBattery(int userID, BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
@@ -82,8 +78,7 @@ class BatteryController extends GetxController {
         offlineBatteryResponse = null;
         showTopRightToast(
           context: context,
-          message:
-              "Can't load battery info from robot. Please check the Wi-Fi or IP settings.",
+          message: "Please check the Wi-Fi or IP settings.",
           color: Colors.red,
         );
       }

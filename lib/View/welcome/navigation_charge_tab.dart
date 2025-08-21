@@ -1,31 +1,40 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:ihub/View/battery/view/battery_view.dart';
 import 'package:ihub/View/welcome/header.dart';
-import 'package:ihub/View/welcome/place_description.dart';
-import 'package:ihub/View/welcome/time_description.dart';
+import 'package:ihub/View/welcome/navigation.dart';
 
-class DescriptionScreen extends StatefulWidget {
-  const DescriptionScreen({super.key});
+class NavigationScreen extends StatefulWidget {
+  final int selectedTabIndex;
+  const NavigationScreen({super.key, required this.selectedTabIndex});
 
   @override
-  State<DescriptionScreen> createState() => _DescriptionScreenState();
+  State<NavigationScreen> createState() => _NavigationScreenState();
 }
 
-class _DescriptionScreenState extends State<DescriptionScreen> {
+class _NavigationScreenState extends State<NavigationScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Place description', 'Time description'];
+  final List<String> tabs = ['Navigate', 'Charging'];
 
   Widget _getCurrentScreen() {
     Widget screen;
 
     if (selectedTabIndex == 0) {
-      screen = PlaceDescription();
-    }  else {
-      screen = TimeDescription();
+      screen = NavigationsSection();
+    } else {
+      screen = BatteryScreen();
     }
     return screen;
   }
+
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTabIndex = widget.selectedTabIndex; // assign passed data here
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +68,7 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
+                padding: const EdgeInsets.only(top: 50, bottom: 20),
                 child: Row(
                   children: [
                     Container(
@@ -83,7 +92,6 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
                     ),
                     Spacer(),
                     Expanded(
-                      flex: 2,
                       child: TabHeaderWidget(
                         onTabSelected: (index) {
                           setState(() {

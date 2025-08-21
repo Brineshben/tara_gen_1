@@ -102,6 +102,7 @@ class GlassmorphismModal extends StatelessWidget {
                                   ),
                                   child: TextField(
                                     controller: lowBatteryController,
+                                    keyboardType: TextInputType.number,
                                     style: TextStyle(
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 16,
@@ -149,6 +150,7 @@ class GlassmorphismModal extends StatelessWidget {
                                       color: Colors.white.withOpacity(0.7),
                                       fontSize: 16,
                                     ),
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       hintText: 'Enter back to home message',
                                       hintStyle: TextStyle(
@@ -167,6 +169,8 @@ class GlassmorphismModal extends StatelessWidget {
                                 SizedBox(height: 40),
                                 GestureDetector(
                                   onTap: () {
+                                    FocusScope.of(context).unfocus();
+
                                     final batteryText =
                                         lowBatteryController.text;
                                     final homeText =

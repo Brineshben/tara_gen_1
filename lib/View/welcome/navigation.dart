@@ -1,114 +1,224 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:ihub/View/battery/view/battery_view.dart';
-import 'package:ihub/View/welcome/header.dart';
-import 'package:ihub/View/welcome/navigate.dart';
+import 'package:get/get.dart';
+import 'package:ihub/Controller/Navigate_Controller.dart';
+import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/toast.dart';
 
-class NavigationScreen extends StatefulWidget {
-  final int selectedTabIndex;
-  const NavigationScreen({super.key, required this.selectedTabIndex});
+class NavigationsSection extends StatefulWidget {
+  const NavigationsSection({super.key});
 
   @override
-  State<NavigationScreen> createState() => _NavigationScreenState();
+  State<NavigationsSection> createState() => _NavigationsSectionState();
 }
 
-class _NavigationScreenState extends State<NavigationScreen> {
-  int selectedTabIndex = 0;
-  final List<String> tabs = ['Navigate', 'Charging'];
-
-  Widget _getCurrentScreen() {
-    Widget screen;
-
-    if (selectedTabIndex == 0) {
-      screen = NavigationsSection();
-    } else {
-      screen = BatteryScreen();
-    }
-    return screen;
-  }
-
+class _NavigationsSectionState extends State<NavigationsSection> {
+  final Map<int, String> _statusText = {}; // Store per-item text
 
   @override
   void initState() {
     super.initState();
-    selectedTabIndex = widget.selectedTabIndex; // assign passed data here
+    Get.find<NavigateController>().navigateData(context);
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/bg.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Color(0xFF608878).withOpacity(0.2), // light green
-                  Color(0xFF18221E).withOpacity(0.2), // dark green
-                ],
-              ),
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(color: Colors.transparent),
-            ),
-          ),
-          Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 50, bottom: 20),
-                child: Row(
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+        child: GetX<NavigateController>(
+          builder: (controller) {
+            if (controller.isLoading.value) {
+              return const Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              );
+            }
+
+            if (controller.dataList.isEmpty) {
+              return const Center(
+                child: Text(
+                  "Oops.. No Data Found",
+                  style: TextStyle(color: Colors.white, fontSize: 20),
+                ),
+              );
+            }
+
+            return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                    child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  spacing: 30,
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(left: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[600]?.withOpacity(0.8),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 20,
+                    Image.asset("assets/Rectangle 65.png"),
+                    InkWell(
+                      onTap: () async {
+                        Map<String, dynamic> resp =
+                            await ApiServices.fulltourNavigation(status: true);
+
+                        if (resp['status'] == "ok") {
+                          showTopRightToast(
+                            color: Colors.green,
+                            context: context,
+                            message:
+                                "Full tour navigation started successfully",
+                          );
+                        }
+                      },
+                      child: Container(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                        decoration: BoxDecoration(
+                          color: const Color.fromARGB(203, 40, 244, 135),
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 6,
+                              offset: Offset(2, 3),
+                            ),
+                          ],
+                        ),
+                        child: Text(
+                          "Activate Full Tour",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Spacer(),
-                    Expanded(
-                      child: TabHeaderWidget(
-                        onTabSelected: (index) {
-                          setState(() {
-                            selectedTabIndex = index;
-                          });
-                        },
-                        selectedIndex: selectedTabIndex,
-                        tabs: tabs,
-                      ),
-                    ),
+                    )
                   ],
+                )),
+
+                // Divider
+                Container(
+                  width: 2,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Colors.grey[600]!,
+                        Colors.transparent,
+                        Colors.grey[600]!,
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-              _getCurrentScreen(),
-            ],
-          )
-        ],
+                // Navigation cards
+                Expanded(
+                  flex: 2,
+                  child: GridView.builder(
+                    itemCount: controller.dataList.length,
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 15,
+                      mainAxisSpacing: 15,
+                      childAspectRatio: 1,
+                    ),
+                    itemBuilder: (context, index) {
+                      final item = controller.dataList[index];
+                      final id = item?.id ?? index;
+                      final text = _statusText[id] ?? "Tap to navigate";
+
+                      return InkWell(
+                        onTap: () async {
+                          setState(() {
+                            _statusText[id] = "SENDING...";
+                          });
+                          try {
+                            await ApiServices.destination(id: id);
+                            await Future.delayed(const Duration(seconds: 1));
+
+                            final resp = await ApiServices.robotbasestatus();
+                            final ok = resp['status'] == true;
+
+                            setState(() {
+                              _statusText[id] =
+                                  ok ? "COMMAND RECEIVED" : "ALREADY RECEIVED";
+                            });
+
+                            // Reset to default after 2 seconds
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) {
+                                setState(() {
+                                  _statusText[id] = "Tap to navigate";
+                                });
+                              }
+                            });
+                          } catch (e) {
+                            setState(() {
+                              _statusText[id] = "FAILED";
+                            });
+
+                            Future.delayed(const Duration(seconds: 2), () {
+                              if (mounted) {
+                                setState(() {
+                                  _statusText[id] = "Tap to navigate";
+                                });
+                              }
+                            });
+                          }
+                        },
+                        child: ChildGlasmorphism(
+                          borderRadius: 15,
+                          borderColor: Colors.grey.withOpacity(0.3),
+                          margin: EdgeInsets.zero,
+                          child: Container(
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Image.asset(
+                                  "assets/route.png",
+                                  color: text == "COMMAND RECEIVED"
+                                      ? Colors.greenAccent
+                                      : Colors.white70,
+                                  width: 40,
+                                ),
+                                const SizedBox(height: 10),
+                                Text(
+                                  item?.name ?? '',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  text,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: text == "SENDING..."
+                                        ? Colors.orangeAccent
+                                        : text == "COMMAND RECEIVED"
+                                            ? Colors.greenAccent
+                                            : text == "FAILED"
+                                                ? Colors.redAccent
+                                                : Colors.white.withOpacity(0.6),
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }

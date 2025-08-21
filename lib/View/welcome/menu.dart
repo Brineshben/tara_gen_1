@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:ihub/View/welcome/behaviour.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/mapping.dart';
+import 'package:ihub/View/welcome/other.dart';
 import 'package:ihub/View/welcome/shutdoen_menu.dart';
 
 class MenuScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Behaviour', 'Map', "Shutdown"];
+  final List<String> tabs = ['Behaviour', 'Map', "Shutdown", "Other"];
   late PageController _pageController;
 
   @override
@@ -102,7 +103,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       ),
                     ),
 
-                    const Spacer(),
+                   SizedBox(width: 400),
 
                     /// Tab header
                     Expanded(
@@ -131,6 +132,7 @@ class _MenuScreenState extends State<MenuScreen> {
                       Behaviour(),
                       Mapping(),
                       ShutdoenMenu(),
+                      OtherSettings()
                     ],
                   ),
                 ),

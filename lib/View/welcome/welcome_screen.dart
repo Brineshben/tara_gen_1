@@ -12,13 +12,14 @@ import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Service/url_service.dart';
 import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
-import 'package:ihub/View/welcome/navigation.dart';
+import 'package:ihub/View/welcome/navigation_charge_tab.dart';
 import 'package:lottie/lottie.dart';
 
 class WelcomeScreen extends StatefulWidget {
@@ -32,7 +33,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool canExit = false;
   Timer? fiveSecTimer;
   Timer? oneSecTimer;
-
   @override
   void initState() {
     super.initState();
@@ -41,12 +41,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
-    Get.find<VolumeController>().fetchinitialvolume(
-        Get.find<UserAuthController>().loginData.value?.user?.id.toString() ??
-            "0",
-        context);
+    _fetchUrls();
+
+    Get.find<RobotresponseapiController>().getUrl();
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 3), (timer) async {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       // get robot wifi ip
       ApiService.fetchAndUpdateBaseUrl();
 
@@ -58,15 +61,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       Map<String, dynamic> resp = await ApiServices.loading();
       if (resp['status'] != "ON") {
         fiveSecTimer?.cancel();
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => LoadingSplash()),
-          (route) => false,
-        );
+        Get.offAll(() => LoadingSplash());
       }
     });
 
     oneSecTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      Get.find<RobotresponseapiController>().communicationStatus();
+      Get.find<RobotresponseapiController>().communicationStatus(context);
       Get.find<BatteryController>().checkCharging();
     });
   }
@@ -75,278 +75,307 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
+  // @override
+  // void dispose() {
+  //   fiveSecTimer?.cancel();
+  //   oneSecTimer?.cancel();
+  //   super.dispose();
+  // }
+
+  Future<void> _fetchUrls() async {
+    Get.find<RobotresponseapiController>().getUrl();
+  }
+
   bool showVolumeControl = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/bg.png'),
-                fit: BoxFit.cover,
+      body: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+          setState(() {
+            showVolumeControl = false;
+          });
+        },
+        child: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/bg.png'),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-          SafeArea(
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: 30,
-                vertical: MediaQuery.of(context).size.width * 0.02,
-              ),
-              child: Row(
-                children: [
-                  Expanded(flex: 2, child: _buildLeftContent()),
-                  const Spacer(flex: 1),
-                  Expanded(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        GetX<BatteryController>(
-                          builder: (batteryController) {
-                            final robot = batteryController
-                                .batteryModel.value?.data?.first.robot;
+            SafeArea(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: MediaQuery.of(context).size.width * 0.02,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(flex: 2, child: _buildLeftContent()),
+                    const Spacer(flex: 1),
+                    Expanded(
+                      flex: 3,
+                      child: Column(
+                        children: [
+                          GetX<BatteryController>(
+                            builder: (batteryController) {
+                              final robot = batteryController
+                                  .batteryModel.value?.data?.first.robot;
 
-                            return Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 20, vertical: 10),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                spacing: 20,
-                                children: [
-                                  // Brake Button (show only when motorBrakeReleased == true)
-                                  if (robot?.motorBrakeReleased ?? false)
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 10, sigmaY: 10),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          child: const Row(
-                                            children: [
-                                              Icon(Icons.stop,
-                                                  color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                "Brake",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  // Emergency Button (show only when emergencyStop == true)
-                                  if (robot?.emergencyStop ?? false)
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 10, sigmaY: 10),
-                                        child: Container(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 20, vertical: 10),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                            borderRadius:
-                                                BorderRadius.circular(16),
-                                            border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          child: const Row(
-                                            children: [
-                                              Icon(Icons.warning,
-                                                  color: Colors.white),
-                                              SizedBox(width: 8),
-                                              Text(
-                                                "Emergency",
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-
-                                  // Q Value Display
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(16),
-                                    child: BackdropFilter(
-                                      filter: ImageFilter.blur(
-                                          sigmaX: 10, sigmaY: 10),
-                                      child: Container(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 20, vertical: 10),
-                                        decoration: BoxDecoration(
-                                          color: Colors.black.withOpacity(0.3),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
-                                          border: Border.all(
-                                              color: Colors.white
-                                                  .withOpacity(0.2)),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.query_stats,
-                                                color: Colors.white),
-                                            const SizedBox(width: 8),
-                                            Text(
-                                              "Q: ${(robot?.quality ?? 0)}",
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.bold,
-                                              ),
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 30),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  spacing: 20,
+                                  children: [
+                                    // Brake Button (show only when motorBrakeReleased == true)
+                                    if (robot?.motorBrakeReleased ?? false)
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 10, sigmaY: 10),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              border: Border.all(
+                                                  color: Colors.white
+                                                      .withOpacity(0.2)),
                                             ),
-                                          ],
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.stop,
+                                                    color: Colors.white),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  "Brake",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                    // Emergency Button (show only when emergencyStop == true)
+                                    if (robot?.emergencyStop ?? false)
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(16),
+                                        child: BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                              sigmaX: 10, sigmaY: 10),
+                                          child: Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 20, vertical: 10),
+                                            decoration: BoxDecoration(
+                                              color:
+                                                  Colors.black.withOpacity(0.3),
+                                              borderRadius:
+                                                  BorderRadius.circular(16),
+                                              border: Border.all(
+                                                  color: Colors.white
+                                                      .withOpacity(0.2)),
+                                            ),
+                                            child: const Row(
+                                              children: [
+                                                Icon(Icons.warning,
+                                                    color: Colors.white),
+                                                SizedBox(width: 8),
+                                                Text(
+                                                  "Emergency",
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                    // Q Value Display
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(16),
+                                      child: BackdropFilter(
+                                        filter: ImageFilter.blur(
+                                            sigmaX: 10, sigmaY: 10),
+                                        child: Container(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 10),
+                                          decoration: BoxDecoration(
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                            borderRadius:
+                                                BorderRadius.circular(16),
+                                            border: Border.all(
+                                                color: Colors.white
+                                                    .withOpacity(0.2)),
+                                          ),
+                                          child: Text(
+                                            "Q: ${(robot?.quality ?? 0)}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          },
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                          Expanded(child: _buildGlassmorphicPanel(context)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            if (showVolumeControl)
+              GetX<VolumeController>(
+                builder: (columeController) {
+                  return Positioned(
+                    top: MediaQuery.of(context).size.height * 0.2,
+                    right: 20,
+                    child: SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.7,
+                      width: 80,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.5),
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(color: Colors.white30),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
                         ),
-                        Expanded(child: _buildGlassmorphicPanel(context)),
-                      ],
+                        child: Column(
+                          children: [
+                            Expanded(
+                              child: RotatedBox(
+                                quarterTurns: -1,
+                                child: SliderTheme(
+                                  data: SliderTheme.of(context).copyWith(
+                                    trackHeight: 40,
+                                    activeTrackColor: Colors.white.withOpacity(
+                                      1,
+                                    ),
+                                    inactiveTrackColor: Colors.grey.withOpacity(
+                                      0.3,
+                                    ),
+                                    thumbColor: Colors.grey.shade700,
+                                    thumbShape: RoundSliderThumbShape(
+                                      enabledThumbRadius: 12,
+                                    ),
+                                    overlayColor: Colors.blueAccent.withOpacity(
+                                      0.2,
+                                    ),
+                                    overlayShape: RoundSliderOverlayShape(
+                                      overlayRadius: 28.0,
+                                    ),
+                                    valueIndicatorColor: Colors.transparent,
+                                  ),
+                                  child: Slider(
+                                    value: columeController.roboVolume.value
+                                        .toDouble(),
+                                    min: 0,
+                                    max: 100,
+                                    divisions: 100,
+                                    onChanged: (v) => columeController
+                                        .roboVolume.value = v.toInt(),
+                                    onChangeEnd: (v) =>
+                                        Get.find<VolumeController>()
+                                            .updatedVolume(
+                                                Get.find<BatteryController>()
+                                                    .roboId
+                                                    .toString(),
+                                                v.toInt(),
+                                                context),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Icon(
+                              columeController.roboVolume.value == 0
+                                  ? Icons.volume_mute_rounded
+                                  : columeController.roboVolume.value > 60
+                                      ? Icons.volume_up
+                                      : Icons.volume_down,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "${columeController.roboVolume.value.round()}%",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            Positioned(
+              top: 40,
+              left: 40,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  const CompnayLogo(),
+                  ChildGlasmorphism(
+                    borderRadius: 20,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Obx(
+                        () => Row(
+                          children: [
+                            Icon(
+                              Icons.link,
+                              color: Colors.white,
+                            ),
+                            Text(
+                              "${Get.find<RobotresponseapiController>().name.value}",
+                              style: const TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-          if (showVolumeControl)
-            GetX<VolumeController>(
-              builder: (columeController) {
-                return Positioned(
-                  top: MediaQuery.of(context).size.height * 0.2,
-                  right: 20,
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.7,
-                    width: 80,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(50),
-                        border: Border.all(color: Colors.white30),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black26,
-                            blurRadius: 8,
-                            offset: Offset(0, 4),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  showVolumeControl = false;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.close,
-                                color: Colors.white,
-                              )),
-                          Expanded(
-                            child: RotatedBox(
-                              quarterTurns: -1,
-                              child: SliderTheme(
-                                data: SliderTheme.of(context).copyWith(
-                                  trackHeight: 40,
-                                  activeTrackColor: Colors.white.withOpacity(
-                                    1,
-                                  ),
-                                  inactiveTrackColor: Colors.grey.withOpacity(
-                                    0.3,
-                                  ),
-                                  thumbColor: Colors.grey.shade700,
-                                  thumbShape: RoundSliderThumbShape(
-                                    enabledThumbRadius: 12,
-                                  ),
-                                  overlayColor: Colors.blueAccent.withOpacity(
-                                    0.2,
-                                  ),
-                                  overlayShape: RoundSliderOverlayShape(
-                                    overlayRadius: 28.0,
-                                  ),
-                                  valueIndicatorColor: Colors.transparent,
-                                ),
-                                child: Slider(
-                                  value: columeController.roboVolume.value
-                                      .toDouble(),
-                                  min: 0,
-                                  max: 100,
-                                  divisions: 100,
-                                  onChanged: (v) => columeController
-                                      .roboVolume.value = v.toInt(),
-                                  onChangeEnd: (v) =>
-                                      Get.find<VolumeController>().fetchvolume(
-                                          Get.find<UserAuthController>()
-                                                  .loginData
-                                                  .value
-                                                  ?.user
-                                                  ?.id
-                                                  .toString() ??
-                                              "0",
-                                          v.toInt(),
-                                          context),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Icon(
-                            columeController.roboVolume.value == 0
-                                ? Icons.volume_mute_rounded
-                                : columeController.roboVolume.value > 60
-                                    ? Icons.volume_up
-                                    : Icons.volume_down,
-                            color: Colors.white,
-                          ),
-                          Text(
-                            "${columeController.roboVolume.value.round()}%",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                );
-              },
-            ),
-          Positioned(
-            top: 20,
-            left: 20,
-            child: const CompnayLogo(),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -420,7 +449,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   Widget _buildGlassmorphicPanel(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.only(top: 30),
+      padding: const EdgeInsets.only(top: 50),
       child: BaseGlassmorphism(
         borderRadius: 30,
         padding: const EdgeInsets.all(20),
@@ -434,7 +463,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: _menuButton(
                       label: "Battery",
                       onPressed: () {
-                        if (!showVolumeControl) {
+                      
+
+                            setState(() {
+                            showVolumeControl = false;
+                          });
                           Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -443,7 +476,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                               ),
                             ),
                           );
-                        }
+                        
                       },
                     ),
                   ),
@@ -453,6 +486,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/Volume.svg",
                       label: "Volume",
                       onPressed: () {
+                        Get.find<VolumeController>().fetchinitialvolume(
+                            Get.find<BatteryController>().roboId.toString(),
+                            context);
+
                         if (showVolumeControl) {
                           setState(() {
                             showVolumeControl = false;
@@ -478,7 +515,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/Home.svg",
                       label: "Menu",
                       onPressed: () {
-                        if (!showVolumeControl)
+                       
+                         setState(() {
+                          showVolumeControl = false;
+                        });
                           Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -493,12 +533,14 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/selfie.svg",
                       label: "Take a Selfie",
                       onPressed: () {
-                        if (!showVolumeControl) {
+                         setState(() {
+                            showVolumeControl = false;
+                          });
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                   builder: (context) => CaptureAndQrPage()));
-                        }
+                        
                       },
                     ),
                   ),
@@ -632,19 +674,34 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget _buildLetsGoButton(BuildContext context) {
     return ChildGlasmorphism(
       borderRadius: 60,
-      // margin: EdgeInsets.all(20),
       child: ActionSlider.standard(
         width: double.infinity,
         height: 90,
         backgroundColor: Colors.white.withOpacity(0.15),
-        toggleColor: Color.fromARGB(113, 255, 255, 255),
-        icon: Icon(Icons.arrow_forward, color: Colors.black),
-        child: Text(
-          'Navigate',
-          style: GoogleFonts.poppins(
-            fontSize: 28,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+        toggleColor: Colors.white,
+        icon: const Icon(
+          Icons.arrow_forward,
+          color: Color.fromARGB(161, 0, 0, 0),
+          size: 40,
+        ),
+        child: ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [
+              Color(0xFFB0B0B0), // light grey
+              Color(0xFFB0B0B0), // light grey
+              Color(0xFF707070), // medium grey
+              Color.fromARGB(255, 89, 89, 89), // dark grey
+            ],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ).createShader(bounds),
+          child: Text(
+            'Navigate',
+            style: GoogleFonts.poppins(
+              fontSize: 28,
+              fontWeight: FontWeight.w600,
+              color: Colors.white, // overridden by shader
+            ),
           ),
         ),
         action: (controller) async {
@@ -653,13 +710,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           controller.success();
           await Future.delayed(const Duration(milliseconds: 400));
           controller.reset();
-          if (!showVolumeControl)
+        
+              setState(() {
+              showVolumeControl = false;
+            });
             Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => NavigationScreen(
-                          selectedTabIndex: 0,
-                        )));
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavigationScreen(
+                  selectedTabIndex: 0,
+                ),
+              ),
+            );
+          
         },
       ),
     );

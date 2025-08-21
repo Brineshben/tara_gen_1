@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/charge_screen_controller.dart';
 import 'package:ihub/Controller/description_controller.dart';
 import 'package:ihub/Controller/language_controller.dart';
@@ -19,7 +20,7 @@ import '../Controller/battery_Controller.dart';
 class HandleControllers {
   static createGetControllers() {
     Get.put(UserAuthController());
-    // Get.put(RobotresponseapiController());
+    Get.put(RobotresponseapiController());
     // Get.put(BackgroudController());
     // Get.put(SessionController());
     // Get.put(CustomerdetailsController());
@@ -31,7 +32,7 @@ class HandleControllers {
     // Get.put(AddEmployeeController());
     // Get.put(AddEmployeeDetailsController());
     // Get.put(EnquirySubListController());
-    Get.put(Passwordcontroller());
+    // Get.put(Passwordcontroller());
     Get.put(VolumeController());
     // Get.put(ResponseNavController());
     Get.put(IpController());

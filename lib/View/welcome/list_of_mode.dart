@@ -78,54 +78,100 @@ class _ListofModeState extends State<ListofMode> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        surfaceTintColor: Colors.white,
-        backgroundColor: Colors.white,
-        title: Text("Modes",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
-        toolbarHeight: 90,
+      body: Stack(
+        children: [
+          /// Background image
+          Container(
+            decoration: const BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/bg.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+
+          /// Blur overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color(0xFF608878).withOpacity(0.2),
+                  const Color(0xFF18221E).withOpacity(0.2),
+                ],
+              ),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(color: Colors.transparent),
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 100, right: 100, top: 150, bottom: 50),
+            child: Row(
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: ModeCard(
+                    title: "Teaching Mode ",
+                    imageUrl:
+                        "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
+                    onSelect: () {
+                      showModeDialog(context, isTeachingMode);
+                    },
+                    teachingModeStatus: isTeachingMode,
+                  ),
+                ),
+                Expanded(
+                  child: ModeCard(
+                    title: "Expo Mode",
+                    imageUrl:
+                        "https://www.therobotreport.com/wp-content/uploads/2025/04/BostonDeviceRobotics-featured-1.jpg",
+                    comingSoon: true,
+                    onSelect: () {
+                      showComingSoonDialog(context);
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: ModeCard(
+                    title: "Control Mode",
+                    imageUrl:
+                        "https://media.istockphoto.com/id/1022892534/photo/engineer-manager-check-and-control-automation-robot-arms-machine-in-intelligent-industrial.jpg?s=612x612&w=0&k=20&c=1lfHMx6lgDgjIpt2YfJHLZ692aYXAJnQE4IJj8UXcVU=",
+                    comingSoon: true,
+                    onSelect: () {
+                      showComingSoonDialog(context);
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 30),
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.arrow_back, color: Colors.white),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                const SizedBox(width: 10),
+                const Text(
+                  'MODE SELECTION',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
-      body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-          child: Row(
-            spacing: 20,
-            children: [
-              Expanded(
-                child: ModeCard(
-                  title: "Teaching Mode ",
-                  imageUrl:
-                      "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
-                  onSelect: () {
-                    showModeDialog(context, isTeachingMode);
-                  },
-                  teachingModeStatus: isTeachingMode,
-                ),
-              ),
-              Expanded(
-                child: ModeCard(
-                  title: "Expo Mode",
-                  imageUrl:
-                      "https://www.therobotreport.com/wp-content/uploads/2025/04/BostonDeviceRobotics-featured-1.jpg",
-                  comingSoon: true,
-                  onSelect: () {
-                    showComingSoonDialog(context);
-                  },
-                ),
-              ),
-              Expanded(
-                child: ModeCard(
-                  title: "Control Mode",
-                  imageUrl:
-                      "https://media.istockphoto.com/id/1022892534/photo/engineer-manager-check-and-control-automation-robot-arms-machine-in-intelligent-industrial.jpg?s=612x612&w=0&k=20&c=1lfHMx6lgDgjIpt2YfJHLZ692aYXAJnQE4IJj8UXcVU=",
-                  comingSoon: true,
-                  onSelect: () {
-                    showComingSoonDialog(context);
-                  },
-                ),
-              ),
-            ],
-          )),
     );
   }
 
@@ -188,7 +234,7 @@ class _ListofModeState extends State<ListofMode> {
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: Container(
-                width: width * 0.85,
+                width: width * 0.6,
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.15),
@@ -201,7 +247,7 @@ class _ListofModeState extends State<ListofMode> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.sync_alt, color: Colors.deepPurple, size: 40),
+                    Icon(Icons.sync_alt, color: Colors.white, size: 40),
                     const SizedBox(height: 12),
                     Text(
                       "Switch Robot Mode",
@@ -235,7 +281,7 @@ class _ListofModeState extends State<ListofMode> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: isTeachingMode ? Colors.green : Colors.red,
+                            color: isTeachingMode ? Colors.green : Colors.white,
                           ),
                         ),
                         Spacer(),
@@ -252,7 +298,7 @@ class _ListofModeState extends State<ListofMode> {
                           style: TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
-                            color: isTeachingMode ? Colors.red : Colors.green,
+                            color: Colors.white,
                           ),
                         ),
                       ],
@@ -283,7 +329,7 @@ class _ListofModeState extends State<ListofMode> {
                           child: OutlinedButton(
                             onPressed: () => Navigator.pop(context),
                             style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: Colors.redAccent),
+                              side: BorderSide(color: Colors.white),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
@@ -292,7 +338,7 @@ class _ListofModeState extends State<ListofMode> {
                             child: const Text(
                               "Cancel",
                               style: TextStyle(
-                                color: Colors.redAccent,
+                                color: Colors.white,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                               ),
@@ -300,7 +346,7 @@ class _ListofModeState extends State<ListofMode> {
                           ),
                         ),
                         const SizedBox(width: 12),
-                      Expanded(
+                        Expanded(
                           child: InkWell(
                             onTap: () async {
                               Navigator.pop(context);
@@ -420,7 +466,6 @@ class _ListofModeState extends State<ListofMode> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
                   ],

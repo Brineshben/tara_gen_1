@@ -460,6 +460,8 @@ class ApiServices {
   }) async {
     String url =
         "${ApiConstants.localIp}${ApiConstants.volumeinitialoffline}${roboid}/";
+
+        print('volume_url $url');
     var request = http.Request('GET', Uri.parse(url));
     http.StreamedResponse response = await request.send();
     var respString = await response.stream.bytesToString();
@@ -709,7 +711,6 @@ class ApiServices {
     required String Data,
   }) async {
     String url = "${ApiConstants.localIp}${ApiConstants.apikey}";
-
     Map apiBody = {"key": Data};
     var request = http.Request('POST', Uri.parse(url));
     request.body = (json.encode(apiBody));

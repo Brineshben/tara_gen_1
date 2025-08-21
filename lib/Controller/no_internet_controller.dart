@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:get/get.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:ihub/View/Settings/no_internet.dart';
+import 'package:ihub/View/welcome/no_internet.dart';
 
 class ConnectivityController extends GetxController {
   final Connectivity _connectivity = Connectivity();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/toast.dart';
 
 import '../Model/Navigate_model.dart';
 
@@ -12,7 +13,7 @@ class NavigateController extends GetxController {
 
   RxList<NavigationData?> dataList = RxList();
 
-  Future<void> navigateData() async {
+  Future<void> navigateData(BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
@@ -27,19 +28,7 @@ class NavigateController extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-
-      Get.snackbar(
-        'Failed', // Title
-        'Error in Robot Response Navigation Control', // Message
-        snackPosition: SnackPosition.BOTTOM, // Position (TOP or BOTTOM)
-        backgroundColor: Colors.blueGrey,
-        colorText: Colors.white,
-        borderRadius: 10,
-        margin: EdgeInsets.all(10),
-
-        duration: Duration(seconds: 3), // Auto dismiss time
-        icon: Icon(Icons.check_circle, color: Colors.white),
-      );
+      showTopRightToast(context: context, message: "", color: Colors.white);
     } finally {
       isLoading.value = false;
     }

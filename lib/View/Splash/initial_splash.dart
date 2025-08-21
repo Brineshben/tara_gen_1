@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
 import 'package:ihub/Model/login_model.dart';
 import 'package:ihub/Service/sharedPreference.dart';
-import 'package:ihub/View/Login_Page/login.dart';
+import 'package:ihub/View/welcome/login.dart';
 import 'package:ihub/View/welcome/welcome_screen.dart';
 import 'package:lottie/lottie.dart';
 

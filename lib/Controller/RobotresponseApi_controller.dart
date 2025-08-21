@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ihub/Service/url_service.dart';
+import 'package:ihub/Utils/toast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Model/robot_Response_Model.dart';
@@ -20,21 +23,17 @@ class RobotresponseapiController extends GetxController {
   RxString name = ''.obs;
 
   getUrl() async {
-    // Map<String, dynamic> responce = await UrlService.getUrls();
-    // if (responce['status'] == "ok") {
-    //   link.value = responce["data"]['url'];
-    //   name.value = responce["data"]['name'];
-    // }
-
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    link.value = prefs.getString('url') ?? '';
-    name.value = prefs.getString('name') ?? '';
+    Map<String, dynamic> responce = await UrlService.getUrls();
+    if (responce['status'] == "ok") {
+      link.value = responce["data"]['url'];
+      name.value = responce["data"]['name'];
+    }
 
     print('link ${link.value}');
     print('name ${name.value}');
   }
 
-  Future<void> communicationStatus() async {
+  Future<void> communicationStatus(BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
     try {
@@ -48,9 +47,7 @@ class RobotresponseapiController extends GetxController {
         isLoaded.value = true;
       }
     } catch (e) {
-      print("gxsgdsydg$e");
-
-      print("---------list error-----------");
+      showTopRightToast(context: context, message: "Error occurred", color: Colors.red);
     } finally {
       resetStatus();
     }

@@ -17,7 +17,7 @@ class VolumeController extends GetxController {
     isError.value = false;
   }
 
-  Future<void> fetchvolume(
+  Future<void> updatedVolume(
       String roboId, int volume, BuildContext context) async {
     isLoading.value = true;
     isLoaded.value = false;
