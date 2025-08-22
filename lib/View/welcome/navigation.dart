@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:ihub/Controller/Navigate_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:ihub/Utils/toast.dart';
 
 class NavigationsSection extends StatefulWidget {
   const NavigationsSection({super.key});
@@ -47,51 +46,7 @@ class _NavigationsSectionState extends State<NavigationsSection> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  spacing: 30,
-                  children: [
-                    Image.asset("assets/Rectangle 65.png"),
-                    InkWell(
-                      onTap: () async {
-                        Map<String, dynamic> resp =
-                            await ApiServices.fulltourNavigation(status: true);
-
-                        if (resp['status'] == "ok") {
-                          showTopRightToast(
-                            color: Colors.green,
-                            context: context,
-                            message:
-                                "Full tour navigation started successfully",
-                          );
-                        }
-                      },
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                        decoration: BoxDecoration(
-                          color: const Color.fromARGB(203, 40, 244, 135),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black12,
-                              blurRadius: 6,
-                              offset: Offset(2, 3),
-                            ),
-                          ],
-                        ),
-                        child: Text(
-                          "Activate Full Tour",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                )),
+                    child: Image.asset("assets/Rectangle 65.png")),
 
                 // Divider
                 Container(

@@ -303,12 +303,141 @@ class FullTourCreateScreen extends StatefulWidget {
 
 class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
   late FullTourControllerNew controller;
+  bool _isDragOver = false;
+  ScrollController _horizontalScrollController = ScrollController();
 
   @override
   void initState() {
     controller = Get.find<FullTourControllerNew>();
     controller.fetchFullTourData();
     super.initState();
+    controller.clearData();
+  }
+
+  @override
+  void dispose() {
+    _horizontalScrollController.dispose();
+    super.dispose();
+  }
+
+  void _autoScrollLeft() {
+    if (_horizontalScrollController.hasClients) {
+      _horizontalScrollController.animateTo(
+        _horizontalScrollController.offset - 200,
+        duration: Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  Widget _buildDragTargetPlaceholder() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          _isDragOver ? Icons.add_location_alt : Icons.drag_indicator,
+          size: 40,
+          color: _isDragOver ? Colors.green : Colors.white54,
+        ),
+        SizedBox(height: 8),
+        Text(
+          _isDragOver ? "Release to add destination" : "Drag destinations here",
+          style: TextStyle(
+            color: _isDragOver ? Colors.green : Colors.white54,
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        SizedBox(height: 4),
+        if (!_isDragOver)
+          Text(
+            "Selected destinations will appear here",
+            style: TextStyle(
+              color: Colors.white38,
+              fontSize: 12,
+            ),
+            textAlign: TextAlign.center,
+          ),
+      ],
+    );
+  }
+
+  Widget _buildSelectedDestinations() {
+    return ListView.separated(
+      controller: _horizontalScrollController,
+      scrollDirection: Axis.horizontal,
+      itemCount: controller.newDataNavigation.length,
+      separatorBuilder: (_, __) => SizedBox(width: 15),
+      itemBuilder: (context, index) {
+        final item = controller.newDataNavigation[index];
+        return ChildGlasmorphism(
+          child: Container(
+            width: 250,
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: Text(
+                    "Position ${index + 1}",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+                Spacer(),
+                Image.asset(
+                  "assets/route.png",
+                  width: 90,
+                  color: Colors.white,
+                ),
+                SizedBox(height: 10),
+                Text(
+                  item.name ?? "",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+                Spacer(),
+                InkWell(
+                  onTap: () {
+                    controller.removeData(item);
+                    showTopRightToast(
+                      color: Colors.black,
+                      context: context,
+                      message: "${item.name} removed",
+                    );
+                    setState(() {});
+                  },
+                  child: ChildGlasmorphism(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 10),
+                      child: Text(
+                        "Remove",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -361,7 +490,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                       ),
                       child: IconButton(
                         onPressed: () => Navigator.pop(context),
-                        icon: const Icon(Icons.arrow_back_ios,
+                        icon: Icon(Icons.arrow_back,
                             color: Colors.white, size: 20),
                       ),
                     ),
@@ -380,6 +509,8 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
 
                           if (resp['status'] == "ok") {
                             FocusManager.instance.primaryFocus?.unfocus();
+                            Navigator.of(context).pop();
+                           
                             showTopRightToast(
                               color: Colors.green,
                               context: context,
@@ -405,7 +536,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                         child: Padding(
                           padding: const EdgeInsets.symmetric(
                               horizontal: 30, vertical: 10),
-                          child: Text("Create",
+                          child: Text("Create Full Tour",
                               style: TextStyle(color: Colors.white)),
                         ),
                       ),
@@ -420,7 +551,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                   padding: const EdgeInsets.all(16.0),
                   child: Row(
                     children: [
-                      // LEFT SIDE (Selected list with DragTarget)
+                      // LEFT SIDE (Selected list with enhanced DragTarget)
                       Expanded(
                         child: Column(
                           children: [
@@ -434,59 +565,164 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                                 )),
                             const SizedBox(height: 20),
                             Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 50),
                                 child: DragTarget<NavigationData>(
-                              onAccept: (item) {
-                                controller.addData(item);
-                                showTopRightToast(
-                                  color: Colors.black,
-                                  context: context,
-                                  message:
-                                      "${item.name} added to selected list",
-                                );
-                              },
-                              builder: (context, candidateData, rejected) {
-                                return controller.newDataNavigation.isNotEmpty
-                                    ? ListView.separated(
-                                        itemCount:
-                                            controller.newDataNavigation.length,
-                                        separatorBuilder: (_, __) =>
-                                            SizedBox(height: 10),
-                                        itemBuilder: (context, index) {
-                                          final item = controller
-                                              .newDataNavigation[index];
-                                          return ChildGlasmorphism(
-                                            child: ListTile(
-                                              title: Text(item.name ?? "",
-                                                  style: TextStyle(
-                                                      color: Colors.white)),
-                                              trailing: IconButton(
-                                                icon: Icon(Icons.delete_outline,
-                                                    color: Colors.white),
-                                                onPressed: () {
-                                                  controller.removeData(item);
-                                                  showTopRightToast(
-                                                    color: Colors.black,
-                                                    context: context,
-                                                    message:
-                                                        "${item.name} removed",
-                                                  );
+                                  onWillAccept: (data) => true,
+                                  onAccept: (item) {
+                                    controller.addData(item);
+                                    showTopRightToast(
+                                      color: Colors.green,
+                                      context: context,
+                                      message:
+                                          "${item.name} added to selected list",
+                                    );
+                                    setState(() {
+                                      _isDragOver = false;
+                                    });
 
-                                                  setState(() {
-                                                    controller.newDataNavigation.remove(item);
-                                                  });
-                                                },
-                                              ),
-                                            ),
-                                          );
-                                        },
-                                      )
-                                    : Center(
-                                        child: Text("Drag items here",
-                                            style: TextStyle(
-                                                color: Colors.white54)),
-                                      );
-                              },
-                            )),
+                                    // Auto scroll to the right to show new item
+                                    Future.delayed(Duration(milliseconds: 100),
+                                        () {
+                                      if (_horizontalScrollController
+                                          .hasClients) {
+                                        _horizontalScrollController.animateTo(
+                                          _horizontalScrollController
+                                              .position.maxScrollExtent,
+                                          duration: Duration(milliseconds: 500),
+                                          curve: Curves.easeInOut,
+                                        );
+                                      }
+                                    });
+                                  },
+                                  onMove: (details) {
+                                    if (!_isDragOver) {
+                                      setState(() {
+                                        _isDragOver = true;
+                                      });
+                                      _autoScrollLeft();
+                                    }
+                                  },
+                                  onLeave: (data) {
+                                    setState(() {
+                                      _isDragOver = false;
+                                    });
+                                  },
+                                  builder: (context, candidateData, rejected) {
+                                    return AnimatedContainer(
+                                      duration: Duration(milliseconds: 200),
+                                      height: 180,
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(15),
+                                        color: _isDragOver
+                                            ? Colors.green.withOpacity(0.1)
+                                            : Colors.transparent,
+                                      ),
+                                      child: controller
+                                              .newDataNavigation.isNotEmpty
+                                          ? Column(
+                                              children: [
+                                                if (_isDragOver)
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10),
+                                                    child: ChildGlasmorphism(
+                                                      borderRadius: 10,
+                                                      child: Container(
+                                                        height: 100,
+                                                        child: Center(
+                                                          child: Text(
+                                                            "Drop here to add to position ${controller.newDataNavigation.length + 1}",
+                                                            style: TextStyle(
+                                                              color:
+                                                                  Colors.green,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                Expanded(
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                          child:
+                                                              _buildSelectedDestinations()),
+                                                      if (_isDragOver)
+                                                        Container(
+                                                          width: 250,
+                                                          margin:
+                                                              EdgeInsets.only(
+                                                                  left: 15),
+                                                          child:
+                                                              ChildGlasmorphism(
+                                                            child: Container(
+                                                              padding:
+                                                                  EdgeInsets
+                                                                      .all(16),
+                                                              child: Column(
+                                                                mainAxisAlignment:
+                                                                    MainAxisAlignment
+                                                                        .center,
+                                                                children: [
+                                                                  Icon(
+                                                                    Icons
+                                                                        .add_circle_outline,
+                                                                    size: 50,
+                                                                    color: Colors
+                                                                        .green,
+                                                                  ),
+                                                                  SizedBox(
+                                                                      height:
+                                                                          10),
+                                                                  Text(
+                                                                    "Drop Here",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .green,
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .bold,
+                                                                      fontSize:
+                                                                          18,
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    "Position ${controller.newDataNavigation.length + 1}",
+                                                                    style:
+                                                                        TextStyle(
+                                                                      color: Colors
+                                                                          .green
+                                                                          .withOpacity(
+                                                                              0.7),
+                                                                      fontSize:
+                                                                          12,
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          : Center(
+                                              child:
+                                                  _buildDragTargetPlaceholder()),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -494,7 +730,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                       VerticalDivider(
                           thickness: 0.5, color: Colors.grey, width: 30),
 
-                      // RIGHT SIDE (GridView with draggable items)
+                      // RIGHT SIDE (GridView with draggable items - unchanged)
                       Expanded(
                         child: Column(
                           children: [
@@ -516,7 +752,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                                           crossAxisCount: 2,
                                           mainAxisSpacing: 10,
                                           crossAxisSpacing: 10,
-                                          childAspectRatio: 3,
+                                          childAspectRatio: 2,
                                         ),
                                         itemCount:
                                             controller.dataNavigation.length,
@@ -528,31 +764,88 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                                             feedback: Material(
                                               color: Colors.transparent,
                                               child: ChildGlasmorphism(
+                                                borderRadius: 10,
                                                 child: Padding(
-                                                  padding: EdgeInsets.all(10),
-                                                  child: Text(item.name ?? "",
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontWeight:
-                                                              FontWeight.bold)),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 80,
+                                                      vertical: 20),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Image.asset(
+                                                        "assets/route.png",
+                                                        width: 50,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        item.name ?? "",
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
+                                                  ),
                                                 ),
                                               ),
                                             ),
                                             childWhenDragging: Opacity(
-                                                opacity: 0.3,
-                                                child: ChildGlasmorphism(
-                                                  child: Center(
-                                                    child: Text(item.name ?? "",
+                                              opacity: 0.3,
+                                              child: ChildGlasmorphism(
+                                                borderRadius: 10,
+                                                child: Padding(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 50,
+                                                      vertical: 20),
+                                                  child: Column(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Image.asset(
+                                                        "assets/route.png",
+                                                        width: 50,
+                                                        color: Colors.white,
+                                                      ),
+                                                      SizedBox(height: 8),
+                                                      Text(
+                                                        item.name ?? "",
                                                         style: TextStyle(
-                                                            color:
-                                                                Colors.white)),
+                                                            color: Colors.white,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold),
+                                                      ),
+                                                    ],
                                                   ),
-                                                )),
+                                                ),
+                                              ),
+                                            ),
                                             child: ChildGlasmorphism(
-                                              child: Center(
-                                                child: Text(item.name ?? "",
+                                              child: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Image.asset(
+                                                    "assets/route.png",
+                                                    width: 50,
+                                                    color: Colors.white,
+                                                  ),
+                                                  SizedBox(height: 8),
+                                                  Text(
+                                                    item.name ?? "",
                                                     style: TextStyle(
-                                                        color: Colors.white)),
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           );

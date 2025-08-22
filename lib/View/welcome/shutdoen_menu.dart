@@ -89,7 +89,7 @@ class _ShutdoenMenuState extends State<ShutdoenMenu> {
                       children: [
                         Image.asset(
                           'assets/restart.png',
-                          width: 50,
+                           width: 80,
                           color: Colors.white,
                         ),
                         SizedBox(height: 8),
@@ -188,7 +188,7 @@ class _ShutdoenMenuState extends State<ShutdoenMenu> {
                       children: [
                         Image.asset(
                           "assets/power.png",
-                          width: 50,
+                          width: 80,
                           color: Colors.white,
                         ),
                         SizedBox(height: 8),
@@ -273,7 +273,7 @@ class _ShutdoenMenuState extends State<ShutdoenMenu> {
                       children: [
                         Image.asset(
                           "assets/logout.png",
-                          width: 50,
+                            width: 80,
                           color: Colors.white,
                         ),
                         SizedBox(height: 8),

@@ -51,7 +51,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         return;
       }
       // get robot wifi ip
-      ApiService.fetchAndUpdateBaseUrl();
+      // ApiService.fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(
@@ -209,7 +209,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
                                     // Q Value Display
                                     ClipRRect(
-                                      borderRadius: BorderRadius.circular(16),
+                                      borderRadius: BorderRadius.circular(10),
                                       child: BackdropFilter(
                                         filter: ImageFilter.blur(
                                             sigmaX: 10, sigmaY: 10),
@@ -220,7 +220,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                             color:
                                                 Colors.black.withOpacity(0.3),
                                             borderRadius:
-                                                BorderRadius.circular(16),
+                                                BorderRadius.circular(10),
                                             border: Border.all(
                                                 color: Colors.white
                                                     .withOpacity(0.2)),

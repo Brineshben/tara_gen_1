@@ -41,97 +41,80 @@ class Mapping extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(top: 50, bottom: 50, left: 50, right: 50),
-      child: Column(
+      padding: EdgeInsets.only(top: 100, bottom: 200, left: 50, right: 50),
+      child: Row(
         spacing: 20,
         children: [
           Expanded(
-            child: Row(
-              spacing: 20,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FullTourCreateScreen()));
-                    },
-                    child: ChildGlasmorphism(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/square-pen.png',
-                            width: 90,
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            "Add full tour",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FullTourCreateScreen()));
+              },
+              child: ChildGlasmorphism(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/square-pen.png',
+                      width: 90,
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FileUploadScreen()));
-                    },
-                    child: ChildGlasmorphism(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/map.png",
-                            width: 90,
-                          ),
-                          SizedBox(height: 8),
-                          Text("Manage map",
-                              style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
+                    SizedBox(height: 8),
+                    Text(
+                      "Add full tour",
+                      style: TextStyle(color: Colors.white),
                     ),
-                  ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
           Expanded(
-            child: Row(
-              spacing: 20,
-              children: [
-                Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      openAnotherApp();
-                    },
-                    child: ChildGlasmorphism(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            "assets/robo.png",
-                            width: 90,
-                            color: Colors.white,
-                          ),
-                          SizedBox(height: 8),
-                          Text("Mapping",
-                              style: TextStyle(color: Colors.white)),
-                        ],
-                      ),
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => FileUploadScreen()));
+              },
+              child: ChildGlasmorphism(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/map.png",
+                      width: 90,
                     ),
-                  ),
+                    SizedBox(height: 8),
+                    Text("Manage map",
+                        style: TextStyle(color: Colors.white)),
+                  ],
                 ),
-
-                // Cancel Button
-                Expanded(child: SizedBox())
-              ],
+              ),
+            ),
+          ),
+          Expanded(
+            child: InkWell(
+              onTap: () {
+                openAnotherApp();
+              },
+              child: ChildGlasmorphism(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      "assets/robo.png",
+                      width: 90,
+                      color: Colors.white,
+                    ),
+                    SizedBox(height: 8),
+                    Text("Mapping",
+                        style: TextStyle(color: Colors.white)),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

@@ -22,8 +22,8 @@ class FullTourModeScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(16),
                 child: Image.asset(
                   'assets/map.png',
-                  width: 180,
-                  height: 180,
+                  width: 120,
+                  height: 120,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -43,7 +43,7 @@ class FullTourModeScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     const Text(
-                      'Guide the robot through multiple waypoints in order. Add locations like 1 → 2 → 3 → 4 to create a full tour path.',
+                      'This mode allows you to explore the full capabilities of the navigation system, including advanced route planning and real-time updates.',
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white70,
@@ -51,56 +51,43 @@ class FullTourModeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    Row(
-                      children: [
-                        ElevatedButton.icon(
-                          onPressed: () {},
-                          icon: const Icon(Icons.place_outlined,
-                              color: Colors.black87),
-                          label: const Text(
-                            'Learn more',
-                            style: TextStyle(color: Colors.black87),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey.shade300,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        ElevatedButton.icon(
-                          onPressed: () async {
-                            Map<String, dynamic> resp =
-                                await ApiServices.fulltourNavigation(
-                                    status: true);
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 40),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () async {
+                              Map<String, dynamic> resp =
+                                  await ApiServices.fulltourNavigation(
+                                      status: true);
 
-                            if (resp['status'] == "ok") {
-                              showTopRightToast(
-                                color: Colors.green,
-                                context: context,
-                                message: "Full tour navigation started successfully",
-                              );
-                            }
-                          },
-                          icon: const Icon(Icons.place_outlined,
-                              color: Colors.white),
-                          label: const Text(
-                            'Customize',
-                            style: TextStyle(color: Colors.white),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.black,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                              if (resp['status'] == "ok") {
+                                showTopRightToast(
+                                  color: Colors.green,
+                                  context: context,
+                                  message:
+                                      "Full tour navigation started successfully",
+                                );
+                              }
+                            },
+                            icon: const Icon(Icons.place_outlined,
+                                color: Colors.white),
+                            label: const Text(
+                              'Activate',
+                              style: TextStyle(color: Colors.white),
                             ),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 12),
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 12),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     )
                   ],
                 ),

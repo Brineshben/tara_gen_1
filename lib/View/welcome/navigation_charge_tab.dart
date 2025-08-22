@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:ihub/View/battery/view/battery_view.dart';
+import 'package:ihub/View/welcome/fulltour_activate.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/navigation.dart';
 
@@ -15,26 +16,26 @@ class NavigationScreen extends StatefulWidget {
 
 class _NavigationScreenState extends State<NavigationScreen> {
   int selectedTabIndex = 0;
-  final List<String> tabs = ['Navigate', 'Charging'];
+  final List<String> tabs = ['Navigate', 'Charging', "Full tour"];
 
   Widget _getCurrentScreen() {
     Widget screen;
 
     if (selectedTabIndex == 0) {
       screen = NavigationsSection();
-    } else {
+    } else if (selectedTabIndex == 1) {
       screen = BatteryScreen();
+    } else {
+      screen = FullTourModeScreen();
     }
     return screen;
   }
-
 
   @override
   void initState() {
     super.initState();
     selectedTabIndex = widget.selectedTabIndex; // assign passed data here
   }
-
 
   @override
   Widget build(BuildContext context) {
