@@ -289,4 +289,6 @@ class BatteryController extends GetxController {
       },
     );
   }
+
+
 }

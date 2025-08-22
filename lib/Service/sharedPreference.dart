@@ -80,18 +80,18 @@ class SharedPrefs {
     return done;
   }
 
-  // store id
-  Future storeRoboId(int id) async {
-    final sharedPrefs = GetIt.instance<SharedPrefs>();
-    final prefs = sharedPrefs.prefs;
-    prefs.setInt("roboId", id);
-  }
+  // // store id
+  // Future storeRoboId(int id) async {
+  //   final sharedPrefs = GetIt.instance<SharedPrefs>();
+  //   final prefs = sharedPrefs.prefs;
+  //   prefs.setInt("roboId", id);
+  // }
 
-  // get robot id
-  Future<int?> getRobotdId() async {
-    final sharedPrefs = GetIt.instance<SharedPrefs>();
-    final prefs = sharedPrefs.prefs;
-    int? id = prefs.getInt("roboId");
-    return id;
-  }
+  // // get robot id
+  // Future<int?> getRobotdId() async {
+  //   final sharedPrefs = GetIt.instance<SharedPrefs>();
+  //   final prefs = sharedPrefs.prefs;
+  //   int? id = prefs.getInt("roboId");
+  //   return id;
+  // }
 }

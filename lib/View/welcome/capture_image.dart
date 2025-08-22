@@ -65,7 +65,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
       final ui.Image cameraUiImage = await decodeImageFromList(imageBytes);
 
       // Load the frame asset
-      final ByteData frameData = await rootBundle.load('assets/frame.png');
+      final ByteData frameData = await rootBundle.load('assets/myg_frame.png');
       final Uint8List frameBytes = frameData.buffer.asUint8List();
       final ui.Image frameUiImage = await decodeImageFromList(frameBytes);
 
@@ -201,14 +201,13 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
     return Stack(
       children: [
-        // Full screen camera preview
         Positioned.fill(
           child: CameraPreview(_cameraController!),
         ),
 
         Positioned.fill(
           child: Image.asset(
-            "assets/frame.png",
+            "assets/myg_frame.png",
             fit: BoxFit.cover,
           ),
         ),

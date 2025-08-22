@@ -27,7 +27,7 @@
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(borderRadius),
-              border: Border.all(color: Colors.white.withOpacity(0.2)),
+              border: Border.all(color: Colors.white.withOpacity(0.1)),
             ),
             child: child,
           ),

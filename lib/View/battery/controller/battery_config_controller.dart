@@ -52,7 +52,7 @@ class BatteryConfigController extends GetxController {
       if (response['status'] == 'ok') {
         _showSnack(context, 'Values updated successfully!', Colors.green);
 
-      await  Future.delayed(Duration(seconds: 3));
+        await Future.delayed(Duration(seconds: 3));
 
         final responce = await ApiServices.setChargingStatus(
           false,
@@ -75,4 +75,5 @@ class BatteryConfigController extends GetxController {
   void _showSnack(BuildContext context, String message, Color color) {
     showTopRightToast(context: context, color: color, message: message);
   }
+
 }

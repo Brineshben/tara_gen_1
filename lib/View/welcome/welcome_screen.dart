@@ -12,15 +12,16 @@ import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
-import 'package:ihub/Service/url_service.dart';
 import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
+import 'package:ihub/View/welcome/animated_navigate_text.dart';
 import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation_charge_tab.dart';
-import 'package:lottie/lottie.dart';
+import 'package:ihub/View/welcome/particlesphere%20.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -33,6 +34,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool canExit = false;
   Timer? fiveSecTimer;
   Timer? oneSecTimer;
+  bool showVolumeControl = false;
+
+
+
+
   @override
   void initState() {
     super.initState();
@@ -40,8 +46,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
     Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
-
-    _fetchUrls();
 
     Get.find<RobotresponseapiController>().getUrl();
 
@@ -51,7 +55,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         return;
       }
       // get robot wifi ip
-      // ApiService.fetchAndUpdateBaseUrl();
+      ApiService.fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(
@@ -82,11 +86,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   //   super.dispose();
   // }
 
-  Future<void> _fetchUrls() async {
-    Get.find<RobotresponseapiController>().getUrl();
-  }
-
-  bool showVolumeControl = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -279,23 +278,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                 child: SliderTheme(
                                   data: SliderTheme.of(context).copyWith(
                                     trackHeight: 40,
-                                    activeTrackColor: Colors.white.withOpacity(
-                                      1,
-                                    ),
-                                    inactiveTrackColor: Colors.grey.withOpacity(
-                                      0.3,
-                                    ),
-                                    thumbColor: Colors.grey.shade700,
+                                    activeTrackColor: Colors.transparent,
+                                    inactiveTrackColor: Colors.transparent,
+                                    thumbColor: Colors.blueAccent,
                                     thumbShape: RoundSliderThumbShape(
                                       enabledThumbRadius: 12,
                                     ),
-                                    overlayColor: Colors.blueAccent.withOpacity(
-                                      0.2,
-                                    ),
+                                    overlayColor:
+                                        Colors.blueAccent.withOpacity(0.2),
                                     overlayShape: RoundSliderOverlayShape(
                                       overlayRadius: 28.0,
                                     ),
                                     valueIndicatorColor: Colors.transparent,
+                                    trackShape: GradientRectSliderTrackShape(),
                                   ),
                                   child: Slider(
                                     value: columeController.roboVolume.value
@@ -308,11 +303,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                     onChangeEnd: (v) =>
                                         Get.find<VolumeController>()
                                             .updatedVolume(
-                                                Get.find<BatteryController>()
-                                                    .roboId
-                                                    .toString(),
-                                                v.toInt(),
-                                                context),
+                                      Get.find<BatteryController>()
+                                          .roboId
+                                          .toString(),
+                                      v.toInt(),
+                                      context,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -347,30 +343,47 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 spacing: 20,
                 children: [
                   const CompnayLogo(),
-                  ChildGlasmorphism(
-                    borderRadius: 20,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Obx(
-                        () => Row(
-                          children: [
-                            Icon(
-                              Icons.link,
-                              color: Colors.white,
-                            ),
-                            Text(
-                              "${Get.find<RobotresponseapiController>().name.value}",
-                              style: const TextStyle(
-                                  fontSize: 14,
+                  if (Get.find<RobotresponseapiController>()
+                      .name
+                      .value
+                      .isNotEmpty)
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => InAppWebViewScreen(
+                                url: Get.find<RobotresponseapiController>()
+                                    .link
+                                    .toString()),
+                          ),
+                        );
+                      },
+                      child: ChildGlasmorphism(
+                        borderRadius: 20,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 10),
+                          child: Obx(
+                            () => Row(
+                              children: [
+                                Icon(
+                                  Icons.link,
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold),
+                                ),
+                                Text(
+                                  "${Get.find<RobotresponseapiController>().name.value}",
+                                  style: const TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -388,6 +401,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            const SizedBox(height: 40),
             Text(
               'TARA GEN 1',
               style: GoogleFonts.poppins(
@@ -404,23 +418,27 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             GetX<RobotresponseapiController>(builder: (controller) {
               return Column(
                 children: [
-                  SizedBox(height: 50),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      if (controller.responseData.value.speaking == true)
-                        Lottie.asset(
-                          "assets/speak.json",
-                          height: MediaQuery.sizeOf(context).height * 0.3,
-                          fit: BoxFit.contain,
-                        ),
-                      if (controller.responseData.value.listening == true)
-                        Lottie.asset(
-                          "assets/Listen.json",
-                          height: MediaQuery.sizeOf(context).height * 0.3,
-                          fit: BoxFit.contain,
-                        ),
-                    ],
+                  // SizedBox(height: 50),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   children: [
+                  //     if (controller.responseData.value.speaking == true)
+                  //       Lottie.asset(
+                  //         "assets/speak.json",
+                  //         height: MediaQuery.sizeOf(context).height * 0.3,
+                  //         fit: BoxFit.contain,
+                  //       ),
+                  //     if (controller.responseData.value.listening == true)
+                  //       Lottie.asset(
+                  //         "assets/Listen.json",
+                  //         height: MediaQuery.sizeOf(context).height * 0.3,
+                  //         fit: BoxFit.contain,
+                  //       ),
+                  //   ],
+                  // ),
+
+                  InteractiveParticleSphere(
+                    size: 300,
                   ),
                   if (controller.robotResponseModel.value?.text != null &&
                       controller.robotResponseModel.value?.text != '')
@@ -463,20 +481,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                     child: _menuButton(
                       label: "Battery",
                       onPressed: () {
-                      
-
-                            setState(() {
-                            showVolumeControl = false;
-                          });
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => NavigationScreen(
-                                selectedTabIndex: 1,
-                              ),
+                        setState(() {
+                          showVolumeControl = false;
+                        });
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => NavigationScreen(
+                              selectedTabIndex: 1,
                             ),
-                          );
-                        
+                          ),
+                        );
                       },
                     ),
                   ),
@@ -515,14 +530,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/Home.svg",
                       label: "Menu",
                       onPressed: () {
-                       
-                         setState(() {
+                        setState(() {
                           showVolumeControl = false;
                         });
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => MenuScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => MenuScreen()));
                       },
                     ),
                   ),
@@ -533,14 +547,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                       icon: "assets/selfie.svg",
                       label: "Take a Selfie",
                       onPressed: () {
-                         setState(() {
-                            showVolumeControl = false;
-                          });
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => CaptureAndQrPage()));
-                        
+                        setState(() {
+                          showVolumeControl = false;
+                        });
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CaptureAndQrPage()));
                       },
                     ),
                   ),
@@ -695,13 +708,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ).createShader(bounds),
-          child: Text(
-            'Navigate',
-            style: GoogleFonts.poppins(
-              fontSize: 28,
-              fontWeight: FontWeight.w600,
-              color: Colors.white, // overridden by shader
-            ),
+          // child: Text(
+          //   'Navigate',
+          //   style: GoogleFonts.poppins(
+          //     fontSize: 28,
+          //     fontWeight: FontWeight.w600,
+          //     color: Colors.white, // overridden by shader
+          //   ),
+          // ),
+          child: AnimatedTextGradient(
+            fontSize: 28,
+            text: "Navigate",
           ),
         ),
         action: (controller) async {
@@ -710,21 +727,96 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           controller.success();
           await Future.delayed(const Duration(milliseconds: 400));
           controller.reset();
-        
-              setState(() {
-              showVolumeControl = false;
-            });
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => NavigationScreen(
-                  selectedTabIndex: 0,
-                ),
+
+          setState(() {
+            showVolumeControl = false;
+          });
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NavigationScreen(
+                selectedTabIndex: 0,
               ),
-            );
-          
+            ),
+          );
         },
       ),
+    );
+  }
+}
+
+// Custom track shape class to add at the top of your file
+class GradientRectSliderTrackShape extends SliderTrackShape
+    with BaseSliderTrackShape {
+  const GradientRectSliderTrackShape();
+
+  @override
+  Rect getPreferredRect({
+    required RenderBox parentBox,
+    Offset offset = Offset.zero,
+    required SliderThemeData sliderTheme,
+    bool isEnabled = false,
+    bool isDiscrete = false,
+  }) {
+    final double trackHeight = sliderTheme.trackHeight!;
+    final double trackLeft = offset.dx;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackWidth = parentBox.size.width;
+    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
+  }
+
+  @override
+  void paint(
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    Offset? secondaryOffset,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+  }) {
+    final Rect trackRect = getPreferredRect(
+      parentBox: parentBox,
+      offset: offset,
+      sliderTheme: sliderTheme,
+      isEnabled: isEnabled,
+      isDiscrete: isDiscrete,
+    );
+
+    final Canvas canvas = context.canvas;
+    final Paint paint = Paint();
+
+    // Create gradient from bottom to top (low to high)
+    // Since the slider is rotated, we need to adjust the gradient direction
+    paint.shader = LinearGradient(
+      begin: Alignment.bottomCenter, // This becomes bottom after rotation
+      end: Alignment.centerRight, // This becomes top after rotation
+      colors: [
+        Colors.grey.withOpacity(0.4), // Low volume - red
+        Colors.white, // High volume - green
+      ],
+      stops: const [0.0, 1.0],
+    ).createShader(trackRect);
+
+    // Draw the gradient track
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(trackRect, const Radius.circular(20)),
+      paint,
+    );
+
+    // Optional: Add a subtle border
+    final Paint borderPaint = Paint()
+      ..color = Colors.white.withOpacity(0.2)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(trackRect, const Radius.circular(20)),
+      borderPaint,
     );
   }
 }

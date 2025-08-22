@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/helper_function.dart';
 import 'package:ihub/View/battery/widgets/charging_circle.dart';
 
 class BatteryScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _BatteryScreenState extends State<BatteryScreen> {
       child: GetX<BatteryController>(
         builder: (controller) {
           return Padding(
-            padding: const EdgeInsets.symmetric(vertical:80, horizontal: 50),
+            padding: const EdgeInsets.symmetric(vertical: 80, horizontal: 50),
             child: Row(
               children: [
                 Expanded(
@@ -52,6 +53,8 @@ class _BatteryScreenState extends State<BatteryScreen> {
                                 child: Column(
                                   spacing: 10,
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       "Status",
@@ -82,32 +85,42 @@ class _BatteryScreenState extends State<BatteryScreen> {
                           spacing: 15,
                           children: [
                             Expanded(
-                              child: BaseGlassmorphism(
-                                borderRadius: 10,
-                                padding: EdgeInsetsGeometry.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      "Current",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                              child: GetX<BatteryController>(
+                                  builder: (controller) {
+                                return BaseGlassmorphism(
+                                  borderRadius: 10,
+                                  padding: EdgeInsetsGeometry.all(15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Current",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "${controller.batteryModel.value?.data?.first.robot?.current ?? 0}A",
-                                      style: TextStyle(
-                                        color: Color(0xff96FFBB),
-                                        fontSize:
-                                            MediaQuery.sizeOf(context).width * 0.02,
-                                        fontWeight: FontWeight.bold,
+                                      Text(
+                                       "${ calculateCurrent(
+                                                currentPercent: controller
+                                                    .batteryStatus
+                                                    .toDouble())
+                                            .toStringAsFixed(0)} A",
+                                        style: TextStyle(
+                                          color: Color(0xff96FFBB),
+                                          fontSize:
+                                              MediaQuery.sizeOf(context).width *
+                                                  0.02,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    ],
+                                  ),
+                                );
+                              }),
                             ),
                             Expanded(
                               child: BaseGlassmorphism(
@@ -115,6 +128,8 @@ class _BatteryScreenState extends State<BatteryScreen> {
                                 padding: EdgeInsetsGeometry.all(15),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
                                   children: [
                                     Text(
                                       "Battery",
@@ -143,56 +158,100 @@ class _BatteryScreenState extends State<BatteryScreen> {
                           spacing: 15,
                           children: [
                             Expanded(
-                              child: BaseGlassmorphism(
-                                borderRadius: 10,
-                                padding: EdgeInsetsGeometry.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Energy",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
+                              child: GetX<BatteryController>(
+                                  builder: (controller) {
+                                return BaseGlassmorphism(
+                                  borderRadius: 10,
+                                  padding: EdgeInsetsGeometry.all(15),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      Text(
+                                        "Energy",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      "65 wh",
-                                      style: TextStyle(
-                                        color: Color(0xff96FFBB),
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
+                                      Text(
+                                        "${calculateEnergy(
+                                          currentPercent: controller
+                                              .batteryStatus
+                                              .toDouble(),
+                                        ).toStringAsFixed(0)} Wh", // Rounded to 1 decimal
+                                        style: const TextStyle(
+                                          color: Color(0xff96FFBB),
+                                          fontSize: 30,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                    ],
+                                  ),
+                                );
+                              }),
                             ),
                             Expanded(
                               child: BaseGlassmorphism(
-                                borderRadius: 10,
-                                padding: EdgeInsetsGeometry.all(15),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      "Time to drop",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                    Text(
-                                      "05 hr",
-                                      style: TextStyle(
-                                        color: Color(0xff96FFBB),
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                                  borderRadius: 10,
+                                  padding: EdgeInsetsGeometry.all(15),
+                                  child: controller.onDock.value
+                                      ? Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              "Time to Full Charge",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${estimateTimeToFullCharge(
+                                                currentPercent: controller
+                                                    .batteryStatus
+                                                    .toDouble(),
+                                              ).toStringAsFixed(0)} m",
+                                              style: TextStyle(
+                                                color: Color(0xff96FFBB),
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      : Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceEvenly,
+                                          children: [
+                                            Text(
+                                              "Time to Drop",
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                            Text(
+                                              "${estimateTimeToEmpty(
+                                                currentPercent: controller
+                                                    .batteryStatus
+                                                    .toDouble(),
+                                              ).toStringAsFixed(0)} m",
+                                              style: TextStyle(
+                                                color: Colors.redAccent,
+                                                fontSize: 30,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ],
+                                        )),
                             ),
                           ],
                         ),
