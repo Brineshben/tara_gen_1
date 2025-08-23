@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/View/welcome/header.dart';
 import 'package:ihub/View/welcome/place_description.dart';
 import 'package:ihub/View/welcome/time_description.dart';
@@ -59,25 +60,24 @@ class _DescriptionScreenState extends State<DescriptionScreen> {
           Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 40),
+                padding: const EdgeInsets.only(left: 30, top: 40, bottom: 40),
                 child: Row(
                   children: [
-                    Container(
-                      width: 50,
-                      height: 50,
-                      margin: const EdgeInsets.only(left: 20),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[600]?.withOpacity(0.8),
-                        shape: BoxShape.circle,
-                      ),
-                      child: IconButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
-                          color: Colors.white,
-                          size: 20,
+                   ChildGlasmorphism(
+                      borderRadius: 10,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () => Navigator.of(context).pop(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
                         ),
                       ),
                     ),

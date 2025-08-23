@@ -184,6 +184,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         cursorColor: ColorUtils.userdetailcolor,
         decoration: InputDecoration(
+           hintStyle: const TextStyle(color: Colors.white70),
           prefixIcon: Icon(
             icon,
             color: ColorUtils.userdetailcolor,

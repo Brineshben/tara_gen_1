@@ -17,10 +17,8 @@ class SpeedControllerPage extends StatefulWidget {
 class _SpeedControllerPageState extends State<SpeedControllerPage>
     with TickerProviderStateMixin {
   late AnimationController _pulseController;
-  late AnimationController _rotationController;
   late AnimationController _glowController;
   late Animation<double> _pulseAnimation;
-  late Animation<double> _rotationAnimation;
   late Animation<double> _glowAnimation;
 
   @override
@@ -33,11 +31,6 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
       vsync: this,
     )..repeat(reverse: true);
 
-    _rotationController = AnimationController(
-      duration: const Duration(seconds: 4),
-      vsync: this,
-    )..repeat();
-
     _glowController = AnimationController(
       duration: const Duration(seconds: 3),
       vsync: this,
@@ -45,10 +38,6 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
 
     _pulseAnimation = Tween<double>(begin: 0.8, end: 1.2).animate(
       CurvedAnimation(parent: _pulseController, curve: Curves.easeInOut),
-    );
-
-    _rotationAnimation = Tween<double>(begin: 0, end: 2 * pi).animate(
-      CurvedAnimation(parent: _rotationController, curve: Curves.linear),
     );
 
     _glowAnimation = Tween<double>(begin: 0.3, end: 0.8).animate(
@@ -61,7 +50,6 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
   @override
   void dispose() {
     _pulseController.dispose();
-    _rotationController.dispose();
     _glowController.dispose();
     super.dispose();
   }
@@ -70,16 +58,9 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
-  Color _getSpeedColor(double speed) {
-    if (speed <= 0.3) return const Color(0xFF00FF88); // Neon Green
-    if (speed <= 0.5) return Colors.orange; // Neon Orange
-    return  const Color.fromARGB(255, 255, 17, 0); // Neon Pink/Red
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Stack(
         children: [
           Container(
@@ -90,18 +71,7 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
               ),
             ),
           ),
-
-            Container(
-            decoration: BoxDecoration(
-              // gradient: LinearGradient(
-              //   begin: Alignment.topCenter,
-              //   end: Alignment.bottomCenter,
-              //   colors: [
-              //     const Color(0xFF608878).withOpacity(0.1),
-              //     const Color(0xFF18221E).withOpacity(0.1),
-              //   ],
-              // ),
-            ),
+          Container(
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
               child: Container(color: Colors.transparent),
@@ -112,14 +82,19 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
               children: [
                 _buildHeader(),
                 Expanded(
-                  child: Center(
-                    child: GetX<SpeedController>(
-                      builder: (SpeedController controller) {
-                        if (controller.isLoading.value) {
-                          return CircularProgressIndicator(color: Colors.white,);
-                        }
-                        return _buildSpeedDisplay(controller);
-                      },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 40),
+                    child: Center(
+                      child: GetX<SpeedController>(
+                        builder: (SpeedController controller) {
+                          if (controller.isLoading.value) {
+                            return const CircularProgressIndicator(
+                              color: Colors.white,
+                            );
+                          }
+                          return _buildSpeedSlider(controller);
+                        },
+                      ),
                     ),
                   ),
                 ),
@@ -130,7 +105,6 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
       ),
     );
   }
-
 
   Widget _buildHeader() {
     return Container(
@@ -156,21 +130,13 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
             ),
           ),
           const SizedBox(width: 20),
-          Expanded(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'SPEED CONTROLLER',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                  ),
-                ),
-                
-              ],
+          const Text(
+            'SPEED CONTROLLER',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.5,
             ),
           ),
         ],
@@ -178,338 +144,243 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
     );
   }
 
-  Widget _buildSpeedDisplay(SpeedController controller) {
-    final speedColor = _getSpeedColor(controller.speed.value);
+  Widget _buildSpeedSlider(SpeedController controller) {
     final speedValue = (controller.speed.value * 10).toInt();
 
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          AnimatedBuilder(
-            animation: Listenable.merge([_pulseAnimation, _glowAnimation]),
-            builder: (context, child) {
-              return Container(
-                width: 280,
-                height: 280,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  gradient: RadialGradient(
-                    colors: [
-                      speedColor.withOpacity(0.1),
-                      Colors.transparent,
-                    ],
-                  ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: speedColor.withOpacity(_glowAnimation.value),
-                      blurRadius: 40,
-                      spreadRadius: 10,
-                    ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      spacing: 20,
+      children: [
+        Column(
+          spacing: 20,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+              ChildGlasmorphism(
+              borderRadius: 15,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildSpeedLabel('SLOW', 0.1, 0.3, controller.speed.value),
+                    const SizedBox(width: 20),
+                    _buildSpeedLabel(
+                        'NORMAL', 0.4, 0.5, controller.speed.value),
+                    const SizedBox(width: 20),
+                    _buildSpeedLabel('FAST', 0.6, 0.7, controller.speed.value),
                   ],
                 ),
-                child: Container(
-                  margin: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withOpacity(0.1),
-                        Colors.transparent,
-                        speedColor.withOpacity(0.2),
-                      ],
-                    ),
-                    border: Border.all(
-                      color: speedColor,
-                      width: 3,
-                    ),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Rotating outer ring
-                      AnimatedBuilder(
-                        animation: _rotationAnimation,
-                        builder: (context, child) {
-                          return Transform.rotate(
-                            angle: _rotationAnimation.value,
-                            child: CustomPaint(
-                              size: const Size(200, 200),
-                              painter: SpeedRingPainter(
-                                speedColor,
-                                controller.speed.value,
+              ),
+            ),
+            AnimatedBuilder(
+              animation: _glowAnimation,
+              builder: (context, child) {
+                return ChildGlasmorphism(
+                  borderRadius: 30,
+                  child: Container(
+                    width: 400,
+                    height: 400,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        AnimatedBuilder(
+                          animation: _pulseAnimation,
+                          builder: (context, child) {
+                            return Transform.scale(
+                              scale: _pulseAnimation.value,
+                              child: Container(
+                                width: 200,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(0.2),
+                                    width: 1,
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                        // Speed indicator ring
+                        CustomPaint(
+                          size: const Size(300, 300),
+                          painter: SpeedRingPainter(
+                            controller.speed.value,
+                            _glowAnimation.value,
+                          ),
+                        ),
+                        // Center content
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              Icons.speed,
+                              size: 40,
+                              color: Colors.white.withOpacity(0.8),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              speedValue.toString(),
+                              style: TextStyle(
+                                fontSize: 36,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                shadows: [
+                                  Shadow(
+                                    color: Colors.white.withOpacity(0.3),
+                                    blurRadius: 8,
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      // Center content
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.settings_input_antenna,
-                            size: 60,
-                            color: speedColor,
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            speedValue.toString(),
-                            style: TextStyle(
-                              fontSize: 48,
-                              fontWeight: FontWeight.bold,
-                              color: speedColor,
-                              shadows: [
-                                Shadow(
-                                  color: speedColor.withOpacity(0.5),
-                                  blurRadius: 10,
-                                ),
-                              ],
+                            Text(
+                              'LEVEL',
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.white.withOpacity(0.6),
+                                letterSpacing: 2,
+                                fontWeight: FontWeight.w300,
+                              ),
                             ),
-                          ),
-                          Text(
-                            'SPEED LEVEL',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.white.withOpacity(0.6),
-                              letterSpacing: 2,
-                              fontWeight: FontWeight.w300,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          ),
-
-          const SizedBox(height: 40),
-
-          // Speed status
-
-          _buildControlButtons(controller, speedColor),
-          // _buildSpeedStatus(controller.speed.value, speedColor),
-
-
-
-          // Control buttons
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSpeedStatus(double speed, Color speedColor) {
-    String status;
-    String description;
-    IconData icon;
-
-    if (speed <= 0.3) {
-      status = 'LOW POWER';
-      description = 'Energy Conservation Mode';
-      icon = Icons.eco;
-    } else if (speed <= 0.5) {
-      status = 'OPTIMAL';
-      description = 'Balanced Performance';
-      icon = Icons.tune;
-    } else {
-      status = 'HIGH PERFORMANCE';
-      description = 'Maximum Efficiency';
-      icon = Icons.flash_on;
-    }
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            speedColor.withOpacity(0.1),
-            Colors.transparent,
+                );
+              },
+            ),
           ],
         ),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: speedColor.withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: speedColor, size: 24),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                status,
-                style: TextStyle(
-                  color: speedColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1,
-                ),
-              ),
-              Text(
-                description,
-                style: TextStyle(
-                  color: Colors.white.withOpacity(0.6),
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildControlButtons(SpeedController controller, Color speedColor) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        _buildControlButton(
-          icon: Icons.remove,
-          label: 'DECREASE',
-          color: speedColor,
-          onTap: () {
-            double newSpeed = controller.speed.value - 0.1;
-            if (newSpeed >= 0.1) {
-              controller.speed.value = newSpeed;
-              controller.updateSpeed(newSpeed);
-              HapticFeedback.mediumImpact();
-            }
-          },
+        const SizedBox(height: 60),
+
+        // Vertical Slider
+        ChildGlasmorphism(
+          borderRadius: 25,
+          child: Container(
+            width: 80,
+            height: 480,
+            padding: const EdgeInsets.symmetric(vertical: 20),
+            child: RotatedBox(
+              quarterTurns: 3, // Rotate slider to be vertical
+              child: SliderTheme(
+                data: SliderTheme.of(context).copyWith(
+                  activeTrackColor: Colors.white.withOpacity(0.8),
+                  inactiveTrackColor: Colors.white.withOpacity(0.2),
+                  thumbColor: Colors.white,
+                  overlayColor: Colors.white.withOpacity(0.2),
+                  thumbShape: const RoundSliderThumbShape(
+                    enabledThumbRadius: 12.0,
+                  ),
+                  overlayShape: const RoundSliderOverlayShape(
+                    overlayRadius: 20.0,
+                  ),
+                  trackHeight: 6.0,
+                  activeTickMarkColor: Colors.white.withOpacity(0.6),
+                  inactiveTickMarkColor: Colors.white.withOpacity(0.1),
+                ),
+                child: Slider(
+                  value: controller.speed.value,
+                  min: 0.1,
+                  max: 0.7,
+                  divisions: 6,
+                  onChanged: (value) {
+                    controller.speed.value = value;
+                    controller.updateSpeed(value);
+                    HapticFeedback.selectionClick();
+                  },
+                ),
+              ),
+            ),
+          ),
         ),
-        _buildControlButton(
-          icon: Icons.add,
-          label: 'INCREASE',
-          color: speedColor,
-          onTap: () {
-            double newSpeed = controller.speed.value + 0.1;
-            if (newSpeed <= 0.7) {
-              controller.speed.value = newSpeed;
-              controller.updateSpeed(newSpeed);
-              HapticFeedback.mediumImpact();
-            }
-          },
-        ),
+
+
+      
       ],
     );
   }
 
-  Widget _buildControlButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) {
-    return AnimatedBuilder(
-      animation: _pulseAnimation,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: 1.0,
-          child: Container(
-            width: 120,
-            height: 120,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  color.withOpacity(0.2),
-                  Colors.transparent,
-                ],
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: color.withOpacity(0.3),
-                  blurRadius: 20,
-                  spreadRadius: 2,
-                ),
-              ],
-            ),
-            child: Material(
-              color: Colors.transparent,
-              child: InkWell(
-                borderRadius: BorderRadius.circular(60),
-                onTap: onTap,
-                child: Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withOpacity(0.1),
-                        Colors.transparent,
-                        color.withOpacity(0.2),
-                      ],
-                    ),
-                    border: Border.all(
-                      color: color.withOpacity(0.5),
-                      width: 2,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(icon, color: color, size: 30),
-                      const SizedBox(height: 8),
-                      Text(
-                        label,
-                        style: TextStyle(
-                          color: color,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-        );
-      },
+  Widget _buildSpeedLabel(
+      String label, double minSpeed, double maxSpeed, double currentSpeed) {
+    final isActive = currentSpeed >= minSpeed && currentSpeed <= maxSpeed;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: isActive ? Colors.white.withOpacity(0.2) : Colors.transparent,
+      ),
+      child: Text(
+        label,
+        style: TextStyle(
+          color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
+          fontSize: 12,
+          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+          letterSpacing: 1,
+        ),
+      ),
     );
   }
 }
 
 class SpeedRingPainter extends CustomPainter {
-  final Color color;
   final double speed;
+  final double glowIntensity;
 
-  SpeedRingPainter(this.color, this.speed);
+  SpeedRingPainter(this.speed, this.glowIntensity);
 
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2 - 10;
 
-    final paint = Paint()
-      ..color = color.withOpacity(0.3)
+    // Background arc
+    final backgroundPaint = Paint()
+      ..color = Colors.white.withOpacity(0.1)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2;
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
 
-    // Draw speed indicators
-    for (int i = 0; i < 12; i++) {
-      final angle = i * 30 * (pi / 180);
-      final startX = center.dx + cos(angle) * (radius - 15);
-      final startY = center.dy + sin(angle) * (radius - 15);
-      final endX = center.dx + cos(angle) * radius;
-      final endY = center.dy + sin(angle) * radius;
+    canvas.drawCircle(center, radius, backgroundPaint);
 
-      final opacity = i < (speed * 12) ? 1.0 : 0.2;
-      paint.color = color.withOpacity(opacity);
+    // Progress arc
+    final progressPaint = Paint()
+      ..color = Colors.white.withOpacity(0.6 * glowIntensity)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 8
+      ..strokeCap = StrokeCap.round;
 
-      canvas.drawLine(
-        Offset(startX, startY),
-        Offset(endX, endY),
-        paint,
+    final sweepAngle = ((speed - 0.1) / 0.6) * 2 * pi;
+
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -pi / 2,
+      sweepAngle,
+      false,
+      progressPaint,
+    );
+
+    // Speed dots
+    for (int i = 0; i < 8; i++) {
+      final angle = (i / 7) * 2 * pi - pi / 2;
+      final dotX = center.dx + cos(angle) * radius;
+      final dotY = center.dy + sin(angle) * radius;
+
+      final isActive = i <= ((speed - 0.1) / 0.6 * 7);
+      final dotPaint = Paint()
+        ..color = isActive
+            ? Colors.white.withOpacity(0.8)
+            : Colors.white.withOpacity(0.2);
+
+      canvas.drawCircle(
+        Offset(dotX, dotY),
+        isActive ? 4 : 2,
+        dotPaint,
       );
     }
   }

@@ -1,8 +1,6 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 
-
-
 class InteractiveParticleSphere extends StatefulWidget {
   const InteractiveParticleSphere({
     super.key,
@@ -15,10 +13,10 @@ class InteractiveParticleSphere extends StatefulWidget {
 
   @override
   State<InteractiveParticleSphere> createState() =>
-      _InteractiveParticleSphereState();
+      InteractiveParticleSphereState();
 }
 
-class _InteractiveParticleSphereState extends State<InteractiveParticleSphere>
+class InteractiveParticleSphereState extends State<InteractiveParticleSphere>
     with TickerProviderStateMixin {
   late final AnimationController _orbit; // rotation
   late final AnimationController _scale; // collapse/restore
@@ -28,8 +26,8 @@ class _InteractiveParticleSphereState extends State<InteractiveParticleSphere>
   Offset? _touchPos;
   double _touchStrength = 0.2;
 
-  static const double _spring = 0.16;
-  static const double _damping = 0.86;
+  static const double _spring = 0.010;
+  static const double _damping = 0.92;
   static const double _repelRadius = 70;
   static const double _repelForce = 220;
 
@@ -53,7 +51,17 @@ class _InteractiveParticleSphereState extends State<InteractiveParticleSphere>
     )..addListener(() => setState(() {}));
 
     _basePoints = _fibonacciSphere(widget.particleCount);
-    _particles = List.generate(widget.particleCount, (i) => _Particle());
+
+    // ✅ Initialize particles at their correct positions
+    final double r = widget.size / 2;
+    final Offset center = Offset(r, r);
+    _particles = List.generate(widget.particleCount, (i) {
+      final p3 = _basePoints[i];
+      final proj = _project(p3, r, center);
+      return _Particle()
+        ..pos = proj
+        ..depth = (p3.z + 1) * 0.5;
+    });
   }
 
   @override
@@ -151,6 +159,49 @@ class _InteractiveParticleSphereState extends State<InteractiveParticleSphere>
       ),
     );
   }
+
+  void listening() async {
+    final double r = widget.size / 2;
+    final Offset center = Offset(r, r);
+
+    for (int cycle = 0; cycle < 3; cycle++) {
+      for (int i = 0; i < 20; i++) {
+        final angle = i / 20 * 2 * pi;
+        final pos = Offset(
+          center.dx + cos(angle) * (r * 0.6),
+          center.dy + sin(angle) * (r * 0.6),
+        );
+        _onDown(pos);
+        await Future.delayed(const Duration(milliseconds: 30));
+        _onMove(center);
+      }
+      _onUpCancel();
+      await Future.delayed(const Duration(milliseconds: 150));
+    }
+  }
+
+  // speaking
+  void speaking() async {
+    final double r = widget.size / 2;
+    final double y = r; // keep drag along the vertical center line
+
+    Offset start = Offset(20, y);
+    Offset end = Offset(widget.size - 20, y);
+    int steps = 30;
+
+    _onDown(start);
+
+    for (int i = 0; i <= steps; i++) {
+      final dx = start.dx + (end.dx - start.dx) * (i / steps);
+      final pos = Offset(dx, y);
+
+      _onMove(pos);
+
+      await Future.delayed(const Duration(milliseconds: 20));
+    }
+
+    _onUpCancel();
+  }
 }
 
 class _SpherePainter extends CustomPainter {
@@ -163,8 +214,6 @@ class _SpherePainter extends CustomPainter {
       ..style = PaintingStyle.fill
       ..maskFilter = const MaskFilter.blur(BlurStyle.inner, 0);
 
-    // final center = size.center(Offset.infinite);
-
     final idx = List<int>.generate(particles.length, (i) => i)
       ..sort((a, b) => particles[a].depth.compareTo(particles[b].depth));
 
@@ -174,13 +223,6 @@ class _SpherePainter extends CustomPainter {
       dot.color = Colors.white;
       canvas.drawCircle(p.pos, s, dot);
     }
-
-    // final halo = Paint()
-    //   ..style = PaintingStyle.stroke
-    //   ..strokeWidth = 1.2
-    //   ..color = Colors.red.withOpacity(0.18)
-    //   ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3);
-    // canvas.drawCircle(center, size.shortestSide * 0.49, halo);
   }
 
   @override

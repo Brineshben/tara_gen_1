@@ -179,20 +179,24 @@ class _PromptListPageState extends State<PromptListPage>
               padding: const EdgeInsets.only(left: 30, top: 30),
               child: Row(
                 children: [
-                  ChildGlasmorphism(
-                      borderRadius: 40,
+                 ChildGlasmorphism(
+                    borderRadius: 10,
+                    child: Material(
+                      color: Colors.transparent,
                       child: InkWell(
-                          onTap: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Padding(
-                            padding: const EdgeInsets.all(15),
-                            child: Icon(
-                              Icons.arrow_back,
-                              color: Colors.white,
-                              size: 20,
-                            ),
-                          ))),
+                        borderRadius: BorderRadius.circular(10),
+                        onTap: () => Navigator.of(context).pop(),
+                        child: const Padding(
+                          padding: EdgeInsets.all(12),
+                          child: Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                   const SizedBox(width: 10),
                   const Text(
                     'BEHAVIOR PROTOCOL',

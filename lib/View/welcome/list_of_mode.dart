@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/Utils/mode_container.dart';
 import 'package:ihub/Utils/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -155,9 +156,23 @@ class _ListofModeState extends State<ListofMode> {
             padding: const EdgeInsets.only(left: 30, top: 30),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.of(context).pop(),
+               ChildGlasmorphism(
+                  borderRadius: 10,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 const Text(

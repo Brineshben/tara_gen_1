@@ -47,7 +47,7 @@ class RobotresponseapiController extends GetxController {
         isLoaded.value = true;
       }
     } catch (e) {
-      showTopRightToast(context: context, message: "Error occurred", color: Colors.red);
+      print("communication_status_error $e");
     } finally {
       resetStatus();
     }

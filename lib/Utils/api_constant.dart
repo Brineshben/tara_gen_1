@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../Controller/battery_Controller.dart';
 
@@ -17,12 +16,13 @@ class ApiConstants {
 
   static String _defaultBaseUrl1 = "http://192.168.1.26:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
+  static String globalip = "http://3.88.46.127";
 
   /// Load stored IP from SharedPreferences
-  static Future<void> loadBaseUrl1() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    _baseUrl1 = prefs.getString('stored_ip') ?? _defaultBaseUrl1;
-  }
+  // static Future<void> loadBaseUrl1() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   _baseUrl1 = prefs.getString('stored_ip') ?? _defaultBaseUrl1;
+  // }
 
   /// Getter for baseUrl1 (always returns the latest value)
   static String get localIp => _baseUrl1;
@@ -31,17 +31,11 @@ class ApiConstants {
   static Future<void> updateBaseUrl1(String newIp) async {
     String newUrl = "http://$newIp:8000"; // Format base URL
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('stored_ip', newUrl);
-
-    print('newwwwwwwwwww $newUrl');
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await prefs.setString('stored_ip', newUrl);
+    // print('newwwwwwwwwww $newUrl');
     _baseUrl1 = newUrl; // Update in memory
   }
-
-  // static String baseUrl = "http://54.163.176.141/";
-  // static String baseUrl = "http://54.211.212.147";
-  // static String baseUrl = "http://54.152.17.211";
-  static String globalip = "http://3.88.46.127";
 
   static String addUrl = "/url/add/";
   static String getUrl = "/url/list/";
@@ -136,30 +130,14 @@ class ApiConstants {
   static String robotresponsefornav = "/robot/button/clicked/";
 }
 
-/// Function to fetch the IP address from API and update baseUrl1
-/// Function to fetch the IP address from API and update baseUrl1
-/// Function to fetch the IP address from API and update baseUrl1
+// <------------- IP UPDATE ----------------------------->
 Future<void> fetchAndUpdateBaseUrl() async {
   try {
-    String data = Get.find<BatteryController>()
-            .batteryModel
-            .value
-            ?.data
-            ?.first
-            .robot
-            ?.roboId ??
-        "";
-    print("objectresponse$data");
+    String roboId = Get.find<BatteryController>().roboId.toString();
 
-    String url =
-        "${ApiConstants.globalip}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/";
+    final response = await http
+        .get(Uri.parse("${ApiConstants.globalip}/robot/get-last-ip/$roboId/"));
 
-    print("url${url}");
-    final response = await http.get(Uri.parse(
-        "${ApiConstants.globalip}/robot/get-last-ip/${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId ?? ""}/"));
-    print(
-        'robo id ${Get.find<BatteryController>().batteryModel.value?.data?.first.robot?.roboId}');
-    // print("objectresfgdfghponse$url");
     if (response.statusCode == 200) {
       final Map<String, dynamic> jsonResponse = json.decode(response.body);
       String? ipAddress = jsonResponse['data']['ip_address'];

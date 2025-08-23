@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Service/url_service.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/Utils/toast.dart';
 
 import '../../Utils/colors.dart';
@@ -108,9 +109,23 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
                 padding: const EdgeInsets.only(left: 30, top: 30),
                 child: Row(
                   children: [
-                    IconButton(
-                      icon: const Icon(Icons.arrow_back, color: Colors.white),
-                      onPressed: () => Navigator.of(context).pop(),
+                  ChildGlasmorphism(
+                      borderRadius: 10,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () => Navigator.of(context).pop(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                     const SizedBox(width: 10),
                     const Text(
@@ -165,7 +180,14 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
                 },
               ),
               SizedBox(height: 40.h),
-              _buildActionButtons(),
+              _buildActionButton(
+                label: _nameController.text.isNotEmpty
+                    ? "Update Link"
+                    : 'Create Link',
+                icon: Icons.add_link,
+                onPressed: _handleCreate,
+                isPrimary: true,
+              ),
             ],
           ),
         ),
@@ -192,12 +214,13 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
       ),
       child: TextFormField(
         controller: controller,
-        style: GoogleFonts.oxygen(fontSize: 16, color: Colors.white),
+       style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
         keyboardType: keyboardType,
         maxLength: maxLength,
         validator: validator,
         decoration: InputDecoration(
           hintText: label,
+           hintStyle: const TextStyle(color: Colors.white70),
           prefixIcon: Icon(
             icon,
             color: Colors.white,
@@ -242,23 +265,6 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildActionButtons() {
-    return Row(
-      children: [
-        Expanded(flex: 3, child: SizedBox()),
-        SizedBox(width: 16.w),
-        Expanded(
-          child: _buildActionButton(
-            label:
-                _nameController.text.isNotEmpty ? "Update Link" : 'Create Link',
-            icon: Icons.add_link,
-            onPressed: _handleCreate,
-            isPrimary: true,
-          ),
-        ),
-      ],
-    );
-  }
 
   Widget _buildActionButton({
     required String label,
@@ -266,53 +272,32 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
     required VoidCallback onPressed,
     bool isPrimary = false,
   }) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(16.r),
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 15, sigmaY: 15), // blur effect
-        child: Container(
-          height: 56.h,
-          decoration: BoxDecoration(
-            color: Colors.black.withOpacity(0.3), // black translucent bg
-            borderRadius: BorderRadius.circular(16.r),
-            border: Border.all(
-              color:
-                  Colors.white.withOpacity(0.2), // light border for glass look
-              width: 1,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.4),
-                blurRadius: 10,
-                offset: const Offset(0, 4),
+    return ChildGlasmorphism(
+      borderRadius: 10,
+      child: SizedBox(
+        width: 200,
+        height: 50,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(16.r),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.white, // white icon on glass
+                size: 20,
+              ),
+              SizedBox(width: 10),
+              Text(
+                label,
+                style: GoogleFonts.oxygen(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
             ],
-          ),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: onPressed,
-              borderRadius: BorderRadius.circular(16.r),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    icon,
-                    color: Colors.white, // white icon on glass
-                    size: 20,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    label,
-                    style: GoogleFonts.oxygen(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ),
         ),
       ),

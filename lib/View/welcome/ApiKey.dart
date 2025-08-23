@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
+import 'package:ihub/Utils/colors.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/Utils/toast.dart';
 
@@ -322,116 +323,112 @@ class _ApiKeyState extends State<ApiKey> {
           SingleChildScrollView(
             child: Form(
               key: _formKey,
-              child: Column(
-                children: [
-                  GetX<BatteryController>(
-                    builder: (controller) {
-                      return Container(
-                        margin: EdgeInsets.only(
-                            left: 40.w, right: 40.w, top: 50.w, bottom: 15),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'NEW API KEY',
-                              style: TextStyle(
-                                fontSize: 25.h,
-                                fontWeight: FontWeight.bold,
-                                color: controller.foregroundColor.value,
+              child: Padding(
+                    padding:
+                    const EdgeInsets.symmetric(horizontal: 100),
+                child: Column(
+                  children: [
+                    GetX<BatteryController>(
+                      builder: (controller) {
+                        return Container(
+                          margin: EdgeInsets.only(
+                              left: 40.w, right: 40.w, top: 50.w, bottom: 15),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'NEW API KEY',
+                                style: TextStyle(
+                                  fontSize: 25.h,
+                                  fontWeight: FontWeight.bold,
+                                  color: controller.foregroundColor.value,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+                
+                    // Danger banner
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40.w),
+                      padding: EdgeInsets.all(12.w),
+                      decoration: BoxDecoration(
+                        color: Colors.red.withOpacity(0.12),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.red.withOpacity(0.5)),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(Icons.dangerous, color: Colors.redAccent),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              'Changing the API key immediately affects robot control clients. '
+                              'Ensure the robot is in a safe state before proceeding.',
+                              style: GoogleFonts.poppins(
+                                  color: Colors.red[200], fontSize: 12),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                
+                    // Key fields
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 40.w),
+                      child: Column(
+                        children: [
+                          _buildInputField(
+                            controller: _apiKeyCtrl,
+                            validator: _validateKey,
+                            obscure: _obscure,
+                            hint: 'Enter new API key',
+                            suffixIcon: IconButton(
+                              onPressed: () =>
+                                  setState(() => _obscure = !_obscure),
+                              icon: Icon(
+                                _obscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
                               ),
                             ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-
-                  // Danger banner
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40.w),
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: Colors.red.withOpacity(0.12),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.red.withOpacity(0.5)),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.dangerous, color: Colors.redAccent),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            'Changing the API key immediately affects robot control clients. '
-                            'Ensure the robot is in a safe state before proceeding.',
-                            style: GoogleFonts.poppins(
-                                color: Colors.red[200], fontSize: 12),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 16),
-
-                  // Key fields
-                  Container(
-                    margin: EdgeInsets.symmetric(horizontal: 40.w),
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: _apiKeyCtrl,
-                          validator: _validateKey,
-                          obscureText: _obscure,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          style: const TextStyle(color: Colors.white),
-                          decoration:
-                              _fieldDecoration('Enter new API key').copyWith(
+                          SizedBox(height: 12),
+                          _buildInputField(
+                            controller: _apiKeyConfirmCtrl,
+                            validator: _validateKey,
+                            obscure: _obscure,
+                            hint: 'Re-enter new API key',
                             suffixIcon: IconButton(
                               onPressed: () =>
                                   setState(() => _obscure = !_obscure),
-                              icon: Icon(_obscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
+                              icon: Icon(
+                                _obscure
+                                    ? Icons.visibility
+                                    : Icons.visibility_off,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(height: 12),
-                        TextFormField(
-                          controller: _apiKeyConfirmCtrl,
-                          validator: _validateKey,
-                          obscureText: _obscure,
-                          enableSuggestions: false,
-                          autocorrect: false,
-                          style: const TextStyle(color: Colors.white),
-                          decoration:
-                              _fieldDecoration('Re-enter new API key').copyWith(
-                            suffixIcon: IconButton(
-                              onPressed: () =>
-                                  setState(() => _obscure = !_obscure),
-                              icon: Icon(_obscure
-                                  ? Icons.visibility
-                                  : Icons.visibility_off),
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 28),
-
-                  // Submit
-                  InkWell(
-                    splashColor: Colors.white,
-                    highlightColor: Colors.white.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(20.r),
-                    child: InkWell(
+                    const SizedBox(height: 28),
+                
+                    // Submit
+                    InkWell(
                       borderRadius: BorderRadius.circular(20),
                       onTap: isLoading ? null : () => _handleSubmit(size),
                       child: ChildGlasmorphism(
+                        borderRadius: 10,
                         child: Container(
                           width: size.width * 0.22,
-                          height: 55,
+                          height: 50,
                           padding: const EdgeInsets.symmetric(horizontal: 20),
                           child: Center(
                             child: isLoading
@@ -469,9 +466,9 @@ class _ApiKeyState extends State<ApiKey> {
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 40),
-                ],
+                    const SizedBox(height: 40),
+                  ],
+                ),
               ),
             ),
           ),
@@ -481,9 +478,23 @@ class _ApiKeyState extends State<ApiKey> {
             padding: const EdgeInsets.only(left: 30, top: 30),
             child: Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.arrow_back, color: Colors.white),
-                  onPressed: () => Navigator.of(context).pop(),
+                ChildGlasmorphism(
+                  borderRadius: 10,
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(10),
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Padding(
+                        padding: EdgeInsets.all(12),
+                        child: Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 const Text(
@@ -497,6 +508,78 @@ class _ApiKeyState extends State<ApiKey> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildInputField({
+    required TextEditingController controller,
+    required String hint,
+    String? Function(String?)? validator,
+    bool obscure = false,
+    Widget? suffixIcon,
+    int? maxLength,
+    TextInputType? keyboardType,
+    IconData? icon,
+  }) {
+    return Container(
+       decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(
+          color: Colors.white.withOpacity(0.15),
+          width: 1,
+        ),
+      ),
+      child: TextFormField(
+        controller: controller,
+        obscureText: obscure,
+        style: GoogleFonts.poppins(fontSize: 16, color: Colors.white),
+        keyboardType: keyboardType,
+        maxLength: maxLength,
+        validator: validator,
+        decoration: InputDecoration(
+          hintText: hint,
+          hintStyle: const TextStyle(color: Colors.white70),
+          prefixIcon: icon != null
+              ? Icon(icon, color: Colors.white, size: 20)
+              : null,
+          suffixIcon: suffixIcon,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide.none,
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide(
+              color: ColorUtils.userdetailcolor,
+              width: 2,
+            ),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: BorderSide(
+              color: Colors.red.withOpacity(0.8),
+              width: 2,
+            ),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(16.r),
+            borderSide: const BorderSide(
+              color: Colors.red,
+              width: 2,
+            ),
+          ),
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: 16.w,
+            vertical: 16.h,
+          ),
+          counterText: '',
+        ),
       ),
     );
   }

@@ -65,7 +65,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
       final ui.Image cameraUiImage = await decodeImageFromList(imageBytes);
 
       // Load the frame asset
-      final ByteData frameData = await rootBundle.load('assets/myg_frame.png');
+      final ByteData frameData = await rootBundle.load('assets/ihub_frame.png');
       final Uint8List frameBytes = frameData.buffer.asUint8List();
       final ui.Image frameUiImage = await decodeImageFromList(frameBytes);
 
@@ -207,7 +207,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
         Positioned.fill(
           child: Image.asset(
-            "assets/myg_frame.png",
+            "assets/ihub_frame.png",
             fit: BoxFit.cover,
           ),
         ),
@@ -215,16 +215,22 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
         Positioned(
           top: 16,
           left: 16,
-          child: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-              size: 30,
-            ),
-            style: IconButton.styleFrom(
-              backgroundColor: Colors.black.withOpacity(0.5),
-              shape: const CircleBorder(),
+          child: ChildGlasmorphism(
+            borderRadius: 10,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () => Navigator.of(context).pop(),
+                child: const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                ),
+              ),
             ),
           ),
         ),
