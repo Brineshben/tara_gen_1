@@ -534,8 +534,6 @@ class ApiServices {
     required int userId,
     required String description,
   }) async {
-    // String url =
-    //     "http://192.168.1.36:8000/${ApiConstants.navigationEditoffline}$userId/";
     String url =
         "${ApiConstants.localIp}${ApiConstants.navigationEditoffline}$userId/";
     Map apiBody = {

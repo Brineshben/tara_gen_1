@@ -49,7 +49,7 @@ class LanguageController extends GetxController {
       );
 
       showTopRightToast(
-        context: context,
+        
         message: "Language updated successfully",
         color: Colors.green,
       );
@@ -62,7 +62,7 @@ class LanguageController extends GetxController {
     } catch (e) {
       debugPrint('Update language error: $e');
       showTopRightToast(
-        context: context,
+        
         message: "$e",
         color: Colors.red,
       );

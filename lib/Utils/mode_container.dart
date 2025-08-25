@@ -25,53 +25,50 @@ class ModeCard extends StatelessWidget {
       onTap: onSelect,
       child: ChildGlasmorphism(
         borderRadius: 16,
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Stack(
-                children: [
-                  Icon(icon, size: 60, color: iconColor),
-                  if (teachingModeStatus && title == "Teaching Mode")
-                    Positioned(
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(4),
-                        decoration: const BoxDecoration(
-                          color: Colors.green,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(Icons.check,
-                            size: 16, color: Colors.white),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Stack(
+              children: [
+                Icon(icon, size: 60, color: iconColor),
+                if (teachingModeStatus && title == "Teaching Mode")
+                  Positioned(
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
                       ),
-                    ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              if (comingSoon)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: Text(
-                    "Coming Soon",
-                    style: TextStyle(
-                      color: Colors.white70,
-                      fontSize: 12,
-                      fontStyle: FontStyle.italic,
+                      child: const Icon(Icons.check,
+                          size: 16, color: Colors.white),
                     ),
                   ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            if (comingSoon)
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0),
+                child: Text(
+                  "Coming Soon",
+                  style: TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-            ],
-          ),
+              ),
+          ],
         ),
       ),
     );

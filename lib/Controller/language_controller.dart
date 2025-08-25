@@ -46,7 +46,7 @@ class LanguageController extends GetxController {
         showTopRightToast(
             message: response['message'] ?? "Language updated successfully",
             color: Colors.green,
-            context: context);
+            );
 
         Get.find<BatteryController>().fetchBattery(
             Get.find<UserAuthController>().loginData.value?.user?.id ?? 0,
@@ -55,13 +55,13 @@ class LanguageController extends GetxController {
         showTopRightToast(
             message: response['message'] ?? "Something went wrong",
             color: Colors.green,
-            context: context);
+            );
       }
     } catch (e) {
       print('updatelan $e');
 
       showTopRightToast(
-          message: "Something went wrong", color: Colors.red, context: context);
+          message: "Something went wrong", color: Colors.red,);
     }
   }
 }

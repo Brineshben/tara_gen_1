@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class InteractiveParticleSphere extends StatefulWidget {
   const InteractiveParticleSphere({
     super.key,
-    this.size = 220,
+    this.size = 300,
     this.particleCount = 900,
   });
 
@@ -220,7 +220,7 @@ class _SpherePainter extends CustomPainter {
     for (final i in idx) {
       final p = particles[i];
       final double s = lerpDouble(0.3, 0.8, p.depth)!;
-      dot.color = Colors.white;
+      dot.color = const Color.fromARGB(255, 191, 188, 188);
       canvas.drawCircle(p.pos, s, dot);
     }
   }

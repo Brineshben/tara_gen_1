@@ -96,12 +96,12 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
                 controller.fetchQAs(widget.promptId);
 
                 showTopRightToast(
-                    context: context,
+                    
                     message: "Q&A deleted successfully",
                     color: Colors.green);
               } else {
                 showTopRightToast(
-                    context: context,
+                    
                     message: response?['message'] ?? "Something went wrong",
                     color: Colors.red);
               }
@@ -128,7 +128,7 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
     if (questionController.text.trim().isEmpty ||
         answerController.text.trim().isEmpty) {
       showTopRightToast(
-        context: context,
+        
         message: "Please fill in both question and answer",
         color: Colors.orange,
       );
@@ -158,7 +158,7 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
         controller.fetchQAs(widget.promptId);
 
         showTopRightToast(
-          context: context,
+          
           message: isEditMode
               ? "Q&A updated successfully"
               : "Q&A added successfully",
@@ -166,14 +166,14 @@ class _QuestionAnswerListScreenState extends State<QuestionAnswerListScreen> {
         );
       } else {
         showTopRightToast(
-          context: context,
+          
           message: response?['message'] ?? "Something went wrong",
           color: Colors.red,
         );
       }
     } catch (e) {
       showTopRightToast(
-        context: context,
+        
         message: "An error occurred: $e",
         color: Colors.red,
       );

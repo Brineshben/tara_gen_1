@@ -256,8 +256,7 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                                                       showTopRightToast(
                                                                         color: Colors
                                                                             .green,
-                                                                        context:
-                                                                            context,
+                                                                      
                                                                         message:
                                                                             response['message'] ??
                                                                                 "Description deleted successfully",
@@ -266,8 +265,7 @@ class _TimeDescriptionState extends State<TimeDescription> {
                                                                       showTopRightToast(
                                                                         color: Colors
                                                                             .red,
-                                                                        context:
-                                                                            context,
+                                                                       
                                                                         message:
                                                                             response['message'] ??
                                                                                 "Something went wrong while deleting",
@@ -560,7 +558,6 @@ class _GlassmorphismModalState extends State<GlassmorphismModal> {
                                 _selectedTime!.isEmpty) {
                               showTopRightToast(
                                 color: Colors.orange,
-                                context: context,
                                 message: "Please select a time of day",
                               );
                               return;
@@ -568,7 +565,6 @@ class _GlassmorphismModalState extends State<GlassmorphismModal> {
                             if (textController.text.trim().isEmpty) {
                               showTopRightToast(
                                 color: Colors.orange,
-                                context: context,
                                 message: "Please enter a description",
                               );
                               return;

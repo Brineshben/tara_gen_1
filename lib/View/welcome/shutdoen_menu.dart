@@ -177,7 +177,6 @@ class _ShutdoenMenuState extends State<ShutdoenMenu> {
                       } catch (e) {
                         showTopRightToast(
                             color: Colors.red,
-                            context: context,
                             message: "Something went wrong");
                       }
                     }

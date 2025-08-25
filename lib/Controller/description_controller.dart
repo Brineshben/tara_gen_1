@@ -36,7 +36,6 @@ class DescriptionController extends GetxController {
     if (time.isEmpty || description.isEmpty) {
       showTopRightToast(
           color: Colors.red,
-          context: context,
           message: "fields can not be empty");
       return;
     }
@@ -54,13 +53,11 @@ class DescriptionController extends GetxController {
 
         showTopRightToast(
             color: Colors.green,
-            context: context,
             message:
                 response['message'] ?? "Description submitted successfully");
       } else {
         showTopRightToast(
           color: Colors.red,
-          context: context,
           message: response['message'] ?? "Something went wrong",
         );
       }
@@ -79,7 +76,7 @@ class DescriptionController extends GetxController {
      
       showTopRightToast(
         color: Colors.red,
-        context: context,
+        
         message:   "Please fill all fields"
       );
       return;
@@ -98,13 +95,13 @@ class DescriptionController extends GetxController {
         await fetchDescriptionAgain();
         showTopRightToast(
           color: Colors.green,
-          context: context,
+          
           message: response['message'] ?? "Description edited successfully",
         );
       } else {
         showTopRightToast(
           color: Colors.red,
-          context: context,
+          
           message: response['message'] ?? "Something went wrong",
         );
       }

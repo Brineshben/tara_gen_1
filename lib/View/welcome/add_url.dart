@@ -46,7 +46,7 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
     } catch (e) {
       print('Error loading data: $e');
       showTopRightToast(
-          context: context, message: "Error loading data", color: Colors.red);
+           message: "Error loading data", color: Colors.red);
     } finally {
       setState(() => _isLoading = false);
     }
@@ -340,7 +340,7 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
 
       if (response['status'] == 'ok') {
         showTopRightToast(
-            context: context,
+            
             message: "URL added successfully",
             color: Colors.green);
 
@@ -357,11 +357,11 @@ class _WebLinkState extends State<WebLink> with TickerProviderStateMixin {
         }
 
         showTopRightToast(
-            context: context, message: errorMessage, color: Colors.red);
+             message: errorMessage, color: Colors.red);
       }
     } catch (e) {
       showTopRightToast(
-          context: context,
+          
           message: "Network error. Please try again.",
           color: Colors.red);
     } finally {

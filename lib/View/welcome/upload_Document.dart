@@ -34,17 +34,30 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
 
   Future<void> _loadMap() async {
     try {
-      if (Get.find<BatteryController>().roboId == null) return;
+      final batteryController = Get.find<BatteryController>();
+
+      if (batteryController.roboId == null) return;
 
       isLoading = true;
       setState(() {});
 
-      roboId = Get.find<BatteryController>().roboId;
-      var response = await ApiServices.fetchUploadedMap(robotId: 'RB8');
+      roboId = batteryController.roboId;
+      var response = await ApiServices.fetchUploadedMap(robotId: roboId);
 
-      if (response['stcm_file_path'] != null) {
+      if (response.containsKey('detail') &&
+          response['detail'] == "Not found.") {
+        // Map not available for this robot
+        fileName = '';
+        print("No map uploaded for robot $roboId");
+      } else if (response['stcm_file_path'] != null) {
+        // Extract filename from path
         fileName = response['stcm_file_path'].toString().split('/').last;
+        print("Map file: $fileName");
+      } else {
+        fileName = '';
+        print("Unexpected map response: $response");
       }
+
       setState(() {});
     } catch (e) {
       print('error $e');
@@ -65,12 +78,12 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       _selectedFile = File(result.files.single.path!);
       showTopRightToast(
           color: Colors.green,
-          context: context,
+          
           message: "Map selected: ${result.files.single.name}");
     } else {
       showTopRightToast(
           color: Colors.black,
-          context: context,
+          
           message: 'No file was selected');
     }
   }
@@ -79,7 +92,7 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
     if (_selectedFile == null) {
       showTopRightToast(
           color: Colors.orange,
-          context: context,
+          
           message: 'Please select a file before upload.');
 
       return;
@@ -99,19 +112,20 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
       final responseBody = await response.stream.bytesToString();
 
       if (response.statusCode == 201) {
+        _loadMap();
         showTopRightToast(
             color: Colors.green,
-            context: context,
+            
             message: 'Map uploaded successfully!');
       } else {
         showTopRightToast(
             color: Colors.red,
-            context: context,
+            
             message: 'Upload failed: $responseBody');
       }
     } catch (e) {
       showTopRightToast(
-          color: Colors.red, context: context, message: 'Something went wrong');
+          color: Colors.red,  message: 'Something went wrong');
     }
   }
 
@@ -121,21 +135,23 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
           await ApiServices.deleteFileLocal(robotId: roboId);
 
       if (resp['status'] == "ok") {
+        _loadMap();
+
         showTopRightToast(
             color: Colors.green,
-            context: context,
+            
             message: resp['detail'] ?? "Map deleted successfully");
         _selectedFile = null;
       } else {
         showTopRightToast(
             color: Colors.red,
-            context: context,
+            
             message: resp['detail'] ?? "Map already deleted");
         _selectedFile = null;
       }
     } catch (e) {
       showTopRightToast(
-          color: Colors.red, context: context, message: "Something went wrong");
+          color: Colors.red,  message: "Something went wrong");
     }
   }
 
@@ -316,13 +332,13 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                             } else {
                               showTopRightToast(
                                   color: Colors.red,
-                                  context: context,
+                                  
                                   message: 'Map not restarted');
                             }
                           } catch (e) {
                             showTopRightToast(
                                 color: Colors.red,
-                                context: context,
+                                
                                 message: 'Something went wrog!');
                           }
                         },
@@ -421,10 +437,10 @@ class _FileUploadScreenState extends State<FileUploadScreen> {
                               fileName.isNotEmpty
                                   ? fileName
                                   : "No Map uploaded",
-                              style: const TextStyle(
+                              style:  TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w500,
-                                color: Colors.green,
+                                color: fileName.isNotEmpty? Colors.green:Colors.white,
                               ),
                               overflow:
                                   TextOverflow.ellipsis, // avoids overflow

@@ -24,7 +24,7 @@ class PromptController extends GetxController {
       {required String prompt, required BuildContext context}) async {
     if (prompt.isEmpty) {
       showTopRightToast(
-          context: context, message: "Please enter Prompt", color: Colors.red);
+           message: "Please enter Prompt", color: Colors.red);
       return;
     }
     isLoading.value = true;
@@ -38,12 +38,12 @@ class PromptController extends GetxController {
       await fetchPrompt();
 
       showTopRightToast(
-          context: context,
+          
           message: response?['message'] ?? "Prompt submitted successfully",
           color: Colors.green);
     } else {
       showTopRightToast(
-          context: context,
+          
           message: response?['message'] ?? "Something went wrong",
           color: Colors.red);
     }
@@ -56,7 +56,7 @@ class PromptController extends GetxController {
       required BuildContext context}) async {
     if (prompt.isEmpty) {
       showTopRightToast(
-          context: context, message: "Please enter Prompt", color: Colors.red);
+           message: "Please enter Prompt", color: Colors.red);
       return;
     }
     isLoading.value = true;
@@ -69,12 +69,12 @@ class PromptController extends GetxController {
 
     if (response?['status'] == 'ok') {
       showTopRightToast(
-          context: context,
+          
           message: response?['message'] ?? "Prompt submitted successfully",
           color: Colors.green);
     } else {
       showTopRightToast(
-          context: context,
+          
           message: response?['message'] ?? "Something went wrong",
           color: Colors.red);
     }

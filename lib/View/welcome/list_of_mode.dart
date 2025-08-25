@@ -58,13 +58,11 @@ class _ListofModeState extends State<ListofMode> {
     final res = await ApiServices.changeTeachingMode(status: value);
     if (res['status'] == 'ok') {
       showTopRightToast(
-        context: context,
         message: res['message'] ?? "Teaching mode updated",
         color: Colors.green,
       );
     } else {
       showTopRightToast(
-        context: context,
         message: "Failed to update teaching mode",
         color: Colors.red,
       );
@@ -133,17 +131,7 @@ class _ListofModeState extends State<ListofMode> {
                         letterSpacing: 1.2,
                       ),
                     ),
-                    Spacer(),
-                    ChildGlasmorphism(
-                      borderColor: Colors.green,
-                        child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
-                      child: Text(
-                        isTeachingMode ? "TARA LEARN" : "TARA GREAT",
-                        style: TextStyle(color: Colors.green),
-                      ),
-                    ))
+                  
                   ],
                 ),
 

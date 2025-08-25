@@ -100,12 +100,12 @@
 //                             if (resp['status'] == "ok") {
 //                               FocusManager.instance.primaryFocus?.unfocus();
 
-//                               showTopRightToast(color: Colors.green, context: context, message: resp['message'].toString());
+//                               showTopRightToast(color: Colors.green,  message: resp['message'].toString());
 //                             } else {
 
 //                               showTopRightToast(
 //                                   color: Colors.red,
-//                                   context: context,
+//                                   
 //                                   message: "Something went wrong",
 //                               );
 
@@ -115,7 +115,7 @@
 
 //                               showTopRightToast(
 //                               color: Colors.red,
-//                               context: context,
+//                               
 //                               message: "Something went wrong",
 //                             );
 //                           }
@@ -167,7 +167,7 @@
 //                                                 controller.addData(item);
 //                                                   showTopRightToast(
 //                                                   color: Colors.black,
-//                                                   context: context,
+//                                                   
 //                                                   message:
 //                                                       "${item.name} added to selected list",
 //                                                 );
@@ -237,7 +237,7 @@
 
 //                                                  showTopRightToast(
 //                                                   color: Colors.black,
-//                                                   context: context,
+//                                                   
 //                                                   message:
 //                                                       "${item.name} removed from selected list",
 //                                                 );
@@ -311,7 +311,6 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
     controller = Get.find<FullTourControllerNew>();
     controller.fetchFullTourData();
     super.initState();
-    controller.clearData();
   }
 
   @override
@@ -416,7 +415,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                     controller.removeData(item);
                     showTopRightToast(
                       color: Colors.black,
-                      context: context,
+                      
                       message: "${item.name} removed",
                     );
                     setState(() {});
@@ -479,7 +478,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                  ChildGlasmorphism(
+                    ChildGlasmorphism(
                       borderRadius: 10,
                       child: Material(
                         color: Colors.transparent,
@@ -512,23 +511,23 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                           if (resp['status'] == "ok") {
                             FocusManager.instance.primaryFocus?.unfocus();
                             Navigator.of(context).pop();
-                           
+
                             showTopRightToast(
                               color: Colors.green,
-                              context: context,
+                              
                               message: resp['message'].toString(),
                             );
                           } else {
                             showTopRightToast(
                               color: Colors.red,
-                              context: context,
+                              
                               message: "Something went wrong",
                             );
                           }
                         } catch (e) {
                           showTopRightToast(
                             color: Colors.red,
-                            context: context,
+                            
                             message: "Something went wrong",
                           );
                         }
@@ -576,7 +575,7 @@ class _FullTourCreateScreenState extends State<FullTourCreateScreen> {
                                     controller.addData(item);
                                     showTopRightToast(
                                       color: Colors.green,
-                                      context: context,
+                                      
                                       message:
                                           "${item.name} added to selected list",
                                     );

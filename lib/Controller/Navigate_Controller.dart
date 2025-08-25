@@ -28,7 +28,7 @@ class NavigateController extends GetxController {
       }
     } catch (e) {
       isLoaded.value = false;
-      showTopRightToast(context: context, message: "", color: Colors.white);
+      showTopRightToast( message: "", color: Colors.white);
     } finally {
       isLoading.value = false;
     }

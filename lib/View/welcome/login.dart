@@ -267,7 +267,7 @@ class _LoginPageState extends State<LoginPage> {
                     showTopRightToast(
                         color: Colors.red,
                         message: "Please enter your username.",
-                        context: context);
+                        );
                     return;
                   }
 
@@ -275,7 +275,7 @@ class _LoginPageState extends State<LoginPage> {
                     showTopRightToast(
                         color: Colors.red,
                         message: "Please enter your password.",
-                        context: context);
+                        );
 
                     return;
                   }

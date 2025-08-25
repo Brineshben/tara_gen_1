@@ -4,10 +4,12 @@ import 'dart:ui';
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:ihub/Controller/Login_api_controller.dart';
+import 'package:ihub/Controller/Navigate_Controller.dart';
 import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
@@ -15,6 +17,7 @@ import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/toast.dart';
 import 'package:ihub/Utils/web_view.dart';
 import 'package:ihub/View/Splash/Loading_Splash.dart';
 import 'package:ihub/View/welcome/animated_navigate_text.dart';
@@ -22,6 +25,7 @@ import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation_charge_tab.dart';
 import 'package:ihub/View/welcome/particlesphere%20.dart';
+import 'package:lottie/lottie.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -48,10 +52,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Get.find<RobotresponseapiController>().getUrl();
 
     fiveSecTimer = Timer.periodic(Duration(seconds: 3), (timer) async {
-      if (!mounted) {
-        timer.cancel();
-        return;
-      }
       // get robot wifi ip
       ApiService.fetchAndUpdateBaseUrl();
 
@@ -125,7 +125,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                                   .batteryModel.value?.data?.first.robot;
 
                               return Padding(
-                                padding: const EdgeInsets.only(top: 30),
+                                padding: const EdgeInsets.only(top: 20),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   spacing: 20,
@@ -245,7 +245,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
             ),
-           
             Positioned(
               top: 40,
               left: 40,
@@ -298,100 +297,86 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ],
               ),
             ),
-
             Obx(() {
               final volumeController = Get.find<VolumeController>();
-
               if (!volumeController.showVolumeControl.value) {
                 return const SizedBox.shrink();
               }
-
               return Positioned(
-                top: MediaQuery.of(context).size.height * 0.2,
-                right: 20,
+                top: MediaQuery.of(context).size.height * 0.3,
+                right: 14,
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.7,
+                  height: MediaQuery.of(context).size.height * 0.5,
                   width: 80,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
-                      borderRadius: BorderRadius.circular(50),
-                      border: Border.all(color: Colors.white30),
-                      boxShadow: [
-                        const BoxShadow(
-                          color: Colors.black26,
-                          blurRadius: 8,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: RotatedBox(
-                            quarterTurns: -1,
-                            child: SliderTheme(
-                              data: SliderTheme.of(context).copyWith(
-                                trackHeight: 40,
-                                activeTrackColor: Colors.transparent,
-                                inactiveTrackColor: Colors.transparent,
-                                thumbColor: Colors.blueAccent,
-                                thumbShape: RoundSliderThumbShape(
-                                  enabledThumbRadius: 12,
-                                ),
-                                overlayColor:
-                                    Colors.blueAccent.withOpacity(0.2),
-                                overlayShape: RoundSliderOverlayShape(
-                                  overlayRadius: 28.0,
-                                ),
-                                valueIndicatorColor: Colors.transparent,
-                                trackShape: GradientRectSliderTrackShape(),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: RotatedBox(
+                          quarterTurns: -1,
+                          child: SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                              trackHeight: 40,
+                              activeTrackColor: Colors.transparent,
+                              inactiveTrackColor: Colors.transparent,
+                              thumbColor: Colors.grey,
+                              thumbShape: RoundSliderThumbShape(
+                                enabledThumbRadius: 15
                               ),
-                              child: Slider(
-                                value: volumeController.roboVolume.value
-                                    .toDouble(),
-                                min: 0,
-                                max: 100,
-                                divisions: 100,
-                                onChanged: (v) => volumeController
-                                    .roboVolume.value = v.toInt(),
-                                onChangeEnd: (v) =>
-                                    Get.find<VolumeController>().updatedVolume(
+                              overlayColor:
+                                  Colors.grey.withOpacity(0.2),
+                              overlayShape: RoundSliderOverlayShape(
+                                overlayRadius: 30,
+                              ),
+                              valueIndicatorColor: Colors.transparent,
+                              trackShape: GradientRectSliderTrackShape(),
+                            ),
+                            child: Slider(
+                              value: volumeController.roboVolume.value
+                                  .toDouble(),
+                              min: 0,
+                              max: 100,
+                              divisions: 100,
+                              onChanged: (v) {
+                                volumeController.roboVolume.value = v.toInt();
+                                volumeController.resetTimer();
+                              },
+                              onChangeEnd: (v) {
+                                Get.find<VolumeController>().updatedVolume(
                                   Get.find<BatteryController>()
                                       .roboId
                                       .toString(),
                                   v.toInt(),
                                   context,
-                                ),
-                              ),
+                                );
+                  
+                                volumeController.resetTimer();
+                              },
                             ),
                           ),
                         ),
-                        SizedBox(height: 10),
-                        Icon(
-                          volumeController.roboVolume.value == 0
-                              ? Icons.volume_mute_rounded
-                              : volumeController.roboVolume.value > 60
-                                  ? Icons.volume_up
-                                  : Icons.volume_down,
+                      ),
+                      SizedBox(height: 10),
+                      Icon(
+                        volumeController.roboVolume.value == 0
+                            ? Icons.volume_mute_rounded
+                            : volumeController.roboVolume.value > 60
+                                ? Icons.volume_up
+                                : Icons.volume_down,
+                        color: Colors.white,
+                      ),
+                      SizedBox(height: 10),
+                      Text(
+                        "${volumeController.roboVolume.value.round()}%",
+                        style: const TextStyle(
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
-                        SizedBox(height: 10),
-                        Text(
-                          "${volumeController.roboVolume.value.round()}%",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               );
             })
-
           ],
         ),
       ),
@@ -402,89 +387,105 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       GlobalKey<InteractiveParticleSphereState> sphereKey) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 20),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 40),
-            Text(
-              'TARA GEN 1',
-              style: GoogleFonts.poppins(
-                fontSize: MediaQuery.sizeOf(context).height * 0.07,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(height: 90),
+          Text(
+            'TARA GEN 1',
+            style: GoogleFonts.poppins(
+              fontSize: MediaQuery.sizeOf(context).height * 0.07,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
             ),
-            const SizedBox(height: 20),
-            Text(
-              'Discover cutting-edge work from top robotics engineers and designers, ready to bring innovation to your next intelligent machine or automation project.',
-              style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
-            ),
-            GetX<RobotresponseapiController>(builder: (controller) {
-              return Column(
-                children: [
-                  SizedBox(height: 50),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     if (controller.responseData.value.speaking == false)
-                  //       Lottie.asset(
-                  //         "assets/speak.json",
-                  //         height: MediaQuery.sizeOf(context).height * 0.3,
-                  //         fit: BoxFit.contain,
-                  //       ),
-                  //     if (controller.responseData.value.listening == false)
-                  //       Lottie.asset(
-                  //         "assets/Listen.json",
-                  //         height: MediaQuery.sizeOf(context).height * 0.3,
-                  //         fit: BoxFit.contain,
-                  //       ),
-                  //   ],
-                  // ),
+          ),
+          Text(
+            'Discover cutting-edge work from top robotics engineers and designers, ready to bring innovation to your next intelligent machine or automation project.',
+            style: GoogleFonts.poppins(fontSize: 12, color: Colors.white70),
+          ),
+          GetX<RobotresponseapiController>(builder: (controller) {
+            return Column(
+              children: [
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: [
+                //     if (controller.responseData.value.speaking == false)
+                //       Lottie.asset(
+                //         "assets/speak.json",
+                //         height: MediaQuery.sizeOf(context).height * 0.3,
+                //         fit: BoxFit.contain,
+                //       ),
+                //     if (controller.responseData.value.listening == false)
+                //       Lottie.asset(
+                //         "assets/Listen.json",
+                //         height: MediaQuery.sizeOf(context).height * 0.3,
+                //         fit: BoxFit.contain,
+                //       ),
+                //   ],
+                // ),
 
-                  Obx(() {
-                    final isSpeaking =
-                        controller.responseData.value.speaking ?? false;
-                    final isListening =
-                        controller.responseData.value.listening ?? false;
+                Obx(() {
+                  final isSpeaking =
+                      controller.responseData.value.speaking ?? false;
+                  final isListening =
+                      controller.responseData.value.listening ?? false;
 
-                    // Trigger after widget is built
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (isSpeaking) {
-                        sphereKey.currentState?.speaking();
-                      } else if (isListening) {
-                        sphereKey.currentState?.listening();
-                      }
-                    });
+                  // Trigger after widget is built
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (isSpeaking) {
+                      sphereKey.currentState?.speaking();
+                    } else if (isListening) {
+                      sphereKey.currentState?.listening();
+                    }
+                  });
 
-                    return InteractiveParticleSphere(
-                      key: sphereKey,
-                      size: 300,
-                    );
-                  }),
-
-                  if (controller.robotResponseModel.value?.text != null &&
-                      controller.robotResponseModel.value?.text != '')
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.5,
-                      padding: EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: Colors.black45,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Center(
-                        child: Text(
-                          controller.robotResponseModel.value?.text ?? '',
-                          style: TextStyle(fontSize: 12, color: Colors.white),
+                  return Column(
+                    children: [
+                      SizedBox(height: 30),
+                      Text(
+                        isSpeaking
+                            ? "Speaking..."
+                            : isListening
+                                ? "Listening..."
+                                : "",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    )
-                ],
-              );
-            }),
-          ],
-        ),
+                      Container(
+                        color: Colors.red,
+                        child: InteractiveParticleSphere(
+                          key: sphereKey,
+                          size: 400,
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+
+                if (controller.robotResponseModel.value?.text != null &&
+                    controller.robotResponseModel.value?.text != '')
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.5,
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Colors.black45,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(
+                        controller.robotResponseModel.value?.text ?? '',
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ),
+                  )
+              ],
+            );
+          }),
+        ],
       ),
     );
   }
@@ -538,6 +539,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           Get.find<VolumeController>().showVolumeControl.value =
                               true;
                         }
+
+                        Get.find<VolumeController>().showControlWithTimer();
                       },
                     ),
                   ),
@@ -632,61 +635,98 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   Widget _buildLetsGoButton(BuildContext context) {
-    return ChildGlasmorphism(
-      borderRadius: 60,
-      child: ActionSlider.standard(
-        width: double.infinity,
-        height: 90,
-        backgroundColor: Colors.white.withOpacity(0.15),
-        toggleColor: Colors.white,
-        icon: const Icon(
-          Icons.arrow_forward,
-          color: Color.fromARGB(161, 0, 0, 0),
-          size: 40,
-        ),
-        child: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [
-              Color(0xFFB0B0B0), // light grey
-              Color(0xFFB0B0B0), // light grey
-              Color(0xFF707070), // medium grey
-              Color.fromARGB(255, 89, 89, 89), // dark grey
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ).createShader(bounds),
-          // child: Text(
-          //   'Navigate',
-          //   style: GoogleFonts.poppins(
-          //     fontSize: 28,
-          //     fontWeight: FontWeight.w600,
-          //     color: Colors.white, // overridden by shader
-          //   ),
-          // ),
-          child: AnimatedTextGradient(
-            fontSize: 28,
-            text: "Navigate",
+    return GetX<BatteryController>(builder: (batteryController) {
+      return ChildGlasmorphism(
+        borderRadius: 60,
+        child: ActionSlider.standard(
+          width: double.infinity,
+          height: 90,
+          backgroundColor: Colors.white.withOpacity(0.15),
+          toggleColor: Colors.white,
+          icon: const Icon(
+            Icons.arrow_forward,
+            color: Color.fromARGB(161, 0, 0, 0),
+            size: 40,
           ),
-        ),
-        action: (controller) async {
-          controller.loading();
-          await Future.delayed(const Duration(milliseconds: 300));
-          controller.success();
-          await Future.delayed(const Duration(milliseconds: 400));
-          controller.reset();
-
-          Get.find<VolumeController>().showVolumeControl.value = false;
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NavigationScreen(
-                selectedTabIndex: 0,
-              ),
+          child: ShaderMask(
+            shaderCallback: (bounds) => const LinearGradient(
+              colors: [
+                Color(0xFFB0B0B0), // light grey
+                Color(0xFFB0B0B0), // light grey
+                Color(0xFF707070), // medium grey
+                Color.fromARGB(255, 89, 89, 89), // dark grey
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ).createShader(bounds),
+            // child: Text(
+            //   'Navigate',
+            //   style: GoogleFonts.poppins(
+            //     fontSize: 28,
+            //     fontWeight: FontWeight.w600,
+            //     color: Colors.white, // overridden by shader
+            //   ),
+            // ),
+            child: AnimatedTextGradient(
+              fontSize: 28,
+              text: batteryController.onDock.value ? "Home" : "Navigate",
             ),
-          );
-        },
-      ),
-    );
+          ),
+          action: (controller) async {
+            controller.loading();
+            await Future.delayed(const Duration(milliseconds: 300));
+            controller.success();
+            await Future.delayed(const Duration(milliseconds: 400));
+            controller.reset();
+
+            Get.find<VolumeController>().showVolumeControl.value = false;
+
+            if (batteryController.onDock.value) {
+              navigateToHome('home');
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NavigationScreen(
+                    selectedTabIndex: 0,
+                  ),
+                ),
+              );
+            }
+          },
+        ),
+      );
+    });
+  }
+
+  void navigateToHome(String name) async {
+    try {
+      final controller = Get.find<NavigateController>();
+
+      final item = controller.dataList.firstWhere(
+        (e) => e?.name?.toLowerCase() == name.toLowerCase(),
+        orElse: () => null,
+      );
+
+      if (item == null) {
+        showTopRightToast(
+            message: "$name location not found.", color: Colors.orange);
+        return;
+      }
+
+      await ApiServices.destination(id: item.id ?? 0);
+      await Future.delayed(Duration(seconds: 2));
+
+      final resp = await ApiServices.robotbasestatus();
+      final bool status = resp['status'] == true;
+      final String message =
+          status ? "Heading to ${item.name}" : "Command already received";
+
+      showTopRightToast(
+          message: message, color: status ? Colors.green : Colors.orange);
+    } catch (e) {
+      showTopRightToast(message: "Something went wrong", color: Colors.red);
+    }
   }
 }
 
@@ -741,7 +781,7 @@ class GradientRectSliderTrackShape extends SliderTrackShape
       begin: Alignment.bottomCenter, // This becomes bottom after rotation
       end: Alignment.centerRight, // This becomes top after rotation
       colors: [
-        Colors.grey.withOpacity(0.4), // Low volume - red
+        Colors.black.withOpacity(0.4), // Low volume - red
         Colors.white, // High volume - green
       ],
       stops: const [0.0, 1.0],
@@ -830,9 +870,10 @@ class _BatteryWidgetState extends State<BatteryWidget>
                     child: AnimatedBuilder(
                       animation: _controller,
                       builder: (context, child) {
-                        final fillWidth = (74 * (controller.batteryStatus.value / 100))
-                            .clamp(0, 74)
-                            .toDouble();
+                        final fillWidth =
+                            (74 * (controller.batteryStatus.value / 100))
+                                .clamp(0, 74)
+                                .toDouble();
                         // If charging → apply animated gradient
                         return Container(
                           width: fillWidth,

@@ -65,7 +65,7 @@ class FullTourModeScreen extends StatelessWidget {
                               if (resp['status'] == "ok") {
                                 showTopRightToast(
                                   color: Colors.green,
-                                  context: context,
+                                  
                                   message:
                                       "Full tour navigation started successfully",
                                 );

@@ -53,18 +53,18 @@ class UserAuthController extends GetxController {
         showTopRightToast(
             color: Colors.red,
             message: resp['message'] ?? 'Something went wrong.',
-            context: context);
+          );
         isLoading.value = false;
       }
     } on SocketException {
       showTopRightToast(
         color: Colors.red,
         message: "No Internet Connection",
-        context: context,
+        
       );
     } catch (e) {
       showTopRightToast(
-          color: Colors.red, message: "Error in IP Address", context: context);
+          color: Colors.red, message: "Error in IP Address");
     } finally {
       resetStatus();
     }

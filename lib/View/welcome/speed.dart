@@ -77,29 +77,17 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
               child: Container(color: Colors.transparent),
             ),
           ),
-          SafeArea(
-            child: Column(
-              children: [
-                _buildHeader(),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 40),
-                    child: Center(
-                      child: GetX<SpeedController>(
-                        builder: (SpeedController controller) {
-                          if (controller.isLoading.value) {
-                            return const CircularProgressIndicator(
-                              color: Colors.white,
-                            );
-                          }
-                          return _buildSpeedSlider(controller);
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          GetX<SpeedController>(
+            builder: (SpeedController controller) {
+              return controller.isLoading.value
+                  ? Center(child: CircularProgressIndicator(color: Colors.white,))
+                  : Column(
+                      children: [
+                        _buildHeader(),
+                        _buildSpeedSlider(controller),
+                      ],
+                    );
+            },
           ),
         ],
       ),
@@ -108,7 +96,7 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
 
   Widget _buildHeader() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
       child: Row(
         children: [
           ChildGlasmorphism(
@@ -147,183 +135,139 @@ class _SpeedControllerPageState extends State<SpeedControllerPage>
   Widget _buildSpeedSlider(SpeedController controller) {
     final speedValue = (controller.speed.value * 10).toInt();
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
       spacing: 20,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          spacing: 20,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-              ChildGlasmorphism(
-              borderRadius: 15,
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildSpeedLabel('SLOW', 0.1, 0.3, controller.speed.value),
-                    const SizedBox(width: 20),
-                    _buildSpeedLabel(
-                        'NORMAL', 0.4, 0.5, controller.speed.value),
-                    const SizedBox(width: 20),
-                    _buildSpeedLabel('FAST', 0.6, 0.7, controller.speed.value),
-                  ],
-                ),
-              ),
-            ),
-            AnimatedBuilder(
-              animation: _glowAnimation,
-              builder: (context, child) {
-                return ChildGlasmorphism(
-                  borderRadius: 30,
-                  child: Container(
-                    width: 400,
-                    height: 400,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        AnimatedBuilder(
-                          animation: _pulseAnimation,
-                          builder: (context, child) {
-                            return Transform.scale(
-                              scale: _pulseAnimation.value,
-                              child: Container(
-                                width: 200,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withOpacity(0.2),
-                                    width: 1,
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                        // Speed indicator ring
-                        CustomPaint(
-                          size: const Size(300, 300),
-                          painter: SpeedRingPainter(
-                            controller.speed.value,
-                            _glowAnimation.value,
+        AnimatedBuilder(
+          animation: _glowAnimation,
+          builder: (context, child) {
+            return Container(
+              width: 400,
+              height: 400,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  AnimatedBuilder(
+                    animation: _pulseAnimation,
+                    builder: (context, child) {
+                      return Transform.scale(
+                        scale: _pulseAnimation.value,
+                        child: Container(
+                          width: 200,
+                          height: 200,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: Colors.white.withOpacity(0.2),
+                              width: 1,
+                            ),
                           ),
                         ),
-                        // Center content
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.speed,
-                              size: 40,
-                              color: Colors.white.withOpacity(0.8),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              speedValue.toString(),
-                              style: TextStyle(
-                                fontSize: 36,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.white.withOpacity(0.3),
-                                    blurRadius: 8,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Text(
-                              'LEVEL',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white.withOpacity(0.6),
-                                letterSpacing: 2,
-                                fontWeight: FontWeight.w300,
-                              ),
+                      );
+                    },
+                  ),
+                  // Speed indicator ring
+                  CustomPaint(
+                    size: const Size(300, 300),
+                    painter: SpeedRingPainter(
+                      controller.speed.value,
+                      _glowAnimation.value,
+                    ),
+                  ),
+                  // Center content
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        speedValue.toString(),
+                        style: TextStyle(
+                          fontSize: 50,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          shadows: [
+                            Shadow(
+                              color: Colors.white.withOpacity(0.3),
+                              blurRadius: 10,
                             ),
                           ],
                         ),
-                      ],
+                      ),
+                      Text(
+                        'SPEED LEVEL',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.6),
+                          letterSpacing: 2,
+                          fontWeight: FontWeight.w300,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {
+                  double newSpeed = controller.speed.value - 0.1;
+                  if (newSpeed >= 0.1) {
+                    controller.speed.value = newSpeed;
+                    controller.updateSpeed(newSpeed);
+                    HapticFeedback.mediumImpact();
+                  }
+                },
+                child: ChildGlasmorphism(
+                  borderRadius: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 10),
+                    child: Icon(
+                      Icons.remove,
+                      size: 30,
+                      color: Colors.white,
                     ),
                   ),
-                );
-              },
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 60),
-
-        // Vertical Slider
-        ChildGlasmorphism(
-          borderRadius: 25,
-          child: Container(
-            width: 80,
-            height: 480,
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: RotatedBox(
-              quarterTurns: 3, // Rotate slider to be vertical
-              child: SliderTheme(
-                data: SliderTheme.of(context).copyWith(
-                  activeTrackColor: Colors.white.withOpacity(0.8),
-                  inactiveTrackColor: Colors.white.withOpacity(0.2),
-                  thumbColor: Colors.white,
-                  overlayColor: Colors.white.withOpacity(0.2),
-                  thumbShape: const RoundSliderThumbShape(
-                    enabledThumbRadius: 12.0,
-                  ),
-                  overlayShape: const RoundSliderOverlayShape(
-                    overlayRadius: 20.0,
-                  ),
-                  trackHeight: 6.0,
-                  activeTickMarkColor: Colors.white.withOpacity(0.6),
-                  inactiveTickMarkColor: Colors.white.withOpacity(0.1),
-                ),
-                child: Slider(
-                  value: controller.speed.value,
-                  min: 0.1,
-                  max: 0.7,
-                  divisions: 6,
-                  onChanged: (value) {
-                    controller.speed.value = value;
-                    controller.updateSpeed(value);
-                    HapticFeedback.selectionClick();
-                  },
                 ),
               ),
             ),
-          ),
+            SizedBox(width: 30),
+            Material(
+              color: Colors.transparent,
+              child: InkWell(
+                borderRadius: BorderRadius.circular(10),
+                onTap: () {
+                  double newSpeed = controller.speed.value + 0.1;
+                  if (newSpeed <= 0.7) {
+                    controller.speed.value = newSpeed;
+                    controller.updateSpeed(newSpeed);
+                    HapticFeedback.mediumImpact();
+                  }
+                },
+                child: ChildGlasmorphism(
+                  borderRadius: 10,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 50, vertical: 10),
+                    child: Icon(
+                      Icons.add,
+                      size: 30,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-
-
-      
       ],
-    );
-  }
-
-  Widget _buildSpeedLabel(
-      String label, double minSpeed, double maxSpeed, double currentSpeed) {
-    final isActive = currentSpeed >= minSpeed && currentSpeed <= maxSpeed;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: isActive ? Colors.white.withOpacity(0.2) : Colors.transparent,
-      ),
-      child: Text(
-        label,
-        style: TextStyle(
-          color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
-          fontSize: 12,
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-          letterSpacing: 1,
-        ),
-      ),
     );
   }
 }

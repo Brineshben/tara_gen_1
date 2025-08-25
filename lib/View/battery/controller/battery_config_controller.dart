@@ -73,7 +73,7 @@ class BatteryConfigController extends GetxController {
 
   // ✅ Toast helper
   void _showSnack(BuildContext context, String message, Color color) {
-    showTopRightToast(context: context, color: color, message: message);
+    showTopRightToast( color: color, message: message);
   }
 
 }

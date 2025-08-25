@@ -185,7 +185,7 @@ class GlassmorphismModal extends StatelessWidget {
                                         homeValue == null) {
                                       showTopRightToast(
                                         color: Colors.red,
-                                        context: context,
+                                        
                                         message: "Please enter valid numbers",
                                       );
                                       return;
@@ -197,7 +197,7 @@ class GlassmorphismModal extends StatelessWidget {
                                         homeValue > 100) {
                                       showTopRightToast(
                                         color: Colors.red,
-                                        context: context,
+                                        
                                         message:
                                             "Values must be between 0 and 100",
                                       );
@@ -208,7 +208,7 @@ class GlassmorphismModal extends StatelessWidget {
                                     if (batteryValue == homeValue) {
                                       showTopRightToast(
                                         color: Colors.red,
-                                        context: context,
+                                        
                                         message:
                                             "Battery and Home values must not be the same",
                                       );
@@ -218,7 +218,7 @@ class GlassmorphismModal extends StatelessWidget {
                                     if (batteryValue > homeValue) {
                                       showTopRightToast(
                                         color: Colors.red,
-                                        context: context,
+                                        
                                         message:
                                             "Battery value must be less than Home value",
                                       );

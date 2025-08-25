@@ -50,7 +50,6 @@ class NavigateDescriptionController extends GetxController {
       isLoaded.value = false;
       showTopRightToast(
           color: Colors.red,
-          context: context,
           message: "something went wrong!");
     } finally {
       isLoading.value = false;
@@ -80,7 +79,6 @@ class NavigateDescriptionController extends GetxController {
     } catch (e) {
       showTopRightToast(
           color: Colors.red,
-          context: context,
           message: "something went wrong!");
     }
   }
@@ -93,7 +91,7 @@ class NavigateDescriptionController extends GetxController {
     if (description.isEmpty) {
       showTopRightToast(
           color: Colors.red,
-          context: context,
+          
           message: "Description cannot be empty");
       return;
     }
@@ -108,19 +106,17 @@ class NavigateDescriptionController extends GetxController {
       if (resp['status'] == 'ok') {
         showTopRightToast(
             color: Colors.green,
-            context: context,
             message: "Navigation updated successfully");
         await fetchAgain(context);
       } else {
         showTopRightToast(
             color: Colors.red,
-            context: context,
             message: resp['message'] ?? 'Unknown error');
       }
     } catch (e) {
       showTopRightToast(
         color: Colors.red,
-        context: context,
+        
         message: e.toString(),
       );
     } finally {

@@ -77,9 +77,8 @@ class BatteryController extends GetxController {
         print('Error fetching offline battery: $e');
         offlineBatteryResponse = null;
         showTopRightToast(
-          context: context,
           message: "Please check the Wi-Fi or IP settings.",
-          color: Colors.red,
+          color: const Color.fromARGB(255, 214, 207, 207),
         );
       }
 
@@ -110,7 +109,6 @@ class BatteryController extends GetxController {
       print("Unexpected error in fetchBattery(): $e");
       isLoaded.value = false;
       showTopRightToast(
-        context: context,
         message: "Something went wrong while fetching battery data.",
         color: Colors.red,
       );

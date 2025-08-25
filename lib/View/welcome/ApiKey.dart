@@ -164,7 +164,6 @@ class _ApiKeyState extends State<ApiKey> {
                                     !wordOk ||
                                     pinCtrl.text.length != 6) {
                                   showTopRightToast(
-                                    context: context,
                                     message: !acknowledged
                                         ? 'Please acknowledge the risks.'
                                         : (!wordOk
@@ -178,7 +177,6 @@ class _ApiKeyState extends State<ApiKey> {
                                     await _mockVerifyPin(pinCtrl.text);
                                 if (!pinValid) {
                                   showTopRightToast(
-                                    context: context,
                                     message: 'Invalid admin PIN.',
                                     color: Colors.red,
                                   );
@@ -243,7 +241,6 @@ class _ApiKeyState extends State<ApiKey> {
     final keyB = _apiKeyConfirmCtrl.text.trim();
     if (keyA != keyB) {
       showTopRightToast(
-        context: context,
         message: 'Keys do not match.',
         color: Colors.red,
       );
@@ -263,14 +260,12 @@ class _ApiKeyState extends State<ApiKey> {
         if (mounted) {
           Navigator.of(context).pop();
           showTopRightToast(
-            context: context,
             message: '${resp['message']}',
             color: Colors.green,
           );
         }
       } else {
         showTopRightToast(
-          context: context,
           message: (resp['message']?.toString().isNotEmpty ?? false)
               ? resp['message'].toString()
               : 'Something went wrong.',
@@ -279,7 +274,6 @@ class _ApiKeyState extends State<ApiKey> {
       }
     } catch (e) {
       showTopRightToast(
-        context: context,
         message: 'Network/API error: $e',
         color: Colors.red,
       );

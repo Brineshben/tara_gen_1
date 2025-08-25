@@ -14,7 +14,7 @@ class ApiConstants {
     return _instance;
   }
 
-  static String _defaultBaseUrl1 = "http://192.168.1.26:8000";
+  static String _defaultBaseUrl1 = "http://192.168.11.35:8000";
   static String _baseUrl1 = _defaultBaseUrl1;
   static String globalip = "http://3.88.46.127";
 

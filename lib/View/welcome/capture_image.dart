@@ -237,7 +237,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
         // Capture button
         Positioned(
-          left: 80,
+          right: 80,
           top: 80,
           child: Center(
             child: GestureDetector(
