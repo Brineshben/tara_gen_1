@@ -35,12 +35,7 @@ class _ListofModeState extends State<ListofMode> {
 
   void openEduTara(int userId) async {
     const packageName = "com.ihub.edu_tara";
-
-    // final Uri androidUri = Uri.parse("myapp://edu_tara?user_id=$userId");
     final fallbackUri = Uri.parse("android-app://$packageName");
-
-    // final Uri androidUri = Uri.parse(
-    //     "intent://edu_tara?user_id=$userId#Intent;scheme=myapp;package=$packageName;end;");
 
     try {
       if (await canLaunchUrl(fallbackUri)) {
@@ -81,25 +76,18 @@ class _ListofModeState extends State<ListofMode> {
     return Scaffold(
       body: Stack(
         children: [
-          /// Background image
-          Container(
+            Container(
             decoration: const BoxDecoration(
               image: DecorationImage(
-                image: AssetImage('assets/bg.png'),
-                fit: BoxFit.cover,
-              ),
+                  image: AssetImage('assets/bg.png'), fit: BoxFit.cover),
             ),
           ),
-
-          /// Blur overlay
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
                 colors: [
-                  const Color(0xFF608878).withOpacity(0.2),
-                  const Color(0xFF18221E).withOpacity(0.2),
+                  Color(0xFF608878).withOpacity(0.2),
+                  Color(0xFF18221E).withOpacity(0.2),
                 ],
               ),
             ),
@@ -108,79 +96,103 @@ class _ListofModeState extends State<ListofMode> {
               child: Container(color: Colors.transparent),
             ),
           ),
-
+          // Content
           Padding(
-            padding: const EdgeInsets.only(
-                left: 100, right: 100, top: 150, bottom: 50),
-            child: Row(
-              spacing: 20,
+            padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 60),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: ModeCard(
-                    title: "Teaching Mode ",
-                    imageUrl:
-                        "https://media.istockphoto.com/id/966248982/photo/robot-with-education-hud.jpg?s=612x612&w=0&k=20&c=9eoZYRXNZsuU3edU87PksxN4Us-c9rB6IR7U_IGZ-U8=",
-                    onSelect: () {
-                      showModeDialog(context, isTeachingMode);
-                    },
-                    teachingModeStatus: isTeachingMode,
-                  ),
-                ),
-                Expanded(
-                  child: ModeCard(
-                    title: "Expo Mode",
-                    imageUrl:
-                        "https://www.therobotreport.com/wp-content/uploads/2025/04/BostonDeviceRobotics-featured-1.jpg",
-                    comingSoon: true,
-                    onSelect: () {
-                      showComingSoonDialog(context);
-                    },
-                  ),
-                ),
-                Expanded(
-                  child: ModeCard(
-                    title: "Control Mode",
-                    imageUrl:
-                        "https://media.istockphoto.com/id/1022892534/photo/engineer-manager-check-and-control-automation-robot-arms-machine-in-intelligent-industrial.jpg?s=612x612&w=0&k=20&c=1lfHMx6lgDgjIpt2YfJHLZ692aYXAJnQE4IJj8UXcVU=",
-                    comingSoon: true,
-                    onSelect: () {
-                      showComingSoonDialog(context);
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 30),
-            child: Row(
-              children: [
-               ChildGlasmorphism(
-                  borderRadius: 10,
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      borderRadius: BorderRadius.circular(10),
-                      onTap: () => Navigator.of(context).pop(),
-                      child: const Padding(
-                        padding: EdgeInsets.all(12),
-                        child: Icon(
-                          Icons.arrow_back_ios_new,
-                          color: Colors.white,
-                          size: 20,
+                // Header
+                Row(
+                  children: [
+                    ChildGlasmorphism(
+                      borderRadius: 10,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          borderRadius: BorderRadius.circular(10),
+                          onTap: () => Navigator.of(context).pop(),
+                          child: const Padding(
+                            padding: EdgeInsets.all(12),
+                            child: Icon(
+                              Icons.arrow_back_ios_new,
+                              color: Colors.white,
+                              size: 20,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                    const SizedBox(width: 15),
+                    const Text(
+                      'MODE SELECTION',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    Spacer(),
+                    ChildGlasmorphism(
+                      borderColor: Colors.green,
+                        child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
+                      child: Text(
+                        isTeachingMode ? "TARA LEARN" : "TARA GREAT",
+                        style: TextStyle(color: Colors.green),
+                      ),
+                    ))
+                  ],
                 ),
-                const SizedBox(width: 10),
-                const Text(
-                  'MODE SELECTION',
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
+
+                const SizedBox(height: 40),
+
+                // Mode cards
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 40),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ModeCard(
+                            title: "TARA LEARN",
+                            icon: Icons.school,
+                            iconColor: Colors.amber,
+                            onSelect: () {
+                              showModeDialog(context, isTeachingMode);
+                            },
+                            teachingModeStatus: isTeachingMode,
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: ModeCard(
+                            title: "TARA EXPO",
+                            icon: Icons.explore,
+                            iconColor: Colors.blue,
+                            comingSoon: true,
+                            onSelect: () {
+                              showComingSoonDialog(context);
+                            },
+                          ),
+                        ),
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: ModeCard(
+                            title: "TARA CARE",
+                            icon: Icons.medical_services,
+                            iconColor: Colors.green,
+                            comingSoon: true,
+                            onSelect: () {
+                              showComingSoonDialog(context);
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -193,149 +205,150 @@ class _ListofModeState extends State<ListofMode> {
   void showComingSoonDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (_) => AlertDialog(
+      builder: (_) => Dialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        backgroundColor: Colors.white,
-        titlePadding: EdgeInsets.fromLTRB(24, 20, 24, 0),
-        contentPadding: EdgeInsets.fromLTRB(24, 12, 24, 16),
-        actionsPadding: EdgeInsets.only(right: 12, bottom: 10),
-        title: Row(
-          children: [
-            Icon(Icons.lock_clock, color: Colors.deepPurple),
-            SizedBox(width: 10),
-            Text(
-              "Coming Soon",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.deepPurple,
-                fontSize: 18,
+        backgroundColor: Colors.white.withOpacity(0.9),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.lock_clock, size: 50, color: Colors.deepPurple),
+              const SizedBox(height: 16),
+              Text(
+                "Coming Soon",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.deepPurple,
+                  fontSize: 20,
+                ),
               ),
-            ),
-          ],
-        ),
-        content: Text(
-          "This feature is not available yet. Stay tuned!",
-          style: TextStyle(color: Colors.black87),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            style: TextButton.styleFrom(
-              foregroundColor: Colors.deepPurple,
-            ),
-            child: Text(
-              "OK",
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
+              const SizedBox(height: 12),
+              Text(
+                "This feature is not available yet. Stay tuned!",
+                style: TextStyle(color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.deepPurple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 100, vertical: 12),
+                ),
+                child: const Text(
+                  "OK",
+                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.white),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
+
 
   void showModeDialog(BuildContext context, bool isTeachingMode) {
     showDialog(
       context: context,
       builder: (ctx) {
-        final width = MediaQuery.of(context).size.width;
-        final height = MediaQuery.of(context).size.height;
-
         return Dialog(
-          backgroundColor: Colors.transparent, // Needed for glass effect
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          backgroundColor: Colors.transparent,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(20),
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
               child: Container(
-                width: width * 0.6,
+                margin: EdgeInsets.symmetric(horizontal: 200),
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(color: Colors.white.withOpacity(0.2)),
                 ),
-                constraints: BoxConstraints(
-                  maxHeight: height * 0.85,
-                ),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(Icons.sync_alt, color: Colors.white, size: 40),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 16),
                     Text(
                       "Switch Robot Mode",
                       style: TextStyle(
-                        fontSize: 22,
+                        fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4,
-                            color: Colors.black26,
-                            offset: Offset(1, 1),
-                          ),
-                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Current Mode:",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            Text(
+                              isTeachingMode
+                                  ? "Teaching Mode"
+                                  : "Reception Mode",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: isTeachingMode
+                                    ? Colors.amber
+                                    : Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              "Switching To:",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 14,
+                                color: Colors.white70,
+                              ),
+                            ),
+                            Text(
+                              isTeachingMode
+                                  ? "Reception Mode"
+                                  : "Teaching Mode",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      isTeachingMode
+                          ? "Switching to Reception Mode for greeting and managing visitors at the entrance."
+                          : "Switching to Teaching Mode for classroom navigation.",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.white.withOpacity(0.9),
+                        height: 1.4,
                       ),
                       textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Text(
-                          "🟢 Current Mode: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          isTeachingMode ? "Teaching Mode" : "Reception Mode",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: isTeachingMode ? Colors.green : Colors.white,
-                          ),
-                        ),
-                        Spacer(),
-                        Text(
-                          "🔁 Switching To: ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 16,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Text(
-                          isTeachingMode ? "Reception Mode" : "Teaching Mode",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            isTeachingMode
-                                ? "Do you want to switch to Reception Mode?\n\n"
-                                    "This mode is used for greeting and managing visitors at the entrance."
-                                : "Do you want to switch to Teaching Mode?\n\n"
-                                    "The app will close, and open the Teaching Controller app for classroom navigation.",
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white.withOpacity(0.9),
-                              height: 1.4,
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                     const SizedBox(height: 30),
                     Row(
@@ -355,72 +368,49 @@ class _ListofModeState extends State<ListofMode> {
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w600,
-                                fontSize: 16,
                               ),
                             ),
                           ),
                         ),
                         const SizedBox(width: 12),
                         Expanded(
-                          child: InkWell(
-                            onTap: () async {
+                          child: ElevatedButton(
+                            onPressed: () async {
                               Navigator.pop(context);
-
                               await Future.delayed(
                                   const Duration(milliseconds: 300));
 
+                              // Show loading dialog
                               showDialog(
                                 context: context,
                                 barrierDismissible: false,
                                 builder: (BuildContext context) {
                                   return Dialog(
                                     backgroundColor: Colors.transparent,
-                                    elevation: 0,
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(20),
-                                      child: BackdropFilter(
-                                        filter: ImageFilter.blur(
-                                            sigmaX: 12, sigmaY: 12),
-                                        child: Container(
-                                          padding: const EdgeInsets.all(24),
-                                          decoration: BoxDecoration(
-                                            color:
-                                                Colors.white.withOpacity(0.15),
-                                            borderRadius:
-                                                BorderRadius.circular(20),
-                                            border: Border.all(
-                                                color: Colors.white
-                                                    .withOpacity(0.2)),
-                                          ),
-                                          child: Column(
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: const [
-                                              Icon(Icons.sync,
-                                                  color: Colors.white,
-                                                  size: 48),
-                                              SizedBox(height: 16),
-                                              Text(
-                                                "Switching Mode...",
-                                                style: TextStyle(
-                                                  fontSize: 18,
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold,
-                                                  shadows: [
-                                                    Shadow(
-                                                      blurRadius: 4,
-                                                      color: Colors.black26,
-                                                      offset: Offset(1, 1),
-                                                    )
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(height: 16),
-                                              CircularProgressIndicator(
+                                    child: BackdropFilter(
+                                      filter: ImageFilter.blur(
+                                          sigmaX: 10, sigmaY: 10),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(24),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.15),
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: const [
+                                            CircularProgressIndicator(
+                                                color: Colors.white),
+                                            SizedBox(height: 16),
+                                            Text(
+                                              "Switching Mode...",
+                                              style: TextStyle(
                                                 color: Colors.white,
-                                                strokeWidth: 3,
+                                                fontWeight: FontWeight.bold,
                                               ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     ),
@@ -428,7 +418,7 @@ class _ListofModeState extends State<ListofMode> {
                                 },
                               );
 
-                              await Future.delayed(const Duration(seconds: 3));
+                              await Future.delayed(const Duration(seconds: 2));
                               Navigator.pop(context);
 
                               if (isTeachingMode) {
@@ -448,35 +438,24 @@ class _ListofModeState extends State<ListofMode> {
                                   Fluttertoast.showToast(
                                     msg:
                                         "Access denied! Only user akhil allowed.",
-                                    backgroundColor: Colors.red,
+                                    backgroundColor: Colors.black,
                                     textColor: Colors.white,
                                   );
                                 }
                               }
                             },
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white,
+                              shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
-                                border: Border.all(color: Colors.black12),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.1),
-                                    blurRadius: 6,
-                                    offset: Offset(0, 3),
-                                  ),
-                                ],
                               ),
-                              child: const Text(
-                                "Switch",
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                            ),
+                            child: Text(
+                              "Switch",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black,
                               ),
                             ),
                           ),

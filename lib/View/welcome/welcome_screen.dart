@@ -12,6 +12,7 @@ import 'package:ihub/Controller/RobotresponseApi_controller.dart';
 import 'package:ihub/Controller/Volume_Controller.dart';
 import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Service/Api_Service.dart';
+import 'package:ihub/Utils/api_constant.dart' as ApiService;
 import 'package:ihub/Utils/company_logo.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:ihub/Utils/web_view.dart';
@@ -42,7 +43,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     Get.find<BatteryController>().fetchBattery(
         Get.find<UserAuthController>().loginData.value?.user?.id ?? 0, context);
 
-    // ApiService.fetchAndUpdateBaseUrl();
+    ApiService.fetchAndUpdateBaseUrl();
 
     Get.find<RobotresponseapiController>().getUrl();
 
@@ -52,7 +53,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         return;
       }
       // get robot wifi ip
-      // ApiService.fetchAndUpdateBaseUrl();
+      ApiService.fetchAndUpdateBaseUrl();
 
       // fetch robot battery data
       Get.find<BatteryController>().fetchBattery(

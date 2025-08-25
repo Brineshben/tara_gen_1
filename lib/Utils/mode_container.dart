@@ -1,114 +1,78 @@
 import 'package:flutter/material.dart';
-
+import 'package:ihub/Utils/glassmorphism.dart';
+// In your mode_container.dart file
 class ModeCard extends StatelessWidget {
   final String title;
-  final String imageUrl;
+  final IconData icon;
+  final Color iconColor;
   final bool comingSoon;
-  final VoidCallback onSelect;
   final bool teachingModeStatus;
+  final VoidCallback onSelect;
 
   const ModeCard({
     super.key,
     required this.title,
-    required this.imageUrl,
+    required this.icon,
+    this.iconColor = Colors.white,
     this.comingSoon = false,
-    required this.onSelect,
     this.teachingModeStatus = false,
+    required this.onSelect,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        onSelect();
-      },
-      child: Stack(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.5), width: 1),
-              image: DecorationImage(
-                image: NetworkImage(imageUrl),
-                
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  comingSoon
-                      ? Colors.black.withOpacity(0.3)
-                      : Colors.white.withOpacity(0.4),
-                  BlendMode.darken,
-                ),
-              ),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(16),
-              child: Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                child: comingSoon
-                    ? null
-                    : Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            title,
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black.withOpacity(0.9),
-                                  offset: Offset(1, 1),
-                                  blurRadius: 3,
-                                ),
-                              ],
-                            ),
-                          ),
-                          if (teachingModeStatus)
-                            Text(
-                              "Activated",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                shadows: [
-                                  Shadow(
-                                    color: Colors.black.withOpacity(0.9),
-                                    offset: Offset(1, 1),
-                                    blurRadius: 3,
-                                  ),
-                                ],
-                              ),
-                            )
-                        ],
+      onTap: onSelect,
+      child: ChildGlasmorphism(
+        borderRadius: 16,
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Stack(
+                children: [
+                  Icon(icon, size: 60, color: iconColor),
+                  if (teachingModeStatus && title == "Teaching Mode")
+                    Positioned(
+                      right: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(4),
+                        decoration: const BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(Icons.check,
+                            size: 16, color: Colors.white),
                       ),
+                    ),
+                ],
               ),
-            ),
-          ),
-          if (comingSoon)
-            Container(
-              decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.6),
-                borderRadius: BorderRadius.circular(16),
+              const SizedBox(height: 16),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
+              if (comingSoon)
+                const Padding(
+                  padding: EdgeInsets.only(top: 8.0),
                   child: Text(
-                    "$title\nComing Soon",
-                    textAlign: TextAlign.center,
+                    "Coming Soon",
                     style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      height: 1.5,
+                      color: Colors.white70,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
                     ),
                   ),
                 ),
-              ),
-            ),
-        ],
+            ],
+          ),
+        ),
       ),
     );
   }
