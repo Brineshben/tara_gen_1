@@ -70,7 +70,7 @@ class _BatteryConfigState extends State<BatteryConfig> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                   ChildGlasmorphism(
+                    ChildGlasmorphism(
                       borderRadius: 10,
                       child: Material(
                         color: Colors.transparent,
@@ -266,18 +266,14 @@ class _BatteryConfigState extends State<BatteryConfig> {
                                                   MainAxisAlignment.spaceEvenly,
                                               children: [
                                                 Text(
-                                                  "Energy",
+                                                  "Current Percentage",
                                                   style: TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 10,
                                                   ),
                                                 ),
                                                 Text(
-                                                  "${calculateEnergy(
-                                                    currentPercent: controller
-                                                        .batteryStatus
-                                                        .toDouble(),
-                                                  ).toStringAsFixed(0)} Wh", // Rounded to 1 decimal
+                                                  "${controller.batteryStatus.value} %",
                                                   style: const TextStyle(
                                                     color: Color(0xff96FFBB),
                                                     fontSize: 30,
@@ -318,7 +314,6 @@ class _BatteryConfigState extends State<BatteryConfig> {
                                                                 controller
                                                                     .batteryStatus
                                                                     .toDouble(),
-                                                            
                                                           ).toStringAsFixed(0)} m",
                                                           style: TextStyle(
                                                             color: Color(

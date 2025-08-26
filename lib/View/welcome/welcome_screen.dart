@@ -120,7 +120,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           GetX<BatteryController>(
                             builder: (batteryController) {
                               final robot = batteryController
-                                  .batteryModel.value?.data?.first.robot;
+                                  .batteryModel.value?.data?.first.robot; 
 
                               return Padding(
                                 padding: const EdgeInsets.only(top: 20),

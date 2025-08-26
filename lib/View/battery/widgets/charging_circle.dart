@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:ihub/Service/Api_Service.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
@@ -76,7 +75,6 @@ class CharginDock extends StatelessWidget {
                           color: onDock
                               ? Color.fromARGB(255, 230, 230, 22)
                               : Color(0xff468953),
-
                           width: 6,
                         ),
                       ),
@@ -93,7 +91,6 @@ class CharginDock extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: Color.fromARGB(255, 26, 42, 38),
                           ),
-
                           child: Center(
                             child: onDock
                                 ? Column(
@@ -149,12 +146,13 @@ class CharginDock extends StatelessWidget {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(30),
                   onTap: () {
-                  
-
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>BatteryConfig()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => BatteryConfig()));
                   },
                   child: Ink(
-                    width: 150,
+                    width: 200,
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
                       vertical: 6,
@@ -173,7 +171,7 @@ class CharginDock extends StatelessWidget {
                         ),
                         SizedBox(width: 8),
                         Text(
-                          onDock ? "Charging..." : "Charge Now",
+                          "Battery Config",
                           style: TextStyle(
                             color: onDock ? Color(0xffF2FA13) : Colors.white,
                             fontSize: 15,

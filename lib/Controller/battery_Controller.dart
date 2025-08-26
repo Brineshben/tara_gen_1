@@ -89,7 +89,7 @@ class BatteryController extends GetxController {
         if (onlineBatteryResponse['status'] == 'ok') {
           batteryModel.value = BatteryModel.fromJson(onlineBatteryResponse);
           roboId = batteryModel.value?.data?.first.robot?.roboId;
-          print("Robo ID: $roboId");
+          print("Robot ID: $roboId");
         } else {
           print("Online battery status not OK");
           onlineBatteryResponse = null;
@@ -130,7 +130,8 @@ class BatteryController extends GetxController {
             backgroundColor: Colors.transparent,
             elevation: 0,
             child: Container(
-              padding: const EdgeInsets.all(24),
+              width: 500,
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,

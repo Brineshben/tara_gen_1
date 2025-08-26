@@ -27,6 +27,9 @@ class RobotInfo extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.black,
       body: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 50,vertical: 20
+        ),
         decoration: const BoxDecoration(
           gradient: RadialGradient(
             center: Alignment.topRight,
@@ -75,25 +78,7 @@ class RobotInfo extends StatelessWidget {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  background: Container(
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          Colors.teal.withOpacity(0.3),
-                          Colors.transparent,
-                        ],
-                      ),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Iconsax.cpu,
-                        size: 64,
-                        color: Colors.teal,
-                      ),
-                    ),
-                  ),
+               
                 ),
               ),
               SliverToBoxAdapter(
@@ -173,7 +158,8 @@ class RobotInfo extends StatelessWidget {
 
                               // Battery Status with Visual Indicator
                               BatteryStatusWidget(
-                                  batteryLevel: int.parse(robot.batteryStatus ?? "0")),
+                                  batteryLevel:
+                                      int.parse(robot.batteryStatus ?? "0")),
 
                               const SizedBox(height: 16),
 
@@ -413,6 +399,9 @@ class BatteryStatusWidget extends StatelessWidget {
     } else {
       batteryColor = Colors.red;
     }
+    double progressWidth =
+        (batteryLevel / 100) * MediaQuery.of(context).size.width - 64;
+    progressWidth = progressWidth < 0 ? 0 : progressWidth;
 
     return GlassContainer(
       borderRadius: 15,
@@ -461,9 +450,7 @@ class BatteryStatusWidget extends StatelessWidget {
                   duration: const Duration(milliseconds: 500),
                   curve: Curves.easeOut,
                   height: 6,
-                  width:
-                      (batteryLevel / 100) * MediaQuery.of(context).size.width -
-                          64,
+                  width: progressWidth,
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
                       colors: [
@@ -504,7 +491,7 @@ class InfoChip extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         child: Row(
           children: [
-            Icon(icon, size:20, color: Colors.teal),
+            Icon(icon, size: 20, color: Colors.teal),
             const SizedBox(width: 15),
             Expanded(
               child: Column(

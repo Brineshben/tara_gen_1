@@ -6,8 +6,11 @@ import 'dart:ui';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:ihub/Controller/battery_Controller.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
+import 'package:ihub/Utils/toast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 
@@ -25,10 +28,12 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
   bool isUploading = false;
   String? frameUrl;
   bool isFrameLoading = true;
+  var robotId;
 
   @override
   void initState() {
     super.initState();
+    robotId = Get.find<BatteryController>().roboId;
     getData();
   }
 
@@ -39,22 +44,33 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
   Future<void> _fetchFrame() async {
     try {
-      final res =
-          await http.get(Uri.parse("http://50.19.192.156/frame/get/RB8/"));
-      if (res.statusCode == 200) {
-        final data = Map<String, dynamic>.from(jsonDecode(res.body));
+      final res = await http.get(
+        Uri.parse("http://50.19.192.156/frame/get/$robotId/"),
+      );
+      print("ROBO ID QR:$robotId");
+      print("response_body ${res.body}");
+
+      final data = Map<String, dynamic>.from(jsonDecode(res.body));
+
+      if (data["status"] == "error") {
+        showTopRightToast(
+          message: data["message"] ?? "No image available",
+          color: Colors.red,
+        );
+
         setState(() {
-          frameUrl = data["data"]["frame"]; // network url
+          frameUrl = "assets/ihub_frame.png"; // fallback
           isFrameLoading = false;
         });
       } else {
         setState(() {
-          frameUrl = "assets/ihub_frame.png"; // fallback
+          frameUrl = data["data"]["frame"]; // network url
           isFrameLoading = false;
         });
       }
     } catch (e) {
       print("Frame fetch error: $e");
+      showTopRightToast(message: "Error fetching frame", color: Colors.red);
       setState(() {
         frameUrl = "assets/ihub_frame.png"; // fallback
         isFrameLoading = false;
@@ -81,7 +97,6 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
     final image = await _cameraController!.takePicture();
     final compositeFile = await _createCompositeImage(File(image.path));
     await _uploadImage(compositeFile);
-    _capturedImage = XFile(compositeFile.path);
 
     setState(() {
       _capturedImage = XFile(compositeFile.path);
@@ -89,35 +104,106 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
     });
   }
 
+  // Future<File> _createCompositeImage(File cameraImage) async {
+  //   try {
+  //     // Load the camera image
+  //     final imageBytes = await cameraImage.readAsBytes();
+  //     final ui.Image cameraUiImage = await decodeImageFromList(imageBytes);
+
+  //     // Load the frame asset
+  //     final ByteData frameData = await rootBundle.load(frameUrl!);
+  //     final Uint8List frameBytes = frameData.buffer.asUint8List();
+  //     final ui.Image frameUiImage = await decodeImageFromList(frameBytes);
+
+  //     // Create a canvas to composite the images
+  //     final recorder = ui.PictureRecorder();
+  //     final canvas = Canvas(recorder);
+
+  //     // Get the size for the composite (use camera image size)
+  //     final Size canvasSize = Size(
+  //       cameraUiImage.width.toDouble(),
+  //       cameraUiImage.height.toDouble(),
+  //     );
+
+  //     // Draw the camera image first
+  //     canvas.drawImage(cameraUiImage, Offset.zero, Paint());
+
+  //     // Calculate frame scaling to match camera image size
+  //     final double scaleX = canvasSize.width / frameUiImage.width;
+  //     final double scaleY = canvasSize.height / frameUiImage.height;
+
+  //     // Draw the frame overlay scaled to match camera image
+  //     canvas.save();
+  //     canvas.scale(scaleX, scaleY);
+  //     canvas.drawImage(frameUiImage, Offset.zero, Paint());
+  //     canvas.restore();
+
+  //     // Convert to image
+  //     final picture = recorder.endRecording();
+  //     final ui.Image compositeImage = await picture.toImage(
+  //       canvasSize.width.toInt(),
+  //       canvasSize.height.toInt(),
+  //     );
+
+  //     // Convert to bytes
+  //     final ByteData? pngBytes = await compositeImage.toByteData(
+  //       format: ui.ImageByteFormat.png,
+  //     );
+
+  //     if (pngBytes == null) {
+  //       throw Exception('Failed to convert composite image to bytes');
+  //     }
+
+  //     // Save to temporary file
+  //     final tempDir = await getTemporaryDirectory();
+  //     final compositeFile = File(
+  //         '${tempDir.path}/composite_${DateTime.now().millisecondsSinceEpoch}.png');
+  //     await compositeFile.writeAsBytes(pngBytes.buffer.asUint8List());
+
+  //     return compositeFile;
+  //   } catch (e) {
+  //     print('Composite image creation error: $e');
+  //     return cameraImage;
+  //   }
+  // }
+
   Future<File> _createCompositeImage(File cameraImage) async {
     try {
       // Load the camera image
       final imageBytes = await cameraImage.readAsBytes();
       final ui.Image cameraUiImage = await decodeImageFromList(imageBytes);
 
-      // Load the frame asset
-      final ByteData frameData = await rootBundle.load(frameUrl!);
-      final Uint8List frameBytes = frameData.buffer.asUint8List();
-      final ui.Image frameUiImage = await decodeImageFromList(frameBytes);
+      // Load the frame (network or asset)
+      ui.Image frameUiImage;
+      if (frameUrl!.startsWith("http")) {
+        final res = await http.get(Uri.parse(frameUrl!));
+        if (res.statusCode == 200) {
+          frameUiImage = await decodeImageFromList(res.bodyBytes);
+        } else {
+          throw Exception("Failed to load network frame");
+        }
+      } else {
+        final ByteData frameData = await rootBundle.load(frameUrl!);
+        frameUiImage =
+            await decodeImageFromList(frameData.buffer.asUint8List());
+      }
 
       // Create a canvas to composite the images
       final recorder = ui.PictureRecorder();
       final canvas = Canvas(recorder);
 
-      // Get the size for the composite (use camera image size)
       final Size canvasSize = Size(
         cameraUiImage.width.toDouble(),
         cameraUiImage.height.toDouble(),
       );
 
-      // Draw the camera image first
+      // Draw the camera image
       canvas.drawImage(cameraUiImage, Offset.zero, Paint());
 
-      // Calculate frame scaling to match camera image size
+      // Scale frame to fit camera image
       final double scaleX = canvasSize.width / frameUiImage.width;
       final double scaleY = canvasSize.height / frameUiImage.height;
 
-      // Draw the frame overlay scaled to match camera image
       canvas.save();
       canvas.scale(scaleX, scaleY);
       canvas.drawImage(frameUiImage, Offset.zero, Paint());
@@ -135,11 +221,9 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
         format: ui.ImageByteFormat.png,
       );
 
-      if (pngBytes == null) {
-        throw Exception('Failed to convert composite image to bytes');
-      }
+      if (pngBytes == null) throw Exception('Failed to convert composite');
 
-      // Save to temporary file
+      // Save to temp file
       final tempDir = await getTemporaryDirectory();
       final compositeFile = File(
           '${tempDir.path}/composite_${DateTime.now().millisecondsSinceEpoch}.png');
@@ -160,14 +244,20 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
         'POST',
         Uri.parse("http://50.19.192.156/image/"),
       );
+      request.fields['robot_id'] = robotId.toString();
       request.files.add(await http.MultipartFile.fromPath('image', file.path));
 
       var response = await request.send();
+      var responseBody = await http.Response.fromStream(response);
+
+      print("Upload response status: ${response.statusCode}");
+      print("Upload response body: ${responseBody.body}");
+
       if (response.statusCode == 200) {
-        final res = await http.Response.fromStream(response);
-        final imageUrl =
-            RegExp(r'"image"\s*:\s*"([^"]+)"').firstMatch(res.body)?.group(1) ??
-                '';
+        final Map<String, dynamic> jsonResponse = jsonDecode(responseBody.body);
+
+        final imageUrl = jsonResponse['data']?['image'] ?? '';
+
         setState(() {
           qrData = imageUrl;
         });
