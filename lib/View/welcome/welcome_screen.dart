@@ -4,7 +4,6 @@ import 'dart:ui';
 import 'package:action_slider/action_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -25,7 +24,6 @@ import 'package:ihub/View/welcome/capture_image.dart';
 import 'package:ihub/View/welcome/menu.dart';
 import 'package:ihub/View/welcome/navigation_charge_tab.dart';
 import 'package:ihub/View/welcome/particlesphere%20.dart';
-import 'package:lottie/lottie.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -455,12 +453,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      Container(
-                        color: Colors.red,
-                        child: InteractiveParticleSphere(
-                          key: sphereKey,
-                          size: 400,
-                        ),
+                      InteractiveParticleSphere(
+                        key: sphereKey,
+                        size: 300,
                       ),
                     ],
                   );

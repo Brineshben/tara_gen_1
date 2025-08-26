@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:ihub/Utils/glassmorphism.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class NoInternetPage extends StatefulWidget {
@@ -33,47 +34,35 @@ class _NoInternetPageState extends State<NoInternetPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F8FA),
+      backgroundColor: Colors.black,
       body: SafeArea(
         child: Center(
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 40),
-            margin: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(24),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 15,
-                  offset: const Offset(0, 5),
-                )
-              ],
-            ),
+          child: BaseGlassmorphism(
+            padding: EdgeInsets.symmetric(horizontal: 100, vertical: 20),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Icon(Icons.wifi_off, size: 80, color: Colors.redAccent),
+                const Icon(Icons.wifi_off, size: 80, color: Colors.white),
                 const SizedBox(height: 20),
                 const Text(
                   "No Internet",
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
-                    color: Colors.black87,
+                    color: Colors.white,
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Text(
                   "You're offline. Please check your connection.",
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, color: Colors.black54),
+                  style: TextStyle(fontSize: 12, color: Colors.white),
                 ),
                 const SizedBox(height: 30),
                 ElevatedButton(
                   onPressed: _retryConnection,
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueGrey,
+                    backgroundColor: Colors.black12,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 30, vertical: 14),
                     shape: RoundedRectangleBorder(
@@ -89,14 +78,14 @@ class _NoInternetPageState extends State<NoInternetPage> {
                   onPressed: () {
                     Get.back();
                   },
-                  child: Text("Back"),
+                  child: Text("Back", style: TextStyle(color: Colors.white),),
                 ),
                 if (_statusText.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   Text(
                     _statusText,
                     style: const TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                     ),

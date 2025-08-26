@@ -9,6 +9,7 @@ class CompnayLogo extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onLongPress: () {
+
         Navigator.push(context, MaterialPageRoute(builder: (context)=> RobotInfo()));
       },
       child: BaseGlassmorphism(

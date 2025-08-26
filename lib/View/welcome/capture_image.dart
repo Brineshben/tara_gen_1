@@ -1,16 +1,15 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
-import 'dart:ui';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
-import 'package:ihub/Utils/api_constant.dart';
 import 'package:ihub/Utils/glassmorphism.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 
 class CaptureAndQrPage extends StatefulWidget {
   const CaptureAndQrPage({super.key});
@@ -24,11 +23,43 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
   XFile? _capturedImage;
   String? qrData;
   bool isUploading = false;
+  String? frameUrl;
+  bool isFrameLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initCamera();
+    getData();
+  }
+
+  getData() async {
+    await _fetchFrame();
+    await _initCamera();
+  }
+
+  Future<void> _fetchFrame() async {
+    try {
+      final res =
+          await http.get(Uri.parse("http://50.19.192.156/frame/get/RB8/"));
+      if (res.statusCode == 200) {
+        final data = Map<String, dynamic>.from(jsonDecode(res.body));
+        setState(() {
+          frameUrl = data["data"]["frame"]; // network url
+          isFrameLoading = false;
+        });
+      } else {
+        setState(() {
+          frameUrl = "assets/ihub_frame.png"; // fallback
+          isFrameLoading = false;
+        });
+      }
+    } catch (e) {
+      print("Frame fetch error: $e");
+      setState(() {
+        frameUrl = "assets/ihub_frame.png"; // fallback
+        isFrameLoading = false;
+      });
+    }
   }
 
   Future<void> _initCamera() async {
@@ -65,7 +96,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
       final ui.Image cameraUiImage = await decodeImageFromList(imageBytes);
 
       // Load the frame asset
-      final ByteData frameData = await rootBundle.load('assets/ihub_frame.png');
+      final ByteData frameData = await rootBundle.load(frameUrl!);
       final Uint8List frameBytes = frameData.buffer.asUint8List();
       final ui.Image frameUiImage = await decodeImageFromList(frameBytes);
 
@@ -184,6 +215,7 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: SafeArea(
         child:
             _capturedImage == null ? _buildCameraView() : _buildCapturedView(),
@@ -204,17 +236,16 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
         Positioned.fill(
           child: CameraPreview(_cameraController!),
         ),
-
-        Positioned.fill(
-          child: Image.asset(
-            "assets/ihub_frame.png",
-            fit: BoxFit.cover,
+        if (frameUrl != null)
+          Positioned.fill(
+            child: frameUrl!.startsWith("http")
+                ? Image.network(frameUrl!, fit: BoxFit.cover)
+                : Image.asset(frameUrl!, fit: BoxFit.cover),
           ),
-        ),
 
         Positioned(
-          top: 16,
-          left: 16,
+          top: 35,
+          left: 8,
           child: ChildGlasmorphism(
             borderRadius: 10,
             child: Material(
@@ -237,8 +268,8 @@ class _CaptureAndQrPageState extends State<CaptureAndQrPage> {
 
         // Capture button
         Positioned(
-          right: 80,
-          top: 80,
+          left: 80,
+          top: 50,
           child: Center(
             child: GestureDetector(
               onTap: _startCountdown,
