@@ -96,9 +96,10 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         child: Stack(
           children: [
             Container(
-              decoration: const BoxDecoration(
+              decoration:  BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/bg.png'),
+                  image: AssetImage('assets/bg.png'), // bg
+                  // image: AssetImage('assets/myg.jpg'), // myg
                   fit: BoxFit.cover,
                 ),
               ),
@@ -120,7 +121,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                           GetX<BatteryController>(
                             builder: (batteryController) {
                               final robot = batteryController
-                                  .batteryModel.value?.data?.first.robot; 
+                                  .batteryModel.value?.data?.first.robot;
 
                               return Padding(
                                 padding: const EdgeInsets.only(top: 20),

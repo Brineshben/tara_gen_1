@@ -1,6 +1,6 @@
 name: ihub
 description: "A new Flutter project."
-version: 5.0.0+21
+version: 5.1.2+24
 environment:
   sdk: '>=3.4.0 <4.0.0'
 dependencies:
